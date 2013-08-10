@@ -1,0 +1,122 @@
+﻿<html xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp">
+  <head>
+    <link rel="SHORTCUT ICON" href="./../icons/favicon.ico" />
+    <style type="text/css">.OH_CodeSnippetContainerTabLeftActive, .OH_CodeSnippetContainerTabLeft,.OH_CodeSnippetContainerTabLeftDisabled { backgroundImageName: tabLeftBG.gif; }.OH_CodeSnippetContainerTabRightActive, .OH_CodeSnippetContainerTabRight,.OH_CodeSnippetContainerTabRightDisabled { backgroundImageName: tabRightBG.gif; }.OH_footer { backgroundImageName: footer_slice.gif; background-position: top; background-repeat: repeat-x; }</style>
+    <link rel="stylesheet" type="text/css" href="./../styles/branding.css" />
+    <link rel="stylesheet" type="text/css" href="./../styles/branding-en-US.css" />
+    <style type="text/css">
+			body
+			{
+			border-left:5px solid #e6e6e6;
+			overflow-x:scroll;
+			overflow-y:scroll;
+			}
+		</style>
+    <script src="./../scripts/branding.js" type="text/javascript">
+      <!---->
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>BoundedIntervalExtensions.HitTest(T, C) Method </title>
+    <meta name="Language" content="en-us" />
+    <meta name="System.Keywords" content="HitTest%3CT%2C C%3E method" />
+    <meta name="System.Keywords" content="HitTest(Of T%2C C) method" />
+    <meta name="System.Keywords" content="BoundedIntervalExtensions.HitTest%3CT%2C C%3E method" />
+    <meta name="System.Keywords" content="BoundedIntervalExtensions.HitTest(Of T%2C C) method" />
+    <meta name="Microsoft.Help.F1" content="whiteMath.BoundedIntervalExtensions.HitTest``2" />
+    <meta name="Microsoft.Help.Id" content="M:whiteMath.BoundedIntervalExtensions.HitTest``2(System.Collections.Generic.IList{whiteMath.BoundedInterval{``0,``1}},``0)" />
+    <meta name="Description" content="Searches a special-way sorted list of non-intersecting BoundedInterval&lt;, &gt; elements and returns the index of interval which contains the specified point." />
+    <meta name="Microsoft.Help.ContentType" content="Reference" />
+    <meta name="BrandingAware" content="'true'" />
+    <meta name="container" content="whiteMath" />
+    <meta name="file" content="2a006c27-89f8-d7ea-7582-c5907bcddac0" />
+    <meta name="guid" content="2a006c27-89f8-d7ea-7582-c5907bcddac0" />
+    
+    <link type="text/css" rel="stylesheet" href="ms-help://Hx/HxRuntime/HxLink.css" />
+    <meta name="SelfBranded" content="true" />
+  </head>
+  <body onload="onLoad()" class="primary-mtps-offline-document">
+    <div class="OH_outerDiv">
+      <div class="OH_outerContent">
+        <table class="TitleTable">
+          <tr>
+            <td class="OH_tdTitleColumn">BoundedIntervalExtensions<span id="ID0EHBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EHBABAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>HitTest<span id="ID0EFBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EFBABAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="typeparameter">T</span>, <span class="typeparameter">C</span><span id="ID0EBBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBBABAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script> Method </td>
+            <td class="OH_tdRunningTitleColumn">whiteMath + whiteStructs - a programmer-friendly mathematical library</td>
+          </tr>
+        </table>
+        <div id="mainSection">
+          <div id="mainBody">
+            <span class="introStyle"></span>
+            <div class="summary">
+            Searches a special-way sorted list of non-intersecting <span class="code">BoundedInterval&lt;<span class="typeparameter">T</span>, <span class="typeparameter">C</span>&gt;</span> 
+            elements and returns the index of interval which contains the specified point.
+            </div>
+            <p></p>
+            <b>Namespace:</b> <a href="333546dc-2611-29c0-8d5c-67a343753ef0.htm" target="">whiteMath</a><br /><b>Assembly:</b> <span sdata="assembly">whiteMath</span> (in whiteMath.dll) Version: 0.0.5.0 (1.0.0.0)<div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Syntax</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div id="snippetGroup_Syntax" class="code"><div id="ID0ECXFAAAAA" class="OH_CodeSnippetContainer"><div class="OH_CodeSnippetContainerTabs" id="ID0ECXFAAAAA_tabs"><div class="OH_CodeSnippetContainerTabLeftActive" id="ID0ECXFAAAAA_tabimgleft"></div><div id="ID0ECXFAAAAA_tab1" class="OH_CodeSnippetContainerTabActive" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECXFAAAAA','C#','1','4');return false;">C#</a></div><div id="ID0ECXFAAAAA_tab2" class="OH_CodeSnippetContainerTab" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECXFAAAAA','Visual Basic','2','4');return false;">VB</a></div><div id="ID0ECXFAAAAA_tab3" class="OH_CodeSnippetContainerTab" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECXFAAAAA','Visual C++','3','4');return false;">C++</a></div><div id="ID0ECXFAAAAA_tab4" class="OH_CodeSnippetContainerTabDisabledNotFirst" EnableCopyCode="true" disabled="true"><a>F#</a></div><div class="OH_CodeSnippetContainerTabRight" id="ID0ECXFAAAAA_tabimgright"></div></div><div id="ID0ECXFAAAAA_codecollection" class="OH_CodeSnippetContainerCodeCollection"><div class="OH_CodeSnippetToolBar"><div class="OH_CodeSnippetToolBarText"><a id="ID0ECXFAAAAA_ViewColorized" href="#" onclick="javascript:ExchangeTitleContent('ID0ECXFAAAAA','4')" title="View Colorized" style="display: none">View Colorized</a><a id="ID0ECXFAAAAA_copycode" href="#" onclick="javascript:CopyToClipboard('ID0ECXFAAAAA','4')" title="Copy to Clipboard">Copy to Clipboard</a><a id="ID0ECXFAAAAA_PrintText" class="OH_PrintText" href="#" onclick="javascript:Print('ID0ECXFAAAAA','4')" title="Print">Print</a></div></div><div id="ID0ECXFAAAAA_code_Div1" class="OH_CodeSnippetContainerCode" style="display: block"><pre><span class="keyword">public</span> <span class="keyword">static</span> <span class="identifier">int</span> <span class="identifier">HitTest</span>&lt;T, C&gt;(
+	<span class="keyword">this</span> <span class="identifier">IList</span>&lt;<span class="identifier">BoundedInterval</span>&lt;T, C&gt;&gt; <span class="parameter">list</span>,
+	T <span class="parameter">point</span>
+)
+<span class="keyword">where</span> C : <span class="keyword">new</span>(), <span class="identifier">Object</span>, <span class="identifier">ICalc</span>&lt;T&gt;</pre></div><div id="ID0ECXFAAAAA_code_Plain_Div1" class="OH_CodeSnippetContainerCode" style="display: none"><pre>public static int HitTest&lt;T, C&gt;(
+	this IList&lt;BoundedInterval&lt;T, C&gt;&gt; list,
+	T point
+)
+where C : new(), Object, ICalc&lt;T&gt;</pre></div><div id="ID0ECXFAAAAA_code_Div2" class="OH_CodeSnippetContainerCode" style="display: none"><pre>&lt;<span class="identifier">ExtensionAttribute</span>&gt; 
+<span class="keyword">Public</span> <span class="keyword">Shared</span> <span class="keyword">Function</span> <span class="identifier">HitTest</span>(<span class="keyword">Of</span> T, C <span class="keyword">As</span> {<span class="keyword">New</span>, <span class="identifier">Object</span>, <span class="identifier">ICalc</span>(<span class="keyword">Of</span> T)}) ( 
+	<span class="parameter">list</span> <span class="keyword">As</span> <span class="identifier">IList</span>(<span class="keyword">Of</span> <span class="identifier">BoundedInterval</span>(<span class="keyword">Of</span> T, C)),
+	<span class="parameter">point</span> <span class="keyword">As</span> T
+) <span class="keyword">As</span> <span class="identifier">Integer</span></pre></div><div id="ID0ECXFAAAAA_code_Plain_Div2" class="OH_CodeSnippetContainerCode" style="display: none"><pre>&lt;ExtensionAttribute&gt; 
+Public Shared Function HitTest(Of T, C As {New, Object, ICalc(Of T)}) ( 
+	list As IList(Of BoundedInterval(Of T, C)),
+	point As T
+) As Integer</pre></div><div id="ID0ECXFAAAAA_code_Div3" class="OH_CodeSnippetContainerCode" style="display: none"><pre><span class="keyword">public</span>:
+[<span class="identifier">ExtensionAttribute</span>]
+<span class="keyword">generic</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> C&gt;
+<span class="keyword">where</span> C : <span class="keyword">gcnew</span>(), <span class="identifier">Object</span>, <span class="identifier">ICalc</span>&lt;T&gt;
+<span class="keyword">static</span> <span class="identifier">int</span> <span class="identifier">HitTest</span>(
+	<span class="identifier">IList</span>&lt;<span class="identifier">BoundedInterval</span>&lt;T, C&gt;&gt;^ <span class="parameter">list</span>, 
+	T <span class="parameter">point</span>
+)</pre></div><div id="ID0ECXFAAAAA_code_Plain_Div3" class="OH_CodeSnippetContainerCode" style="display: none"><pre>public:
+[ExtensionAttribute]
+generic&lt;typename T, typename C&gt;
+where C : gcnew(), Object, ICalc&lt;T&gt;
+static int HitTest(
+	IList&lt;BoundedInterval&lt;T, C&gt;&gt;^ list, 
+	T point
+)</pre></div><div id="ID0ECXFAAAAA_code_Div4" class="OH_CodeSnippetContainerCode" style="display: none"><pre /></div><div id="ID0ECXFAAAAA_code_Plain_Div4" class="OH_CodeSnippetContainerCode" style="display: none"><pre /></div></div></div><script>addSpecificTextLanguageTagSet('ID0ECXFAAAAA');</script></div><div id="parameters"><h4 class="subHeading">Parameters</h4><dl paramName="list"><dt><span class="parameter">list</span></dt><dd>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/5y536ey6" target="_blank">System.Collections.Generic<span id="ID0EBKABWFAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBKABWFAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>IList</a><span id="ID0EJABWFAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EJABWFAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><a href="5339969f-35e4-f666-f6f0-8df90417531a.htm" target="">BoundedInterval</a><span id="ID0EHABWFAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EHABWFAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="selflink"><span class="typeparam">T</span></span>, <span class="selflink"><span class="typeparam">C</span></span><span id="ID0EDABWFAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EDABWFAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script><span id="ID0ECABWFAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0ECABWFAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script><br /><span>A list of non-intersecting intervals, sorted on their left bounds.</span></dd></dl><dl paramName="point"><dt><span class="parameter">point</span></dt><dd>Type: <span class="selflink"><span class="typeparam">T</span></span><br /><span>The point to search for.</span></dd></dl></div><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Type Parameters</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><dl><dt><span class="parameter">T</span></dt><dd>A type of numbers contained inside the interval.</dd><dt><span class="parameter">C</span></dt><dd>A calculator for the <span class="typeparameter">T</span> type.</dd></dl><h4 class="subHeading">Return Value</h4>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/td2s409d" target="_blank">Int32</a><br />The index of interval containing the specified point, or a negative value if such interval hasn't been found.<h4 class="subHeading">Usage Note</h4>In Visual Basic and C#, you can call this method as an instance method on any object of type <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/5y536ey6" target="_blank">IList</a><span id="ID0EMFAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EMFAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><a href="5339969f-35e4-f666-f6f0-8df90417531a.htm" target="">BoundedInterval</a><span id="ID0EKFAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EKFAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="selflink"><span class="typeparam">T</span></span>, <span class="selflink"><span class="typeparam">C</span></span><span id="ID0EGFAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EGFAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script><span id="ID0EFFAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EFFAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script>. When you use instance method syntax to call this method, omit the first parameter. For more information, see <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn.microsoft.com/en-us/library/bb384936.aspx" target="_blank">Extension Methods (Visual Basic)</a> or <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn.microsoft.com/en-us/library/bb383977.aspx" target="_blank">Extension Methods (C# Programming Guide)</a>.<div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Exceptions</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="tableSection"><table><tr><th class="ps_exceptionNameColumn">Exception</th><th class="ps_exceptionConditionColumn">Condition</th></tr><tr><td><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/27426hcy" target="_blank">System<span id="ID0EBABAAAEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBABAAAEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentNullException</a></td><td>list == null</td></tr></table></div><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Remarks</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div>Warning! If the list is either not sorted on interval's left bounds or contains several intersecting intervals, the result of the function is undefined.<div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Contracts</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="tableSection"><table><tr><th class="ps_contractsNameColumn">Requires</th></tr><tr><td><div class="code" style="margin-bottom: 0pt; white-space: pre-wrap;"><pre xml:space="preserve" style="margin-bottom: 0pt">list != null</pre></div><div style="font-size:95%; margin-left: 10pt;                         margin-bottom: 0pt"><table class="contractaux" width="100%" frame="void" rules="none" border="0"><colgroup><col width="10%"></col><col width="90%"></col></colgroup><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Description: </i></td><td style="border-bottom: 0px none;">list</td></tr><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Exception: </i></td><td style="border-bottom: 0px none;"><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/27426hcy" target="_blank">System<span id="ID0EBAAAAAAABBCAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBAAAAAAABBCAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentNullException</a></td></tr></table></div></td></tr></table><table><tr><th class="ps_contractsNameColumn">Ensures</th></tr><tr><td><div class="code" style="margin-bottom: 0pt; white-space: pre-wrap;"><pre xml:space="preserve" style="margin-bottom: 0pt">Contract.Result&lt;int&gt;() &lt; list.Count</pre></div></td></tr></table></div><div class="ps_contractsLink"><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn.microsoft.com/en-us/devlabs/dd491992.aspx" target="_blank">Learn more about contracts</a></div><a name="seeAlsoSection"><!----></a><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">See Also</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="seeAlsoStyle"><a href="2efccf41-98e1-52ae-a15e-8f27fd548ef2.htm" target="">BoundedIntervalExtensions Class</a></div><div class="seeAlsoStyle"><a href="e65c9d0d-66e6-0f02-6947-881f63d655db.htm" target="">BoundedIntervalExtensions Members</a></div><div class="seeAlsoStyle"><a href="333546dc-2611-29c0-8d5c-67a343753ef0.htm" target="">whiteMath Namespace</a></div></div>
+        </div>
+      </div>
+    </div>
+    <div id="OH_footer" class="OH_footer">
+      <p />
+      <div class="OH_feedbacklink">
+        <a href="mailto:?subject=whiteMath+%2b+whiteStructs+-+a+programmer-friendly+mathematical+library+BoundedIntervalExtensions.HitTest(T%2c+C)+Method++100+EN-US&amp;body=Your%20feedback%20is%20used%20to%20improve%20the%20documentation%20and%20the%20product.%20Your%20e-mail%20address%20will%20not%20be%20used%20for%20any%20other%20purpose%20and%20is%20disposed%20of%20after%20the%20issue%20you%20report%20is%20resolved.%20While%20working%20to%20resolve%20the%20issue%20that%20you%20report%2c%20you%20may%20be%20contacted%20via%20e-mail%20to%20get%20further%20details%20or%20clarification%20on%20the%20feedback%20you%20sent.%20After%20the%20issue%20you%20report%20has%20been%20addressed%2c%20you%20may%20receive%20an%20e-mail%20to%20let%20you%20know%20that%20your%20feedback%20has%20been%20addressed.">Send Feedback</a> on this topic.</div>
+    </div>
+  </body>
+</html>

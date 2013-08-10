@@ -1,0 +1,306 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using whiteMath.General;
+
+namespace whiteMath.ArithmeticLong
+{
+    public partial class LongInt<B> where B: IBase, new()
+    {
+        public static partial class Helper
+        {
+            public static LongInt<B> MultiplyFFTComplex(LongInt<B> one, LongInt<B> two)
+            {
+                double junk;        // не хотите использовать - не надо!
+                long junky;         // ну, что поделать...
+
+                return MultiplyFFTComplex(one, two, out junk, out junky);
+            }
+
+            public static LongInt<B> MultiplyFFTComplex(LongInt<B> one, LongInt<B> two, out double maxRoundError, out long maxLong)
+            {
+                LongInt<B> res = new LongInt<B>(one.Length + two.Length);
+                res.Negative = one.Negative ^ two.Negative;
+
+                long[] resultOverflowProne = new long[one.Length + two.Length];
+                MultiplyFFTComplex(LongInt<B>.BASE, resultOverflowProne, one.Digits, two.Digits, out maxRoundError, out maxLong);
+
+                for (int i = 0; i < resultOverflowProne.Length; i++)
+                    res.Digits.Add((int)resultOverflowProne[i]);
+
+                res.DealWithZeroes();
+                return res;
+            }
+
+            /// <summary>
+            /// Computes the product of two long integer numbers using Complex-field FFT algorithm.
+            /// Precision is not guaranteed on very large numbers.
+            /// 
+            /// Empirically safe to compute the product of LongInt numbers 2 500 000 decimal digits length.
+            /// !!! DO NOT use with numbers of digit base more than 10 000.
+            /// 
+            /// The numbers are not necessarily required to be of two's power long;
+            /// this algorithm performs all needed operations automatically.
+            /// </summary>
+            /// <param name="result"></param>
+            /// <param name="one"></param>
+            /// <param name="two"></param>
+            public static void MultiplyFFTComplex(int BASE, IList<long> result, IList<int> one, IList<int> two, out double maxRoundError, out long maxLongCoefficient)
+            {
+                // инициализируем максимальную ошибку
+
+                maxRoundError = 0;
+                maxLongCoefficient = 0;
+
+                int maxLength = Math.Max(one.Count, two.Count);
+
+                // Ищем минимальную степень двойки
+                
+                int twoPower = 1;
+                while (twoPower < maxLength)
+                    twoPower *= 2;
+
+                twoPower *= 2;  // Еще раз умножаем на два, для однозначной интерполяции многочленов
+
+                // ---------------------------------
+
+                Complex[] res = new Complex[twoPower>>1];
+
+                // ---------------------------------
+
+                // Если один операнд возводится в квадрат,
+                // можно сэкономить на одном преобразовании Фурье
+
+                if (object.ReferenceEquals(one, two))
+                {
+                    Complex[] op = new Complex[twoPower>>1];
+
+                    for (int i = 0, k = 0; i < maxLength; i++)
+                    {
+                        op[k].RealCounterPart = one[i];
+                        op[k].ImaginaryCounterPart = one[i];
+                    }
+
+                    Complex[] fft = Recursive_FFT(op);
+                    res = Recursive_FFT_Back(componentMultiply(fft, fft));
+                }
+                // Если разные операнды
+                else
+                {
+                    Complex[] op1 = new Complex[twoPower>>1];
+                    Complex[] op2 = new Complex[twoPower>>1];
+
+                    for (int i = 0, k = 0, m = 0; i < maxLength; i++)
+                    {
+                        if (i < one.Count)
+                        {
+                            if (i % 2 == 0)
+                                op1[k].RealCounterPart = one[i];
+                            else
+                            {
+                                op1[k].ImaginaryCounterPart = one[i];
+                                k++;
+                            }
+                        }
+
+                        if (i < two.Count)
+                        {
+                            if (i % 2 == 0)
+                                op2[m].RealCounterPart = two[i];
+                            else
+                            {
+                                op2[m].ImaginaryCounterPart = two[i];
+                                m++;
+                            }
+                        }
+                    }
+
+                    res = Recursive_FFT_Back(componentMultiply(Recursive_FFT(op1), Recursive_FFT(op2)));          
+                }
+
+                // -------------------------------------------
+                // последние штрихи и осуществление переносов
+
+                for (int i = 0, k = 0; i < result.Count; i++)
+                {
+                    double x;
+                    double tmp;
+
+                    if (i % 2 == 0)
+                        x = res[k].RealCounterPart;
+                    else
+                    {
+                        x = res[k].ImaginaryCounterPart;
+                        k++;
+                    }
+
+                    tmp = Math.Round(x);
+
+                    double err = Math.Abs(x - tmp);
+
+                    if (err > maxRoundError)
+                        maxRoundError = err;
+
+                    result[i] = (long)tmp;
+                    if (result[i] > maxLongCoefficient) maxLongCoefficient = result[i];
+                }
+
+                performCarries(BASE, result);     // осуществим переносы
+                return;
+            }
+
+            /// <summary>
+            /// FFT
+            /// </summary>
+            /// <param name="coefficients"></param>
+            /// <returns></returns>
+            public static Complex[] Recursive_FFT(IList<Complex> coefficients)
+            {
+                int n = coefficients.Count;
+
+                // ----------------- Cutting off lowest dimensions.
+
+                if (n == 1)
+                    return new Complex[] { coefficients[0] };
+                else if (n == 2)
+                    return new Complex[] { coefficients[0] + coefficients[1], coefficients[0] - coefficients[1] };
+
+                Complex[] rootsHalf = rootsOfUnityHalf(n, false);
+                return Recursive_FFT_Skeleton(coefficients, rootsHalf, 1, 0);
+            }
+
+            /// <summary>
+            /// BACK fft
+            /// </summary>
+            /// <param name="coefficients"></param>
+            /// <returns></returns>
+            public static Complex[] Recursive_FFT_Back(IList<Complex> coefficients)
+            {
+                int n = coefficients.Count;
+
+                // ----------------- Cutting off lowest dimensions.
+
+                if (n == 1)
+                    return new Complex[] { coefficients[0] };
+                else if (n == 2)
+                    return new Complex[] { coefficients[0] + coefficients[1], coefficients[0] - coefficients[1] };
+
+                Complex[] rootsHalf = rootsOfUnityHalf(n, true);
+                Complex[] result = Recursive_FFT_Skeleton(coefficients, rootsHalf, 1, 0);
+
+                for (int i = 0; i < result.Length; i++)
+                    result[i] /= n;
+
+                return result;
+            }
+
+            /// <summary>
+            /// Calculates the result of recursive Fast Fourier Transform.
+            /// </summary>
+            /// <param name="coefficients"></param>
+            /// <returns></returns>
+            private static Complex[] Recursive_FFT_Skeleton(IList<Complex> coefficients, IList<Complex> rootsOfUnity, int step, int offset)
+            {
+                int n = coefficients.Count / step - offset / step;
+
+                if (n == 4)
+                {
+                    Complex a = coefficients[offset];
+                    Complex b = coefficients[offset + step];
+                    Complex c = coefficients[offset + 2 * step];
+                    Complex d = coefficients[offset + 3 * step];
+
+                    Complex i = rootsOfUnity[coefficients.Count/4];
+
+                    /*
+                     * Как бы все могло выглядеть
+                     * 
+                    Complex[] evensFFTresult = { a + c, a - c };
+                    Complex[] oddsFFTresult = { b + d, b - d };
+                     * 
+                     * ...
+                     * 
+                     * и т.д. (см. цикл ниже)
+                     * 
+                    */
+
+                    return new Complex[] { a+c+b+d, a-c + i*(b-d), a+c-b-d, a-c - i*(b-d) };
+                }
+
+                Complex[] results = new Complex[n];
+
+                IList<Complex> resultEvens = Recursive_FFT_Skeleton(coefficients, rootsOfUnity, step*2, offset);
+                IList<Complex> resultOdds = Recursive_FFT_Skeleton(coefficients, rootsOfUnity, step*2, offset+step);
+                    
+                for (int k = 0; k < n/2; k++)
+                {
+                    Complex bfly = rootsOfUnity[k*step] * resultOdds[k];
+                    results[k] = resultEvens[k] + bfly;
+                    results[k + n/2] = resultEvens[k] - bfly;
+                }
+
+                return results;
+            }
+
+
+            /// <summary>
+            /// Returns the upper half of the [rootDegree]th roots of unity series in the complex field.
+            /// Used in the recursive FFT algorithm in LongInt.Helper class.
+            /// 
+            /// Root degree should be a certain power of two.
+            /// </summary>
+            /// <param name="rootDegree"></param>
+            /// <returns></returns>
+            internal static Complex[] rootsOfUnityHalf(int rootDegree, bool inverted)
+            {
+                Complex[] tmp = new Complex[rootDegree / 2];
+
+                tmp[0] = 1;
+
+                for (int i = 1; i < rootDegree / 2; i++)
+                {
+                    tmp[i] = new Complex(Math.Cos(2 * Math.PI * i / rootDegree), Math.Sin(2 * Math.PI * i / rootDegree));
+                    if (inverted) tmp[i] = 1 / tmp[i];
+                }
+
+                return tmp;
+            }
+            
+            /// <summary>
+            /// Performs the component-to-component multiplication of two convolution vectors.
+            /// </summary>
+            /// <param name="one"></param>
+            /// <param name="two"></param>
+            /// <returns></returns>
+            internal static Complex[] componentMultiply(IList<Complex> one, IList<Complex> two)
+            {
+                Complex[] tmp = new Complex[one.Count];
+
+                for (int i = 0; i < one.Count; i++)
+                    tmp[i] = one[i]*two[i];
+
+                return tmp;
+            }
+
+            /// <summary>
+            /// Performs the carrying after the FFT multiplication.
+            /// </summary>
+            /// <param name="BASE"></param>
+            /// <param name="?"></param>
+            internal static void performCarries(int BASE, IList<long> digits)
+            {
+                long carry=0;
+
+                for (int i = 0; i < digits.Count; i++)
+                {
+                    digits[i]+=carry;
+
+                    carry = digits[i] / BASE;
+                    digits[i] %= BASE;
+                }
+            }
+        }
+    }
+}

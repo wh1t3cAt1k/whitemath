@@ -1,0 +1,356 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>whiteStructs</name>
+    </assembly>
+    <members>
+        <member name="T:whiteStructs.Drawing.ColorPath">
+            <summary>
+            This class provides a way of mapping a real coefficient
+            in the [0; 1] segment to RGB color space using a pre-specified sequence of colors and
+            the linear gradient method.
+            </summary>
+        </member>
+        <member name="M:whiteStructs.Drawing.ColorPath.Map(System.Double)">
+            <summary>
+            Maps a real coefficient in [0; 1] to a position on
+            linear color path made of <c>ColorPath</c>'s specified colors.
+            </summary>
+            <param name="coefficient">A coefficient in the [0; 1] segment.</param>
+            <returns>A <c>Color</c> structure 'between' the first color and the last color of the linear path, according to the coefficient's value.</returns>
+        </member>
+        <member name="M:whiteStructs.Drawing.ColorPath.#ctor(System.Drawing.Color[])">
+            <summary>
+            Initializes the color path with a sequence of colors.
+            </summary>
+            <param name="colors">A parameter array of two or more colors.</param>
+        </member>
+        <member name="M:whiteStructs.Drawing.ColorPath.#ctor(System.Collections.Generic.IEnumerable{System.Drawing.Color})">
+            <summary>
+            Initializes the color path with a sequence of colors.
+            </summary>
+            <param name="colorSequence">A sequence of two or more colors.</param>
+        </member>
+        <member name="P:whiteStructs.Drawing.ColorPath.ColorFunction">
+            <summary>
+            Returns the <c>Func</c> delegate that maps double coefficients
+            in the [0; 1] segment to Color values according to the current
+            <c>ColorPath</c> object's color sequence.
+            </summary>
+        </member>
+        <member name="T:whiteStructs.Forms.FormExtensions">
+            <summary>
+            This class provides different extension methods
+            for Windows Forms.
+            </summary>
+        </member>
+        <member name="M:whiteStructs.Forms.FormExtensions.ShowErrorInMessageBox(System.Windows.Forms.IWin32Window,System.String)">
+            <summary>
+            Shows an error message in a message box
+            which belongs to the caller window.
+            </summary>
+            <param name="owner">The caller window.</param>
+            <param name="message">The error message to show.</param>
+        </member>
+        <member name="M:whiteStructs.Forms.FormExtensions.ShowWarningInMessageBox(System.Windows.Forms.IWin32Window,System.String,System.Boolean)">
+            <summary>
+            Shows an warning message in a message box
+            which belongs to the caller window.
+            </summary>
+            <param name="owner">The caller window.</param>
+            <param name="message">The warning message to show.</param>
+            <param name="question">
+            If this parameter is <c>true</c>, the message box
+            will be displayed with 'Yes' and 'No' buttons instead of an 'OK' button.
+            </param>
+        </member>
+        <member name="T:whiteStructs.Interop.NotepadSender">
+            <summary>
+            This class allows sending text to Windows Notepad.
+            </summary>
+        </member>
+        <member name="M:whiteStructs.Interop.NotepadSender.SendTextToNewNotepadInstance(System.String)">
+            <summary>
+            Sends a text to a new Windows Notepad instance.
+            </summary>
+            <param name="text">The text to send.</param>
+        </member>
+        <member name="T:whiteStructs.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:whiteStructs.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:whiteStructs.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="M:whiteStructs.Strings.SubstringSearching.calculateZFunction(System.String,whiteStructs.Strings.SubstringSearching.SubstringSearchOptions)">
+            <summary>
+            This method will calculate the Z-function for the caller string.
+            The result of the Z-function is a vector; the i-th element of this
+            vector is the length of the greatest common prefix of the string with the string SPL,
+            where the SPL is a suffix of the string starting at element i.
+            </summary>
+            <param name="str">The caller string object.</param>
+            <param name="options">The options of searching for the substring.</param>
+            <returns>The Z-function for the string.</returns>
+        </member>
+        <member name="M:whiteStructs.Strings.SubstringSearching.indexOfString_ZFunction(System.String,System.String,whiteStructs.Strings.SubstringSearching.SubstringSearchOptions)">
+            <summary>
+            Searches for the first occurence of a specified sample string in the calling string
+            using the specified substring search options and returns the index of the occurence or a negative value when unsuccessful.
+            </summary>
+            <param name="str">The calling string object.</param>
+            <param name="sample">The sample string to search for.</param>
+            <param name="options">The options of searching.</param>
+            <returns>The index of the occurence or a negative value when unsuccessful</returns>
+        </member>
+        <member name="M:whiteStructs.Strings.SubstringSearching.indicesOfString_ZFunction(System.String,System.String,whiteStructs.Strings.SubstringSearching.SubstringSearchOptions)">
+            <summary>
+            Searches for all occurences of a specified sample string in the calling string 
+            using the specified substring search options and returns the indices of the occurences.
+            
+            The indexes of the sample are returned in the form of an int[] array.
+            </summary>
+            <param name="str">The calling string object.</param>
+            <param name="sample">The sample string to search for.</param>
+            <param name="options">The options of searching.</param>
+            <returns>A list of indices in the <paramref name="str"/> where the specified sample string occurs.</returns>
+        </member>
+        <member name="T:whiteStructs.Testing.ExcelSequenceFormer">
+            <summary>
+            This class enables to form sequences of values 
+            in Microsoft Excel worksheets automatically.
+            </summary>
+        </member>
+        <member name="M:whiteStructs.Testing.ExcelSequenceFormer.#ctor(System.Int32)">
+            <summary>
+            Initializes the <c>ExcelSequenceFormer</c> object 
+            with a newly created, visible <c>Excel</c> application instance.
+            </summary>
+        </member>
+        <member name="M:whiteStructs.Testing.ExcelSequenceFormer.#ctor(Microsoft.Office.Interop.Excel.Worksheet,System.Int32)">
+            <summary>
+            Initializes the <c>ExcelSequenceFormer</c>
+            with an existing Excel worksheet object.
+            </summary>
+            <param name="sheet">An empty worksheet to be dealt with.</param>
+        </member>
+        <member name="M:whiteStructs.Testing.ExcelSequenceFormer.excelStorable``1(``0)">
+            <summary>
+            Можно ли сохранить в Excel без приведения к строчке.
+            </summary>
+        </member>
+        <member name="M:whiteStructs.Testing.ExcelSequenceFormer.SetColumnNames(System.String[])">
+            <summary>
+            Assigns the column names for the <c>ExcelSequenceFormer</c>
+            from the names array.
+            </summary>
+            <param name="values">An array of length equal to the current object's <c>ColumnCount</c>, containing non-<c>null</c> names for the columns.</param>
+        </member>
+        <member name="M:whiteStructs.Testing.ExcelSequenceFormer.AddRow(System.Object[])">
+            <summary>
+            Stores a row of arbitrary values in the internal queue.
+            </summary>
+            <param name="values">A parameter array of length equal to the current object's <c>ColumnCount</c>, containing arbitrary values.</param>
+        </member>
+        <member name="M:whiteStructs.Testing.ExcelSequenceFormer.AddRow``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Stores a row of identically-typed values in the internal queue.
+            </summary>
+            <typeparam name="T">The type of values in the row.</typeparam>
+            <param name="values">A sequence of length equal to the current object's <c>ColumnCount</c>, containing values of type <typeparamref name="T"/>.</param>
+        </member>
+        <member name="M:whiteStructs.Testing.ExcelSequenceFormer.FlushRow">
+            <summary>
+            Flushes a single row into the worksheet.
+            </summary>
+            <returns>True if there were any rows to flush, false otherwise.</returns>
+        </member>
+        <member name="M:whiteStructs.Testing.ExcelSequenceFormer.Flush">
+            <summary>
+            Flushes all the available rows in the <c>ExcelSequenceFormer</c> into
+            the Excel worksheet.
+            </summary>
+            <returns>The total amount of rows flushed into the worksheet.</returns>
+        </member>
+        <member name="P:whiteStructs.Testing.ExcelSequenceFormer.WorkSheet">
+            <summary>
+            Gets the Microsoft Excel worksheet associated with the 
+            current <see cref="T:whiteStructs.Testing.ExcelSequenceFormer"/>.
+            </summary>
+        </member>
+        <member name="P:whiteStructs.Testing.ExcelSequenceFormer.ColumnCount">
+            <summary>
+            Gets or sets the amount of columns
+            in the worksheet.
+            </summary>
+        </member>
+        <member name="P:whiteStructs.Testing.ExcelSequenceFormer.ColumnNames">
+            <summary>
+            Returns the collection of column names associated
+            with the current <c>ExcelSequenceFormer</c>.
+            </summary>
+        </member>
+        <member name="T:whiteStructs.Testing.ExcelSequenceFormer.ColumnNameCollection">
+            <summary>
+            Represents a collection of column names related to 
+            an <c>ExcelSequenceFormer</c> object.
+            </summary>
+        </member>
+        <member name="M:whiteStructs.Testing.ExcelSequenceFormer.ColumnNameCollection.#ctor(whiteStructs.Testing.ExcelSequenceFormer)">
+            <summary>
+            Initializes a new instance of <c>ColumnNameCollection</c>
+            and associates it with an <c>ExcelSequenceFormer</c>.
+            </summary>
+            <param name="former">An <c>ExcelSequenceFormer</c> object to associate with.</param>
+        </member>
+        <member name="P:whiteStructs.Testing.ExcelSequenceFormer.ColumnNameCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets the name of the excel column.
+            </summary>
+            <param name="index">The zero-based index of the desired column.</param>
+            <returns>The name of the column at the specified index.</returns>
+        </member>
+        <member name="T:whiteStructs.Testing.OneArgumentProcedure`1">
+            <summary>
+            Represents a one-argument procedure without a return value.
+            </summary>
+            <typeparam name="T">The type of the argument that procedure receives.</typeparam>
+            <param name="arg">The argument received by the procedure.</param>
+        </member>
+        <member name="T:whiteStructs.Testing.TestPerformedEventHandler`1">
+            <summary>
+            Represents an event handler which is called once 
+            the <see cref="!:PerformanceTester"/> performs a single
+            test during two-level testing.
+            </summary>
+            <typeparam name="HT">The type of high-level tester argument.</typeparam>
+            <param name="highLevelValue">The value of high-level tester argument.</param>
+            <param name="meanTime">The mean running time of tested procedure.</param>
+        </member>
+        <member name="T:whiteStructs.Testing.PerformanceTester`2">
+            <summary>
+            This class provides means for conducting perfomance tests
+            of one-argument procedures.
+            </summary>
+        </member>
+        <member name="M:whiteStructs.Testing.PerformanceTester`2.#ctor(whiteStructs.Testing.OneArgumentProcedure{`0})">
+            <summary>
+            Initializes the <see cref="!:PerformanceTester"/> with 
+            a one-argument procedure which mean running time is
+            to be estimated.
+            </summary>
+            <param name="procedure">A delegate pointing to a one-argument procedure.</param>
+        </member>
+        <member name="M:whiteStructs.Testing.PerformanceTester`2.TestProcedure(`0,System.Func{System.Int32,`0,`0},System.Func{System.Int32,`0,System.Boolean},System.Boolean,System.Boolean)">
+            <summary>
+            Performs a performance test of specified procedure by substituting different 
+            values of its argument and returning a mean value of function performance time.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="procedure"></param>
+            <param name="initialArgument"></param>
+            <param name="changeFunction"></param>
+            <param name="stopCriteria"></param>
+            <param name="precalculateArguments"></param>
+            <param name="idleRun"></param>
+            <returns></returns>
+        </member>
+        <member name="M:whiteStructs.Testing.PerformanceTester`2.TestProcedure(System.Collections.Generic.IEnumerable{`0},System.Boolean)">
+            <summary>
+            Для проведения тестов с множеством предопределенных аргументов.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="procedure"></param>
+            <param name="arguments"></param>
+            <param name="idleRun"></param>
+            <returns></returns>
+        </member>
+        <member name="M:whiteStructs.Testing.PerformanceTester`2.TestProcedure(`0,System.Func{System.Int32,System.Boolean},System.Boolean)">
+            <summary>
+            Для проведения нескольких тестов с одним аргументом.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="procedure"></param>
+            <param name="argument"></param>
+            <param name="stopCriteria"></param>
+            <param name="idleRun"></param>
+            <returns></returns>
+        </member>
+        <member name="E:whiteStructs.Testing.PerformanceTester`2.TestPerformed">
+            <summary>
+            This event fires once the <see cref="!:PerformanceTester"/>
+            during performs a single test during two-level testing.
+            </summary>
+        </member>
+        <member name="P:whiteStructs.Testing.PerformanceTester`2.TestedProcedure">
+            <summary>
+            Gets the procedure which mean running time is tested
+            by the current <see cref="!:PerformanceTester"/>.
+            </summary>
+        </member>
+        <member name="T:whiteStructs.Testing.OneArgumentFunction`2">
+            <summary>
+            Represents a one-argument function.
+            </summary>
+            <typeparam name="T">The type of the function's argument.</typeparam>
+            <typeparam name="R">The type of the function's return value.</typeparam>
+            <param name="arg">The argument received by the procedure.</param>
+            <returns>A value as specified by function's logic.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:whiteStructs.Testing.TestConductedEventArgs`2" -->
+        <member name="P:whiteStructs.Testing.TestConductedEventArgs`2.TestNumber">
+            <summary>
+            Gets the zero-based number of the test in the series.
+            </summary>
+        </member>
+        <member name="P:whiteStructs.Testing.TestConductedEventArgs`2.Argument">
+            <summary>
+            Gets the value of the argument which was used
+            to invoke the tested function.
+            </summary>
+        </member>
+        <member name="P:whiteStructs.Testing.TestConductedEventArgs`2.Result">
+            <summary>
+            Gets the result produced by the tested function.
+            </summary>
+        </member>
+        <member name="P:whiteStructs.Testing.TestConductedEventArgs`2.Stop">
+            <summary>
+            Gets or sets a value that indicates whether the
+            <c>ResultTester&lt;<typeparamref name="T"/>,<typeparamref name="R"/>&gt;</c>
+            should stop further testing.
+            </summary>
+        </member>
+        <member name="T:whiteStructs.Testing.TestConductedEventHandler`2">
+            <summary>
+            Represents a method which handles the event of successfully conducting
+            a test on a <c>OneArgumentFunction&lt;<typeparamref name="T"/>, <typeparamref name="R"/>&gt;</c>
+            </summary>
+            <typeparam name="T">The type of tested function's argument.</typeparam>
+            <typeparam name="R">The type of tested function's return value.</typeparam>
+            <param name="source">
+            A <c>ResultTester&lt;<typeparamref name="T"/>,<typeparamref name="R"/>&gt;</c>
+            object that raised the event.
+            </param>
+            <param name="e">
+            The event data, including the zero-based number of the test, the argument and 
+            the return value of the function.
+            </param>
+        </member>
+        <member name="T:whiteStructs.Testing.ResultTester">
+            <summary>
+            This class provides means for testing return
+            values of one-argument functions.
+            </summary>
+        </member>
+    </members>
+</doc>

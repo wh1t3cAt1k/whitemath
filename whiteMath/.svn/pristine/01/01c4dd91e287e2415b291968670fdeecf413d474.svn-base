@@ -1,0 +1,479 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Diagnostics.Contracts;
+
+namespace whiteMath
+{
+    public partial class WhiteMath<T, C> where C : ICalc<T>, new()
+    {
+        /// <summary>
+        /// Returns the value of the Jacobi symbol for
+        /// the two numbers, that is, the multiplication product
+        /// of Legendre symbols with numerators all equal to the Jacobi symbol's
+        /// numerator and denominators taken from the factorization
+        /// of Jacobi symbol's denominator.
+        /// </summary>
+        /// <param name="num">The numerator of the Jacobi symbol.</param>
+        /// <param name="denom">The denominator of the Jacobi symbol. Should be odd and positive.</param>
+        /// <returns>The value of the Jacobi symbol for <paramref name="num"/> and <paramref name="denom"/>.</returns>
+        public static int JacobiSymbol(T num, T denom)
+        {
+            Contract.Requires<NonIntegerTypeException>(Numeric<T, C>.Calculator.isIntegerCalculator, "The method works only for integer numeric types.");
+            Contract.Requires<ArgumentException>(denom > Numeric<T,C>.Zero && !Numeric<T,C>.Calculator.isEven(denom), "The denominator of the Jacobi symbol should be odd and positive.");
+
+            bool minus = false;     // флаг минуса
+
+            Numeric<T, C> x = num;
+            Numeric<T, C> y = denom;
+
+            if(y == Numeric<T, C>._1)
+                return 1;
+
+            if (WhiteMath<T, C>.GreatestCommonDivisor(x, y) != Numeric<T, C>._1)
+                return 0;
+
+            if (x < Numeric<T,C>.Zero)
+            {
+                // Надо домножить на (-1)^((y-1)/2)
+                // Эта величина равна -1 тогда и только тогда, когда floor(y/2) - четное число.
+
+                if ((y / Numeric<T, C>._2).Even)
+                    minus ^= true;
+
+                x = -x;
+            }
+
+            // На этом шаге ни в числителе,
+            // ни в знаменателе не осталось отрицательных чисел.
+
+            while (true)
+            {
+                // (x; y) = (x mod y; y) ------------------
+
+                if (x > y)
+                    x = x % y;
+
+                // ---------- избавляемся от четности -----
+
+                int t = 0;
+
+                while(x.Even)
+                {
+                    // Надо домножить на (-1)^((y^2 - 1)/8)
+                    // Эта величина равна -1 тогда и только тогда, когда y имеет остатки 3 или 5 при делении на 8
+
+                    ++t;
+                    x /= Numeric<T, C>._2;
+                }
+
+                if (t % 2 != 0)
+                {
+                    Numeric<T, C> rem = y % Numeric<T,C>._8;
+
+                    if (rem == Numeric<T, C>._3 || rem == Numeric<T, C>._5)
+                        minus ^= true;
+                }
+
+                // ----------------------------------------
+                // --- Если x - единица, то надо вернуться.
+                // ----------------------------------------
+
+                if (x == Numeric<T, C>._1)
+                    return (minus ? -1 : 1);
+
+                // ----------------------------------------------------
+                // -- x и y на этом этапе гарантированно взаимно просты
+                // -- и нечетны, поэтому можно использовать свойство (8) из твоей тетрадочки
+                // ----------------------------------------------------
+
+                if (x < y)
+                {
+                    if (x % Numeric<T, C>._4 == Numeric<T,C>._3 &&
+                        y % Numeric<T, C>._4 == Numeric<T,C>._3)
+                        minus ^= true;
+
+                    Numeric<T, C> tmp = x;
+                    x = y;
+                    y = tmp;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Performs an Extended Euclidean algorithms on two positive numbers <c>one, two</c>,
+        /// calculates their GCD and finds such integer <c>x, y</c> which satisfy Bezout's identity <c>one*x + two*y = 1</c>.
+        /// </summary>
+        /// <param name="one">The first number.</param>
+        /// <param name="two">The second number.</param>
+        /// <param name="x">The first coefficient in Bezout's identity <c>one*x + two*y = 1</c>.</param>
+        /// <param name="y">The second coefficient in Bezout's identity <c>one*x + two*y = 1</c>.</param>
+        /// <returns>The greatest common divisor of <paramref name="one"/> and <paramref name="two"/>.</returns>
+        public static T ExtendedEuclideanAlgorithm(T one, T two, out T x, out T y)
+        {
+            Contract.Requires<NonIntegerTypeException>(Numeric<T,C>.Calculator.isIntegerCalculator, "The method works only for integer numeric types.");
+            Contract.Requires<ArgumentException>(one != Numeric<T,C>.Zero && two != Numeric<T,C>.Zero, "None of the numbers should be zero.");
+
+            Contract.Ensures(Contract.Result<T>() > Numeric<T,C>.Zero);
+            Contract.Ensures((Numeric<T, C>)one % Contract.Result<T>() == Numeric<T, C>.Zero);
+            Contract.Ensures((Numeric<T, C>)two % Contract.Result<T>() == Numeric<T, C>.Zero);
+            
+            // Uncomment only on tests
+            // because int often overflows here.
+            // Contract.Ensures((Numeric<T, C>)one * Contract.ValueAtReturn<T>(out x) + (Numeric<T, C>)two * Contract.ValueAtReturn<T>(out y) == Contract.Result<T>());
+
+            if (calc.mor(two, one))
+                return ExtendedEuclideanAlgorithm(two, one, out y, out x);
+
+            bool oneLessThanZero = calc.mor(calc.zero, one);
+            bool twoLessThanZero = calc.mor(calc.zero, two);
+
+            if (oneLessThanZero || twoLessThanZero)
+            {
+                if (oneLessThanZero && twoLessThanZero)
+                {
+                    T res = ExtendedEuclideanAlgorithm(calc.negate(one), calc.negate(two), out x, out y);
+                    
+                    x = calc.negate(x);
+                    y = calc.negate(y);
+
+                    return res;
+                }
+                else if (oneLessThanZero)
+                {
+                    T res = ExtendedEuclideanAlgorithm(calc.negate(one), two, out x, out y);
+                    x = calc.negate(x);
+
+                    return res;
+                }
+                else
+                {
+                    T res = ExtendedEuclideanAlgorithm(one, calc.negate(two), out x, out y);
+                    y = calc.negate(y);
+
+                    return res;
+                }
+            }
+
+            Numeric<T, C> a = one;
+            Numeric<T, C> b = two;
+
+            Numeric<T, C>
+                //
+                tmp,
+                curX = Numeric<T, C>.Zero,
+                curY = Numeric<T, C>._1,
+                lastX = Numeric<T, C>._1,
+                lastY = Numeric<T, C>.Zero;
+
+            while (b != Numeric<T, C>.Zero)
+            {
+                Numeric<T, C> quotient = a / b;
+
+                tmp = a;
+                
+                a = b;
+                b = tmp % b;
+
+                tmp = curX;
+
+                curX = lastX - quotient * curX;
+                lastX = tmp;
+
+                tmp = curY;
+
+                curY = lastY - quotient * curY;
+                lastY = tmp;
+            }
+
+            x = lastX;
+            y = lastY;
+
+            return a;
+        }
+
+        /// <summary>
+        /// Using an Extended Euclidean Algorithm, finds a multiplicative
+        /// inverse of a positive number on a coprime module.
+        /// </summary>
+        /// <param name="number">A positive number coprime to and less than '<paramref name="module"/>'.</param>
+        /// <param name="module">A positive number coprime to and bigger than '<paramref name="number"/>'.</param>
+        /// <remarks>
+        /// If <paramref name="number"/> and <paramref name="module"/> are not coprime, the result
+        /// of the function is incorrect.
+        /// </remarks>
+        /// <returns>A number which, multiplied by <paramref name="number"/>, results in <see cref="Numeric&lt;T,C&gt;"/>.CONST_1</returns>
+        public static T MultiplicativeInverse(T number, T module)
+        {
+            Contract.Requires<ArgumentOutOfRangeException>((Numeric<T, C>)module > number, "The module should be bigger than the number.");
+            Contract.Requires<ArgumentOutOfRangeException>(number > Numeric<T,C>.Zero, "The number should be positive.");
+            Contract.Requires(GreatestCommonDivisor(number, module) == Numeric<T,C>._1);
+
+            Contract.Ensures((Numeric<T,C>)number * Contract.Result<T>() % module == Numeric<T,C>._1);
+
+            T x, y;
+
+            ExtendedEuclideanAlgorithm(number, module, out x, out y);
+
+            // Результат может быть отрицательным,
+            // поэтому надо все время прибавлять модуль.
+
+            while (calc.mor(calc.zero, x))
+                x = calc.sum(x, module);
+
+            return x;
+        }
+
+        /// <summary>
+        /// Finds the greatest common divisor of two integer-like numbers
+        /// using the simple Euclid algorithm.
+        /// 
+        /// The calculator for the numbers is recommended to provide reasonable implementation
+        /// of the remainder operation (%) - otherwise, the function
+        /// Modulus from whiteMath class will be used.
+        /// 
+        /// Will work with floating-point type numbers only if they are integers;
+        /// In case of division errors the result will be rounded and thus not guaranteed.
+        /// </summary>
+        /// <param name="one"></param>
+        /// <param name="two"></param>
+        /// <returns></returns>
+        public static T GreatestCommonDivisor(T one, T two)
+        {
+            Contract.Requires<ArgumentException>(one != Numeric<T,C>.Zero && two != Numeric<T,C>.Zero, "None of the numbers may be zero.");
+
+            Contract.Ensures(Contract.Result<T>() > Numeric<T,C>.Zero);
+            Contract.Ensures((Numeric<T,C>)one % Contract.Result<T>() == Numeric<T,C>.Zero);
+            Contract.Ensures((Numeric<T,C>)two % Contract.Result<T>() == Numeric<T,C>.Zero);
+
+            // T может быть ссылочным типом, поэтому необходимо
+            // предостеречь объекты от изменения
+            // а также отсечь знаки по необходимости
+            
+            T oneTmp;
+            T twoTmp;
+
+            if (calc.mor(calc.zero, one))
+                oneTmp = calc.negate(one);
+            else
+                oneTmp = calc.getCopy(one);
+
+            if (calc.mor(calc.zero, two))
+                twoTmp = calc.negate(two);
+            else
+                twoTmp = calc.getCopy(two);
+
+            try
+            {
+                while (!calc.eqv(oneTmp, calc.zero) && !calc.eqv(twoTmp, calc.zero))
+                {
+                    if (calc.mor(oneTmp, twoTmp))
+                        oneTmp = calc.rem(oneTmp, twoTmp);
+                    else
+                        twoTmp = calc.rem(twoTmp, oneTmp);
+                }
+            }
+            catch   // calculator throws exception - working with fp's.
+            {
+                oneTmp = calc.intPart(oneTmp);
+                twoTmp = calc.intPart(twoTmp);
+
+                while (!calc.eqv(oneTmp, calc.zero) && !calc.eqv(twoTmp, calc.zero))
+                {
+                    if (calc.mor(oneTmp, twoTmp))
+                        oneTmp = WhiteMath<T,C>.Round(WhiteMath<T,C>.Modulus(oneTmp, twoTmp));
+                    else
+                        twoTmp = WhiteMath<T,C>.Round(WhiteMath<T,C>.Modulus(twoTmp, oneTmp));
+                }
+            }
+
+            return calc.sum(oneTmp, twoTmp);
+        }
+
+        /// <summary>
+        /// Finds the lowest common multiple of two integer-like numbers from the equation:
+        /// A * B = gcd(A,B) * lcm(A,B)
+        /// </summary>
+        /// <param name="one">The first number.</param>
+        /// <param name="two">The second number.</param>
+        /// <returns></returns>
+        public static T LowestCommonMultiple(T one, T two)
+        {
+            return LowestCommonMultiple(one, two, GreatestCommonDivisor(one, two));
+        }
+
+        /// <summary>
+        /// Finds the lowest common multiple of two integer-like numbers from the equation:
+        /// A * B = gcd(A,B) * lcm(A,B)
+        /// </summary>
+        /// <param name="one">The first number.</param>
+        /// <param name="two">The second number.</param>
+        /// <param name="greatestCommonDivisor">The greatest common divisor for the numbers. Optional, if nothing is specified, it will be calculated.</param>
+        /// <returns></returns>
+        public static T LowestCommonMultiple(T one, T two, T greatestCommonDivisor)
+        {
+            return calc.div(calc.mul(one, two), greatestCommonDivisor);
+        }
+
+        /// <summary>
+        /// Returns the exact factorial of an integer number.
+        /// Uses simple iteration.
+        /// It is recommended that you use long integers (ex. LongInt) to avoid overflow exceptions.
+        /// </summary>
+        /// <param name="integer"></param>
+        /// <returns></returns>
+        public static T Factorial(T integer)
+        {
+            if (calc.mor(calc.zero, integer))
+                throw new ArgumentException("The argument for the factorial function should be a positive integer.");
+
+            T tmp = calc.fromInt(1);
+
+            for (T counter = calc.fromInt(2); !calc.mor(counter, integer); counter = calc.increment(counter))
+                tmp = calc.mul(tmp, counter);
+
+            return tmp;
+        }
+
+        /// <summary>
+        /// Checks whether the first number is some natural integer power of
+        /// the argument passed. The exact value of the power is either null (if false)
+        /// or int.
+        /// </summary>
+        /// <param name="one">The argument to test if it is the natural power of the second.</param>
+        /// <param name="two">The second argument.</param>
+        /// <param name="powerValue">The value of the integer power. Contains either null or the value of the integer power.</param>
+        /// <returns>True if the first argument is the natural power of the second, false otherwise.</returns>
+        public static bool IsNaturalIntegerPowerOf(Numeric<T,C> one, Numeric<T,C> two, out int? powerValue)
+        {
+            // first, the power is zero.
+            powerValue = 0;
+
+            // check if the first argument is zero, then the assertion is true.
+            // the power value is ZERO!
+            if (one == Numeric<T, C>._1)
+                return true;
+
+            // get the number copy
+            Numeric<T, C> twoCopy = two.Copy;
+
+            // second condition for the overflow proof.
+            while (one >= twoCopy && twoCopy>=Numeric<T,C>.Zero)
+            {
+                // first increase the power value.
+                powerValue++;
+
+                if (one == twoCopy)
+                    return true;
+
+                // now multiply.
+                twoCopy *= two;
+            }
+
+            // now the twoCopy finally is more than one.
+            // that means... BIG BADA BOOM!!!!
+
+            powerValue = null;
+            return false;
+        }
+
+        // ---------------------------------------------------------------
+        // --------------- integer powers --------------------------------
+
+        /// <summary>
+        /// Performs a fast modular integral modular exponentiation.
+        /// </summary>
+        /// <param name="number">An integer number to be exponentiated.</param>
+        /// <param name="power">A non-negative integer exponent.</param>
+        /// <param name="modulus">An integer modulus of the operation.</param>
+        /// <returns>The result of raising <paramref name="number"/> to power <paramref name="power"/> modulo <paramref name="modulus"/>.</returns>
+        public static T PowerIntegerModular(T number, ulong power, T modulus)
+        {
+            Contract.Requires<NonIntegerTypeException>(Numeric<T,C>.Calculator.isIntegerCalculator, "This method works only for integer numeric types.");
+            
+            Numeric<T, C> result = Numeric<T, C>._1;                                  // результат возведения в степень
+            Numeric<T, C> numberNumeric = number;
+
+            while (power > 0)
+            {
+                if ((power & 1) == 1)
+                    result = (result * numberNumeric) % modulus;
+
+                power >>= 1;
+                numberNumeric = (numberNumeric * numberNumeric) % modulus;
+            }
+
+            return result;
+        }
+
+
+        // ---------------------------------------------------------------
+        // --------------- integer square roots --------------------------
+
+        /// <summary>
+        /// Returns the integer part of the square root
+        /// of the number.
+        /// </summary>
+        /// <remarks>This method works only for integer numeric types.</remarks>
+        /// <param name="number">A non-negative number for which the integer part of its square root is to be found.</param>
+        /// <returns>The integer part of the square root of the <paramref name="number"/>.</returns>
+        [Obsolete("This method works very slowly. Consider using SquareRootInteger instead.")]
+        public static T SquareRootIntegerSimple(T number)
+        {
+            Contract.Requires<NonIntegerTypeException>(Numeric<T,C>.Calculator.isIntegerCalculator, "This method works only for integer numeric types.");
+            Contract.Requires<ArgumentException>((Numeric<T,C>)number >= Numeric<T,C>.Zero, "The number passed to this method should not be negative.");
+
+            Numeric<T, C> numberNumeric = number;
+            Numeric<T, C> reduction     = Numeric<T, C>._1;
+            Numeric<T, C> result        = Numeric<T, C>._0;
+
+            while (numberNumeric > Numeric<T, C>._0)
+            {
+                ++result;
+
+                numberNumeric -= reduction;
+                reduction += Numeric<T,C>._2;
+            }
+
+            if (numberNumeric < Numeric<T, C>._0)
+                --result;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the integer part of the square root
+        /// of the number.
+        /// </summary>
+        /// <remarks>This method works only for integer numeric types.</remarks>
+        /// <param name="number">A strictly positive number for which the integer part of its square root is to be found.</param>
+        /// <param name="firstEstimate">
+        /// A first estimate of the square root. 
+        /// WARNING! This number should be more than or equal to the real 
+        /// square root of the <paramref name="number"/>, otherwise the behaviour 
+        /// of this method is undefined.
+        /// </param>
+        /// <returns>The integer part of the square root of the <paramref name="number"/>.</returns>
+        public static T SquareRootInteger(T number, T firstEstimate)
+        {
+            Contract.Requires<NonIntegerTypeException>(Numeric<T, C>.Calculator.isIntegerCalculator, "This method works only for integer numeric types.");
+            Contract.Requires<ArgumentException>((Numeric<T, C>)number >= Numeric<T, C>.Zero, "The number passed to this method should not be negative.");
+
+            Numeric<T, C> 
+                xPrev = Numeric<T,C>._0, 
+                 xCur = firstEstimate;
+
+            while (true)
+            {
+                xPrev = xCur;
+                xCur = (xPrev + number / xPrev) / Numeric<T, C>._2;
+
+                if (xCur == xPrev)
+                    return xCur;
+                else if (xCur > xPrev)
+                    return xPrev;
+            }
+        }
+    }
+}

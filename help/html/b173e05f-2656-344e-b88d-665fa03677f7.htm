@@ -1,0 +1,136 @@
+﻿<html xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp">
+  <head>
+    <link rel="SHORTCUT ICON" href="./../icons/favicon.ico" />
+    <style type="text/css">.OH_CodeSnippetContainerTabLeftActive, .OH_CodeSnippetContainerTabLeft,.OH_CodeSnippetContainerTabLeftDisabled { backgroundImageName: tabLeftBG.gif; }.OH_CodeSnippetContainerTabRightActive, .OH_CodeSnippetContainerTabRight,.OH_CodeSnippetContainerTabRightDisabled { backgroundImageName: tabRightBG.gif; }.OH_footer { backgroundImageName: footer_slice.gif; background-position: top; background-repeat: repeat-x; }</style>
+    <link rel="stylesheet" type="text/css" href="./../styles/branding.css" />
+    <link rel="stylesheet" type="text/css" href="./../styles/branding-en-US.css" />
+    <style type="text/css">
+			body
+			{
+			border-left:5px solid #e6e6e6;
+			overflow-x:scroll;
+			overflow-y:scroll;
+			}
+		</style>
+    <script src="./../scripts/branding.js" type="text/javascript">
+      <!---->
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>GraphingArgs Constructor </title>
+    <meta name="Language" content="en-us" />
+    <meta name="System.Keywords" content="GraphingArgs structure, constructor" />
+    <meta name="System.Keywords" content="GraphingArgs.GraphingArgs constructor" />
+    <meta name="Microsoft.Help.F1" content="whiteMath.Graphers.GraphingArgs.#ctor" />
+    <meta name="Microsoft.Help.F1" content="whiteMath.Graphers.GraphingArgs.GraphingArgs" />
+    <meta name="Microsoft.Help.Id" content="M:whiteMath.Graphers.GraphingArgs.#ctor(System.Int32,System.Drawing.Brush,System.Drawing.Pen,System.Drawing.Font,System.Drawing.Pen,System.Drawing.Pen,whiteMath.Graphers.LineType)" />
+    <meta name="Description" content="Initializes the GraphingArgs structure with drawing parameters." />
+    <meta name="Microsoft.Help.ContentType" content="Reference" />
+    <meta name="BrandingAware" content="'true'" />
+    <meta name="container" content="whiteMath.Graphers" />
+    <meta name="file" content="b173e05f-2656-344e-b88d-665fa03677f7" />
+    <meta name="guid" content="b173e05f-2656-344e-b88d-665fa03677f7" />
+    
+    <link type="text/css" rel="stylesheet" href="ms-help://Hx/HxRuntime/HxLink.css" />
+    <meta name="SelfBranded" content="true" />
+  </head>
+  <body onload="onLoad()" class="primary-mtps-offline-document">
+    <div class="OH_outerDiv">
+      <div class="OH_outerContent">
+        <table class="TitleTable">
+          <tr>
+            <td class="OH_tdTitleColumn">GraphingArgs Constructor </td>
+            <td class="OH_tdRunningTitleColumn">whiteMath + whiteStructs - a programmer-friendly mathematical library</td>
+          </tr>
+        </table>
+        <div id="mainSection">
+          <div id="mainBody">
+            <span class="introStyle"></span>
+            <div class="summary">
+            Initializes the <span class="code">GraphingArgs</span> structure
+            with drawing parameters.
+            </div>
+            <p></p>
+            <b>Namespace:</b> <a href="91937677-dca2-1ecd-689b-469bc66c86b8.htm" target="">whiteMath.Graphers</a><br /><b>Assembly:</b> <span sdata="assembly">whiteMath</span> (in whiteMath.dll) Version: 0.0.5.0 (1.0.0.0)<div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Syntax</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div id="snippetGroup_Syntax" class="code"><div id="ID0ECBEAAAAA" class="OH_CodeSnippetContainer"><div class="OH_CodeSnippetContainerTabs" id="ID0ECBEAAAAA_tabs"><div class="OH_CodeSnippetContainerTabLeftActive" id="ID0ECBEAAAAA_tabimgleft"></div><div id="ID0ECBEAAAAA_tab1" class="OH_CodeSnippetContainerTabActive" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECBEAAAAA','C#','1','4');return false;">C#</a></div><div id="ID0ECBEAAAAA_tab2" class="OH_CodeSnippetContainerTab" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECBEAAAAA','Visual Basic','2','4');return false;">VB</a></div><div id="ID0ECBEAAAAA_tab3" class="OH_CodeSnippetContainerTab" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECBEAAAAA','Visual C++','3','4');return false;">C++</a></div><div id="ID0ECBEAAAAA_tab4" class="OH_CodeSnippetContainerTabDisabledNotFirst" EnableCopyCode="true" disabled="true"><a>F#</a></div><div class="OH_CodeSnippetContainerTabRight" id="ID0ECBEAAAAA_tabimgright"></div></div><div id="ID0ECBEAAAAA_codecollection" class="OH_CodeSnippetContainerCodeCollection"><div class="OH_CodeSnippetToolBar"><div class="OH_CodeSnippetToolBarText"><a id="ID0ECBEAAAAA_ViewColorized" href="#" onclick="javascript:ExchangeTitleContent('ID0ECBEAAAAA','4')" title="View Colorized" style="display: none">View Colorized</a><a id="ID0ECBEAAAAA_copycode" href="#" onclick="javascript:CopyToClipboard('ID0ECBEAAAAA','4')" title="Copy to Clipboard">Copy to Clipboard</a><a id="ID0ECBEAAAAA_PrintText" class="OH_PrintText" href="#" onclick="javascript:Print('ID0ECBEAAAAA','4')" title="Print">Print</a></div></div><div id="ID0ECBEAAAAA_code_Div1" class="OH_CodeSnippetContainerCode" style="display: block"><pre><span class="keyword">public</span> <span class="identifier">GraphingArgs</span>(
+	<span class="identifier">int</span> <span class="parameter">indentFromBounds</span>,
+	<span class="identifier">Brush</span> <span class="parameter">backgroundBrush</span>,
+	<span class="identifier">Pen</span> <span class="parameter">coordPen</span>,
+	<span class="identifier">Font</span> <span class="parameter">coordFont</span>,
+	<span class="identifier">Pen</span> <span class="parameter">gridPen</span>,
+	<span class="identifier">Pen</span> <span class="parameter">curvePen</span>,
+	<span class="identifier">LineType</span> <span class="parameter">curveType</span> = <span class="identifier">LineType</span>.Line
+)</pre></div><div id="ID0ECBEAAAAA_code_Plain_Div1" class="OH_CodeSnippetContainerCode" style="display: none"><pre>public GraphingArgs(
+	int indentFromBounds,
+	Brush backgroundBrush,
+	Pen coordPen,
+	Font coordFont,
+	Pen gridPen,
+	Pen curvePen,
+	LineType curveType = LineType.Line
+)</pre></div><div id="ID0ECBEAAAAA_code_Div2" class="OH_CodeSnippetContainerCode" style="display: none"><pre><span class="keyword">Public</span> <span class="keyword">Sub</span> <span class="identifier">New</span> ( 
+	<span class="parameter">indentFromBounds</span> <span class="keyword">As</span> <span class="identifier">Integer</span>,
+	<span class="parameter">backgroundBrush</span> <span class="keyword">As</span> <span class="identifier">Brush</span>,
+	<span class="parameter">coordPen</span> <span class="keyword">As</span> <span class="identifier">Pen</span>,
+	<span class="parameter">coordFont</span> <span class="keyword">As</span> <span class="identifier">Font</span>,
+	<span class="parameter">gridPen</span> <span class="keyword">As</span> <span class="identifier">Pen</span>,
+	<span class="parameter">curvePen</span> <span class="keyword">As</span> <span class="identifier">Pen</span>,
+	Optional <span class="parameter">curveType</span> <span class="keyword">As</span> <span class="identifier">LineType</span> = <span class="identifier">LineType</span>.Line
+)</pre></div><div id="ID0ECBEAAAAA_code_Plain_Div2" class="OH_CodeSnippetContainerCode" style="display: none"><pre>Public Sub New ( 
+	indentFromBounds As Integer,
+	backgroundBrush As Brush,
+	coordPen As Pen,
+	coordFont As Font,
+	gridPen As Pen,
+	curvePen As Pen,
+	Optional curveType As LineType = LineType.Line
+)</pre></div><div id="ID0ECBEAAAAA_code_Div3" class="OH_CodeSnippetContainerCode" style="display: none"><pre><span class="keyword">public</span>:
+<span class="identifier">GraphingArgs</span>(
+	<span class="identifier">int</span> <span class="parameter">indentFromBounds</span>, 
+	<span class="identifier">Brush</span>^ <span class="parameter">backgroundBrush</span>, 
+	<span class="identifier">Pen</span>^ <span class="parameter">coordPen</span>, 
+	<span class="identifier">Font</span>^ <span class="parameter">coordFont</span>, 
+	<span class="identifier">Pen</span>^ <span class="parameter">gridPen</span>, 
+	<span class="identifier">Pen</span>^ <span class="parameter">curvePen</span>, 
+	<span class="identifier">LineType</span> <span class="parameter">curveType</span> = <span class="identifier">LineType</span>::Line
+)</pre></div><div id="ID0ECBEAAAAA_code_Plain_Div3" class="OH_CodeSnippetContainerCode" style="display: none"><pre>public:
+GraphingArgs(
+	int indentFromBounds, 
+	Brush^ backgroundBrush, 
+	Pen^ coordPen, 
+	Font^ coordFont, 
+	Pen^ gridPen, 
+	Pen^ curvePen, 
+	LineType curveType = LineType::Line
+)</pre></div><div id="ID0ECBEAAAAA_code_Div4" class="OH_CodeSnippetContainerCode" style="display: none"><pre /></div><div id="ID0ECBEAAAAA_code_Plain_Div4" class="OH_CodeSnippetContainerCode" style="display: none"><pre /></div></div></div><script>addSpecificTextLanguageTagSet('ID0ECBEAAAAA');</script></div><div id="parameters"><h4 class="subHeading">Parameters</h4><dl paramName="indentFromBounds"><dt><span class="parameter">indentFromBounds</span></dt><dd>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/td2s409d" target="_blank">System<span id="ID0EBCAGAEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBCAGAEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>Int32</a><br /><span>
+            The indent (in pixels) from the boundaries of drawing area.
+            </span></dd></dl><dl paramName="backgroundBrush"><dt><span class="parameter">backgroundBrush</span></dt><dd>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/d78x2d7s" target="_blank">System.Drawing<span id="ID0EBCAFAEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBCAFAEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>Brush</a><br /><span><p style="color: #dc143c; font-size: 8.5pt; font-weight: bold;">[Missing &lt;param name="backgroundBrush"/&gt; documentation for "M:whiteMath.Graphers.GraphingArgs.#ctor(System.Int32,System.Drawing.Brush,System.Drawing.Pen,System.Drawing.Font,System.Drawing.Pen,System.Drawing.Pen,whiteMath.Graphers.LineType)"]</p></span></dd></dl><dl paramName="coordPen"><dt><span class="parameter">coordPen</span></dt><dd>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/9f23c0f4" target="_blank">System.Drawing<span id="ID0EBCAEAEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBCAEAEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>Pen</a><br /><span><p style="color: #dc143c; font-size: 8.5pt; font-weight: bold;">[Missing &lt;param name="coordPen"/&gt; documentation for "M:whiteMath.Graphers.GraphingArgs.#ctor(System.Int32,System.Drawing.Brush,System.Drawing.Pen,System.Drawing.Font,System.Drawing.Pen,System.Drawing.Pen,whiteMath.Graphers.LineType)"]</p></span></dd></dl><dl paramName="coordFont"><dt><span class="parameter">coordFont</span></dt><dd>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/hcb9kaf8" target="_blank">System.Drawing<span id="ID0EBCADAEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBCADAEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>Font</a><br /><span><p style="color: #dc143c; font-size: 8.5pt; font-weight: bold;">[Missing &lt;param name="coordFont"/&gt; documentation for "M:whiteMath.Graphers.GraphingArgs.#ctor(System.Int32,System.Drawing.Brush,System.Drawing.Pen,System.Drawing.Font,System.Drawing.Pen,System.Drawing.Pen,whiteMath.Graphers.LineType)"]</p></span></dd></dl><dl paramName="gridPen"><dt><span class="parameter">gridPen</span></dt><dd>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/9f23c0f4" target="_blank">System.Drawing<span id="ID0EBCACAEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBCACAEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>Pen</a><br /><span><p style="color: #dc143c; font-size: 8.5pt; font-weight: bold;">[Missing &lt;param name="gridPen"/&gt; documentation for "M:whiteMath.Graphers.GraphingArgs.#ctor(System.Int32,System.Drawing.Brush,System.Drawing.Pen,System.Drawing.Font,System.Drawing.Pen,System.Drawing.Pen,whiteMath.Graphers.LineType)"]</p></span></dd></dl><dl paramName="curvePen"><dt><span class="parameter">curvePen</span></dt><dd>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/9f23c0f4" target="_blank">System.Drawing<span id="ID0EBCABAEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBCABAEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>Pen</a><br /><span>
+            The pen which will be used to draw the graph curve. 
+            If <span class="code">null</span>, the graph curve won't be drawn.
+            </span></dd></dl><dl paramName="curveType"><dt><span class="parameter">curveType</span> (Optional)</dt><dd>Type: <a href="aab4f779-4868-6402-a758-ecd644d620b4.htm" target="">whiteMath.Graphers<span id="ID0EBCAAAEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBCAAAEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>LineType</a><br /><span><p style="color: #dc143c; font-size: 8.5pt; font-weight: bold;">[Missing &lt;param name="curveType"/&gt; documentation for "M:whiteMath.Graphers.GraphingArgs.#ctor(System.Int32,System.Drawing.Brush,System.Drawing.Pen,System.Drawing.Font,System.Drawing.Pen,System.Drawing.Pen,whiteMath.Graphers.LineType)"]</p></span></dd></dl></div><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Exceptions</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="tableSection"><table><tr><th class="ps_exceptionNameColumn">Exception</th><th class="ps_exceptionConditionColumn">Condition</th></tr><tr><td><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/8xt94y6e" target="_blank">System<span id="ID0EBABAAADAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBABAAADAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentOutOfRangeException</a></td><td>indentFromBounds &lt;0</td></tr></table></div><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Contracts</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="tableSection"><table><tr><th class="ps_contractsNameColumn">Requires</th></tr><tr><td><div class="code" style="margin-bottom: 0pt; white-space: pre-wrap;"><pre xml:space="preserve" style="margin-bottom: 0pt">indentFromBounds &gt;=0</pre></div><div style="font-size:95%; margin-left: 10pt;                         margin-bottom: 0pt"><table class="contractaux" width="100%" frame="void" rules="none" border="0"><colgroup><col width="10%"></col><col width="90%"></col></colgroup><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Description: </i></td><td style="border-bottom: 0px none;">The indent from image bounds must be a non-negative value.</td></tr><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Exception: </i></td><td style="border-bottom: 0px none;"><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/8xt94y6e" target="_blank">System<span id="ID0EBAAAAAAAABCAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBAAAAAAAABCAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentOutOfRangeException</a></td></tr></table></div></td></tr></table></div><div class="ps_contractsLink"><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn.microsoft.com/en-us/devlabs/dd491992.aspx" target="_blank">Learn more about contracts</a></div><a name="seeAlsoSection"><!----></a><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">See Also</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="seeAlsoStyle"><a href="644b9542-9947-2510-a02b-0afcf5366a73.htm" target="">GraphingArgs Structure</a></div><div class="seeAlsoStyle"><a href="ec6793ae-ec6a-2380-72a0-9615c3448bd5.htm" target="">GraphingArgs Members</a></div><div class="seeAlsoStyle"><a href="91937677-dca2-1ecd-689b-469bc66c86b8.htm" target="">whiteMath.Graphers Namespace</a></div></div>
+        </div>
+      </div>
+    </div>
+    <div id="OH_footer" class="OH_footer">
+      <p />
+      <div class="OH_feedbacklink">
+        <a href="mailto:?subject=whiteMath+%2b+whiteStructs+-+a+programmer-friendly+mathematical+library+GraphingArgs+Constructor++100+EN-US&amp;body=Your%20feedback%20is%20used%20to%20improve%20the%20documentation%20and%20the%20product.%20Your%20e-mail%20address%20will%20not%20be%20used%20for%20any%20other%20purpose%20and%20is%20disposed%20of%20after%20the%20issue%20you%20report%20is%20resolved.%20While%20working%20to%20resolve%20the%20issue%20that%20you%20report%2c%20you%20may%20be%20contacted%20via%20e-mail%20to%20get%20further%20details%20or%20clarification%20on%20the%20feedback%20you%20sent.%20After%20the%20issue%20you%20report%20has%20been%20addressed%2c%20you%20may%20receive%20an%20e-mail%20to%20let%20you%20know%20that%20your%20feedback%20has%20been%20addressed.">Send Feedback</a> on this topic.</div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,289 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Globalization;
+
+namespace whiteMath.Functions
+{
+    public partial class AnalyticFunction
+    {
+        /// <summary>
+        /// Analyzes the function string and recursively forms the action list.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="argument"></param>
+        /// <param name="curAc"></param>
+        /// <returns></returns>
+        internal static List<string> Analyze(string str, char argument, int curAc)
+        {
+            if (str == "")
+                throw new FunctionStringSyntaxException("Неизвестная ошибка.");
+
+            List<string> actionList = new List<string>();
+
+            // убиваем внешние скобки
+
+            str = str.withoutOuterParentheses();
+
+            // If the string is "-smth", we should make it a mathematically correct:
+            // 0 - smth
+
+            if (str[0] == '-') str = str.Insert(0, "0");
+
+            int lastActionindex=curAc;  // the index of previous subfunction's last action
+            string argFormat;           // string formatted
+            List<int> temp;             // indices of mathematical operators
+            List<string> tempList;      // helper
+
+            // -----------------Look for indices of first-level "+" and "-".
+            // -----------------if there is no "+" or "-", look for the first-level "*" and "/"
+
+            temp = str.findSign('+', '-');
+
+            if (temp.Count == 0)
+                temp = str.findSign('*', '/');
+
+            if (temp.Count > 0)
+            {
+                // Recursively form the action list for first analyzed sub-function
+
+                tempList = Analyze(str.Substring(0, temp[0]), argument, curAc);
+                actionList.AddRange(tempList);
+                curAc += tempList.Count;
+
+                // For all others except the last...
+                for (int j = 1; j < temp.Count; j++)
+                {
+                    tempList = Analyze(str.Substring(temp[j - 1] + 1, temp[j] - temp[j - 1] - 1), argument, curAc);
+                    actionList.AddRange(tempList);
+
+                    argFormat = String.Format("{0}:${1}$,$", str[temp[j - 1]], curAc-1);
+
+                    actionList.Add(argFormat);
+                    curAc += tempList.Count+1;
+                }
+
+                // For the last
+                actionList.AddRange(Analyze(str.Substring(temp[temp.Count - 1] + 1), argument, curAc));
+                
+                argFormat = String.Format("{0}:${1}$,$", str[temp[temp.Count - 1]], curAc-1);
+                actionList.Add(argFormat);
+
+                return actionList;
+            }
+
+            // ------------------------ If not, search for mathematical power operation
+
+            temp = str.findSign('^');
+
+            if (temp.Count > 1)
+                throw new FunctionStringSyntaxException("it is forbidden to write more than two sequential mathematical power operators without explicitly mentioning the powering order with parentheses.");
+            else if (temp.Count == 1)
+            {
+                tempList = Analyze(str.Substring(0, temp[0]), argument, curAc);
+                actionList.AddRange(tempList);
+                curAc += tempList.Count;
+
+                actionList.AddRange(Analyze(str.Substring(temp[0] + 1), argument, curAc));
+                argFormat = String.Format("^:${0}$,$", curAc-1);
+
+                actionList.Add(argFormat);
+                return actionList;
+            }
+
+            // ------------------------ If not successfull, finally, search for
+            // ------------------------ mathematical function signs.
+            if (str[0] == '@')
+            {
+                // Check if function called is logarithm.
+                if (str.Substring(1, 3) == "log")
+                {
+                    if (str.IndexOf(',') == -1) throw new FunctionStringSyntaxException("log(x,y) is called but the y base is not mentioned.");
+                    
+                    // 6 was...
+                    tempList = Analyze(str.Substring(6, str.IndexOf(',') - 6), argument, curAc);
+                    
+                    actionList.AddRange(tempList);
+                    curAc += tempList.Count;
+
+                    actionList.AddRange(Analyze(str.Substring(str.IndexOf(',') + 1, str.LastIndexOf(')') - str.IndexOf(',') - 1), argument, curAc));
+                }
+                // else only one action is done
+                else actionList.AddRange(Analyze(str.Substring(5), argument, curAc));
+
+                switch (str.Substring(1, 3))
+                {
+                    case "abs": actionList.Add("abs:$"); break;
+                    case "sin": actionList.Add("sin:$"); break;
+                    case "cos": actionList.Add("cos:$"); break;
+                    case "tan": actionList.Add("tg:$"); break;
+                    case "asi": actionList.Add("arcsin:$"); break;
+                    case "aco": actionList.Add("arccos:$"); break;
+                    case "ata": actionList.Add("arctg:$"); break;
+                    case "ctg": actionList.Add("ctg:$"); break;
+                    case "sih": actionList.Add("sinh:$"); break;
+                    case "coh": actionList.Add("cosh:$"); break;
+                    case "lna": actionList.Add("ln:$"); break;
+                    case "lg1": actionList.Add("log10:$"); break;
+                    case "log": actionList.Add("log:$"+(curAc-1)+"$,$"); break;
+                    case "exp": actionList.Add("exp:$"); break;
+                    case "sqr": actionList.Add("sqrt:$"); break;
+                    case "flr": actionList.Add("floor:$"); break;
+                    case "cei": actionList.Add("ceil:$"); break;
+
+                    default: throw new FunctionStringSyntaxException("unknown function called: " + str.Substring(1, 3));
+                }
+
+                return actionList;
+            }
+
+            // ------------------------ If this is an argument, return it.
+
+            if (str[0] == argument)
+            { 
+                actionList.Add("ret:!"); 
+                return actionList; 
+            }
+
+            // ------------------------ Finally, if this is number, just return it.
+
+            if (str.Contains(',')) throw new FunctionStringSyntaxException("floating point numbers should be written using the dot separator.");
+
+            double dtm;
+            try { dtm = double.Parse(str.Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)); }
+            catch { throw new FunctionStringSyntaxException("uknown error."); }
+
+            actionList.Add("ret:" + dtm.ToString().Replace(",", "."));
+            return actionList;
+        }
+
+#if (OLD_VERSION)
+        protected static AnalyticFunction Analyze(string str, char argument)
+        {
+            AnalyticFunction tempFun = new AnalyticFunction(new List<string>());
+
+            if (str == "")
+                throw new Exception("Синтаксическая ошибка.");
+
+            // First, we should get rid of the outer ( and )
+            while (str[0] == '(' && str[str.Length - 1] == ')') str = str.Substring(1, str.Length - 2);
+
+            // If the string is "-smth", we should make it a mathematically correct
+            // 0-smth
+            if (str[0] == '-') str = str.Insert(0, "0");
+
+            // -----------------Look for indices of first-level "+" and "-"
+            
+            List<int> temp = findZnak(str, '+', '-');
+
+            if (temp.Count > 0)
+            {
+                tempFun.composedFunc.Add(Analyze(str.Substring(0, temp[0]), argument));
+                tempFun.actions.Add("R:%0%"); // возвращаем значение нулевой функции
+
+                for (int j = 1; j < temp.Count; j++)
+                {
+                    tempFun.composedFunc.Add(Analyze(str.Substring(temp[j - 1] + 1, temp[j] - temp[j - 1] - 1), argument));
+                    if (str[temp[j - 1]] == '+') tempFun.actions.Add("+:$,%" + j + "%"); // к значению предыдущей функции прибавляем i-ую функцию
+                    else if (str[temp[j - 1]] == '-') tempFun.actions.Add("-:$,%" + j + "%");
+                }
+
+                tempFun.composedFunc.Add(Analyze(str.Substring(temp[temp.Count - 1] + 1), argument));
+
+                if (str[temp[temp.Count - 1]] == '+') tempFun.actions.Add("+:$,%" + (temp.Count) + "%");
+                else if (str[temp[temp.Count - 1]] == '-') tempFun.actions.Add("-:$,%" + (temp.Count) + "%");
+                return tempFun;
+            }
+
+            //------------------ If there is no + and -, search for * and /
+            temp = findZnak(str, '*', '/');
+
+            if (temp.Count > 0)
+            {
+                tempFun.composedFunc.Add(Analyze(str.Substring(0, temp[0]), argument));
+                tempFun.actions.Add("R:%0%"); // возвращаем значение нулевой функции
+
+                for (int j = 1; j < temp.Count; j++)
+                {
+                    tempFun.composedFunc.Add(Analyze(str.Substring(temp[j - 1] + 1, temp[j] - temp[j - 1] - 1), argument));
+                    if (str[temp[j - 1]] == '*') tempFun.actions.Add("*:$,%" + j + "%"); // к значению предыдущей функции прибавляем i-ую функцию
+                    else if (str[temp[j - 1]] == '/') tempFun.actions.Add("/:$,%" + j + "%");
+                }
+
+                tempFun.composedFunc.Add(Analyze(str.Substring(temp[temp.Count - 1] + 1), argument));
+
+                if (str[temp[temp.Count - 1]] == '*') tempFun.actions.Add("*:$,%" + (temp.Count) + "%");
+                else if (str[temp[temp.Count - 1]] == '/') tempFun.actions.Add("/:$,%" + (temp.Count) + "%");
+
+                return tempFun;
+            }
+
+            // ------------------------ If not, search for mathematical power operation
+            temp = findZnak(str, '^');
+
+            if (temp.Count > 0)
+            {
+                if (temp.Count != 1) throw new Exception("Синтаксическая ошибка: недопустимо писать несколько знаков возведения в степень подряд (без указания порядка возведения скобками)");
+
+                tempFun.composedFunc.Add(Analyze(str.Substring(0, temp[0]), argument));
+                tempFun.actions.Add("R:%0%");
+
+                tempFun.composedFunc.Add(Analyze(str.Substring(temp[0] + 1), argument));
+                tempFun.actions.Add("^:$,%1%");
+                return tempFun;
+            }
+
+            // ------------------------ If not successfull, finally, search for
+            // ------------------------ mathematical function signs.
+            if (str[0] == '@')
+            {
+                switch (str.Substring(1, 3))
+                {
+                    case "abs": tempFun.actions.Add("|:%0%"); break;
+                    case "sin": tempFun.actions.Add("Й:%0%"); break;
+                    case "cos": tempFun.actions.Add("Ц:%0%"); break;
+                    case "tan": tempFun.actions.Add("У:%0%"); break;
+                    case "asi": tempFun.actions.Add("К:%0%"); break;
+                    case "aco": tempFun.actions.Add("Е:%0%"); break;
+                    case "ata": tempFun.actions.Add("Н:%0%"); break;
+                    case "ctg": tempFun.actions.Add("Г:%0%"); break;
+                    case "sih": tempFun.actions.Add("Ф:%0%"); break;
+                    case "coh": tempFun.actions.Add("Ы:%0%"); break;
+                    case "lna": tempFun.actions.Add("В:%0%"); break;
+                    case "lg1": tempFun.actions.Add("А:%0%"); break;
+                    case "log": tempFun.actions.Add("Л:%0%,%1%"); break;
+                    case "exp": tempFun.actions.Add("Э:%0%"); break;
+                    case "sqr": tempFun.actions.Add("Ь:%0%"); break;
+                    default: throw new FunctionStringSyntaxException("Неизвестное имя функции: "+str.Substring(1,3));
+                }
+                if (str.Substring(1, 3) == "log")
+                {
+                    if (str.IndexOf(',') == -1) throw new FunctionStringSyntaxException("Не указано основание логарифма.");
+                    tempFun.composedFunc.Add(Analyze(str.Substring(6, str.IndexOf(',') - 6), argument));
+                    tempFun.composedFunc.Add(Analyze(str.Substring(str.IndexOf(',') + 1, str.LastIndexOf(')') - str.IndexOf(',') - 1), argument));
+                }
+                else tempFun.composedFunc.Add(Analyze(str.Substring(5), argument));
+                return tempFun;
+            }
+
+            // ------------------------ If this is an argument, return it.
+
+            if (str[0] == argument)
+            { tempFun.actions.Add("R:!"); return tempFun; }
+
+            if (str.Contains(',')) throw new FunctionStringSyntaxException("Дробные числа должны записываться через точку.");
+
+            // ------------------------ Finally, if this is number, just return it.
+
+            double dtm;
+            try { dtm = double.Parse(str.Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)); }
+            catch { throw new FunctionStringSyntaxException("Неизвестная ошибка."); }
+
+            tempFun.actions.Add("R:" + dtm.ToString().Replace(",", "."));
+            return tempFun;
+        }
+#endif
+
+    }
+}

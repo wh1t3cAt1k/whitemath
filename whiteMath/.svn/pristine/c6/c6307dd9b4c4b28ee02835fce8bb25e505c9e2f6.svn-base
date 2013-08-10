@@ -1,0 +1,103 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Numerics;
+
+using whiteMath.General;
+using whiteStructs.Strings;
+using whiteMath.ArithmeticLong;
+using whiteMath.Randoms;
+
+using LongIntVar = whiteMath.ArithmeticLong.LongInt<whiteMath.ArithmeticLong.Bases.B_Var>;
+
+namespace whiteStructTester
+{
+    public class SubstringTest
+    {
+        public static bool zFunctionSubstringTest_1()
+        {
+            string a = "abababa";
+            string b = "aba";
+
+            List<int> indices = a.indicesOfString_ZFunction(b);
+
+            return indices.Contains(0) && indices.Contains(2) && indices.Contains(4) && indices.Count == 3;
+        }
+    }
+
+    class Program
+    {
+
+#if(DEBUG_1)
+        public static void GaloisInvertibilityTest(int minTwoPower, int maxTwoPower)
+        {
+            int rootDegree = whiteMath.WhiteMath<int, whiteMath.CalcInt>.PowerInteger(2, minTwoPower);
+
+            for (; rootDegree <= maxTwoPower; rootDegree <<= 2)
+            {
+                BigInteger[] rootsNatural = LongIntVar.Helper.__DB__rootsOfUnityGalois(rootDegree, false);
+                BigInteger[] rootsUnnatural = LongIntVar.Helper.rootsOfUnityHalfGalois(rootDegree, false);
+
+                for (int i = rootsNatural.Length / 2; i < rootsNatural.Length; ++i)
+                {
+                    BigInteger dendr = -rootsUnnatural[i - rootsNatural.Length / 2];
+
+                    while (dendr < 0)
+                    {
+                        dendr += LongIntVar.Helper.NTT_MODULUS;
+                    }
+
+                    if (rootsNatural[i] != dendr)
+                    {
+                        Console.WriteLine("FAIL at length {0}", rootDegree);
+                    }
+                }
+            }
+        }
+#endif
+
+        public static void NTTMultiplicationTest_1(int BASE, int numberOfTests, int minLength, int maxLength)
+        {
+            Bases.B_Var.Base = BASE;
+
+            RandomStandard gen = new RandomStandard();
+
+            for (int length = minLength; length <= maxLength; ++length)
+            {
+                bool success = true;
+
+                for (int testNumber = 0; testNumber < numberOfTests; ++testNumber)
+                {
+                    LongIntVar operand1 = new LongIntVar(length, gen, false);
+                    LongIntVar operand2 = new LongIntVar(length, gen, false);
+
+                    if (LongIntVar.Helper.MultiplyNTT(operand1, operand2) !=
+                        LongIntVar.Helper.MultiplyFFTComplex(operand1, operand2))
+                    {
+                        success = false;
+                        break;
+                    }
+                }
+
+                if (success)
+                {
+                    Console.WriteLine("SUCCESS at length {0}", length);
+                }
+                else
+                {
+                    Console.WriteLine("FAIL at length {0}", length);
+                }
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            // Bases.B_Var.setBase(10000);
+
+            NTTMultiplicationTest_1(10000, 1, 4, 20000);
+
+            Console.ReadKey(true);
+        }
+    }
+}

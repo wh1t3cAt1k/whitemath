@@ -1,0 +1,126 @@
+﻿<html xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp">
+  <head>
+    <link rel="SHORTCUT ICON" href="./../icons/favicon.ico" />
+    <style type="text/css">.OH_CodeSnippetContainerTabLeftActive, .OH_CodeSnippetContainerTabLeft,.OH_CodeSnippetContainerTabLeftDisabled { backgroundImageName: tabLeftBG.gif; }.OH_CodeSnippetContainerTabRightActive, .OH_CodeSnippetContainerTabRight,.OH_CodeSnippetContainerTabRightDisabled { backgroundImageName: tabRightBG.gif; }.OH_footer { backgroundImageName: footer_slice.gif; background-position: top; background-repeat: repeat-x; }</style>
+    <link rel="stylesheet" type="text/css" href="./../styles/branding.css" />
+    <link rel="stylesheet" type="text/css" href="./../styles/branding-en-US.css" />
+    <style type="text/css">
+			body
+			{
+			border-left:5px solid #e6e6e6;
+			overflow-x:scroll;
+			overflow-y:scroll;
+			}
+		</style>
+    <script src="./../scripts/branding.js" type="text/javascript">
+      <!---->
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>EnumerableExtensions.ToElementString(T) Method </title>
+    <meta name="Language" content="en-us" />
+    <meta name="System.Keywords" content="ToElementString%3CT%3E method" />
+    <meta name="System.Keywords" content="ToElementString(Of T) method" />
+    <meta name="System.Keywords" content="EnumerableExtensions.ToElementString%3CT%3E method" />
+    <meta name="System.Keywords" content="EnumerableExtensions.ToElementString(Of T) method" />
+    <meta name="Microsoft.Help.F1" content="whiteMath.General.EnumerableExtensions.ToElementString``1" />
+    <meta name="Microsoft.Help.Id" content="M:whiteMath.General.EnumerableExtensions.ToElementString``1(System.Collections.Generic.IEnumerable{``0},System.String,System.Func{``0,System.String})" />
+    <meta name="Description" content="Constructs a string out of a sequence, enumerating its values through the separator." />
+    <meta name="Microsoft.Help.ContentType" content="Reference" />
+    <meta name="BrandingAware" content="'true'" />
+    <meta name="container" content="whiteMath.General" />
+    <meta name="file" content="42dc8b1b-003d-ced3-185b-6629daf20f2b" />
+    <meta name="guid" content="42dc8b1b-003d-ced3-185b-6629daf20f2b" />
+    
+    <link type="text/css" rel="stylesheet" href="ms-help://Hx/HxRuntime/HxLink.css" />
+    <meta name="SelfBranded" content="true" />
+  </head>
+  <body onload="onLoad()" class="primary-mtps-offline-document">
+    <div class="OH_outerDiv">
+      <div class="OH_outerContent">
+        <table class="TitleTable">
+          <tr>
+            <td class="OH_tdTitleColumn">EnumerableExtensions<span id="ID0EFBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EFBABAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ToElementString<span id="ID0EDBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EDBABAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="typeparameter">T</span><span id="ID0EBBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBBABAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script> Method </td>
+            <td class="OH_tdRunningTitleColumn">whiteMath + whiteStructs - a programmer-friendly mathematical library</td>
+          </tr>
+        </table>
+        <div id="mainSection">
+          <div id="mainBody">
+            <span class="introStyle"></span>
+            <div class="summary">
+            Constructs a string out of a sequence, enumerating its values through the separator.
+            </div>
+            <p></p>
+            <b>Namespace:</b> <a href="93142b82-d81c-fb0b-94e9-05311e87e678.htm" target="">whiteMath.General</a><br /><b>Assembly:</b> <span sdata="assembly">whiteMath</span> (in whiteMath.dll) Version: 0.0.5.0 (1.0.0.0)<div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Syntax</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div id="snippetGroup_Syntax" class="code"><div id="ID0ECSEAAAAA" class="OH_CodeSnippetContainer"><div class="OH_CodeSnippetContainerTabs" id="ID0ECSEAAAAA_tabs"><div class="OH_CodeSnippetContainerTabLeftActive" id="ID0ECSEAAAAA_tabimgleft"></div><div id="ID0ECSEAAAAA_tab1" class="OH_CodeSnippetContainerTabActive" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECSEAAAAA','C#','1','4');return false;">C#</a></div><div id="ID0ECSEAAAAA_tab2" class="OH_CodeSnippetContainerTab" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECSEAAAAA','Visual Basic','2','4');return false;">VB</a></div><div id="ID0ECSEAAAAA_tab3" class="OH_CodeSnippetContainerTab" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECSEAAAAA','Visual C++','3','4');return false;">C++</a></div><div id="ID0ECSEAAAAA_tab4" class="OH_CodeSnippetContainerTabDisabledNotFirst" EnableCopyCode="true" disabled="true"><a>F#</a></div><div class="OH_CodeSnippetContainerTabRight" id="ID0ECSEAAAAA_tabimgright"></div></div><div id="ID0ECSEAAAAA_codecollection" class="OH_CodeSnippetContainerCodeCollection"><div class="OH_CodeSnippetToolBar"><div class="OH_CodeSnippetToolBarText"><a id="ID0ECSEAAAAA_ViewColorized" href="#" onclick="javascript:ExchangeTitleContent('ID0ECSEAAAAA','4')" title="View Colorized" style="display: none">View Colorized</a><a id="ID0ECSEAAAAA_copycode" href="#" onclick="javascript:CopyToClipboard('ID0ECSEAAAAA','4')" title="Copy to Clipboard">Copy to Clipboard</a><a id="ID0ECSEAAAAA_PrintText" class="OH_PrintText" href="#" onclick="javascript:Print('ID0ECSEAAAAA','4')" title="Print">Print</a></div></div><div id="ID0ECSEAAAAA_code_Div1" class="OH_CodeSnippetContainerCode" style="display: block"><pre><span class="keyword">public</span> <span class="keyword">static</span> <span class="identifier">string</span> <span class="identifier">ToElementString</span>&lt;T&gt;(
+	<span class="keyword">this</span> <span class="identifier">IEnumerable</span>&lt;T&gt; <span class="parameter">sequence</span>,
+	<span class="identifier">string</span> <span class="parameter">separator</span> = "|",
+	<span class="identifier">Func</span>&lt;T, <span class="identifier">string</span>&gt; <span class="parameter">toString</span> = <span class="keyword">null</span>
+)</pre></div><div id="ID0ECSEAAAAA_code_Plain_Div1" class="OH_CodeSnippetContainerCode" style="display: none"><pre>public static string ToElementString&lt;T&gt;(
+	this IEnumerable&lt;T&gt; sequence,
+	string separator = "|",
+	Func&lt;T, string&gt; toString = null
+)</pre></div><div id="ID0ECSEAAAAA_code_Div2" class="OH_CodeSnippetContainerCode" style="display: none"><pre>&lt;<span class="identifier">ExtensionAttribute</span>&gt; 
+<span class="keyword">Public</span> <span class="keyword">Shared</span> <span class="keyword">Function</span> <span class="identifier">ToElementString</span>(<span class="keyword">Of</span> T) ( 
+	<span class="parameter">sequence</span> <span class="keyword">As</span> <span class="identifier">IEnumerable</span>(<span class="keyword">Of</span> T),
+	Optional <span class="parameter">separator</span> <span class="keyword">As</span> <span class="identifier">String</span> = "|",
+	Optional <span class="parameter">toString</span> <span class="keyword">As</span> <span class="identifier">Func</span>(<span class="keyword">Of</span> T, <span class="identifier">String</span>) = <span class="keyword">Nothing</span>
+) <span class="keyword">As</span> <span class="identifier">String</span></pre></div><div id="ID0ECSEAAAAA_code_Plain_Div2" class="OH_CodeSnippetContainerCode" style="display: none"><pre>&lt;ExtensionAttribute&gt; 
+Public Shared Function ToElementString(Of T) ( 
+	sequence As IEnumerable(Of T),
+	Optional separator As String = "|",
+	Optional toString As Func(Of T, String) = Nothing
+) As String</pre></div><div id="ID0ECSEAAAAA_code_Div3" class="OH_CodeSnippetContainerCode" style="display: none"><pre><span class="keyword">public</span>:
+[<span class="identifier">ExtensionAttribute</span>]
+<span class="keyword">generic</span>&lt;<span class="keyword">typename</span> T&gt;
+<span class="keyword">static</span> <span class="identifier">String</span>^ <span class="identifier">ToElementString</span>(
+	<span class="identifier">IEnumerable</span>&lt;T&gt;^ <span class="parameter">sequence</span>, 
+	<span class="identifier">String</span>^ <span class="parameter">separator</span> = L"|", 
+	<span class="identifier">Func</span>&lt;T, <span class="identifier">String</span>^&gt;^ <span class="parameter">toString</span> = <span class="keyword">nullptr</span>
+)</pre></div><div id="ID0ECSEAAAAA_code_Plain_Div3" class="OH_CodeSnippetContainerCode" style="display: none"><pre>public:
+[ExtensionAttribute]
+generic&lt;typename T&gt;
+static String^ ToElementString(
+	IEnumerable&lt;T&gt;^ sequence, 
+	String^ separator = L"|", 
+	Func&lt;T, String^&gt;^ toString = nullptr
+)</pre></div><div id="ID0ECSEAAAAA_code_Div4" class="OH_CodeSnippetContainerCode" style="display: none"><pre /></div><div id="ID0ECSEAAAAA_code_Plain_Div4" class="OH_CodeSnippetContainerCode" style="display: none"><pre /></div></div></div><script>addSpecificTextLanguageTagSet('ID0ECSEAAAAA');</script></div><div id="parameters"><h4 class="subHeading">Parameters</h4><dl paramName="sequence"><dt><span class="parameter">sequence</span></dt><dd>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/9eekhta0" target="_blank">System.Collections.Generic<span id="ID0EBFACREAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBFACREAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>IEnumerable</a><span id="ID0EEACREAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EEACREAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="selflink"><span class="typeparam">T</span></span><span id="ID0ECACREAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0ECACREAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script><br /><span>The calling sequence object.</span></dd></dl><dl paramName="separator"><dt><span class="parameter">separator</span> (Optional)</dt><dd>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/s1wwdcbf" target="_blank">System<span id="ID0EBCABREAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBCABREAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>String</a><br /><span>A string used to separate adjacent elements.</span></dd></dl><dl paramName="toString"><dt><span class="parameter">toString</span> (Optional)</dt><dd>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/bb549151" target="_blank">System<span id="ID0EBHAAREAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBHAAREAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>Func</a><span id="ID0EGAAREAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EGAAREAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="selflink"><span class="typeparam">T</span></span>, <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/s1wwdcbf" target="_blank">String</a><span id="ID0ECAAREAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0ECAAREAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script><br /><span>
+            A function that converts <span class="typeparameter">T</span> values to their string representations. 
+            If <span class="code">null</span>, standard <span class="code">ToString()</span> function will be used.
+            </span></dd></dl></div><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Type Parameters</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><dl><dt><span class="parameter">T</span></dt><dd>The type of elements in the sequence.</dd></dl><h4 class="subHeading">Return Value</h4>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/s1wwdcbf" target="_blank">String</a><br />A string which enumerates the values of the sequence through the separator string specified.<h4 class="subHeading">Usage Note</h4>In Visual Basic and C#, you can call this method as an instance method on any object of type <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/9eekhta0" target="_blank">IEnumerable</a><span id="ID0EHEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EHEAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="selflink"><span class="typeparam">T</span></span><span id="ID0EFEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EFEAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script>. When you use instance method syntax to call this method, omit the first parameter. For more information, see <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn.microsoft.com/en-us/library/bb384936.aspx" target="_blank">Extension Methods (Visual Basic)</a> or <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn.microsoft.com/en-us/library/bb383977.aspx" target="_blank">Extension Methods (C# Programming Guide)</a>.<div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Exceptions</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="tableSection"><table><tr><th class="ps_exceptionNameColumn">Exception</th><th class="ps_exceptionConditionColumn">Condition</th></tr><tr><td><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/27426hcy" target="_blank">System<span id="ID0EBABAAADAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBABAAADAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentNullException</a></td><td>sequence == null</td></tr></table></div><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Contracts</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="tableSection"><table><tr><th class="ps_contractsNameColumn">Requires</th></tr><tr><td><div class="code" style="margin-bottom: 0pt; white-space: pre-wrap;"><pre xml:space="preserve" style="margin-bottom: 0pt">sequence != null</pre></div><div style="font-size:95%; margin-left: 10pt;                         margin-bottom: 0pt"><table class="contractaux" width="100%" frame="void" rules="none" border="0"><colgroup><col width="10%"></col><col width="90%"></col></colgroup><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Description: </i></td><td style="border-bottom: 0px none;">sequence</td></tr><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Exception: </i></td><td style="border-bottom: 0px none;"><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/27426hcy" target="_blank">System<span id="ID0EBAAAAAAAABCAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBAAAAAAAABCAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentNullException</a></td></tr></table></div></td></tr></table></div><div class="ps_contractsLink"><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn.microsoft.com/en-us/devlabs/dd491992.aspx" target="_blank">Learn more about contracts</a></div><a name="seeAlsoSection"><!----></a><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">See Also</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="seeAlsoStyle"><a href="a36c0f79-5863-35ca-174c-1b06eee0c8b7.htm" target="">EnumerableExtensions Class</a></div><div class="seeAlsoStyle"><a href="fd50125f-f869-a850-cced-3cff3fa5a866.htm" target="">EnumerableExtensions Members</a></div><div class="seeAlsoStyle"><a href="93142b82-d81c-fb0b-94e9-05311e87e678.htm" target="">whiteMath.General Namespace</a></div></div>
+        </div>
+      </div>
+    </div>
+    <div id="OH_footer" class="OH_footer">
+      <p />
+      <div class="OH_feedbacklink">
+        <a href="mailto:?subject=whiteMath+%2b+whiteStructs+-+a+programmer-friendly+mathematical+library+EnumerableExtensions.ToElementString(T)+Method++100+EN-US&amp;body=Your%20feedback%20is%20used%20to%20improve%20the%20documentation%20and%20the%20product.%20Your%20e-mail%20address%20will%20not%20be%20used%20for%20any%20other%20purpose%20and%20is%20disposed%20of%20after%20the%20issue%20you%20report%20is%20resolved.%20While%20working%20to%20resolve%20the%20issue%20that%20you%20report%2c%20you%20may%20be%20contacted%20via%20e-mail%20to%20get%20further%20details%20or%20clarification%20on%20the%20feedback%20you%20sent.%20After%20the%20issue%20you%20report%20has%20been%20addressed%2c%20you%20may%20receive%20an%20e-mail%20to%20let%20you%20know%20that%20your%20feedback%20has%20been%20addressed.">Send Feedback</a> on this topic.</div>
+    </div>
+  </body>
+</html>

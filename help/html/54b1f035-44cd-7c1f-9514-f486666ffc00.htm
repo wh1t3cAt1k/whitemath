@@ -1,0 +1,148 @@
+﻿<html xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp">
+  <head>
+    <link rel="SHORTCUT ICON" href="./../icons/favicon.ico" />
+    <style type="text/css">.OH_CodeSnippetContainerTabLeftActive, .OH_CodeSnippetContainerTabLeft,.OH_CodeSnippetContainerTabLeftDisabled { backgroundImageName: tabLeftBG.gif; }.OH_CodeSnippetContainerTabRightActive, .OH_CodeSnippetContainerTabRight,.OH_CodeSnippetContainerTabRightDisabled { backgroundImageName: tabRightBG.gif; }.OH_footer { backgroundImageName: footer_slice.gif; background-position: top; background-repeat: repeat-x; }</style>
+    <link rel="stylesheet" type="text/css" href="./../styles/branding.css" />
+    <link rel="stylesheet" type="text/css" href="./../styles/branding-en-US.css" />
+    <style type="text/css">
+			body
+			{
+			border-left:5px solid #e6e6e6;
+			overflow-x:scroll;
+			overflow-y:scroll;
+			}
+		</style>
+    <script src="./../scripts/branding.js" type="text/javascript">
+      <!---->
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>LongInt(B).Helper.PowerIntegerModular(B) Method (LongInt(B), UInt64, LongInt(B))</title>
+    <meta name="Language" content="en-us" />
+    <meta name="Microsoft.Help.Id" content="M:whiteMath.ArithmeticLong.LongInt`1.Helper.PowerIntegerModular``1(whiteMath.ArithmeticLong.LongInt{``0},System.UInt64,whiteMath.ArithmeticLong.LongInt{``0})" />
+    <meta name="Description" content="Performs fast modular exponentiation of a LongInt number modulo another number." />
+    <meta name="Microsoft.Help.ContentType" content="Reference" />
+    <meta name="BrandingAware" content="'true'" />
+    <meta name="container" content="whiteMath.ArithmeticLong" />
+    <meta name="file" content="54b1f035-44cd-7c1f-9514-f486666ffc00" />
+    <meta name="guid" content="54b1f035-44cd-7c1f-9514-f486666ffc00" />
+    
+    <link type="text/css" rel="stylesheet" href="ms-help://Hx/HxRuntime/HxLink.css" />
+    <meta name="SelfBranded" content="true" />
+  </head>
+  <body onload="onLoad()" class="primary-mtps-offline-document">
+    <div class="OH_outerDiv">
+      <div class="OH_outerContent">
+        <table class="TitleTable">
+          <tr>
+            <td class="OH_tdTitleColumn">LongInt<span id="ID0ESBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0ESBABAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="typeparameter">B</span><span id="ID0EQBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EQBABAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script><span id="ID0EPBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EPBABAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>Helper<span id="ID0ENBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0ENBABAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>PowerIntegerModular<span id="ID0ELBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0ELBABAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="typeparameter">B</span><span id="ID0EJBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EJBABAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script> Method (LongInt<span id="ID0EHBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EHBABAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="typeparameter">B</span><span id="ID0EFBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EFBABAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script>, UInt64, LongInt<span id="ID0EDBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EDBABAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="typeparameter">B</span><span id="ID0EBBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBBABAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script>)</td>
+            <td class="OH_tdRunningTitleColumn">whiteMath + whiteStructs - a programmer-friendly mathematical library</td>
+          </tr>
+        </table>
+        <div id="mainSection">
+          <div id="mainBody">
+            <span class="introStyle"></span>
+            <div class="summary">
+            Performs fast modular exponentiation of a <span class="code">LongInt</span> number modulo another number.
+            </div>
+            <p></p>
+            <b>Namespace:</b> <a href="84135e0e-8ca5-e27a-821f-da5962eb0b0d.htm" target="">whiteMath.ArithmeticLong</a><br /><b>Assembly:</b> <span sdata="assembly">whiteMath</span> (in whiteMath.dll) Version: 0.0.5.0 (1.0.0.0)<div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Syntax</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div id="snippetGroup_Syntax" class="code"><div id="ID0ECQEAAAAA" class="OH_CodeSnippetContainer"><div class="OH_CodeSnippetContainerTabs" id="ID0ECQEAAAAA_tabs"><div class="OH_CodeSnippetContainerTabLeftActive" id="ID0ECQEAAAAA_tabimgleft"></div><div id="ID0ECQEAAAAA_tab1" class="OH_CodeSnippetContainerTabActive" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECQEAAAAA','C#','1','4');return false;">C#</a></div><div id="ID0ECQEAAAAA_tab2" class="OH_CodeSnippetContainerTab" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECQEAAAAA','Visual Basic','2','4');return false;">VB</a></div><div id="ID0ECQEAAAAA_tab3" class="OH_CodeSnippetContainerTab" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECQEAAAAA','Visual C++','3','4');return false;">C++</a></div><div id="ID0ECQEAAAAA_tab4" class="OH_CodeSnippetContainerTabDisabledNotFirst" EnableCopyCode="true" disabled="true"><a>F#</a></div><div class="OH_CodeSnippetContainerTabRight" id="ID0ECQEAAAAA_tabimgright"></div></div><div id="ID0ECQEAAAAA_codecollection" class="OH_CodeSnippetContainerCodeCollection"><div class="OH_CodeSnippetToolBar"><div class="OH_CodeSnippetToolBarText"><a id="ID0ECQEAAAAA_ViewColorized" href="#" onclick="javascript:ExchangeTitleContent('ID0ECQEAAAAA','4')" title="View Colorized" style="display: none">View Colorized</a><a id="ID0ECQEAAAAA_copycode" href="#" onclick="javascript:CopyToClipboard('ID0ECQEAAAAA','4')" title="Copy to Clipboard">Copy to Clipboard</a><a id="ID0ECQEAAAAA_PrintText" class="OH_PrintText" href="#" onclick="javascript:Print('ID0ECQEAAAAA','4')" title="Print">Print</a></div></div><div id="ID0ECQEAAAAA_code_Div1" class="OH_CodeSnippetContainerCode" style="display: block"><pre><span class="keyword">public</span> <span class="keyword">static</span> <span class="identifier">LongInt</span>&lt;B&gt; <span class="identifier">PowerIntegerModular</span>&lt;B&gt;(
+	<span class="identifier">LongInt</span>&lt;B&gt; <span class="parameter">number</span>,
+	<span class="identifier">ulong</span> <span class="parameter">power</span>,
+	<span class="identifier">LongInt</span>&lt;B&gt; <span class="parameter">modulus</span>
+)
+<span class="keyword">where</span> B : <span class="keyword">new</span>(), <span class="identifier">IBase</span></pre></div><div id="ID0ECQEAAAAA_code_Plain_Div1" class="OH_CodeSnippetContainerCode" style="display: none"><pre>public static LongInt&lt;B&gt; PowerIntegerModular&lt;B&gt;(
+	LongInt&lt;B&gt; number,
+	ulong power,
+	LongInt&lt;B&gt; modulus
+)
+where B : new(), IBase</pre></div><div id="ID0ECQEAAAAA_code_Div2" class="OH_CodeSnippetContainerCode" style="display: none"><pre><span class="keyword">Public</span> <span class="keyword">Shared</span> <span class="keyword">Function</span> <span class="identifier">PowerIntegerModular</span>(<span class="keyword">Of</span> B <span class="keyword">As</span> {<span class="keyword">New</span>, <span class="identifier">IBase</span>}) ( 
+	<span class="parameter">number</span> <span class="keyword">As</span> <span class="identifier">LongInt</span>(<span class="keyword">Of</span> B),
+	<span class="parameter">power</span> <span class="keyword">As</span> <span class="identifier">ULong</span>,
+	<span class="parameter">modulus</span> <span class="keyword">As</span> <span class="identifier">LongInt</span>(<span class="keyword">Of</span> B)
+) <span class="keyword">As</span> <span class="identifier">LongInt</span>(<span class="keyword">Of</span> B)</pre></div><div id="ID0ECQEAAAAA_code_Plain_Div2" class="OH_CodeSnippetContainerCode" style="display: none"><pre>Public Shared Function PowerIntegerModular(Of B As {New, IBase}) ( 
+	number As LongInt(Of B),
+	power As ULong,
+	modulus As LongInt(Of B)
+) As LongInt(Of B)</pre></div><div id="ID0ECQEAAAAA_code_Div3" class="OH_CodeSnippetContainerCode" style="display: none"><pre><span class="keyword">public</span>:
+<span class="keyword">generic</span>&lt;<span class="keyword">typename</span> B&gt;
+<span class="keyword">where</span> B : <span class="keyword">gcnew</span>(), <span class="identifier">IBase</span> 
+<span class="keyword">static</span> <span class="identifier">LongInt</span>&lt;B&gt;^ <span class="identifier">PowerIntegerModular</span>(
+	<span class="identifier">LongInt</span>&lt;B&gt;^ <span class="parameter">number</span>, 
+	<span class="identifier">unsigned long long</span> <span class="parameter">power</span>, 
+	<span class="identifier">LongInt</span>&lt;B&gt;^ <span class="parameter">modulus</span>
+)</pre></div><div id="ID0ECQEAAAAA_code_Plain_Div3" class="OH_CodeSnippetContainerCode" style="display: none"><pre>public:
+generic&lt;typename B&gt;
+where B : gcnew(), IBase 
+static LongInt&lt;B&gt;^ PowerIntegerModular(
+	LongInt&lt;B&gt;^ number, 
+	unsigned long long power, 
+	LongInt&lt;B&gt;^ modulus
+)</pre></div><div id="ID0ECQEAAAAA_code_Div4" class="OH_CodeSnippetContainerCode" style="display: none"><pre /></div><div id="ID0ECQEAAAAA_code_Plain_Div4" class="OH_CodeSnippetContainerCode" style="display: none"><pre /></div></div></div><script>addSpecificTextLanguageTagSet('ID0ECQEAAAAA');</script></div><div id="parameters"><h4 class="subHeading">Parameters</h4><dl paramName="number"><dt><span class="parameter">number</span></dt><dd>Type: <a href="ecd1f5e5-2547-7b55-706e-d2cbcafedc78.htm" target="">whiteMath.ArithmeticLong<span id="ID0EBFACPEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBFACPEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>LongInt</a><span id="ID0EEACPEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EEACPEAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="selflink"><span class="typeparam">B</span></span><span id="ID0ECACPEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0ECACPEAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script><br /><span>A <span class="code">LongInt</span> number to be exponentiated.</span></dd></dl><dl paramName="power"><dt><span class="parameter">power</span></dt><dd>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/06cf7918" target="_blank">System<span id="ID0EBCABPEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBCABPEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>UInt64</a><br /><span>A non-negative exponent.</span></dd></dl><dl paramName="modulus"><dt><span class="parameter">modulus</span></dt><dd>Type: <a href="ecd1f5e5-2547-7b55-706e-d2cbcafedc78.htm" target="">whiteMath.ArithmeticLong<span id="ID0EBFAAPEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBFAAPEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>LongInt</a><span id="ID0EEAAPEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EEAAPEAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="selflink"><span class="typeparam">B</span></span><span id="ID0ECAAPEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0ECAAPEAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script><br /><span>The modulus of the operation.</span></dd></dl></div><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Type Parameters</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><dl><dt><span class="parameter">B</span></dt><dd>A type specifying the numeric base of <span class="code">LongInt</span> digits.</dd></dl><h4 class="subHeading">Return Value</h4>Type: <a href="ecd1f5e5-2547-7b55-706e-d2cbcafedc78.htm" target="">LongInt</a><span id="ID0EKEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EKEAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><span class="selflink"><span class="typeparam">B</span></span><span id="ID0EIEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EIEAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script><br />The result of raising <span class="parameter">number</span> to power <span class="parameter">power</span> modulo <span class="parameter">modulus</span>.<div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Exceptions</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="tableSection"><table><tr><th class="ps_exceptionNameColumn">Exception</th><th class="ps_exceptionConditionColumn">Condition</th></tr><tr><td><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/27426hcy" target="_blank">System<span id="ID0EBABBAADAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBABBAADAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentNullException</a></td><td>number == null</td></tr><tr><td><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/27426hcy" target="_blank">System<span id="ID0EBABAAADAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBABAAADAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentNullException</a></td><td>modulus == null</td></tr></table></div><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Contracts</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="tableSection"><table><tr><th class="ps_contractsNameColumn">Requires</th></tr><tr><td><div class="code" style="margin-bottom: 0pt; white-space: pre-wrap;"><pre xml:space="preserve" style="margin-bottom: 0pt">number != null</pre></div><div style="font-size:95%; margin-left: 10pt;                         margin-bottom: 0pt"><table class="contractaux" width="100%" frame="void" rules="none" border="0"><colgroup><col width="10%"></col><col width="90%"></col></colgroup><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Description: </i></td><td style="border-bottom: 0px none;">number</td></tr><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Exception: </i></td><td style="border-bottom: 0px none;"><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/27426hcy" target="_blank">System<span id="ID0EBAAAAAABABCAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBAAAAAABABCAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentNullException</a></td></tr></table></div></td></tr><tr><td><div class="code" style="margin-bottom: 0pt; white-space: pre-wrap;"><pre xml:space="preserve" style="margin-bottom: 0pt">modulus != null</pre></div><div style="font-size:95%; margin-left: 10pt;                         margin-bottom: 0pt"><table class="contractaux" width="100%" frame="void" rules="none" border="0"><colgroup><col width="10%"></col><col width="90%"></col></colgroup><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Description: </i></td><td style="border-bottom: 0px none;">modulus</td></tr><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Exception: </i></td><td style="border-bottom: 0px none;"><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/27426hcy" target="_blank">System<span id="ID0EBAAAAAAAABCAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBAAAAAAAABCAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentNullException</a></td></tr></table></div></td></tr></table></div><div class="ps_contractsLink"><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn.microsoft.com/en-us/devlabs/dd491992.aspx" target="_blank">Learn more about contracts</a></div><a name="seeAlsoSection"><!----></a><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">See Also</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="seeAlsoStyle"><a href="21c298f9-c3f3-7ebd-d517-2194f3a7ec90.htm" target="">LongInt<span id="ID0EEADAAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EEADAAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script>B<span id="ID0ECADAAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0ECADAAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script><span id="ID0EBADAAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBADAAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>Helper Class</a></div><div class="seeAlsoStyle"><a href="346f53a1-370c-d469-d6fe-6950009f7b0d.htm" target="">LongInt<span id="ID0EEACAAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EEACAAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script>B<span id="ID0ECACAAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0ECACAAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script><span id="ID0EBACAAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBACAAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>Helper Members</a></div><div class="seeAlsoStyle"><a href="b8ffb08e-bb01-f5b1-b94a-0133de13531c.htm" target="">PowerIntegerModular Overload</a></div><div class="seeAlsoStyle"><a href="84135e0e-8ca5-e27a-821f-da5962eb0b0d.htm" target="">whiteMath.ArithmeticLong Namespace</a></div></div>
+        </div>
+      </div>
+    </div>
+    <div id="OH_footer" class="OH_footer">
+      <p />
+      <div class="OH_feedbacklink">
+        <a href="mailto:?subject=whiteMath+%2b+whiteStructs+-+a+programmer-friendly+mathematical+library+LongInt(B).Helper.PowerIntegerModular(B)+Method+(LongInt(B)%2c+UInt64%2c+LongInt(B))+100+EN-US&amp;body=Your%20feedback%20is%20used%20to%20improve%20the%20documentation%20and%20the%20product.%20Your%20e-mail%20address%20will%20not%20be%20used%20for%20any%20other%20purpose%20and%20is%20disposed%20of%20after%20the%20issue%20you%20report%20is%20resolved.%20While%20working%20to%20resolve%20the%20issue%20that%20you%20report%2c%20you%20may%20be%20contacted%20via%20e-mail%20to%20get%20further%20details%20or%20clarification%20on%20the%20feedback%20you%20sent.%20After%20the%20issue%20you%20report%20has%20been%20addressed%2c%20you%20may%20receive%20an%20e-mail%20to%20let%20you%20know%20that%20your%20feedback%20has%20been%20addressed.">Send Feedback</a> on this topic.</div>
+    </div>
+  </body>
+</html>

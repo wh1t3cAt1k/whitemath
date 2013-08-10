@@ -1,0 +1,124 @@
+﻿<html xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp">
+  <head>
+    <link rel="SHORTCUT ICON" href="./../icons/favicon.ico" />
+    <style type="text/css">.OH_CodeSnippetContainerTabLeftActive, .OH_CodeSnippetContainerTabLeft,.OH_CodeSnippetContainerTabLeftDisabled { backgroundImageName: tabLeftBG.gif; }.OH_CodeSnippetContainerTabRightActive, .OH_CodeSnippetContainerTabRight,.OH_CodeSnippetContainerTabRightDisabled { backgroundImageName: tabRightBG.gif; }.OH_footer { backgroundImageName: footer_slice.gif; background-position: top; background-repeat: repeat-x; }</style>
+    <link rel="stylesheet" type="text/css" href="./../styles/branding.css" />
+    <link rel="stylesheet" type="text/css" href="./../styles/branding-en-US.css" />
+    <style type="text/css">
+			body
+			{
+			border-left:5px solid #e6e6e6;
+			overflow-x:scroll;
+			overflow-y:scroll;
+			}
+		</style>
+    <script src="./../scripts/branding.js" type="text/javascript">
+      <!---->
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>RandomBounded.NextString Method </title>
+    <meta name="Language" content="en-us" />
+    <meta name="System.Keywords" content="NextString method" />
+    <meta name="System.Keywords" content="RandomBounded.NextString method" />
+    <meta name="Microsoft.Help.F1" content="whiteMath.Randoms.RandomBounded.NextString" />
+    <meta name="Microsoft.Help.Id" content="M:whiteMath.Randoms.RandomBounded.NextString(whiteMath.Randoms.IRandomBounded{System.Int32},System.Collections.Generic.IList{System.Char},System.Int32)" />
+    <meta name="Description" content="Forms a random string of the desired length containing characters from a char list. There are no guarantees for each character to appear in the string." />
+    <meta name="Microsoft.Help.ContentType" content="Reference" />
+    <meta name="BrandingAware" content="'true'" />
+    <meta name="container" content="whiteMath.Randoms" />
+    <meta name="file" content="b4fc48e6-4194-ceaf-fe7a-e48777ffd06a" />
+    <meta name="guid" content="b4fc48e6-4194-ceaf-fe7a-e48777ffd06a" />
+    
+    <link type="text/css" rel="stylesheet" href="ms-help://Hx/HxRuntime/HxLink.css" />
+    <meta name="SelfBranded" content="true" />
+  </head>
+  <body onload="onLoad()" class="primary-mtps-offline-document">
+    <div class="OH_outerDiv">
+      <div class="OH_outerContent">
+        <table class="TitleTable">
+          <tr>
+            <td class="OH_tdTitleColumn">RandomBounded<span id="ID0EBBABAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBBABAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>NextString Method </td>
+            <td class="OH_tdRunningTitleColumn">whiteMath + whiteStructs - a programmer-friendly mathematical library</td>
+          </tr>
+        </table>
+        <div id="mainSection">
+          <div id="mainBody">
+            <span class="introStyle"></span>
+            <div class="summary">
+            Forms a random string of the desired length containing characters from a <span class="code">char</span> list.
+            There are no guarantees for each character to appear in the string.
+            </div>
+            <p></p>
+            <b>Namespace:</b> <a href="e3206f96-86f1-5297-1b6d-653c76325433.htm" target="">whiteMath.Randoms</a><br /><b>Assembly:</b> <span sdata="assembly">whiteMath</span> (in whiteMath.dll) Version: 0.0.5.0 (1.0.0.0)<div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Syntax</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div id="snippetGroup_Syntax" class="code"><div id="ID0ECTEAAAAA" class="OH_CodeSnippetContainer"><div class="OH_CodeSnippetContainerTabs" id="ID0ECTEAAAAA_tabs"><div class="OH_CodeSnippetContainerTabLeftActive" id="ID0ECTEAAAAA_tabimgleft"></div><div id="ID0ECTEAAAAA_tab1" class="OH_CodeSnippetContainerTabActive" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECTEAAAAA','C#','1','4');return false;">C#</a></div><div id="ID0ECTEAAAAA_tab2" class="OH_CodeSnippetContainerTab" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECTEAAAAA','Visual Basic','2','4');return false;">VB</a></div><div id="ID0ECTEAAAAA_tab3" class="OH_CodeSnippetContainerTab" EnableCopyCode="true"><a href="#" onclick="javascript:ChangeTab('ID0ECTEAAAAA','Visual C++','3','4');return false;">C++</a></div><div id="ID0ECTEAAAAA_tab4" class="OH_CodeSnippetContainerTabDisabledNotFirst" EnableCopyCode="true" disabled="true"><a>F#</a></div><div class="OH_CodeSnippetContainerTabRight" id="ID0ECTEAAAAA_tabimgright"></div></div><div id="ID0ECTEAAAAA_codecollection" class="OH_CodeSnippetContainerCodeCollection"><div class="OH_CodeSnippetToolBar"><div class="OH_CodeSnippetToolBarText"><a id="ID0ECTEAAAAA_ViewColorized" href="#" onclick="javascript:ExchangeTitleContent('ID0ECTEAAAAA','4')" title="View Colorized" style="display: none">View Colorized</a><a id="ID0ECTEAAAAA_copycode" href="#" onclick="javascript:CopyToClipboard('ID0ECTEAAAAA','4')" title="Copy to Clipboard">Copy to Clipboard</a><a id="ID0ECTEAAAAA_PrintText" class="OH_PrintText" href="#" onclick="javascript:Print('ID0ECTEAAAAA','4')" title="Print">Print</a></div></div><div id="ID0ECTEAAAAA_code_Div1" class="OH_CodeSnippetContainerCode" style="display: block"><pre><span class="keyword">public</span> <span class="keyword">static</span> <span class="identifier">string</span> <span class="identifier">NextString</span>(
+	<span class="keyword">this</span> <span class="identifier">IRandomBounded</span>&lt;<span class="identifier">int</span>&gt; <span class="parameter">gen</span>,
+	<span class="identifier">IList</span>&lt;<span class="identifier">char</span>&gt; <span class="parameter">characters</span>,
+	<span class="identifier">int</span> <span class="parameter">length</span>
+)</pre></div><div id="ID0ECTEAAAAA_code_Plain_Div1" class="OH_CodeSnippetContainerCode" style="display: none"><pre>public static string NextString(
+	this IRandomBounded&lt;int&gt; gen,
+	IList&lt;char&gt; characters,
+	int length
+)</pre></div><div id="ID0ECTEAAAAA_code_Div2" class="OH_CodeSnippetContainerCode" style="display: none"><pre>&lt;<span class="identifier">ExtensionAttribute</span>&gt; 
+<span class="keyword">Public</span> <span class="keyword">Shared</span> <span class="keyword">Function</span> <span class="identifier">NextString</span> ( 
+	<span class="parameter">gen</span> <span class="keyword">As</span> <span class="identifier">IRandomBounded</span>(<span class="keyword">Of</span> <span class="identifier">Integer</span>),
+	<span class="parameter">characters</span> <span class="keyword">As</span> <span class="identifier">IList</span>(<span class="keyword">Of</span> <span class="identifier">Char</span>),
+	<span class="parameter">length</span> <span class="keyword">As</span> <span class="identifier">Integer</span>
+) <span class="keyword">As</span> <span class="identifier">String</span></pre></div><div id="ID0ECTEAAAAA_code_Plain_Div2" class="OH_CodeSnippetContainerCode" style="display: none"><pre>&lt;ExtensionAttribute&gt; 
+Public Shared Function NextString ( 
+	gen As IRandomBounded(Of Integer),
+	characters As IList(Of Char),
+	length As Integer
+) As String</pre></div><div id="ID0ECTEAAAAA_code_Div3" class="OH_CodeSnippetContainerCode" style="display: none"><pre><span class="keyword">public</span>:
+[<span class="identifier">ExtensionAttribute</span>]
+<span class="keyword">static</span> <span class="identifier">String</span>^ <span class="identifier">NextString</span>(
+	<span class="identifier">IRandomBounded</span>&lt;<span class="identifier">int</span>&gt;^ <span class="parameter">gen</span>, 
+	<span class="identifier">IList</span>&lt;<span class="identifier">wchar_t</span>&gt;^ <span class="parameter">characters</span>, 
+	<span class="identifier">int</span> <span class="parameter">length</span>
+)</pre></div><div id="ID0ECTEAAAAA_code_Plain_Div3" class="OH_CodeSnippetContainerCode" style="display: none"><pre>public:
+[ExtensionAttribute]
+static String^ NextString(
+	IRandomBounded&lt;int&gt;^ gen, 
+	IList&lt;wchar_t&gt;^ characters, 
+	int length
+)</pre></div><div id="ID0ECTEAAAAA_code_Div4" class="OH_CodeSnippetContainerCode" style="display: none"><pre /></div><div id="ID0ECTEAAAAA_code_Plain_Div4" class="OH_CodeSnippetContainerCode" style="display: none"><pre /></div></div></div><script>addSpecificTextLanguageTagSet('ID0ECTEAAAAA');</script></div><div id="parameters"><h4 class="subHeading">Parameters</h4><dl paramName="gen"><dt><span class="parameter">gen</span></dt><dd>Type: <a href="3175e4a8-afbf-f630-d9fe-a75f39ca5bb5.htm" target="">whiteMath.Randoms<span id="ID0EBFACSEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBFACSEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>IRandomBounded</a><span id="ID0EEACSEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EEACSEAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/td2s409d" target="_blank">Int32</a><span id="ID0ECACSEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0ECACSEAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script><br /><span>An integer generator which will be used to randomly traverse the character list.</span></dd></dl><dl paramName="characters"><dt><span class="parameter">characters</span></dt><dd>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/5y536ey6" target="_blank">System.Collections.Generic<span id="ID0EBFABSEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBFABSEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>IList</a><span id="ID0EEABSEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EEABSEAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/k493b04s" target="_blank">Char</a><span id="ID0ECABSEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0ECABSEAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script><br /><span>A list of characters. Duplicates will increase the chance of appearing in the result string.</span></dd></dl><dl paramName="length"><dt><span class="parameter">length</span></dt><dd>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/td2s409d" target="_blank">System<span id="ID0EBCAASEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBCAASEAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>Int32</a><br /><span>A non-negative desired length of the string.</span></dd></dl></div><h4 class="subHeading">Return Value</h4>Type: <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/s1wwdcbf" target="_blank">String</a><br />A random string of the desired length containing characters from a <span class="code">char</span> list.<h4 class="subHeading">Usage Note</h4>In Visual Basic and C#, you can call this method as an instance method on any object of type <a href="3175e4a8-afbf-f630-d9fe-a75f39ca5bb5.htm" target="">IRandomBounded</a><span id="ID0EHEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EHEAAAAA?vb=(Of |cpp=&lt;|cs=&lt;|fs=&lt;'|nu=(");
+				</script><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/td2s409d" target="_blank">Int32</a><span id="ID0EFEAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EFEAAAAA?vb=)|cpp=&gt;|cs=&gt;|fs=&gt;|nu=)");
+				</script>. When you use instance method syntax to call this method, omit the first parameter. For more information, see <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn.microsoft.com/en-us/library/bb384936.aspx" target="_blank">Extension Methods (Visual Basic)</a> or <img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn.microsoft.com/en-us/library/bb383977.aspx" target="_blank">Extension Methods (C# Programming Guide)</a>.<div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Exceptions</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="tableSection"><table><tr><th class="ps_exceptionNameColumn">Exception</th><th class="ps_exceptionConditionColumn">Condition</th></tr><tr><td><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/27426hcy" target="_blank">System<span id="ID0EBABCAADAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBABCAADAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentNullException</a></td><td>gen == null</td></tr><tr><td><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/27426hcy" target="_blank">System<span id="ID0EBABBAADAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBABBAADAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentNullException</a></td><td>characters == null</td></tr><tr><td><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/8xt94y6e" target="_blank">System<span id="ID0EBABAAADAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBABAAADAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentOutOfRangeException</a></td><td>length &lt; 0</td></tr></table></div><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">Contracts</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="tableSection"><table><tr><th class="ps_contractsNameColumn">Requires</th></tr><tr><td><div class="code" style="margin-bottom: 0pt; white-space: pre-wrap;"><pre xml:space="preserve" style="margin-bottom: 0pt">gen != null</pre></div><div style="font-size:95%; margin-left: 10pt;                         margin-bottom: 0pt"><table class="contractaux" width="100%" frame="void" rules="none" border="0"><colgroup><col width="10%"></col><col width="90%"></col></colgroup><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Description: </i></td><td style="border-bottom: 0px none;">gen</td></tr><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Exception: </i></td><td style="border-bottom: 0px none;"><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/27426hcy" target="_blank">System<span id="ID0EBAAAAAACABCAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBAAAAAACABCAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentNullException</a></td></tr></table></div></td></tr><tr><td><div class="code" style="margin-bottom: 0pt; white-space: pre-wrap;"><pre xml:space="preserve" style="margin-bottom: 0pt">characters != null</pre></div><div style="font-size:95%; margin-left: 10pt;                         margin-bottom: 0pt"><table class="contractaux" width="100%" frame="void" rules="none" border="0"><colgroup><col width="10%"></col><col width="90%"></col></colgroup><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Description: </i></td><td style="border-bottom: 0px none;">characters</td></tr><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Exception: </i></td><td style="border-bottom: 0px none;"><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/27426hcy" target="_blank">System<span id="ID0EBAAAAAABABCAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBAAAAAABABCAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentNullException</a></td></tr></table></div></td></tr><tr><td><div class="code" style="margin-bottom: 0pt; white-space: pre-wrap;"><pre xml:space="preserve" style="margin-bottom: 0pt">length &gt;= 0</pre></div><div style="font-size:95%; margin-left: 10pt;                         margin-bottom: 0pt"><table class="contractaux" width="100%" frame="void" rules="none" border="0"><colgroup><col width="10%"></col><col width="90%"></col></colgroup><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Description: </i></td><td style="border-bottom: 0px none;">The length of the string should be a non-negative value.</td></tr><tr style="border-bottom: 0px none;"><td style="border-bottom: 0px none;"><i>Exception: </i></td><td style="border-bottom: 0px none;"><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn2.microsoft.com/en-us/library/8xt94y6e" target="_blank">System<span id="ID0EBAAAAAAAABCAAAAA"> </span><script type="text/javascript">
+					addToLanSpecTextIdSet("ID0EBAAAAAAAABCAAAAA?vb=.|cpp=::|cs=.|fs=.|nu=.");
+				</script>ArgumentOutOfRangeException</a></td></tr></table></div></td></tr></table></div><div class="ps_contractsLink"><img src="./../icons/online_icon.gif" class="OH_offlineIcon" alt="Online" title="Online" /><a href="http://msdn.microsoft.com/en-us/devlabs/dd491992.aspx" target="_blank">Learn more about contracts</a></div><a name="seeAlsoSection"><!----></a><div class="OH_CollapsibleAreaRegion"><div class="OH_regiontitle">See Also</div><div class="OH_CollapsibleArea_HrDiv"><hr class="OH_CollapsibleArea_Hr" /></div></div><div class="OH_clear"></div><div class="seeAlsoStyle"><a href="ccd65eb6-da2e-6ba7-e52b-770f7f193536.htm" target="">RandomBounded Class</a></div><div class="seeAlsoStyle"><a href="cb8b7ff3-ed22-862a-fbda-79a1f2071374.htm" target="">RandomBounded Members</a></div><div class="seeAlsoStyle"><a href="e3206f96-86f1-5297-1b6d-653c76325433.htm" target="">whiteMath.Randoms Namespace</a></div></div>
+        </div>
+      </div>
+    </div>
+    <div id="OH_footer" class="OH_footer">
+      <p />
+      <div class="OH_feedbacklink">
+        <a href="mailto:?subject=whiteMath+%2b+whiteStructs+-+a+programmer-friendly+mathematical+library+RandomBounded.NextString+Method++100+EN-US&amp;body=Your%20feedback%20is%20used%20to%20improve%20the%20documentation%20and%20the%20product.%20Your%20e-mail%20address%20will%20not%20be%20used%20for%20any%20other%20purpose%20and%20is%20disposed%20of%20after%20the%20issue%20you%20report%20is%20resolved.%20While%20working%20to%20resolve%20the%20issue%20that%20you%20report%2c%20you%20may%20be%20contacted%20via%20e-mail%20to%20get%20further%20details%20or%20clarification%20on%20the%20feedback%20you%20sent.%20After%20the%20issue%20you%20report%20has%20been%20addressed%2c%20you%20may%20receive%20an%20e-mail%20to%20let%20you%20know%20that%20your%20feedback%20has%20been%20addressed.">Send Feedback</a> on this topic.</div>
+    </div>
+  </body>
+</html>
