@@ -29,7 +29,7 @@ This never happened, as you could expect.
 So why now? Because today I stopped caring.
 Maybe we could do it together?
 
-0. TODO:
+-0.5 PREFIX:
 
 I understand that perhaps this isn't a very good readme for an open-source library.
 I honestly promise to write one very soon - just don't know where to begin.
@@ -45,8 +45,8 @@ Stay tuned - and I will really appreciate any help.
 Currently, there are two types of hardly understandable and badly documented code 
 in the library:
 
-1. "How in the world this thing works?"
-2. "What in the world this thing does?"
+1.1. "How in the world this thing works?"
+2.1. "What in the world this thing does?"
 
 The second type should be urgently reported using appropriate media (e.g. the issues
 channel). Code of the first type can also be reported, but the author does not guarantee 
