@@ -77,6 +77,13 @@ it is understood that all their authors deserve at least their name to be mentio
 So please report if you find anything.
 You can also tell me what bad boy I was - I really know.
 
+3.5. TOOLS USED:
+
+3.5.0 - Visual Studio 2012 Ultimate Edition
+3.5.1 - SandCastle for building HTML/CHM files from XML comments: http://shfb.codeplex.com/
+3.5.2 - .NET Code Contracts: http://visualstudiogallery.msdn.microsoft.com/1ec7db13-3363-46c9-851f-1ce455f66970
+3.5.3 - Brain
+
 4. ALL IN ALL,
 
 It can already do something:
