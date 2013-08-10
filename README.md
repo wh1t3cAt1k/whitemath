@@ -5,20 +5,20 @@ An open-source programmer-friendly C# .NET mathematical++ library.
 Current version: 1.0.0.
 Released under Apache v2 open-source license. 
 
-As of 2013.08.10 - "just gone open-source" (c)
+As of 2013.08.10 - "just gone open-source"
 
 The library should not by any means be treated as something complete in terms
 of both functionality and documentation. Hopefully, it will never be complete
 in terms of functionality; unfortunately, it is likely that the documentation
 isn't going to cover everything, either.
 
--2. WHAT?
+0.1.- WHAT?
 
 This is a mathematical++ (maths, data structures, helper classes) library initially
 designed to assist me in my student projects at the Higher School of Economics, 
 Moscow, Russia. What is it now? You decide.
 
--1. WHY?
+0.2.- WHY?
 
 Because I believe that the majority of shareableideas ought to be shared.
 
@@ -29,7 +29,7 @@ This never happened, as you could expect.
 So why now? Because today I stopped caring.
 Maybe we could do it together?
 
--0.5 PREFIX:
+0.999.- PREFIX:
 
 I understand that perhaps this isn't a very good readme for an open-source library.
 I honestly promise to write one very soon - just don't know where to begin.
@@ -40,13 +40,15 @@ included in repository.
 
 Stay tuned - and I will really appreciate any help. 
 
-1. BAD DOCUMENTATION:
+1.- BAD DOCUMENTATION:
 
 Currently, there are two types of hardly understandable and badly documented code 
 in the library:
 
-1.1. "How in the world this thing works?"
-2.1. "What in the world this thing does?"
+<ul>
+<li> "How in the world this thing works?" </li>
+<li> "What in the world this thing does?" </li>
+</ul>
 
 The second type should be urgently reported using appropriate media (e.g. the issues
 channel). Code of the first type can also be reported, but the author does not guarantee 
@@ -58,7 +60,7 @@ Currently, the author tries to document everything thoroughly using XML and in-l
 comments. Sadly, part of these comments are still in Russian, so feel free to
 ask for an appropriate translation.
 
-2. BUGS: 
+2.- BUGS: 
 
 I suspect there are lots of them. Most of the functions were in real-life use from one to
 several times, and after that was happily abandoned. I have never bothered with thorough
@@ -66,7 +68,7 @@ randomized testing either.
 
 Please report.
 
-3. COPYRIGHT NOTES:
+3.- COPYRIGHT NOTES:
 
 - The idea of Numeric<T, C> appears to be stolen/rewritten from somewhere. My conscience 
 eats me for that, but I just can't find the source. 
@@ -77,14 +79,14 @@ it is understood that all their authors deserve at least their name to be mentio
 So please report if you find anything.
 You can also tell me what bad boy I was - I really know.
 
-3.5. TOOLS USED:
+3.5.- TOOLS USED:
 
-3.5.0 - Visual Studio 2012 Ultimate Edition
-3.5.1 - SandCastle for building HTML/CHM files from XML comments: http://shfb.codeplex.com/
-3.5.2 - .NET Code Contracts: http://visualstudiogallery.msdn.microsoft.com/1ec7db13-3363-46c9-851f-1ce455f66970
-3.5.3 - Brain
+3.5.0 - Visual Studio 2012 Ultimate Edition <br/>
+3.5.1 - SandCastle for building HTML/CHM files from XML comments: http://shfb.codeplex.com/ <br/>
+3.5.2 - .NET Code Contracts: http://visualstudiogallery.msdn.microsoft.com/1ec7db13-3363-46c9-851f-1ce455f66970 <br/>
+3.5.3 - Brain <br/>
 
-4. ALL IN ALL,
+4.- ALL IN ALL,
 
 It can already do something:
 
