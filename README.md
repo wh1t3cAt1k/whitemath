@@ -63,7 +63,7 @@ ask for an appropriate translation.
 2.- BUGS: 
 
 I suspect there are lots of them. Most of the functions were in real-life use from one to
-several times, and after that was happily abandoned. I have never bothered with thorough
+several times, and after that were happily forgotten about. I have never bothered with thorough
 randomized testing either.
 
 Please report.
