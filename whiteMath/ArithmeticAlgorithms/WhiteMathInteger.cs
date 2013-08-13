@@ -21,7 +21,7 @@ namespace whiteMath
         public static int JacobiSymbol(T num, T denom)
         {
             Contract.Requires<NonIntegerTypeException>(Numeric<T, C>.Calculator.isIntegerCalculator, "The method works only for integer numeric types.");
-            Contract.Requires<ArgumentException>(denom > Numeric<T,C>.Zero && !Numeric<T,C>.Calculator.isEven(denom), "The denominator of the Jacobi symbol should be odd and positive.");
+            Contract.Requires<ArgumentException>(denom > Numeric<T, C>.Zero && !Numeric<T,C>.Calculator.isEven(denom), "The denominator of the Jacobi symbol should be odd and positive.");
 
             bool minus = false;     // флаг минуса
 

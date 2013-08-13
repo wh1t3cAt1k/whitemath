@@ -91,21 +91,21 @@ namespace whiteMath.Graphers
         /// <param name="indentFromBounds">
         /// The indent (in pixels) from the boundaries of drawing area.
         /// </param>
-        /// <param name="BackgroundBrush">
+        /// <param name="backgroundBrush">
         /// The brush which will be used to fill
         /// the background of the drawing area.
         /// If <c>null</c>, no background will be drawn.
         /// </param>
-        /// <param name="CoordPen">
+        /// <param name="coordPen">
         /// The pen which will be used to draw the axes.
         /// If <c>null</c>, no axes will be drawn.
         /// </param>
-        /// <param name="CoordFont">
+        /// <param name="coordFont">
         /// The font which will be used to draw the values
         /// on the axes.
         /// If <c>null</c>, no values will be drawn on the axes.
         /// </param>
-        /// <param name="GridPen">
+        /// <param name="gridPen">
         /// The pen which will be used to draw the
         /// coordinate grid.
         /// If <c>null</c>, no grid will be drawn.
@@ -114,7 +114,7 @@ namespace whiteMath.Graphers
         /// The pen which will be used to draw the graph curve. 
         /// If <c>null</c>, the graph curve won't be drawn.
         /// </param>
-        /// <param name="CurveType"></param>
+        /// <param name="curveType"></param>
         public GraphingArgs(
             int indentFromBounds, 
             Brush backgroundBrush, 
@@ -206,7 +206,7 @@ namespace whiteMath.Graphers
         /// This dictionary must contain all point names of <c>HistoGrapher</c>.
         /// </summary>
         /// <see cref="HistoGrapher.PointNames"/>
-        /// <see cref="HistoGrapher.CreateBrushes()"/>
+        /// <see cref="HistoGrapher.CreateBrushes"/>
         public Dictionary<string, Brush> ColumnBrushes { get; set; }
 
         /// <summary>

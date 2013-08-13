@@ -81,7 +81,7 @@ namespace whiteMath.Randoms
     // ------------------------------------------------------
 
     /// <summary>
-    /// This class contains extension methods for <c>IRandomBounded.
+    /// This class contains extension methods for <see cref="IRandomBounded&lt;T&gt;"/>.
     /// </summary>
     public static class RandomBounded
     {

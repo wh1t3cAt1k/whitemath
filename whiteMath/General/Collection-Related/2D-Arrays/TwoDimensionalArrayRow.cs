@@ -197,7 +197,7 @@ namespace whiteMath.General
         /// The source two-dimensional array object
         /// to be wrapped.
         /// </param>
-        /// <param name="row">
+        /// <param name="rowIndex">
         /// The row index of the source object to be fixed.
         /// </param>
         public TwoDimensionalArrayRow(T[,] matrix, int rowIndex)

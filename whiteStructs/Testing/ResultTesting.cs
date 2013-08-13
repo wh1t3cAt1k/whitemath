@@ -21,7 +21,7 @@ namespace whiteStructs.Testing
     /// <c>TestConductedEventHandler&lt;<typeparamref name="T"/>,<typeparamref name="R"/>&gt;</c>
     /// event.
     /// </summary>
-    /// <see cref="<c>TestConductedEventHandler&lt;T,R&gt;</c>"/>
+    /// <see cref="TestConductedEventHandler&lt;T,R&gt;"/>
     /// <typeparam name="T">The type of tested function's argument.</typeparam>
     /// <typeparam name="R">The type of tested function's return value.</typeparam>
     [ContractVerification(true)]

@@ -44,7 +44,7 @@ namespace whiteMath.General
             return new Point<T>(Numeric<T, C>.Zero, Numeric<T, C>.Zero);
         }
 
-        /// ----------------------------------------------
+        // ----------------------------------------------
 
         /// <summary>
         /// The X coordinate of the point.
@@ -56,7 +56,7 @@ namespace whiteMath.General
         /// </summary>
         public T Y { get; private set; }
 
-        /// ----------------------------------------------
+        // ----------------------------------------------
 
         /// <summary>
         /// Provides an alternative way of accessing the point elements.

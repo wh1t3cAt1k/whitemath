@@ -23,9 +23,9 @@ namespace whiteMath.Graphers.Components
         public event EventHandler ColorValueChanged;
 
         /// <summary>
-        /// Returns the user-selected color for the curve with specified index in multigrapher list.
+        /// Returns the user-selected color for the curve with specified index in the multigrapher's list.
         /// </summary>
-        /// <param name="MultiGrapherIndex"></param>
+        /// <param name="multiGrapherIndex">A zero-based index of grapher contained in the multigrapher's list.</param>
         /// <returns></returns>
         public Color getCurveColor(int multiGrapherIndex)
         {
@@ -35,7 +35,6 @@ namespace whiteMath.Graphers.Components
         /// <summary>
         /// Returns the user-selected color for the curve.
         /// </summary>
-        /// <param name="MultiGrapherIndex"></param>
         /// <returns></returns>
         public Color getCurveColor()
         {

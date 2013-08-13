@@ -61,7 +61,6 @@ namespace whiteMath.ArithmeticLong
     {
         int IBase.getBase()
         {
-            Contract.Ensures(Contract.Result<int>() > 1, "The base of number digits should be positive and more than 1.");
             return 0;
         }
 

@@ -31,7 +31,7 @@ namespace whiteMath.Graphers
         /// Graph method supported by graphers with either bounded or unbounded range.
         /// 
         /// The method signature assumes that the implementation class knows how to calculate
-        /// the function bounds (yMin & yMax) knowing the argument bounds.
+        /// the function bounds (yMin and yMax) knowing the argument bounds.
         /// 
         /// CONTRACT:
         /// 

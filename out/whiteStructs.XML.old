@@ -244,7 +244,7 @@
         </member>
         <member name="M:whiteStructs.Testing.PerformanceTester`2.#ctor(whiteStructs.Testing.OneArgumentProcedure{`0})">
             <summary>
-            Initializes the <see cref="!:PerformanceTester"/> with 
+            Initializes the <see cref="T:whiteStructs.Testing.PerformanceTester`2"/> with 
             a one-argument procedure which mean running time is
             to be estimated.
             </summary>
@@ -268,8 +268,6 @@
             <summary>
             Для проведения тестов с множеством предопределенных аргументов.
             </summary>
-            <typeparam name="T"></typeparam>
-            <param name="procedure"></param>
             <param name="arguments"></param>
             <param name="idleRun"></param>
             <returns></returns>
@@ -287,14 +285,14 @@
         </member>
         <member name="E:whiteStructs.Testing.PerformanceTester`2.TestPerformed">
             <summary>
-            This event fires once the <see cref="!:PerformanceTester"/>
+            This event fires once the <see cref="T:whiteStructs.Testing.PerformanceTester`2"/>
             during performs a single test during two-level testing.
             </summary>
         </member>
         <member name="P:whiteStructs.Testing.PerformanceTester`2.TestedProcedure">
             <summary>
             Gets the procedure which mean running time is tested
-            by the current <see cref="!:PerformanceTester"/>.
+            by the current <see cref="T:whiteStructs.Testing.PerformanceTester`2"/>.
             </summary>
         </member>
         <member name="T:whiteStructs.Testing.OneArgumentFunction`2">
@@ -306,7 +304,16 @@
             <param name="arg">The argument received by the procedure.</param>
             <returns>A value as specified by function's logic.</returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:whiteStructs.Testing.TestConductedEventArgs`2" -->
+        <member name="T:whiteStructs.Testing.TestConductedEventArgs`2">
+            <summary>
+            This class contains the event data for the
+            <c>TestConductedEventHandler&lt;<typeparamref name="T"/>,<typeparamref name="R"/>&gt;</c>
+            event.
+            </summary>
+            <see cref="T:whiteStructs.Testing.TestConductedEventHandler`2"/>
+            <typeparam name="T">The type of tested function's argument.</typeparam>
+            <typeparam name="R">The type of tested function's return value.</typeparam>
+        </member>
         <member name="P:whiteStructs.Testing.TestConductedEventArgs`2.TestNumber">
             <summary>
             Gets the zero-based number of the test in the series.

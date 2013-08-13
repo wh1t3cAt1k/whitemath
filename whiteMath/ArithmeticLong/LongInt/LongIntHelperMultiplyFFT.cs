@@ -280,8 +280,6 @@ namespace whiteMath.ArithmeticLong
             /// <summary>
             /// Performs the carrying after the FFT multiplication.
             /// </summary>
-            /// <param name="BASE"></param>
-            /// <param name="?"></param>
             internal static void performCarry(int BASE, IList<long> digits)
             {
                 long carry = 0;

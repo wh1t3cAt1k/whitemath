@@ -60,10 +60,10 @@ internal sealed class ZigZagWinder : Winder
     /// </summary>
     private void analyzeDirection()
     {
-        /// The direction map
-        /// 2 3 4
-        /// 1   5
-        /// 8 7 6
+        // The direction map
+        // 2 3 4
+        // 1   5
+        // 8 7 6
         switch (celltype)
         {
             case 0: if (direction == 4) direction = 4; else direction = 8; break;

@@ -50,9 +50,9 @@ namespace whiteMath.Matrices
             }
         }
 
-        /// ---------------------------------------------
-        ///             MATRIX ARITHMETIC
-        /// ---------------------------------------------
+        // ---------------------------------------------
+        //             MATRIX ARITHMETIC
+        // ---------------------------------------------
 
         /// <summary>
         /// Performs the matrix multiplication using the quick Strassen algorithm.
@@ -324,7 +324,7 @@ namespace whiteMath.Matrices
 
         /// <summary>
         /// Checks if matrices passed to common arithmetic methods (sum and substraction between matrices etc., 
-        /// arithmetic operations between matrices and Numeric<T,C> values et\c.)
+        /// arithmetic operations between matrices and <see cref="Numeric&lt;T, C&gt;"/> values etc.)
         /// 
         /// The principle is that (dim(A) = dim(B) = dim(res)) should be true, where dim is imaginary function
         /// returning the [row x columns] dimension object.

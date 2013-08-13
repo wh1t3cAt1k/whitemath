@@ -25,14 +25,13 @@ namespace whiteMath.Geometry
         /// </param>
         /// <param name="c">The first free term of transformation matrix. Can be set to any value, affects the inverse matrix calculation precision.</param>
         /// <param name="d">THe second free term of transformation matrix. Can be set to any value, affects the inverse matrix calculation precision.</param>
-        /// <returns>An affine transform matrix that would convert the <typeparamref name="firstVector"/> to the <typeparamref name="secondVector"/>.</returns>
+        /// <returns>An affine transform matrix that would convert the <paramref name="firstVector"/> to the <paramref name="secondVector"/>.</returns>
         public static Matrix_SDA<double, CalcDouble> GetAffineTransformMatrix(
             VectorD firstVector, 
             VectorD secondVector, 
             double c = 0, 
             double d = 0,
-            Func<DoubleMatrix, DoubleVector, DoubleVector> equationSystemSolverFunction = null
-            )
+            Func<DoubleMatrix, DoubleVector, DoubleVector> equationSystemSolverFunction = null)
         {
             if(equationSystemSolverFunction == null)
                 equationSystemSolverFunction = delegate(DoubleMatrix matrix, DoubleVector f)
@@ -42,8 +41,6 @@ namespace whiteMath.Geometry
 
                     return null;
                 };
-
-            
 
             return null;
         }

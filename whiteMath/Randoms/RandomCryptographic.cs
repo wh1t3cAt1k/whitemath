@@ -43,7 +43,7 @@ namespace whiteMath.Randoms
         /// </summary>
         /// <param name="gen">
         /// An instance of cryptographically strong <see cref="RandomNumberGenerator"/>.
-        /// If <c>null</c>, an instance built from <see cref="RNGCryptoServiceProvider.Create()"/> will be used.
+        /// If <c>null</c>, an instance built from <see cref="RNGCryptoServiceProvider.Create"/> will be used.
         /// </param>
         public RandomCryptographic(RandomNumberGenerator gen = null)
         {

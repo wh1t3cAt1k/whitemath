@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
-
 using whiteMath.General;
 
 namespace whiteMath
@@ -114,6 +114,7 @@ namespace whiteMath
         /// </exception>
         /// <param name="one">The number to test.</param>
         /// <returns>True if the number is even,that is, has no remainder of division by two.</returns>
+        [Pure]
         bool isEven(T one);
         
         /// <summary>
@@ -168,6 +169,7 @@ namespace whiteMath
         /// <param name="one">The number to be tested if it's bigger than the second.</param>
         /// <param name="two">The number to be tested if it's smaller than the first.</param>
         /// <returns>True if <paramref name="one"/> is bigger than <paramref name="two"/>, false otherwise.</returns>
+        [Pure]
         bool mor(T one, T two);     
 
         /// <summary>
@@ -177,6 +179,7 @@ namespace whiteMath
         /// <param name="one">The first operand.</param>
         /// <param name="two">THe second operand.</param>
         /// <returns>The flag indicating whether the two numbers are equal.</returns>
+        [Pure]
         bool eqv(T one, T two);     
 
         /// <summary>
@@ -185,6 +188,7 @@ namespace whiteMath
         /// </summary>
         /// <param name="one">The value to be tested.</param>
         /// <returns>True if the value is NaN, false otherwise.</returns>
+        [Pure]
         bool isNaN(T one);          
 
         /// <summary>

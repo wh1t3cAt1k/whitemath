@@ -355,9 +355,9 @@ namespace whiteMath
             return calc.div(obj.num, obj.denom);
         }
 
-        ///-----------------------------------
-        ///-----INHERITED OVERRIDING----------
-        ///-----------------------------------
+        //-----------------------------------
+        //-----INHERITED OVERRIDING----------
+        //-----------------------------------
 
         /// <summary>
         /// Gets the exact deep copy of the current number.

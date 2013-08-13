@@ -182,7 +182,7 @@ namespace whiteMath.General
         /// the same as nodes order within the nodes list object passed.
         /// 
         /// Requirement: the nodes list passed should contain unique nodes which are all the nodes of the linked list, not less and not more;
-        /// This is automatically true if the nodes list passes the <see cref="IsObsolete()"/> test with <paramref name="checkOrder"/> set to false.
+        /// This is automatically true if the nodes list passes the <see cref="IsObsolete&lt;T&gt;"/> test with <c>checkOrder</c> set to false.
         /// </summary>
         /// <typeparam name="T">The type of values stored in the linked list.</typeparam>
         /// <param name="list">The calling linked list object to be reordered.</param>

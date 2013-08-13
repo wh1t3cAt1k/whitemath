@@ -58,30 +58,33 @@ namespace whiteMath.ArithmeticLong
         /// The constructor designed to create a pseudo-random LongExp
         /// number, using an integer amount of decimal digits specified by the user.
         /// </summary>
-        /// <param name="powerInterval">The interval in which the exponent of the number can be presented.</param>
-        /// <param name="generator">The random generator for the digits.</param>
-        /// <param name="decimalDigitCount">The decimal digit length of the number. Cannot be more than specified by IPrecision precision class.</param>
+        /// <param name="powerInterval">An interval in which the exponent of the number can be presented.</param>
+        /// <param name="generator">A random generator for the digits.</param>
+        /// <param name="digitCount">The digit length of the number. Cannot be more than specified by IPrecision precision class.</param>
         public LongExp(int digitCount, BoundedInterval<int, CalcInt> powerInterval, Random generator)
         {
             this.Negative = (generator.Next(0, 2) == 0 ? false : true);
 
-            // рандомизируем экспоненту
+            // Randomize the explonent
+            // -
             this.Exponent = generator.Next((powerInterval.IsLeftInclusive ? powerInterval.LeftBound : powerInterval.LeftBound + 1), (powerInterval.IsRightInclusive ? powerInterval.RightBound + 1 : powerInterval.RightBound));
 
-            // теперь мантисса.
-
+            // Now to the mantiss.
+            // -
             this.Mantiss = new List<int>(digitCount);
             this.Mantiss.Add(generator.Next(1, BASE));
 
-            // ...так как первая цифра должна быть значимой
+            // ...Because the first digit should be significant.
 
             int i = 1;
 
             for ( ; i < digitCount - 1; i++)
                 this.Mantiss.Add(generator.Next(0, BASE));
 
-            if(i<digitCount)
+            if (i < digitCount)
+            {
                 this.Mantiss.Add(generator.Next(1, BASE));
+            }
         }
 
         // -------------------------

@@ -23,7 +23,8 @@ namespace whiteMath.General
         /// For ordered sequences, returns a list of pairs with first element being the index,
         /// and second being the result of selector function applied to the value and current index. The order of elements is preserved.
         /// </summary>
-        /// <typeparam name="T">The type of elements in the ordered sequence.</typeparam>
+        /// <typeparam name="TSource">The type of elements in the source sequence.</typeparam>
+        /// <typeparam name="TResult">The type of values in the key-value pairs in the result sequence.</typeparam>
         /// <param name="sequence">The calling ordered sequence.</param>
         /// <param name="selector">The selector function transforming elements from <typeparamref name="TSource"/> to <typeparamref name="TResult"/>.</param>
         /// <returns>
@@ -37,7 +38,9 @@ namespace whiteMath.General
             List<KeyValuePair<int, TResult>> result = new List<KeyValuePair<int, TResult>>(sequence.Count());
 
             foreach (TSource value in sequence)
+            {
                 result.Add(new KeyValuePair<int, TResult>(index, selector(index++, value)));
+            }
 
             return result;
         }

@@ -21,10 +21,10 @@ namespace whiteMath.Functions
     /// On the other side, LagrangePolynom's calculation method 
     /// would take much more time than of the simple Polynom using Horner's scheme.
     /// </summary>
-    /// <see cref="Polynom"/>
+    /// <see cref="Polynom&lt;T, C&gt;"/>
     /// <typeparam name="T">The type of polynom coefficients/value.</typeparam>
     /// <typeparam name="C">The calculator for the coefficient type.</typeparam>
-    public class LagrangePolynom<T,C>: IFunction<T, T>, ICloneable where C: ICalc<T>, new() 
+    public class LagrangePolynom<T, C>: IFunction<T, T>, ICloneable where C: ICalc<T>, new() 
     {
         private static ICalc<T> calc = Numeric<T, C>.Calculator;
 

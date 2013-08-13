@@ -5,8 +5,6 @@ An open-source programmer-friendly C# .NET mathematical++ library.
 Current version: 1.0.0.
 Released under Apache v2 open-source license. 
 
-As of 2013.08.10 - "just gone open-source" (c)
-
 The library should not by any means be treated as something complete in terms
 of both functionality and documentation. Hopefully, it will never be complete
 in terms of functionality; unfortunately, it is likely that the documentation
@@ -20,9 +18,9 @@ Moscow, Russia. What is it now? You decide.
 
 -1. WHY?
 
-Because I believe that the majority of shareableideas ought to be shared.
+Because I believe that the majority of shareable ideas ought to be shared.
 
-I wanted to go open-source more than four years ago, but wanted to write
+I wanted to go open-source more than four years ago, but thought to write
 a thorough documentation before I would disclose all that stuff.
 This never happened, as you could expect.
 

@@ -35,19 +35,19 @@ namespace whiteStructs.Testing
     public class PerformanceTester<T, HT>
     {
         /// <summary>
-        /// This event fires once the <see cref="PerformanceTester"/>
+        /// This event fires once the <see cref="PerformanceTester&lt;T, HT&gt;"/>
         /// during performs a single test during two-level testing.
         /// </summary>
         public event TestPerformedEventHandler<HT> TestPerformed;
 
         /// <summary>
         /// Gets the procedure which mean running time is tested
-        /// by the current <see cref="PerformanceTester"/>.
+        /// by the current <see cref="PerformanceTester&lt;T, HT&gt;"/>.
         /// </summary>
         public OneArgumentProcedure<T> TestedProcedure { get; private set; }
 
         /// <summary>
-        /// Initializes the <see cref="PerformanceTester"/> with 
+        /// Initializes the <see cref="PerformanceTester&lt;T, HT&gt;"/> with 
         /// a one-argument procedure which mean running time is
         /// to be estimated.
         /// </summary>
@@ -68,6 +68,7 @@ namespace whiteStructs.Testing
             bool                                idleRun = true
             )
         {
+            Contract.Requires<ArgumentNullException>(highLevelChangeFunction != null, "highLevelChangeFunction");
             Contract.Requires<ArgumentNullException>(highLevelStopCriteria != null, "highLevelStopCriteria");
             Contract.Requires<ArgumentNullException>(lowLevelValueProvider != null, "lowLevelValueProvider");
             Contract.Requires<ArgumentNullException>(lowLevelStopCriteriaProvider != null, "lowLevelStopCriteriaProvider");
@@ -86,14 +87,10 @@ namespace whiteStructs.Testing
 
                 result.Add(new KeyValuePair<HT, double>(highLevelValue, currentTime));
 
-                // -----------------------------------
-                // ----- выполнил тест - скажи соседу!
-                // -----------------------------------
-
+                // Performed the test - tell everyone!
+                // -
                 if (this.TestPerformed != null)
                     this.TestPerformed.Invoke(highLevelValue, currentTime);
-
-                // -----------------------------------
 
                 highLevelValue = highLevelChangeFunction(highLevelChanges, highLevelValue);
                 ++highLevelChanges;
@@ -280,8 +277,6 @@ namespace whiteStructs.Testing
         /// <summary>
         /// Для проведения тестов с множеством предопределенных аргументов.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="procedure"></param>
         /// <param name="arguments"></param>
         /// <param name="idleRun"></param>
         /// <returns></returns>

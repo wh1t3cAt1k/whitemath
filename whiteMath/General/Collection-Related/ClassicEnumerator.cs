@@ -7,8 +7,6 @@ using System.Collections;
 
 namespace whiteMath.General
 {
-    // ----------------------------------------- ENUMERATORS
-
     /// <summary>
     /// The classic enumerator for IList<typeparamref name="T"/>.
     /// </summary>
@@ -18,16 +16,15 @@ namespace whiteMath.General
         IList<T> list;
 
         /// <summary>
-        /// Creates the enumerator for the indexed list.
+        /// Creates a <see cref="ClassicEnumerator&lt;T&gt;"/> for an <see cref="IList&lt;T&gt;"/>.
         /// </summary>
-        /// <param name="fragment"></param>
         public ClassicEnumerator(IList<T> list)
         {
             this.list = list;
         }
 
         /// <summary>
-        /// Gets the object to which the enumerator currently points.
+        /// Gets the element to which the enumerator currently points.
         /// </summary>
         object IEnumerator.Current
         {
@@ -35,7 +32,7 @@ namespace whiteMath.General
         }
 
         /// <summary>
-        /// Gets the object to which the enumerator currently points.
+        /// Gets the element to which the enumerator currently points.
         /// </summary>
         public T Current
         {

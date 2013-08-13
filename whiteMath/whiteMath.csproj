@@ -369,8 +369,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\LICENSE" />
     <None Include="Resources\NTTPrimeModuli.txt" />
     <None Include="Resources\NTTFastPrimeModuli.txt" />
+    <None Include="Resources\README.md" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

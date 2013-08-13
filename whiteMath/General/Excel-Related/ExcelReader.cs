@@ -185,7 +185,6 @@ namespace whiteMath.General
         /// <summary>
         /// Closes the previously opened Excel connection and cleans up all the resources.
         /// </summary>
-        /// <param name="app"></param>
         public static void closeConnection(XS.Workbook wb)
         {
             XS.Application app = wb.Application;

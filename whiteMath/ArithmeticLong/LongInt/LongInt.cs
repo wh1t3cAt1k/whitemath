@@ -679,7 +679,7 @@ namespace whiteMath.ArithmeticLong
         /// <summary>
         /// If the base of the current number digits is an integer power of some value <paramref name="rootValue"/>,
         /// then this method, provided with information on which power it is exactly (<paramref name="rootDegree"/>),
-        /// will return the current number multiplied by <paramref name="rootValue"/>^<paramref name="multiplyByRootPower"/>.
+        /// will return the current number multiplied by <paramref name="rootValue"/>^<paramref name="rootPower"/>.
         /// 
         /// Is QUICK for any digit bases. Takes as much as O(n) time to perform.
         /// 
@@ -693,9 +693,9 @@ namespace whiteMath.ArithmeticLong
         /// </summary>
         /// <param name="rootValue">The number which is, being powered to <paramref name="rootDegree"/>, equals to the current number's digits base.</param>
         /// <param name="rootDegree">The exponent of the <paramref name="rootValue"/> which makes the expression <paramref name="rootValue"/>^<paramref name="rootDegree"/> be equal to the current base.</param>
-        /// <param name="multiplyByRootPower">The value of <paramref name="rootValue"/>'s integer power to multiply by. For example, if <paramref name="multiplyByRootPower"/> is 2 and <paramref name="rootValue"/> is 5, the multiplication by 25 will be performed.</param>
-        /// <returns>The result of current number's multiplication by <paramref name="rootValue"/>^<paramref name="multiplyByRootPower"/>.</returns>
-        public LongInt<B> BaseRootMultiply(int rootValue, int rootDegree, int multiplyByRootPower)
+        /// <param name="rootPower">The value of <paramref name="rootValue"/>'s integer power to multiply by. For example, if <paramref name="rootPower"/> is 2 and <paramref name="rootValue"/> is 5, the multiplication by 25 will be performed.</param>
+        /// <returns>The result of current number's multiplication by <paramref name="rootValue"/>^<paramref name="rootPower"/>.</returns>
+        public LongInt<B> BaseRootMultiply(int rootValue, int rootDegree, int rootPower)
         {
             // TODO: if power < 0.
             // -
@@ -704,9 +704,9 @@ namespace whiteMath.ArithmeticLong
             // Если степень числа не кратна длине цифры, которая и равна logValue, придется
             // работать дополнительно.
             // -
-            if (multiplyByRootPower % rootDegree > 0)
+            if (rootPower % rootDegree > 0)
             {
-                int remPower = WhiteMath<int, CalcInt>.PowerInteger(rootValue, multiplyByRootPower % rootDegree);
+                int remPower = WhiteMath<int, CalcInt>.PowerInteger(rootValue, rootPower % rootDegree);
 
                 long product = tmp.Digits[tmp.Length - 1] * remPower;
 
@@ -739,7 +739,7 @@ namespace whiteMath.ArithmeticLong
             // То, что кратно - просто добавляем в начало числа
             // как нули.
             // -
-            tmp.Digits.InsertRange(0, new int[multiplyByRootPower / rootDegree]);
+            tmp.Digits.InsertRange(0, new int[rootPower / rootDegree]);
 
             return tmp;
         }
@@ -747,7 +747,7 @@ namespace whiteMath.ArithmeticLong
         /// <summary>
         /// If the base of the current number digits is an integer power of some value <paramref name="rootValue"/>,
         /// then this method, provided with information on which power it is exactly (<paramref name="rootDegree"/>),
-        /// will return the current number integrally divided by <paramref name="rootValue"/>^<paramref name="multiplyByRootPower"/>.
+        /// will return the current number integrally divided by <paramref name="rootValue"/>^<paramref name="rootPower"/>.
         /// 
         /// Is QUICK for any digit bases. Takes as much as O(n) time to perform.
         /// 
@@ -761,49 +761,53 @@ namespace whiteMath.ArithmeticLong
         /// </summary>
         /// <param name="rootValue">The number which is, being powered to <paramref name="rootDegree"/>, equals to the current number's digits base.</param>
         /// <param name="rootDegree">The exponent of the <paramref name="rootValue"/> which makes the expression <paramref name="rootValue"/>^<paramref name="rootDegree"/> be equal to the current base.</param>
-        /// <param name="divideByRootPower">The value of <paramref name="rootValue"/>'s integer power to divide by. For example, if <paramref name="multiplyByRootPower"/> is 2 and <paramref name="rootValue"/> is 5, the division by 25 will be performed.</param>
-        /// <returns>The result of current number's division by <paramref name="rootValue"/>^<paramref name="multiplyByRootPower"/>.</returns>
-        public LongInt<B> BaseRootDivide(int rootValue, int rootDegree, int divideByRootPower)
+        /// <param name="rootPower">The value of <paramref name="rootValue"/>'s integer power to divide by. For example, if <paramref name="multiplyByRootPower"/> is 2 and <paramref name="rootValue"/> is 5, the division by 25 will be performed.</param>
+        /// <returns>The result of current number's division by <paramref name="rootValue"/>^<paramref name="rootPower"/>.</returns>
+        public LongInt<B> BaseRootDivide(int rootValue, int rootDegree, int rootPower)
         {
-            if (divideByRootPower < 0) { return BaseRootMultiply(rootValue, rootDegree, -divideByRootPower); }
+            if (rootPower < 0) 
+            { 
+                return BaseRootMultiply(rootValue, rootDegree, -rootPower); 
+            }
 
-            // Для начала создаем копию текущего числа.
-
-            LongInt<B> tmp = this.Clone() as LongInt<B>;
-
-            // Удаляем цифры. Может удалиться все, поэтому берем минимум. 
-            //
-            tmp.Digits.RemoveRange(0, Math.Min(divideByRootPower / rootDegree, this.Length));
-
-            // Имеет смысл что-то делать, только если в числе остались цифры.
-            // Если нет, просто добавляем ноль и завершаем работу.
+            // Create a copy of the current number.
             // -
-            if (tmp.Length > 0)
+            LongInt<B> result = this.Clone() as LongInt<B>;
+
+            // Delete the digits. It is possible that everything would
+            // be deleted, so we take a min. 
+            //
+            result.Digits.RemoveRange(0, Math.Min(rootPower / rootDegree, this.Length));
+
+            // It is reasonable to do something only if any digits are left.
+            // If not, just add a zero and finish. 
+            // -
+            if (result.Length > 0)
             {
-                // Теперь будем разбираться с остатком.
+                // Now we are dealing with the remainder.
                 //
-                divideByRootPower %= rootDegree;
+                rootPower %= rootDegree;
 
                 // То, на что осталось поделить все цифры числа со сдвигом.
                 // Из следующей цифры числа берем остаток от деления на rootValue в остаточной степени.
 
-                int powered = WhiteMath<int, CalcInt>.PowerInteger(rootValue, divideByRootPower);
+                int powered = WhiteMath<int, CalcInt>.PowerInteger(rootValue, rootPower);
                 int backpowered = BASE / powered;
 
-                for (int i = 0; i < tmp.Digits.Count - 1; i++)
-                    tmp.Digits[i] = tmp.Digits[i] / powered + tmp.Digits[i + 1] % powered * backpowered;
+                for (int i = 0; i < result.Digits.Count - 1; i++)
+                    result.Digits[i] = result.Digits[i] / powered + result.Digits[i + 1] % powered * backpowered;
 
-                // Последнюю цифру делим. К ней ничего не прибавляем.
-
-                tmp.Digits[tmp.Length - 1] /= powered;
+                // Divide the last digit. Do not add anything to it.
+                // -
+                result.Digits[result.Length - 1] /= powered;
                 
-                // Могут остаться ведущие нули.
-                
-                tmp.DealWithZeroes();
+                // It is possible that leading zeroes will appear.
+                // -
+                result.DealWithZeroes();
             }
-            else tmp.Digits.Add(0);
+            else result.Digits.Add(0);
 
-            return tmp;
+            return result;
         }
 
         // --------- BASE MULTIPLY -------------------

@@ -522,7 +522,7 @@ namespace whiteMath
         /// on the <paramref name="interval"/> object passed.
         /// </remarks>
         /// <returns>
-        /// A <see cref="PotentialResult&lt;Numeric&lt;T,C&gt;&gt;"/> object which will store
+        /// A <c>PotentialResult&lt;Numeric&lt;T, C&gt;&gt;</c> object which will store
         /// the maximum number within a given interval for which the <paramref name="predicate"/> holds, if the algorithm
         /// finds one.
         /// </returns>

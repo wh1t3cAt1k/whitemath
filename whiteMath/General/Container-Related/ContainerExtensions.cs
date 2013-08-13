@@ -12,8 +12,6 @@ namespace whiteMath.General
         /// <summary>
         /// Creates the form that contains the invoking user control as its only child component.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public static Form createContainingForm(this UserControl ctrl, FormBorderStyle borderStyle = FormBorderStyle.Sizable)
         {
             Form obj = new Form();

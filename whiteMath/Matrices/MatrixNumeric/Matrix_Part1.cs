@@ -117,9 +117,9 @@ namespace whiteMath.Matrices
             set { this[indexPair.row, indexPair.column] = value; }
         }
 
-        /// -----------------------------------
-        /// ---------- INDEXERS CONCERNED -----
-        /// -----------------------------------
+        // -----------------------------------
+        // ---------- INDEXERS-RELATED -------
+        // -----------------------------------
 
         /// <summary>
         /// Returns the value at specified matrix index.
@@ -151,9 +151,9 @@ namespace whiteMath.Matrices
         /// <param name="value">The VALUE TO SET!</param>
         protected internal abstract void setItemAt(int row, int column, Numeric<T,C> value);
 
-        /// ----------------------------------
-        /// --------TRANSPOSE ----------------
-        /// ----------------------------------
+        // ----------------------------------
+        // --------TRANSPOSE ----------------
+        // ----------------------------------
 
         /// <summary>
         /// Transposes the current matrix.
@@ -190,9 +190,9 @@ namespace whiteMath.Matrices
             return transposedMatrix;
         }
 
-        /// ----------------------------------
-        /// --------ROW AND COLUMN SWAPPING---
-        /// ----------------------------------
+        // ----------------------------------
+        // --------ROW AND COLUMN SWAPPING---
+        // ----------------------------------
 
         /// <summary>
         /// Virtual method. Swaps two rows with specified indices in the matrix.
@@ -270,9 +270,9 @@ namespace whiteMath.Matrices
             return !(one.Equals(two));
         }
 
-        /// --------------------------------
-        /// --------SUBMATRICES AND MINORS--
-        /// --------------------------------
+        // --------------------------------
+        // --------SUBMATRICES AND MINORS--
+        // --------------------------------
 
         /// <summary>
         /// Inserts the submatrix at the specified point. The current matrix WILL NOT BE STRETCHED
@@ -335,7 +335,7 @@ namespace whiteMath.Matrices
         /// <param name="j">Column index of the upper-left corner element</param>
         /// <param name="rows">Row count of the submatrix</param>
         /// <param name="columns">Column count of the submatrix</param>
-        /// <returns>The binded submatrix of specified size</returns>
+        /// <returns>A binded submatrix of specified size</returns>
         public Matrix<T, C> getSubMatrixAt(int i, int j, int rows, int columns)
         {
             checkPositive(i, j);
@@ -350,9 +350,7 @@ namespace whiteMath.Matrices
         /// </summary>
         /// <param name="i">Row index of the upper-left corner element</param>
         /// <param name="j">Column index of the upper-left corner element</param>
-        /// <param name="rows">Row count of the submatrix</param>
-        /// <param name="columns">Column count of the submatrix</param>
-        /// <returns>The binded submatrix of size [RowCount-i; ColumnCount-j]</returns>
+        /// <returns>A binded submatrix of size [RowCount-i; ColumnCount-j]</returns>
         public Matrix<T, C> getSubMatrixAt(int i, int j)
             { return this.getSubMatrixAt(i, j, RowCount - i, ColumnCount - j); }
 
@@ -372,7 +370,7 @@ namespace whiteMath.Matrices
         /// all changes made to the array OBJECTS (not to the array itself) will affect the matrix 
         /// elements and vice versa.
         /// 
-        /// Use <see cref="MatrixElementCopyAdapter"/> if such behaviour is not expected.
+        /// Use <see cref="ElementCopyAdapter"/> if such behaviour is not expected.
         /// </summary>
         /// <returns></returns>
         public T[,] convertToArray()
@@ -394,7 +392,7 @@ namespace whiteMath.Matrices
         /// all changes made to the array OBJECTS (not to the array itself) will affect the matrix 
         /// elements and vice versa.
         /// 
-        /// Use <see cref="MatrixElementCopyAdapter"/> if such behaviour is not expected.
+        /// Use <see cref="ElementCopyAdapter"/> if such behaviour is not expected.
         /// </summary>
         /// <param name="matrix"></param>
         public void convertFromArray(T[,] matrix)

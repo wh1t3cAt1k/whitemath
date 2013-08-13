@@ -130,11 +130,11 @@ namespace whiteMath.General
         // -----------------------------------
 
         /// <summary>
-        /// Invokes a quick mergesort algorithm on a particular list.
-        /// O(n*log(n)) asympthotics are guaranteed!
+        /// Invokes a quick mergesort algorithm on a list.
+        /// Works with O(n*log(n)) speed.
         /// </summary>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
-        /// <param name="arr">List to be sorted.</param>
+        /// <param name="list">A list to be sorted.</param>
         /// <param name="comparer">The comparer for list elements.</param>
         public static void SortMerge<T>(this IList<T> list, IComparer<T> comparer = null)
         {

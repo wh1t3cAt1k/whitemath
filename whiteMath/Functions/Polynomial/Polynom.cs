@@ -562,7 +562,7 @@ namespace whiteMath.Functions
         /// You may wish to cancel the returning polynom
         /// as the coefficients may be multiples of the same number.
         /// </summary>
-        /// <param name="second">The second polynom.</param>
+        /// <param name="another">The second polynom.</param>
         /// <returns>The greatest common divisor of the current polynom and the other.</returns>
         public Polynom<T, C> GreatestCommonDivisor(Polynom<T, C> another)
         {

@@ -166,14 +166,14 @@ namespace whiteMath.Cryptography
         };
 
         /// <summary>
-        /// Скрытый метод. Перебирает сначала первые 100 простых чисел для проверки делимости.
-        /// А уже дальше - Миллера-Рабина.
+        /// Hidden method - tries the first 100 primes to test divisibility.
+        /// If not divisible - proceeds with Miller-Rabin.
         /// </summary>
-        private static bool isPrimeOptimized<B>(LongInt<B> number)
+        private static bool __isPrimeOptimized<B>(LongInt<B> number)
             where B: IBase, new()
         {
             RandomMersenneTwister gen = new RandomMersenneTwister();
-            RandomLongIntRejection<B> lgen = new RandomLongIntRejection<B>(gen);
+            RandomLongIntModular<B> lgen = new RandomLongIntModular<B>(gen);
 
             foreach (int prime in firstPrimes)
                 if (number % prime == 0)
@@ -207,10 +207,10 @@ namespace whiteMath.Cryptography
             long bits = (long)Math.Ceiling(Math.Log(LongInt<B>.BASE, 2));   // сколько бит занимает BASE
 
             if (randomGenerator == null)
-                randomGenerator = new RandomLongIntRejection<B>(new RandomMersenneTwister());
+                randomGenerator = new RandomLongIntModular<B>(new RandomMersenneTwister());
 
             if (primalityTest == null)
-                primalityTest = (x => isPrimeOptimized(x));
+                primalityTest = (x => __isPrimeOptimized(x));
 
             LongInt<B>
                 firstPrime,

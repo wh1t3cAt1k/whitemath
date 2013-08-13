@@ -239,10 +239,10 @@ namespace whiteMath.Randoms
 
         /// <summary>
         /// Returns a delegate that is able to generate random byte sequences 
-        /// on the basis of a random <c>long</c> generator delegate.
+        /// on the basis of a random <see cref="long"/> generator.
         /// </summary>
         /// <param name="longGenerator">A delegate which returns a random long number, recommended to cover the whole range <c>[long.MinValue; long.MaxValue]</c>.</param>
-        /// <returns>A delegate that wraps around the <paramref name="intGenerator"/> to produce random byte sequences.</returns>
+        /// <returns>A delegate that wraps around the <paramref name="longGenerator"/> to produce random byte sequences.</returns>
         public static ByteGenerator CreateNextBytes(UnboundedGenerator<long> longGenerator)
         {
             return delegate(byte[] array)

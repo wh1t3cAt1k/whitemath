@@ -34,26 +34,46 @@ namespace whiteMath.Statistics
         }
 
         /// <summary>
-        /// TODO
+        /// Calculates the sample median value for a sequence of observations, that is,
+        /// such a value that (approximately) 50% of all observations in the sequence are less than
+        /// (or equal to) this value, and other 50% are bigger than (or equal to) it.
+        /// 
+        /// Please note that if the number of observations is even (2k), the median
+        /// returned may not be an element of the source sequence at all, 
+        /// being calculated as an arithmetic average of the middle two adjacent
+        /// observations in the sorted sequence (see the definition of sample median).
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="C"></typeparam>
-        /// <param name="values"></param>
-        /// <param name="comparer"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of observations' values.</typeparam>
+        /// <typeparam name="C">A calculator for the <typeparamref name="T"/> type.</typeparam>
+        /// <param name="values">The sequence of observations.</param>
+        /// <param name="comparer">A comparer object used to sort the incoming sequence ascending.</param>
+        /// <returns>The sample median for the sequence of observations passed.</returns>
         public static T SampleMedian<T, C>(this IEnumerable<T> values, IComparer<T> comparer = null) where C : ICalc<T>, new()
         {
+            Contract.Requires<ArgumentNullException>(values != null, "values");
+            Contract.Ensures(
+                values.Where(x => (Numeric<T, C>)x < Contract.Result<T>()).Count() == values.Count() / 2,
+                "The value returned does not satisfy the requirements for the median.");
+
             if(values.Count() == 0)
                 throw new ArgumentException("Cannot evaluate the sample median value for an empty sequence.");
 
-            T[] arr = values.ToArray();
+            T[] sortedSequence = values.ToArray();
 
-            arr.SortShell(comparer);
+            sortedSequence.SortShell(comparer);
 
-            if (arr.Length % 2 == 0)
-                return ((Numeric<T, C>)arr[(arr.Length - 1) / 2] + arr[arr.Length / 2]) / (Numeric<T, C>._2);
+            if (sortedSequence.Length % 2 == 0)
+            {
+                // By definition of the sample median for a sequence with an even number of elements,
+                // we calculate it as an arithmetic average of two adjacent middle elements of the
+                // sequence sorted ascending. 
+                // -
+                return ((Numeric<T, C>)sortedSequence[(sortedSequence.Length - 1) / 2] + sortedSequence[sortedSequence.Length / 2]) / (Numeric<T, C>._2);
+            }
             else
-                return (arr[arr.Length / 2]);
+            {
+                return (sortedSequence[sortedSequence.Length / 2]);
+            }
         }
 
         /// <summary>
@@ -81,8 +101,8 @@ namespace whiteMath.Statistics
 
             enumerator.MoveNext();
 
-            // доходим до первого значения, не равного медиане.
-
+            // Find the first value not equal to the median.
+            // -
             while (calc.eqv(enumerator.Current, sampleMedian))
                 if (enumerator.MoveNext() == false)
                     return 0;
@@ -116,6 +136,9 @@ namespace whiteMath.Statistics
         /// <returns>The sample unbiased variation for the sequence of observations.</returns>
         public static T SampleUnbiasedVariance<T, C>(this IEnumerable<T> values, T sampleAverage) where C : ICalc<T>, new()
         {
+            Contract.Requires<ArgumentNullException>(values != null, "values");
+            Contract.Ensures(Contract.Result<T>() >= Numeric<T, C>._0, "The variance should not be negative.");
+
             int count = values.Count();
 
             if (count == 0)
@@ -142,11 +165,14 @@ namespace whiteMath.Statistics
         /// <returns>The sample biased variation for the sequence of observations.</returns>
         public static T SampleVariance<T, C>(this IEnumerable<T> values, T sampleAverage) where C : ICalc<T>, new()
         {
+            Contract.Requires<ArgumentNullException>(values != null, "values");
+            Contract.Ensures(Contract.Result<T>() >= Numeric<T, C>._0, "The variance should not be negative.");
+
             return SampleUnbiasedVariance<T, C>(values, sampleAverage) * (Numeric<T,C>)(values.Count() - 1) / (Numeric<T,C>)(values.Count());
         }
 
         // - 
-        // MOVING AVERAGES
+        // MOVING STATISTICS (INCLUDING AVERAGES)
         // -
 
         /// <summary>
@@ -321,7 +347,7 @@ namespace whiteMath.Statistics
         /// <param name="currentIndex">
         /// The current index in the source sequence 
         /// pointing to the current element (for which the window sequence is calculated)</param>
-        /// <param name="tailValuesHandling">A tail values handling flag, see <see cref="TailvaluesHandling"/></param>
+        /// <param name="tailValuesHandling">A tail values handling flag, see <see cref="TailValuesHandling"/></param>
         /// <param name="windowType">The window type, see <see cref="WindowType"/>.</param>
         /// <returns>
         /// A window sequence for the current element (referenced by <paramref name="currentIndex"/>).
@@ -406,6 +432,83 @@ namespace whiteMath.Statistics
         }
 
         /// <summary>
+        /// Finds the moving statistic sequence from the sequence of values 
+        /// using the specified non-negative window width and the statistic functor
+        /// <paramref name="statistic"/> of type <c>Func&lt;IEnumerable&lt;T&gt;, T&gt;"</c>. 
+        /// 
+        /// The tail values (such that there is not enough data in the window around them
+        /// get handled using <see cref="TailValuesHandling"/> flag passed).
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the sequence.</typeparam>
+        /// <typeparam name="C">The numeric calculator for the <typeparamref name="T"/> type.</typeparam>
+        /// <param name="values">The sequence of values.</param>
+        /// <param name="windowWidth">
+        /// A non-negative window width applied to both sides of the current value.
+        /// It means that, e.g. when the window width is 1, the window will consist
+        /// of three values: the current value, one value to the left and one value to the right.
+        /// </param>
+        /// <param name="windowType">
+        /// The type of the window for calculation of the average. 
+        /// See <see cref="WindowType"/>
+        /// </param>
+        /// <param name="tailValuesHandling">
+        /// A flag specifying how the tail values should be handled 
+        /// (such that there is not enough data in the window around them).
+        /// See <see cref="TailValuesHandling"/>.
+        /// </param>
+        /// <param name="statistic">
+        /// A functor object taking an <c>IEnumerable&lt;T&gt;</c> sequence of observations
+        /// and returning a statistic such as sample average, sample median, sample variance / standard
+        /// deviation etc.
+        /// </param>
+        /// <returns>
+        /// A sequence of statictics calculated in the window
+        /// around each value from the source sequence.
+        /// i.e. the i-th index in the result sequence means
+        /// that the <paramref name="statistic"/> was calculated in the
+        /// respective window around the i-th element of the source sequence.
+        /// </returns>
+        public static List<T> MovingStatistic<T, C>(
+            this IList<T> values,
+            int windowWidth,
+            WindowType windowType,
+            TailValuesHandling tailValuesHandling,
+            Func<IEnumerable<T>, T> statistic)
+            where C : ICalc<T>, new()
+        {
+            Contract.Requires<ArgumentNullException>(values != null, "values");
+            Contract.Requires<ArgumentOutOfRangeException>(windowWidth >= 0, "The window width should be non-negative");
+            Contract.Requires<ArgumentException>(
+                tailValuesHandling != TailValuesHandling.UseSymmetricAvailableWindow ||
+                windowType == WindowType.Symmetric,
+                "Symmetric tail values handling is only available for symmetric windows.");
+
+            List<T> result = new List<T>(values.Count);
+
+            for (int index = 0; index < values.Count; ++index)
+            {
+                ListSegment<T> windowSequence = __getWindowSequence<T>(
+                    values,
+                    windowWidth,
+                    windowType,
+                    tailValuesHandling,
+                    index);
+
+                if (windowSequence.IsEmpty())
+                {
+                    continue;
+                }
+                else
+                {
+                    T statisticValue = statistic(windowSequence);
+                    result.Add(statisticValue);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Finds the moving average sequence from the sequence of values
         /// and the specified non-negative window width. The tail values
         /// (such that there is not enough data in the window around them
@@ -443,29 +546,12 @@ namespace whiteMath.Statistics
                 windowType == WindowType.Symmetric,
                 "Symmetric tail values handling is only available for symmetric windows.");
 
-            List<T> result = new List<T>(values.Count);
-
-            for (int index = 0; index < values.Count; ++index)
-            {
-                ListSegment<T> windowSequence = __getWindowSequence<T>(
-                    values,
-                    windowWidth,
-                    windowType,
-                    tailValuesHandling,
-                    index);
-
-                if (windowSequence.IsEmpty())
-                {
-                    continue;
-                }
-                else
-                {
-                    T average = SampleAverage<T, C>(windowSequence);
-                    result.Add(average);
-                }
-            }
-
-            return result;
+            return MovingStatistic<T, C>(
+                values,
+                windowWidth,
+                windowType,
+                tailValuesHandling,
+                StatisticExtensionMethods.SampleAverage<T, C>);
         }
 
         /// <summary>
@@ -506,29 +592,12 @@ namespace whiteMath.Statistics
                 windowType == WindowType.Symmetric,
                 "Symmetric tail values handling is only available for symmetric windows.");
 
-            List<T> result = new List<T>(values.Count);
-
-            for (int index = 0; index < values.Count; ++index)
-            {
-                ListSegment<T> windowSequence = __getWindowSequence<T>(
-                    values,
-                    windowWidth,
-                    windowType,
-                    tailValuesHandling,
-                    index);
-
-                if (windowSequence.IsEmpty())
-                {
-                    continue;
-                }
-                else
-                {
-                    T median = SampleMedian<T, C>(windowSequence);
-                    result.Add(median);
-                }
-            }
-
-            return result;
+            return MovingStatistic<T, C>(
+                values,
+                windowWidth,
+                windowType,
+                tailValuesHandling,
+                StatisticExtensionMethods.SampleAverage<T, C>);
         }
     }
 }
