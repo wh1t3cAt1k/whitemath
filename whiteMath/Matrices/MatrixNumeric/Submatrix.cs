@@ -12,7 +12,7 @@ namespace whiteMath.Matrices
     /// reference.
     /// 
     /// An object of this class cannot be instantiated directly.
-    /// Call method getSubmatrixAt() for a particular DoubleMatrix object instead.
+    /// Call method getSubmatrixAt() for a particular Matrix object instead.
     /// </summary>
     public class Submatrix<T,C>: Matrix<T,C> where C: ICalc<T>, new()
     {

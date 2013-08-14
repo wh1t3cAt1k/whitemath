@@ -214,6 +214,7 @@
     <Compile Include="General\Collection-Related\CollectionFilling.cs" />
     <Compile Include="General\Collection-Related\2D-Arrays\TwoDimensionalArrayExtensions.cs" />
     <Compile Include="General\Collection-Related\2D-Arrays\TwoDimensionalArrayRow.cs" />
+    <Compile Include="General\Collection-Related\Multidimensional Arrays\MultiDimensionalArrayExtensions.cs" />
     <Compile Include="General\Enumerable-Related\EnumerableExtensions.cs" />
     <Compile Include="General\Function-Related\HitTester.cs" />
     <Compile Include="General\GeneralExceptions.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="General\Collection-Related\ListSorting.cs" />
     <Compile Include="General\Collection-Related\LTDefaultList.cs" />
     <Compile Include="General\Collection-Related\SequenceExtensions.cs" />
+    <Compile Include="General\NaNForceEqualityComparer.cs" />
     <Compile Include="General\Other\DoubleInfoExtraction.cs" />
     <Compile Include="General\Structures\BinaryHeap.cs" />
     <Compile Include="General\Structures\BinomialHeap.cs" />

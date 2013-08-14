@@ -129,5 +129,66 @@ namespace whiteMath.General
 
             return new Point<T>(min, max);
         }
+
+        // ------------------------------------
+        // ------- TO 2D ARRAY ---------------
+        // ------------------------------------
+
+        /// <summary>
+        /// Creates a single-column two-dimensional array from an enumerable.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the enumerable.</typeparam>
+        /// <param name="enumerable">A sequence to be converted to 2D single-column array.</param>
+        /// <returns>
+        /// A single-column two dimensional array containing the elements of 
+        /// <paramref name="enumerable"/> in increasing row order.
+        /// </returns>
+        public static T[,] To2DArrayColumn<T>(this IEnumerable<T> enumerable)
+        {
+            Contract.Requires<ArgumentNullException>(enumerable != null, "enumerable");
+
+            int elementCount = enumerable.Count();
+
+            T[,] result = new T[elementCount, 1];
+
+            int rowIndex = 0;
+
+            foreach (T value in enumerable)
+            {
+                result[rowIndex, 0] = value;
+                ++rowIndex;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a single-row two-dimensional array from an enumerable.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the enumerable.</typeparam>
+        /// <param name="enumerable">A sequence to be converted to 2D single-row array.</param>
+        /// <returns>
+        /// A single-row two dimensional array containing the elements of 
+        /// <paramref name="enumerable"/> in increasing column order.
+        /// </returns>
+        public static T[,] To2DArrayRow<T>(this IEnumerable<T> enumerable)
+        {
+            Contract.Requires<ArgumentNullException>(enumerable != null, "enumerable");
+
+            int elementCount = enumerable.Count();
+
+            T[,] result = new T[1, elementCount];
+
+            int columnIndex = 0;
+
+            foreach (T value in enumerable)
+            {
+                result[0, columnIndex] = value;
+                ++columnIndex;
+            }
+
+            return result;
+        }
+
     }
 }

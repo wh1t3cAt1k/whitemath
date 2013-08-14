@@ -4,8 +4,8 @@ namespace whiteMath.Matrices
 {
     /// <summary>
     /// A struct representing a pair of matrix indexes.
-    /// Provides alternative way of indexing in Matrix objects;
-    /// Also is used in Winder-classes for compact next-IndexPair return of getNextIndexPair();
+    /// Provides an alternative way of indexing in Matrix objects;
+    /// Also used in Winder-classes for compact next-IndexPair return of getNextIndexPair();
     /// <see>Winder.getNextIndexPair()</see>
     /// </summary>
     public struct IndexPair

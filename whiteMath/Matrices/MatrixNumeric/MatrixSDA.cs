@@ -9,11 +9,11 @@ namespace whiteMath.Matrices
 {
     /// <summary>
     /// Matrix containing the single-dimensional array inside.
-    /// Is quickest to work.
+    /// Works fast.
     /// </summary>
-    public class Matrix_SDA<T,C>: Matrix<T,C> where C:ICalc<T>, new()
+    public class Matrix_SDA<T, C>: Matrix<T, C> where C: ICalc<T>, new()
     {
-        internal Numeric<T,C>[] matrixArray;       // Single-dimensional array containing the matrix
+        internal Numeric<T, C>[] matrixArray;       // Single-dimensional array containing the matrix
         
         //--------------- CONSTRUCTORS
 

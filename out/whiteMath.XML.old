@@ -2569,6 +2569,91 @@
             <param name="rowIndex">The row index of the two-dimensional array.</param>
             <param name="list">The list containing the values to be placed in the specified row.</param>
         </member>
+        <member name="M:whiteMath.General.TwoDimensionalArrayExtensions.GetSubArray``1(``0[0:,0:],System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Computes a subarray of a specified 2D array,
+            starting at the specified position (row and column index)
+            and spanning the specified number of rows and columns.
+            The result 2D array does not depend on the original array in 
+            terms of getting / setting its elements (the elements themselves
+            are shallow copies though).
+            </summary>
+            <typeparam name="T">The type of elements in the source array.</typeparam>
+            <param name="matrix">A 2D array whose submatrix is to be calculated.</param>
+            <param name="atRowIndex">The row index in the <paramref name="matrix"/> where the subarray should begin.</param>
+            <param name="atColumnIndex">The column index in the <paramref name="matrix"/> where the subarray should begin.</param>
+            <param name="rowCount">Total number of rows in the resulting array.</param>
+            <param name="columnCount">Total number of columns in the resulting array.</param>
+            <returns>
+            A 2D array containing elements of <paramref name="matrix"/> 
+            starting from row <paramref name="atRowIndex"/> and column <paramref name="atColumnIndex"/>
+            and spanning <paramref name="rowCount"/> rows and <paramref name="columnCount"/> columns.
+            </returns>
+        </member>
+        <member name="M:whiteMath.General.TwoDimensionalArrayExtensions.PlaceMatrixAt``1(``0[0:,0:],System.Int32,System.Int32,``0[0:,0:])">
+            <summary>
+            Replaces the element in the source 2D array
+            with elements from the second 2D array,
+            starting at the specified row and column in the source array.
+            </summary>
+            <typeparam name="T">The type of elements in the array.</typeparam>
+            <param name="matrix">The source matrix to be modified.</param>
+            <param name="patch">A second matrix whose elements will replace part of the original matrix.</param>
+            <param name="atRowIndex">
+            The row index in the <paramref name="matrix"/> where the 
+            elements of <paramref name="patch"/> will be placed.
+            </param>
+            <param name="atColumnIndex">
+            The column index in the <paramref name="matrix"/> where the elements 
+            of <paramref name="patch"/> will be placed.
+            </param>
+            <exception cref="T:System.ArgumentException">
+            Thrown if <paramref name="patch"/> cannot be completely placed 
+            within <paramref name="matrix"/> considering the specified indices of placement.
+            </exception>
+        </member>
+        <member name="M:whiteMath.General.TwoDimensionalArrayExtensions.WithAttachedToTheLeft``1(``0[0:,0:],``0[0:,0:])">
+            <summary>
+            Attaches a two-dimensional "patch" array with the same row
+            count to the left of the source 2D array. In the result
+            2D array, the columns of the original matrix will
+            be shifted to the right depending on the column count of the patch. 
+            </summary>
+            <typeparam name="T">The type of elements in the array.</typeparam>
+            <param name="matrix">
+            A two-dimensional array to which the <paramref name="leftPatch"/> will be attached.
+            Remains unmodified.
+            </param>
+            <param name="leftPatch">
+            A matrix that will be attached to the left of the original 2D array.
+            </param>
+            <returns>
+            A new two-dimensional array of combined column count and the same row count,
+            where the beginning columns contain elements of <paramref name="leftPatch"/>,
+            and the ending columns contain elements of <paramref name="matrix"/>.
+            </returns>
+        </member>
+        <member name="M:whiteMath.General.TwoDimensionalArrayExtensions.WithAttachedToTheRight``1(``0[0:,0:],``0[0:,0:])">
+            <summary>
+            Attaches a two-dimensional "patch" array with the same row
+            count to the right of the source 2D array. In the result
+            2D array, the original 2D array will be located in the leftmost part,
+            and the "patch" in the rightmost. 
+            </summary>
+            <typeparam name="T">The type of elements in the array.</typeparam>
+            <param name="matrix">
+            A two-dimensional array to which the <paramref name="rightPatch"/> will be attached.
+            Remains unmodified.
+            </param>
+            <param name="rightPatch">
+            A matrix that will be attached to the right of the original 2D array.
+            </param>
+            <returns>
+            A new two-dimensional array of combined column count and the same row count,
+            where the beginning columns contain elements of <paramref name="matrix"/>,
+            and the ending columns contain elements of <paramref name="rightPatch"/>.
+            </returns>
+        </member>
         <member name="T:whiteMath.General.TwoDimensionalArrayRow`1">
             <summary>
             Represents a row of a two-dimensional array.
@@ -2660,6 +2745,43 @@
             <param name="index">The index of the element to be got or set.</param>
             <returns>The value at the specified index of the collection.</returns>
         </member>
+        <member name="T:whiteMath.General.MultiDimensionalArrayExtensions">
+            <summary>
+            This class provides extension methods for multidimensional arrays.
+            </summary>
+        </member>
+        <member name="M:whiteMath.General.MultiDimensionalArrayExtensions.IsSizeEqualTo(System.Array,System.Array)">
+            <summary>
+            Returns whether two arrays are
+            equal in size within each dimension.
+            </summary>
+            <param name="matrix">The first array.</param>
+            <param name="another">The second array.</param>
+            <returns><c>true</c> if the sizes are equal, <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:whiteMath.General.MultiDimensionalArrayExtensions.IsElementwiseEqualTo``1(System.Array,System.Array,System.Collections.Generic.IEqualityComparer{``0},System.Boolean)">
+            <summary>
+            Returns whether the two arrays are
+            of the same size and contain equal elements
+            for every combination of indices. 
+            </summary>
+            <typeparam name="T">The type of elements in the array.</typeparam>
+            <param name="first">The first array.</param>
+            <param name="second">The second array.</param>
+            <param name="equalityComparer">
+            An equality comparer for the type <typeparamref name="T"/>.
+            If <c>null</c>, a default comparer will be used.
+            </param>
+            <param name="NaNEqualsNaN">
+            If this flag is set to <c>true</c>, then any two <c>NaN</c> values
+            (i.e. values not equal to themselves in terms of <see cref="!:equalityComparer"/>)
+            WILL be considered equal even though it is against the IEEE standard. 
+            </param>
+            <returns>
+            <c>true</c> if two arrays are of the same size and contain equal
+            elements for every combination of indices, <c>false</c> otherwise.
+            </returns>
+        </member>
         <member name="M:whiteMath.General.EnumerableExtensions.ToElementString``1(System.Collections.Generic.IEnumerable{``0},System.String,System.Func{``0,System.String})">
             <summary>
             Constructs a string out of a sequence, enumerating its values through the separator.
@@ -2708,6 +2830,28 @@
             <param name="sequence">The calling sequence object.</param>
             <param name="comparer">A comparer for the T type. Its Compare() method should return a positive value in case when the first compared element is bigger than the second.</param>
             <returns>A logical point whose X value is equal to the minimum element, and Y value is equal to the maximum element of the sequence.</returns>
+        </member>
+        <member name="M:whiteMath.General.EnumerableExtensions.To2DArrayColumn``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Creates a single-column two-dimensional array from an enumerable.
+            </summary>
+            <typeparam name="T">The type of elements in the enumerable.</typeparam>
+            <param name="enumerable">A sequence to be converted to 2D single-column array.</param>
+            <returns>
+            A single-column two dimensional array containing the elements of 
+            <paramref name="enumerable"/> in increasing row order.
+            </returns>
+        </member>
+        <member name="M:whiteMath.General.EnumerableExtensions.To2DArrayRow``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Creates a single-row two-dimensional array from an enumerable.
+            </summary>
+            <typeparam name="T">The type of elements in the enumerable.</typeparam>
+            <param name="enumerable">A sequence to be converted to 2D single-row array.</param>
+            <returns>
+            A single-row two dimensional array containing the elements of 
+            <paramref name="enumerable"/> in increasing column order.
+            </returns>
         </member>
         <member name="M:whiteMath.General.HitTester`2.#ctor(System.Collections.Generic.IEnumerable{whiteMath.BoundedInterval{`0,`1}})">
             <summary>
@@ -2940,6 +3084,63 @@
             <typeparam name="C">A calculator for the <typeparamref name="T"/> type.</typeparam>
             <param name="sequence">The calling sequence object.</param>
             <returns>a list of index-value points, where index has the same numeric type as the elements of the sequence.</returns>
+        </member>
+        <member name="T:whiteMath.General.NaNForceEqualityComparer`1">
+            <summary>
+            Represents a wrapper around an arbitrary equality comparer,
+            modifying it for the <c>NaN</c> case: the wrapping comparer will
+            return whatever the underlying comparer returns, except for the
+            case when both compared objects are <c>NaN</c>s (by definition, not equal to 
+            anything, even themselves). In this case, the wraping equality comparer
+            will return <c>true</c>.
+            </summary>
+            <typeparam name="T">The type of elements to be compared for equality.</typeparam>
+        </member>
+        <member name="M:whiteMath.General.NaNForceEqualityComparer`1.#ctor(System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Constructs a <see cref="T:whiteMath.General.NaNForceEqualityComparer`1"/> using
+            an <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> comparer object.
+            </summary>
+            <param name="parent">
+            An <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> comparer object
+            which will be used for equality comparison in every case except
+            when both compared values are <c>NaN</c>'s (not equal to themselves - in
+            terms of the parent comparer).
+            In that case, the constructed comparer will return <c>true</c>.
+            </param>
+        </member>
+        <member name="M:whiteMath.General.NaNForceEqualityComparer`1.Equals(`0,`0)">
+            <summary>
+            Compares two <typeparamref name="T"/> objects and returns whatever 
+            the <see cref="P:whiteMath.General.NaNForceEqualityComparer`1.ParentEqualityComparer"/> returns, except for the case when
+            <see cref="P:whiteMath.General.NaNForceEqualityComparer`1.ParentEqualityComparer"/> returns <c>false</c> for 
+            self-comparison of both <paramref name="first"/> and <paramref name="second"/>.
+            Since that means that both values are <c>NaN</c> (by definition), the 
+            comparer will intentionally return <c>true</c> (because that's what it does by design).
+            </summary>
+            <param name="first">The first object to be compared for equality.</param>
+            <param name="second">The second object to be compared for equality.</param>
+            <returns>
+            The result of comparison by <see cref="P:whiteMath.General.NaNForceEqualityComparer`1.ParentEqualityComparer"/> if at least one of the 
+            objects is not <c>NaN</c>, or <c>true</c> otherwise.
+            </returns>
+        </member>
+        <member name="M:whiteMath.General.NaNForceEqualityComparer`1.GetHashCode(`0)">
+            <summary>
+            Returns whatever <see cref="P:whiteMath.General.NaNForceEqualityComparer`1.ParentEqualityComparer"/>
+            returns in the <see cref="M:whiteMath.General.NaNForceEqualityComparer`1.GetHashCode(`0)"/> for this value.
+            </summary>
+            <param name="value">The value whose hash code is to be calculated.</param>
+            <returns>
+            Whatever <see cref="P:whiteMath.General.NaNForceEqualityComparer`1.ParentEqualityComparer"/> returns in the <see cref="M:whiteMath.General.NaNForceEqualityComparer`1.GetHashCode(`0)"/> 
+            for this value.
+            </returns>
+        </member>
+        <member name="P:whiteMath.General.NaNForceEqualityComparer`1.ParentEqualityComparer">
+            <summary>
+            Gets the parent equality comparer associated with
+            the current object.
+            </summary>
         </member>
         <member name="T:whiteMath.General.DoubleInfo">
             <summary>
@@ -6985,8 +7186,8 @@
         <member name="T:whiteMath.Matrices.IndexPair">
             <summary>
             A struct representing a pair of matrix indexes.
-            Provides alternative way of indexing in Matrix objects;
-            Also is used in Winder-classes for compact next-IndexPair return of getNextIndexPair();
+            Provides an alternative way of indexing in Matrix objects;
+            Also used in Winder-classes for compact next-IndexPair return of getNextIndexPair();
             <see>Winder.getNextIndexPair()</see>
             </summary>
         </member>
@@ -7013,7 +7214,7 @@
             reference.
             
             An object of this class cannot be instantiated directly.
-            Call method getSubmatrixAt() for a particular DoubleMatrix object instead.
+            Call method getSubmatrixAt() for a particular Matrix object instead.
             </summary>
         </member>
         <member name="M:whiteMath.Matrices.Submatrix`2.Clone">
@@ -7041,7 +7242,7 @@
         <member name="T:whiteMath.Matrices.Matrix_SDA`2">
             <summary>
             Matrix containing the single-dimensional array inside.
-            Is quickest to work.
+            Works fast.
             </summary>
         </member>
         <member name="M:whiteMath.Matrices.Matrix_SDA`2.#ctor(System.Int32,System.Int32)">

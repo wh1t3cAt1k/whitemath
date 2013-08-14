@@ -309,7 +309,6 @@ namespace whiteStructs.Testing
         /// Для проведения нескольких тестов с одним аргументом.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="procedure"></param>
         /// <param name="argument"></param>
         /// <param name="stopCriteria"></param>
         /// <param name="idleRun"></param>

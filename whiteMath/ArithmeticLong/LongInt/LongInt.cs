@@ -1238,6 +1238,8 @@ namespace whiteMath.ArithmeticLong
         /// <returns>The long integer value containing all of the digits specified.</returns>
         public static LongInt<B> Parse(string value)
         {
+            Contract.Requires<ArgumentNullException>(value != null, "value");
+
             // Работает только для десятичных чисел.
             // Если нет, то придется сначала преобразовывать в десятичное, а потом
             // из десятичного в число по требуемому основанию.

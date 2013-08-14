@@ -388,6 +388,7 @@ namespace whiteMath
         /// <param name="power">A non-negative integer exponent.</param>
         /// <param name="modulus">An integer modulus of the operation.</param>
         /// <returns>The result of raising <paramref name="number"/> to power <paramref name="power"/> modulo <paramref name="modulus"/>.</returns>
+        [Pure]
         public static T PowerIntegerModular(T number, ulong power, T modulus)
         {
             Contract.Requires<NonIntegerTypeException>(Numeric<T,C>.Calculator.isIntegerCalculator, "This method works only for integer numeric types.");

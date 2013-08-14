@@ -311,7 +311,6 @@
             Для проведения нескольких тестов с одним аргументом.
             </summary>
       <typeparam name="T" />
-      <param name="procedure" />
       <param name="argument" />
       <param name="stopCriteria" />
       <param name="idleRun" />
