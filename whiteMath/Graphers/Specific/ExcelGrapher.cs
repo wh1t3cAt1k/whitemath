@@ -127,16 +127,34 @@ namespace whiteMath.Graphers
         {
             try
             {
-                if (File.Exists(Path)) { FileName = Path; }
-                    else throw new GrapherSettingsException("Не существует файла с именем: " + Path);
-         
+                if (File.Exists(Path))
+                {
+                    FileName = Path;
+                }
+                else
+                {
+                    throw new GrapherSettingsException("File doesn't exist at the specified path: " + Path);
+                }
+
                 FileInfo FI = new FileInfo(Path);
-                
-                if (FI.Extension == ".xls") ext = FileType.ExcelOld;
-                    else if (FI.Extension == ".xlsx") ext = FileType.Excel2007;
-                    else throw new GrapherSettingsException("Невозможно определить тип файла (расширение)");
+
+                if (FI.Extension == ".xls")
+                {
+                    ext = FileType.ExcelOld;
+                }
+                else if (FI.Extension == ".xlsx")
+                {
+                    ext = FileType.Excel2007;
+                }
+                else
+                {
+                    throw new GrapherSettingsException("Unknown file extension.");
+                }
             }
-            catch { throw; }
+            catch 
+            { 
+                throw; 
+            }
         }
 
         public string Axis1StartCell
@@ -329,18 +347,26 @@ namespace whiteMath.Graphers
                     Marshal.ReleaseComObject(ws);
                     Marshal.ReleaseComObject(wb);
                     Marshal.ReleaseComObject(app);
-                    
-                    if(excelProcessId>0)
+
+                    if (excelProcessId > 0)
+                    {
                         Process.GetProcessById(excelProcessId).Kill();
+                    }
                 }
                 catch
                 {
-                    // все нормально, все само закрылось :)
+                    // It's okay. Everything seems to be closed :)
+                    // --
                 }
 
                 this.Count = count;
             }
-            catch { base.yMin = base.yMax = 0; app.Quit(); throw; }
+            catch 
+            { 
+                base.yMin = base.yMax = 0; 
+                app.Quit(); 
+                throw; 
+            }
         }
     }
 }
