@@ -36,7 +36,7 @@ namespace whiteMath.General
         /// A two-dimensional array with the same dimensionality and data
         /// as the source jagged array.
         /// </returns>
-        public static T[,] ToTwoDimensionalArray<T>(this T[][] jagged)
+        public static T[,] To2DArray<T>(this T[][] jagged)
         {
             Contract.Requires<ArgumentNullException>(jagged != null, "jagged");
             Contract.Requires<ArgumentException>(Contract.ForAll<T[]>(jagged, (x => x != null)), "The source array must contain no null rows.");
@@ -44,7 +44,13 @@ namespace whiteMath.General
 
             Contract.Ensures(Contract.Result<T[,]>() != null);
 
-            if (jagged.Length == 0)
+            // We are now sure that every row (if any rows are present)
+            // contains the same number of columns.
+            // 
+            // Here we check if there are no rows at all, or if 
+            // all rows have the column count of zero.
+            // -
+            if (jagged.Length == 0 || jagged[0].Length == 0)
             {
                 return new T[0, 0];
             }

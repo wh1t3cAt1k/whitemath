@@ -1237,94 +1237,36 @@
             <param name="digitIndex">The index of the desired number.</param>
             <returns>The digit on the zero-based position <paramref name="digitIndex"/>.</returns>
         </member>
-        <member name="T:whiteMath.ArithmeticLong.LongInt`1.NTTFastFiniteFieldInfo">
+        <member name="T:whiteMath.ArithmeticLong.LongInt`1.NTTTransformInfo">
+            <summary>
+            This struct contains the info used the information about the transform.
+            </summary>
+        </member>
+        <member name="P:whiteMath.ArithmeticLong.LongInt`1.NTTTransformInfo.numericBase">
+            <summary>
+            Gets the numeric base of transformed vectors.
+            </summary>
+        </member>
+        <member name="P:whiteMath.ArithmeticLong.LongInt`1.NTTTransformInfo.transformLength">
+            <summary>
+            Gets the length of vectors transformed.
+            </summary>
+        </member>
+        <member name="T:whiteMath.ArithmeticLong.LongInt`1.NTTFiniteFieldInfo">
             <summary>
             This class contains information associated with the finite field used to
             multiply two numbers using NTT.
             </summary>
         </member>
-        <member name="P:whiteMath.ArithmeticLong.LongInt`1.NTTFastFiniteFieldInfo.primeModulus">
+        <member name="P:whiteMath.ArithmeticLong.LongInt`1.NTTFiniteFieldInfo.primeModulus">
             <summary>
             Represents the prime modulus used in the process of multiplication.
             </summary>
         </member>
-        <member name="P:whiteMath.ArithmeticLong.LongInt`1.NTTFastFiniteFieldInfo.rootOfUnity">
+        <member name="P:whiteMath.ArithmeticLong.LongInt`1.NTTFiniteFieldInfo.rootOfUnity">
             <summary>
             Represents the primitive root of unity used in the process of multiplication.
             </summary>
-        </member>
-        <member name="M:whiteMath.ArithmeticLong.LongInt`1.Helper.PrepareFastNTTMultiplication">
-            <summary>
-            This method prepares the Helper class for fast NTT multiplication
-            by loading finite field information from the resource file.
-            
-            This can take a few seconds of time, so consider calling this method in advance.
-            </summary>
-        </member>
-        <member name="M:whiteMath.ArithmeticLong.LongInt`1.Helper.getFastFiniteFieldInfo(System.Int32,System.Int32)">
-            <summary>
-            Returns the "minimal" finite field info for a given pair of values for BASE and transform length.
-            </summary>
-        </member>
-        <member name="M:whiteMath.ArithmeticLong.LongInt`1.Helper.MultiplyNTTFast(whiteMath.ArithmeticLong.LongInt{`0},whiteMath.ArithmeticLong.LongInt{`0})">
-            <summary>
-            Computes the product of two long integer numbers using NTT in finite fields.
-            
-            The numbers are not necessarily required to be of two's power long;
-            this algorithm performs all needed operations automatically.
-            </summary>
-            <param name="one"></param>
-            <param name="two"></param>
-        </member>
-        <member name="M:whiteMath.ArithmeticLong.LongInt`1.Helper.MultiplyNTTFast(System.Int32,System.Collections.Generic.IList{System.Int64},System.Collections.Generic.IList{System.Int32},System.Collections.Generic.IList{System.Int32})">
-            <summary>
-            Computes the product of two long integer numbers using NTT in finite fields.
-            
-            The numbers are not necessarily required to be of two's power long;
-            this algorithm performs all needed operations automatically.
-            </summary>
-            <param name="result"></param>
-            <param name="one"></param>
-            <param name="two"></param>
-        </member>
-        <member name="M:whiteMath.ArithmeticLong.LongInt`1.Helper.Recursive_NTT(System.Collections.Generic.IList{System.Int64},whiteMath.ArithmeticLong.LongInt{`0}.NTTFastFiniteFieldInfo)">
-            <summary>
-            FFT
-            </summary>
-            <param name="coefficients"></param>
-            <returns></returns>
-        </member>
-        <member name="M:whiteMath.ArithmeticLong.LongInt`1.Helper.Recursive_NTT_Inverse(System.Collections.Generic.IList{System.Int64},whiteMath.ArithmeticLong.LongInt{`0}.NTTFastFiniteFieldInfo)">
-            <summary>
-            BACK FFT
-            </summary>
-            <param name="coefficients"></param>
-            <returns></returns>
-        </member>
-        <member name="M:whiteMath.ArithmeticLong.LongInt`1.Helper.Recursive_NTT_Skeleton(System.Collections.Generic.IList{System.Int64},System.Collections.Generic.IList{System.Int64},whiteMath.ArithmeticLong.LongInt{`0}.NTTFastFiniteFieldInfo,System.Int32,System.Int32)">
-            <summary>
-            Calculates the result of the recursive Number Theoretic Transform.
-            </summary>
-            <param name="coefficients"></param>
-            <returns></returns>
-        </member>
-        <member name="M:whiteMath.ArithmeticLong.LongInt`1.Helper.rootsOfUnityHalfGalois(whiteMath.ArithmeticLong.LongInt{`0}.NTTFastFiniteFieldInfo,System.Int32,System.Boolean)">
-            <summary>
-            Returns the first half of the [rootDegree]th roots of unity series in the long field.
-            Used in the recursive FFT algorithm in LongInt.Helper class.
-            
-            Root degree should be an exact power of two.
-            </summary>
-            <param name="rootDegree"></param>
-            <returns></returns>
-        </member>
-        <member name="M:whiteMath.ArithmeticLong.LongInt`1.Helper.componentMultiplyGalois(System.Collections.Generic.IList{System.Int64},System.Collections.Generic.IList{System.Int64},whiteMath.ArithmeticLong.LongInt{`0}.NTTFastFiniteFieldInfo)">
-            <summary>
-            Performs the component-to-component multiplication of two convolution vectors in the finite field.
-            </summary>
-            <param name="one"></param>
-            <param name="two"></param>
-            <returns></returns>
         </member>
         <member name="M:whiteMath.ArithmeticLong.LongInt`1.Helper.PrepareNTTMultiplication">
             <summary>
@@ -1526,37 +1468,6 @@
             <param name="power">A non-negative exponent.</param>
             <param name="modulus">The modulus of the operation.</param>
             <returns>The result of raising <paramref name="number"/> to power <paramref name="power"/> modulo <paramref name="modulus"/>.</returns>
-        </member>
-        <member name="T:whiteMath.ArithmeticLong.LongInt`1.NTTTransformInfo">
-            <summary>
-            This struct contains the info used the information about the transform.
-            </summary>
-        </member>
-        <member name="P:whiteMath.ArithmeticLong.LongInt`1.NTTTransformInfo.numericBase">
-            <summary>
-            Gets the numeric base of transformed vectors.
-            </summary>
-        </member>
-        <member name="P:whiteMath.ArithmeticLong.LongInt`1.NTTTransformInfo.transformLength">
-            <summary>
-            Gets the length of vectors transformed.
-            </summary>
-        </member>
-        <member name="T:whiteMath.ArithmeticLong.LongInt`1.NTTFiniteFieldInfo">
-            <summary>
-            This class contains information associated with the finite field used to
-            multiply two numbers using NTT.
-            </summary>
-        </member>
-        <member name="P:whiteMath.ArithmeticLong.LongInt`1.NTTFiniteFieldInfo.primeModulus">
-            <summary>
-            Represents the prime modulus used in the process of multiplication.
-            </summary>
-        </member>
-        <member name="P:whiteMath.ArithmeticLong.LongInt`1.NTTFiniteFieldInfo.rootOfUnity">
-            <summary>
-            Represents the primitive root of unity used in the process of multiplication.
-            </summary>
         </member>
         <member name="F:whiteMath.ArithmeticLong.LongInt`1.Helper_NTT_OLD.NTT_MAX_ROOT_OF_UNITY_DEGREE_EXPONENT">
             <summary>
@@ -2275,7 +2186,7 @@
             for multi-dimensional jagged arrays.
             </summary>
         </member>
-        <member name="M:whiteMath.General.JaggedArrayExtensions.ToTwoDimensionalArray``1(``0[][])">
+        <member name="M:whiteMath.General.JaggedArrayExtensions.To2DArray``1(``0[][])">
             <summary>
             Converts a rectangular two-dimensional jagged array
             to a two-dimensional array with the same dimensionality
@@ -2611,6 +2522,17 @@
             Thrown if <paramref name="patch"/> cannot be completely placed 
             within <paramref name="matrix"/> considering the specified indices of placement.
             </exception>
+        </member>
+        <member name="M:whiteMath.General.TwoDimensionalArrayExtensions.GetTransposedArray``1(``0[0:,0:])">
+            <summary>
+            Returns the transposed array from a two-dimensional array
+            i.e. such that <c>result[i, j] = source[j, i]</c>. If the source
+            array was of size M x N, then the resulting array will have the 
+            size N x M.
+            </summary>
+            <typeparam name="T">The type of elements in the arrays.</typeparam>
+            <param name="matrix">The two-dimensional array to be transposed.</param>
+            <returns>The transposed two-dimensional array.</returns>
         </member>
         <member name="M:whiteMath.General.TwoDimensionalArrayExtensions.WithAttachedToTheLeft``1(``0[0:,0:],``0[0:,0:])">
             <summary>

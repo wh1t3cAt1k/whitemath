@@ -310,9 +310,9 @@ namespace whiteMath.General
 
             T[,] result = new T[columnCount, rowCount];
 
-            for (int rowIndex = 0; rowIndex < rowCount; ++rowCount)
+            for (int rowIndex = 0; rowIndex < rowCount; ++rowIndex)
             {
-                for (int columnIndex = 0; columnIndex < columnCount; ++columnCount)
+                for (int columnIndex = 0; columnIndex < columnCount; ++columnIndex)
                 {
                     result[columnIndex, rowIndex] = matrix[rowIndex, columnIndex];
                 }
