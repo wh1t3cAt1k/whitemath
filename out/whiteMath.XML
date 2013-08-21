@@ -5932,7 +5932,7 @@
     </member>
     <member name="M:whiteMath.Functions.AnalyticFunction.CheckNPrepare(System.String@)">
       <summary>
-            Возвращает букву переменной-аргумента и подготавливает все дело.
+            Returns the letter of the argument (e.g. 'x') and prepares everything.
             </summary>
       <param name="str" />
       <returns />

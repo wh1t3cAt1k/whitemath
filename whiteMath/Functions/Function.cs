@@ -7,15 +7,15 @@ using System.Globalization;
 /* ДАННЫЙ ФАЙЛ СОДЕРЖИТ определение класса FUNCTION, а также набор вспомогательных математических функций.
  * Объявлен также интерфейс IFunction, обеспечивающий функциональность выдачи значения по аргументу
  * 
- * Реализовать: 
- * 1. Длинную целочисленную и длинную вещественную арифметику.
- * 2. Функции: факториал, гамма-функция и т.п.
+ * To be implemented: 
+ * 1. Long integer and long exponential arithmetics.
+ * 2. Functions: factorial, gamma-function etc.
 
 /*
- * СПИСОК СОКРАЩЕНИЙ ДЯ ПРОСТЕЙШИХ МАТЕМАТИЧЕСКИХ ФУНКЦИЙ,
- * вызываемых в массиве действий.
+ * A list of short names for elementary mathematic functions
+ * in the 'actions array'.
  * 
- * x        -- куе:x
+ * x        -- ret:x
  * x+y      -- +:x,y
  * x-y      -- -:x,y
  * x*y      -- *:x,y
@@ -39,25 +39,25 @@ using System.Globalization;
  * log(x,a) -- log:x,a
  * exp(x)   -- exp:x 
  * sgn(x)   -- sign:x
- * if(x>0) return y else return z -- >:x,y,z 
- * if(x=0) return y else return z -- =:x,y,z
- * if(x>=0) return y else return z -- >=:x,y,z
- * if(x<0) return y else return z -- <:x,y,z
- * if(x!=0) return y else return z -- !=:x,y,z
- * if(x<=0) return y else return z -- <=:x,y,z
+ * if (x > 0) return y else return z -- >:x,y,z 
+ * if (x = 0) return y else return z -- =:x,y,z
+ * if (x >= 0) return y else return z -- >=:x,y,z
+ * if (x < 0) return y else return z -- <:x,y,z
+ * if (x != 0) return y else return z -- !=:x,y,z
+ * if (x <= 0) return y else return z -- <=:x,y,z
 
- * x,y,z - метаобозначение операндов.
- * На их местах в синтаксисе действия могут быть:
+ * x,y,z - meta-signs of operands.
+ * In the actual action syntax these meta-signs can be replaced by:
  * 
- * 1) символ $ - обращение к результату предыдущего действия
- * 2) $n$, где n - число - обращение к результату действия за номером n.
- *      внимание! нумерация действий начинается с нуля, n должно быть меньше номера текущего действия.
- * 3) %n%, где n - число - обращение к значению вложенной функции за номером n.
- *      внимание! нумерация функций начинается с нуля.
- * 4) символ ! - обращение к значению переменной
- * 5) #errormessage# - вызывает выброс исключения с указанным сообщением об ошибке.
- * 5) число.
- *      внимание! разделитель целой и дробной части - ТОЧКА!
+ * 1) The $ symbol - takes the result of the previous action.
+ * 2) $n$, where n is an integer - takes the result of action number n.
+ *      warning! Action indices are zero-based, n must be less than the current action index.
+ * 3) %n%, where n is an integer - takes the result of inner function number n.
+ *      warning! Inner function indices are zero-based.
+ * 4) The ! symbol - takes the value of the argument
+ * 5) #errormessage# - raises an exception with the specified message.
+ * 5) a number. (e.g.: 5.2)
+ *      warning! The integer and fractional parts must be separated by a DOT, not a comma: '.'
  */
 
 namespace whiteMath.Functions

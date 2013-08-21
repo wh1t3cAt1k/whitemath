@@ -97,6 +97,7 @@ namespace whiteMath.Functions
             if (str[0] == '@')
             {
                 // Check if function called is logarithm.
+                // -
                 if (str.Substring(1, 3) == "log")
                 {
                     if (str.IndexOf(',') == -1) throw new FunctionStringSyntaxException("log(x,y) is called but the y base is not mentioned.");
@@ -110,6 +111,7 @@ namespace whiteMath.Functions
                     actionList.AddRange(Analyze(str.Substring(str.IndexOf(',') + 1, str.LastIndexOf(')') - str.IndexOf(',') - 1), argument, curAc));
                 }
                 // else only one action is done
+                // -
                 else actionList.AddRange(Analyze(str.Substring(5), argument, curAc));
 
                 switch (str.Substring(1, 3))
@@ -125,7 +127,7 @@ namespace whiteMath.Functions
                     case "sih": actionList.Add("sinh:$"); break;
                     case "coh": actionList.Add("cosh:$"); break;
                     case "lna": actionList.Add("ln:$"); break;
-                    case "lg1": actionList.Add("log10:$"); break;
+                    case "lg1": actionList.Add("lg:$"); break;
                     case "log": actionList.Add("log:$"+(curAc-1)+"$,$"); break;
                     case "exp": actionList.Add("exp:$"); break;
                     case "sqr": actionList.Add("sqrt:$"); break;

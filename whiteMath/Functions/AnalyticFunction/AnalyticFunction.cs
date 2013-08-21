@@ -41,35 +41,39 @@ namespace whiteMath.Functions
         // ------------------------------------------------
 
         /// <summary>
-        /// Возвращает букву переменной-аргумента и подготавливает все дело.
+        /// Returns the letter of the argument (e.g. 'x') and prepares everything.
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
         private static char CheckNPrepare(ref string str)
         {
-            // Удаляем пробелы
+            // Kill all whitespace characters.
+            // -
             str = str.Replace(" ", "");
 
-            if (char.IsLetter(str, 0) && char.IsLetter(str, 1)) throw new FunctionStringSyntaxException("Для имени функции может использоваться только одна буква.");
-            if (str[1] != '(' || str[3] != ')') throw new FunctionStringSyntaxException("Данная функция может зависеть только от одной переменной; для имени переменной используется одна буква.");
+            if (char.IsLetter(str, 0) && char.IsLetter(str, 1)) throw new FunctionStringSyntaxException("Only single letters are allowed for the function name (i.e. 'f').");
+            if (str[1] != '(' || str[3] != ')') throw new FunctionStringSyntaxException("The function can only depend on one argument. The argument should be a single latin letter (i.e. 'x').");
 
-            char argument = char.ToLower(str[2]); // переменная
+            // Catch the variable.
+            // -
+            char argument = char.ToLower(str[2]);
 
-            if (!char.IsLetter(argument) || !(argument >= 'a' && argument <= 'z')) throw new FunctionStringSyntaxException("Синтаксическая ошибка: для имени переменной может использоваться только малая латинская буква!");
+            if (!char.IsLetter(argument) || !(argument >= 'a' && argument <= 'z'))
+            {
+                throw new FunctionStringSyntaxException("Only small latin letters can be used for the argument name.");
+            }
 
-            // ---------- Можно начинать работать!
-
+            // Ready to work!
+            // -
             str = str.Substring(5);
             str = str.Replace("@", "");
 
-            // ----------- Вставка умножений на место 15log(x) == 15*log(x)
-
+            // Insert multiplication signs where assumed: 15log(x) == 15*log(x)
+            // -
             str = str.insertMultiplicationSign();
 
-            // ----------- Выделение элементарных функций
-
-            int leftCount = 0, rightCount = 0;
-
+            // Find elementary functions
+            // -
             str = str.Replace("abs", "@abs@");
             str = str.Replace("sinh", "@sih@");
             str = str.Replace("cosh", "@coh@");
@@ -88,17 +92,19 @@ namespace whiteMath.Functions
             str = str.Replace("floor", "@flr@");
             str = str.Replace("ceil", "@cei@");
 
-            // ----------- Здесь проверится наличие скобок и неправильные знаки операций.
+            // Check for brackets correctness and incorrect operation signs / uknown function names.
+            // -
+            int leftCount = 0, rightCount = 0;
 
             for (int i = 0; i < str.Length; i++)
             {
                 if (str[i] == '@') { i += 4; continue; }
 
                 if (char.IsSymbol(str[i]) && ("+-*/()^." + argument.ToString()).IndexOf(str[i]) == -1)
-                    throw new FunctionStringSyntaxException("Синтаксическая ошибка: неизвестный знак операции, имя аргумента или функции.");
+                    throw new FunctionStringSyntaxException("Syntax arror: unknown operation / argument name / function name.");
 
-                // Старая замена умножений
-            
+                // Insert multiplication signs where needed (old version applied for safety).
+                // -
                 if (i < str.Length - 1)
                     if (char.IsNumber(str[i]) && (argument.ToString() + "(@").IndexOf(str[i + 1]) != -1)
                         str = str.Insert(i + 1, "*"); // 15x == 15*x и 15(x+5) == 15*(x+5)
@@ -107,8 +113,8 @@ namespace whiteMath.Functions
                 else if (str[i] == ')') { rightCount++; }
             }
 
-            if (leftCount > rightCount) throw new FunctionStringSyntaxException("Синтаксическая ошибка: не хватает ')'");
-            if (leftCount < rightCount) throw new FunctionStringSyntaxException("Синтаксическая ошибка: не хватает '('");
+            if (leftCount > rightCount) throw new FunctionStringSyntaxException("Syntax error: not enough closing brackets ')'");
+            if (leftCount < rightCount) throw new FunctionStringSyntaxException("Syntax error: not enough opening brackets '('");
 
             return argument;
         }
