@@ -133,6 +133,7 @@ namespace whiteMath.Functions
                     case "sqr": actionList.Add("sqrt:$"); break;
                     case "flr": actionList.Add("floor:$"); break;
                     case "cei": actionList.Add("ceil:$"); break;
+                    case "rou": actionList.Add("round:$"); break;
 
                     default: throw new FunctionStringSyntaxException("unknown function called: " + str.Substring(1, 3));
                 }

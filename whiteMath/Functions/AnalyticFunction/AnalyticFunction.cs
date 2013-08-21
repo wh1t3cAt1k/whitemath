@@ -75,15 +75,15 @@ namespace whiteMath.Functions
             // Find elementary functions
             // -
             str = str.Replace("abs", "@abs@");
+            str = str.Replace("arcsin", "@asi@");
+            str = str.Replace("arccos", "@aco@");
+            str = str.Replace("arctg", "@ata@");
             str = str.Replace("sinh", "@sih@");
             str = str.Replace("cosh", "@coh@");
             str = str.Replace("sin", "@sin@");
             str = str.Replace("cos", "@cos@");
-            str = str.Replace("tg", "@tan@");
-            str = str.Replace("arcsin", "@asi@");
-            str = str.Replace("arccos", "@aco@");
-            str = str.Replace("arctg", "@ata@");
             str = str.Replace("ctg", "@ctg@");
+            str = str.Replace("tg", "@tan@");
             str = str.Replace("ln", "@lna@");
             str = str.Replace("lg", "@lg1@");
             str = str.Replace("log", "@log@");
@@ -91,6 +91,7 @@ namespace whiteMath.Functions
             str = str.Replace("sqrt", "@sqr@");
             str = str.Replace("floor", "@flr@");
             str = str.Replace("ceil", "@cei@");
+            str = str.Replace("round", "@rou@");
 
             // Check for brackets correctness and incorrect operation signs / uknown function names.
             // -

@@ -66,9 +66,9 @@ namespace whiteMath.Functions
     {
         public double this[double x] { get { return Value(x); } }
 
-        delegate double singleAct(double x);
-        delegate double doubleAct(double x, double y);
-        delegate bool tripleCheck(double x);
+        delegate double UnaryAction(double x);
+        delegate double BinaryAction(double x, double y);
+        delegate bool CheckerAction(double x);
 
         protected internal char argument;
         protected internal List<IFunction<double, double>> composedFunc;
@@ -101,140 +101,180 @@ namespace whiteMath.Functions
         /// <summary>
         /// Calculates the function value depending on the argument passed.
         /// </summary>
-        /// <param name="x"></param>
+        /// <param name="argumentValue"></param>
         /// <returns></returns>
-        public double Value(double x) // вычисление значения функции по значению аргумента
+        public double Value(double argumentValue)
         {
-            singleAct act1;
-            doubleAct act2;
-            tripleCheck act3;
+            UnaryAction unaryAction;
+            BinaryAction binaryAction;
+            CheckerAction checkerAction;
 
             actionResults = new double[actions.Count];
 
-            for (int i=0; i<actions.Count; i++)
+            for (int i = 0; i < actions.Count; ++i)
             {
-                string str = actions[i];
+                string currentActionString = actions[i];
 
-                if (str == null || str.Trim() == "") throw new FunctionActionSyntaxException("cтрока действия за номером " + i + " является пустой.");
+                if (string.IsNullOrWhiteSpace(currentActionString))
+                {
+                    throw new FunctionActionSyntaxException("Action string for action number " + i + " should not be empty.");
+                }
 
-                act1 = new singleAct(Functions.Ret);
-                act2 = new doubleAct(Functions.Sum);
-                act3 = new tripleCheck(Functions.Equals);
+                unaryAction = new UnaryAction(x => x);
+                binaryAction = new BinaryAction((x, y) => (x + y));
+                checkerAction = new CheckerAction(x => (x == 0));
 
-                bool binary = true; // бинарное действие или унарное
+                // Binary or unary action flag.
+                // -
+                bool binary = true; 
 
-                if (str.IndexOf('#') == -1) str = str.Replace(" ", ""); // удаляем все пробелы, если нет сообщений об ошибке
+                // If no user-defined error messages in the action,
+                // remove all whitespace.
+                // -
+                if (currentActionString.IndexOf('#') == -1)
+                {
+                    currentActionString = currentActionString.Replace(" ", "");
+                }
+                // Otherwise, do some magic.
+                // -
                 else
                 {
-                    string tmp = "";
-                    bool insideErrorMsg = false;
+                    StringBuilder stringWithoutWhitespace = new StringBuilder();
+                    bool isInsideErrorMessage = false;
 
-                    for (int j = 0; j < str.Length; j++)
-                    {    
-                        if (str[j] == '#') insideErrorMsg = !insideErrorMsg;
-                        if (str[j] != ' ' || insideErrorMsg) tmp += str[j];
+                    for (int j = 0; j < currentActionString.Length; j++)
+                    {
+                        if (currentActionString[j] == '#')
+                        {
+                            isInsideErrorMessage = !isInsideErrorMessage;
+                        }
+                        else if (currentActionString[j] != ' ' || isInsideErrorMessage)
+                        {
+                            stringWithoutWhitespace.Append(currentActionString[j]);
+                        }
                     }
 
-                    str = tmp;
+                    currentActionString = stringWithoutWhitespace.ToString();
                 }
 
                 double a, b;
                 string operand1, operand2, operand3;
 
-                switch(str.getActionSubString())
+                switch(currentActionString.getActionSubString())
                 {
-                    case "ret": binary = false; act1 = new singleAct(Functions.Ret); break;
+                    case "ret": binary = false; unaryAction = new UnaryAction(x => x); break;
                     
-                    case "+": act2 = new doubleAct(Functions.Sum); break;
-                    case "-": act2 = new doubleAct(Functions.Dif); break;
-                    case "*": act2 = new doubleAct(Functions.Mul); break;
-                    case "/": act2 = new doubleAct(Functions.Div); break;
-                    case "^": act2 = new doubleAct(Math.Pow); break;
+                    case "+": binaryAction = new BinaryAction((x, y) => (x + y)); break;
+                    case "-": binaryAction = new BinaryAction((x, y) => (x - y)); break;
+                    case "*": binaryAction = new BinaryAction((x, y) => (x * y)); break;
+                    case "/": binaryAction = new BinaryAction((x, y) => (x / y)); break;
+                    case "^": binaryAction = new BinaryAction(Math.Pow); break;
                     
-                    case "abs": binary = false; act1 = new singleAct(Math.Abs); break;
-                    case "floor": binary = false; act1 = new singleAct(Math.Floor); break;
-                    case "ceil": binary = false; act1 = new singleAct(Math.Ceiling); break;
+                    case "abs": binary = false; unaryAction = new UnaryAction(Math.Abs); break;
+                    case "floor": binary = false; unaryAction = new UnaryAction(Math.Floor); break;
+                    case "ceil": binary = false; unaryAction = new UnaryAction(Math.Ceiling); break;
+                    case "round": binary = false; unaryAction = new UnaryAction(number => Math.Round(number, MidpointRounding.AwayFromZero)); break;
 
-                    case "sin": binary = false; act1 = new singleAct(Math.Sin); break;
-                    case "cos": binary = false; act1 = new singleAct(Math.Cos); break;
-                    case "tg": binary = false; act1 = new singleAct(Math.Tan); break;
-                    case "ctg": binary = false; act1 = new singleAct(Functions.Ctg); break;
+                    case "sin": binary = false; unaryAction = new UnaryAction(Math.Sin); break;
+                    case "cos": binary = false; unaryAction = new UnaryAction(Math.Cos); break;
+                    case "tg": binary = false; unaryAction = new UnaryAction(Math.Tan); break;
+                    case "ctg": binary = false; unaryAction = new UnaryAction(x => (1 / Math.Tan(x))); break;
 
-                    case "arcsin": binary = false; act1 = new singleAct(Math.Asin); break;
-                    case "arccos": binary = false; act1 = new singleAct(Math.Acos); break;
-                    case "arctg": binary = false; act1 = new singleAct(Math.Atan); break;
+                    case "arcsin": binary = false; unaryAction = new UnaryAction(Math.Asin); break;
+                    case "arccos": binary = false; unaryAction = new UnaryAction(Math.Acos); break;
+                    case "arctg": binary = false; unaryAction = new UnaryAction(Math.Atan); break;
                     
-                    case "sinh": binary = false; act1 = new singleAct(Math.Sinh); break;
-                    case "cosh": binary = false; act1 = new singleAct(Math.Cosh); break;
+                    case "sinh": binary = false; unaryAction = new UnaryAction(Math.Sinh); break;
+                    case "cosh": binary = false; unaryAction = new UnaryAction(Math.Cosh); break;
                     
-                    case "log": binary = true; act2 = new doubleAct(Math.Log); break;
-                    case "lg": binary = false; act1 = new singleAct(Math.Log10); break;
+                    case "log": binary = true; binaryAction = new BinaryAction(Math.Log); break;
+                    case "lg": binary = false; unaryAction = new UnaryAction(Math.Log10); break;
                     
-                    case "sqrt": binary = false; act1 = new singleAct(Math.Sqrt); break;
-                    case "ln": binary = false; act1 = new singleAct(Math.Log); break;
+                    case "sqrt": binary = false; unaryAction = new UnaryAction(Math.Sqrt); break;
+                    case "ln": binary = false; unaryAction = new UnaryAction(Math.Log); break;
                     
-                    case "exp": binary = false; act1 = new singleAct(Math.Exp); break;
-                    case "sign": binary = false; act1 = new singleAct(Functions.Sgn); break;
+                    case "exp": binary = false; unaryAction = new UnaryAction(Math.Exp); break;
+                    case "sign": binary = false; unaryAction = new UnaryAction(x => Math.Sign(x)); break;
                     
                     case ">": case "=": case ">=": case "<=": case "<": case "!=": goto CONDITION;
-                    default: throw new FunctionActionSyntaxException("неизвестное обозначение функции в списке действий."); 
+                    default: throw new FunctionActionSyntaxException("Unknown function name in the list of actions."); 
                 }
 
                 if (binary)
                 {
-                    operand1 = str.getFirstOperand();
-                    operand2 = str.getSecondOperand();
+                    operand1 = currentActionString.getFirstOperand();
+                    operand2 = currentActionString.getSecondOperand();
 
                     try
                     {
-                        a = operandMeaning(operand1, composedFunc, actionResults, i, x);
-                        b = operandMeaning(operand2, composedFunc, actionResults, i, x);
+                        a = operandMeaning(operand1, composedFunc, actionResults, i, argumentValue);
+                        b = operandMeaning(operand2, composedFunc, actionResults, i, argumentValue);
                     }
-                    catch (Exception xxx)
-                    { throw new Exception("Ошибка при выполнении действия " + i + ". " + xxx.Message); }
+                    catch (Exception actionExecutionException)
+                    {
+                        throw new FunctionActionExecutionException(actionExecutionException.Message, i); 
+                    }
 
-                    double res; // результат операции
-                    
-                    try { res = act2(a, b); }
-                    catch { res = double.NaN; }
+                    double operationResult; // результат операции
 
-                    actionResults[i] = res;
+                    try 
+                    { 
+                        operationResult = binaryAction(a, b); 
+                    }
+                    catch 
+                    { 
+                        operationResult = double.NaN; 
+                    }
+
+                    actionResults[i] = operationResult;
                     goto RETURNER;
                 }
                 else
                 {
-                    operand1 = str.getFirstOperand();
+                    operand1 = currentActionString.getFirstOperand();
 
-                    try { a = operandMeaning(operand1, composedFunc, actionResults, i, x); }
+                    try 
+                    { 
+                        a = operandMeaning(operand1, composedFunc, actionResults, i, argumentValue); 
+                    }
                     catch (Exception xxx)
                     {
-                        if (xxx is FunctionActionUserThrownException) throw;
-                        throw new Exception("Ошибка при выполнении действия " + i + ". " + xxx.Message); 
+                        if (xxx is FunctionActionUserThrownException)
+                        {
+                            throw;
+                        }
+                        else
+                        {
+                            throw new FunctionActionExecutionException(xxx.Message, i);
+                        }
                     }
 
-                    double res;
+                    double operationResult;
 
-                    try { res = act1(a); }
-                    catch { res = double.NaN; }
+                    try { operationResult = unaryAction(a); }
+                    catch { operationResult = double.NaN; }
 
-                    actionResults[i] = res;
+                    actionResults[i] = operationResult;
                     goto RETURNER;
                 }
 
-            CONDITION: // выполняется в случае условного оператора действия: >, = , } 
+            // This block executes in case of the conditional action operator.
+            // -
+            CONDITION: 
 
-                if (i == 0) throw new FunctionActionSyntaxException("недопустимо использование условных операторов в нулевом действии.");
+                if (i == 0) throw new FunctionActionSyntaxException("No conditional operators are allowed in the action number 0.");
                 
-                // объявим дополнительные переменные, так как действие тернарное.
+                // Should declare additional variable since the action is ternary.
+                // -
                 double c;
                 
-                operand1 = str.getFirstOperand();
-                operand2 = str.getSecondOperand();
-                operand3 = str.getThirdOperand();
+                operand1 = currentActionString.getFirstOperand();
+                operand2 = currentActionString.getSecondOperand();
+                operand3 = currentActionString.getThirdOperand();
 
                 try
                 {
-                    a = operandMeaning(operand1, composedFunc, actionResults, i, x);
+                    a = operandMeaning(operand1, composedFunc, actionResults, i, argumentValue);
                 }
                 catch (Exception xxx)
                 {
@@ -242,37 +282,37 @@ namespace whiteMath.Functions
                     throw new Exception("Ошибка при выполнении действия " + i + ". " + xxx.Message); 
                 }
 
-                switch(str.getActionSubString())
+                switch(currentActionString.getActionSubString())
                 {
-                    case ">": act3 = new tripleCheck(Functions.More); break;
-                    case "<": act3 = new tripleCheck(Functions.Less); break;
-                    case "=": act3 = new tripleCheck(Functions.Equals); break;
-                    case ">=": act3 = new tripleCheck(Functions.MoreQ); break;
-                    case "<=": act3 = new tripleCheck(Functions.LessQ); break;
-                    case "!=": act3 = new tripleCheck(Functions.EqualsNot); break;
+                    case ">": checkerAction = new CheckerAction(x => (x > 0)); break;
+                    case "<": checkerAction = new CheckerAction(x => (x < 0)); break;
+                    case "=": checkerAction = new CheckerAction(x => (x == 0)); break;
+                    case ">=": checkerAction = new CheckerAction(x => (x >= 0)); break;
+                    case "<=": checkerAction = new CheckerAction(x => (x <= 0)); break;
+                    case "!=": checkerAction = new CheckerAction(x => (x != 0)); break;
                 }
 
-                if (act3(a)) 
+                if (checkerAction(a)) 
                     try
                         {   
-                            b = operandMeaning(operand2, composedFunc, actionResults, i, x);
+                            b = operandMeaning(operand2, composedFunc, actionResults, i, argumentValue);
                             actionResults[i] = b;
                         }
                     catch (Exception xxx)
                         {
                             if (xxx is FunctionActionUserThrownException) throw;
-                            throw new Exception("Ошибка при выполнении действия " + i + ". " + xxx.Message); 
+                            throw new Exception("Error while performing action number " + i + ". " + xxx.Message); 
                         }                        
                 else
                     try
                         {
-                            c = operandMeaning(operand3, composedFunc, actionResults, i, x);
+                            c = operandMeaning(operand3, composedFunc, actionResults, i, argumentValue);
                             actionResults[i] = c;
                         }
                     catch (Exception xxx)
                         {
                             if (xxx is FunctionActionUserThrownException) throw;
-                            throw new Exception("Ошибка при выполнении действия " + i + ". " + xxx.Message);
+                            throw new Exception("Error while performing action number " + i + ". " + xxx.Message);
                         }
             
             RETURNER: ; 
@@ -283,32 +323,50 @@ namespace whiteMath.Functions
 
         private double operandMeaning(string operand, List<IFunction<double,double>> composedFunc, double[] actionResults, int num, double x)
         {
-            if (operand == null || operand == "") throw new FunctionActionSyntaxException("не указан один из операндов.");
+            if (operand == null || operand == "") throw new FunctionActionSyntaxException("One of the operands is missing.");
 
-            int negflag=1;
-            // если перед операндом стоит знак "минус", то negflag умножается на -1.
-            if (operand[0] == '-') { negflag = -1; operand = operand.Substring(1); }
+            int negativeFlag = 1;
 
-            if (char.IsDigit(operand[0])) // обращение к числовому значению
+            // 'negflag' is multiplied by -1 if the operand
+            // is preceded by a minus sign '-'.
+            // 
+            if (operand[0] == '-') 
+            { 
+                negativeFlag = -1; 
+                operand = operand.Substring(1); 
+            }
+
+            // Reference the digit value.
+            // -
+            if (char.IsDigit(operand[0])) 
             { 
                 try 
                 { 
                     double tmp = double.Parse(
-                        operand.Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)); return negflag * tmp; 
+                        operand.Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)); return negativeFlag * tmp; 
                 } 
                 catch 
                 { 
-                    throw 
-                        new Exception("Ошибка синтаксиса действия: неизвестный операнд в команде-действии."); 
+                    throw
+                        new FunctionActionSyntaxException("Unknown operand in the action."); 
                 } 
             }
-            else if (operand.Length == 1 && operand[0] == '!') return negflag * x; // обращение к значению аргумента
-            else if (operand.Length == 1 && operand[0] == '$') // обращение к предыдущему действия
+            // Referencing the argument value.
+            // -
+            else if (operand.Length == 1 && operand[0] == '!')
             {
-                if (num <= 0) throw new FunctionActionSyntaxException("обращение к предыдущему действию из нулевого действия.");
-                return negflag * actionResults[num - 1];
+                return negativeFlag * x;
             }
-            else if (operand[0] == '$') // обращение к результату выполненного действия по номеру
+            // Referencing the previous action result.
+            // -
+            else if (operand.Length == 1 && operand[0] == '$')
+            {
+                if (num <= 0) throw new FunctionActionSyntaxException("No previous action for action 0.");
+                return negativeFlag * actionResults[num - 1];
+            }
+            // Referencing one of the action results by its number (index).
+            // -
+            else if (operand[0] == '$')
             {
                 if (operand.Length <= 2 || operand.LastIndexOf('$') != operand.Length - 1) throw new Exception("Ошибка синтаксиса действия: неверно указано обращение к результату действия по номеру.");
 
@@ -320,7 +378,7 @@ namespace whiteMath.Functions
                 }
                 catch { throw new FunctionActionSyntaxException("неизвестный номер действия, указанный в обращении."); }
                 if (callOperationNum >= num) throw new FunctionActionSyntaxException("попытка рефлексивного обращения в действии или попытка обращения к еще не выполненному (следующему) действию.");
-                return negflag * actionResults[callOperationNum]; // возвращаем значение действия по номеру
+                return negativeFlag * actionResults[callOperationNum]; // возвращаем значение действия по номеру
             }
             else if (operand[0] == '%') // вызов результата вложенной функции по номеру
             {
@@ -339,7 +397,7 @@ namespace whiteMath.Functions
                 if (callFuncNum < 0 || callFuncNum >= composedFunc.Count)
                     throw new FunctionActionSyntaxException("there is no inner function with such a number (numeration starts from 0!).");
 
-                return negflag * composedFunc[callFuncNum].Value(x);
+                return negativeFlag * composedFunc[callFuncNum].Value(x);
             }
             else if (operand[0] == '#') // пользовательское сообщение об ошибке
             {
@@ -395,45 +453,6 @@ namespace whiteMath.Functions
 
     internal static class Functions
     {
-        internal static double Sum(double a, double b)
-        { return a+b; }
-
-        internal static double Dif(double a, double b)
-        { return a-b; }
-
-        internal static double Mul(double a, double b)
-        { return a*b; }
-
-        internal static double Div(double a, double b)
-        { return a/b; }
-
-        internal static double Ret(double a)
-        { return a; }
-
-        internal static double Ctg(double a)
-        { return 1 / Math.Tan(a); }
-
-        internal static double Sgn(double a)
-        { return Math.Sign(a); }
-
-        internal static bool More(double a)
-        { return (a > 0); }
-
-        internal static bool Less(double a)
-        { return (a < 0); }
-
-        internal static bool MoreQ(double a)
-        { return (a >= 0); }
-
-        internal static bool LessQ(double a)
-        { return (a <= 0); }
-
-        internal static bool Equals(double a)
-        { return (a == 0); }
-
-        internal static bool EqualsNot(double a)
-        { return (a != 0); }
-
         internal static double IfMore(double a, double b, double c)
         {
             return (a > 0 ? b : c);

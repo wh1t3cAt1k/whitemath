@@ -5308,7 +5308,7 @@
             <summary>
             Calculates the function value depending on the argument passed.
             </summary>
-            <param name="x"></param>
+            <param name="argumentValue"></param>
             <returns></returns>
         </member>
         <member name="P:whiteMath.Functions.Function.PrecompiledVersion">
