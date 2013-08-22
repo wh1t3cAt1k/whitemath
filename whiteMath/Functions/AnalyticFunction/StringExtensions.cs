@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Diagnostics.Contracts;
 
 using whiteMath.General;
 
@@ -42,29 +43,53 @@ namespace whiteMath.Functions
         }
 
         /// <summary>
-        /// Finds the specified sign.
+        /// Finds all occurrences of the specified characters in a string
+        /// and returns the list of their indices; the characters
+        /// located inside the parentheses do not count.
         /// </summary>
-        /// <param name="str"></param>
-        /// <param name="signs"></param>
-        /// <returns></returns>
-        internal static List<int> findSign(this string str, params char[] signs)
+        /// <param name="sourceString">The string where the search is to be done.</param>
+        /// <param name="characters">A parameter array containing the characters to be found.</param>
+        /// <returns>
+        /// A list of indices in the <paramref name="sourceString"/>
+        /// where any one of the characters in <paramref name="characters"/> 
+        /// has been found, excluding those located inside any parentheses.
+        /// </returns>
+        internal static List<int> FindCharactersNotInParentheses(this string sourceString, params char[] characters)
         {
+            Contract.Requires<ArgumentNullException>(sourceString != null, "sourceString");
+            Contract.Requires<ArgumentNullException>(characters != null, "characters");
+
             List<int> indexes = new List<int>();
 
-            for (int i = 0; i < str.Length; i++)
+            for (int i = 0; i < sourceString.Length; i++)
             {
-                // должны пропускать то, что внутри скобок.
-                if (str[i] == '(')
+                // We should leave alone (do not touch) whatever is inside the parentheses.
+                // -
+                if (sourceString[i] == '(')
                 {
-                    int cc = 1;
+                    int openBracketCount = 1;
+                    
+                    // Enter the loop which will not match
+                    // any character while inside the parentheses.
+                    // -
                     do
                     {
-                        i++;
-                        if (str[i] == '(') cc++;
-                        else if (str[i] == ')') cc--;
-                    } while (cc > 0);
+                        ++i;
+
+                        if (sourceString[i] == '(')
+                        {
+                            openBracketCount++;
+                        }
+                        else if (sourceString[i] == ')')
+                        {
+                            openBracketCount--;
+                        }
+                    } while (openBracketCount > 0);
                 }
-                else if (signs.Contains<char>(str[i])) indexes.Add(i);
+                else if (characters.Contains<char>(sourceString[i]))
+                {
+                    indexes.Add(i);
+                }
             }
 
             return indexes;
@@ -324,27 +349,25 @@ namespace whiteMath.Functions
         // --------- INSERT * -----------
         // ------------------------------
 
-        static Regex signum = new Regex(@"(\d)([a-zA-Z@\(])", RegexOptions.Compiled);
-
+        static Regex multiplicationSignInsertionRegex = new Regex(@"(\d)([a-zA-Z@\(])", RegexOptions.Compiled);
+        
         /// <summary>
-        /// Вставляет знак умножения между всякой ерундой, вроде 25sin(x)
+        /// Inserts the multiplication sign where safe, e.g. 25sin(x) => 25*sin(x)
+        /// and returns the modified string.
         /// </summary>
-        /// <param name="obj"></param>
-        internal static string insertMultiplicationSign(this string str)
+        /// <param name="sourceString">The source string object (remains as is).</param>
+        /// <returns>The modified string with multiplication signs inserted where safe.</returns>
+        internal static string insertMultiplicationSign(this string sourceString)
         {
-            string obj = str.Clone() as string;
+            Match match = multiplicationSignInsertionRegex.Match(sourceString);
 
-            REPEAT:
-            
-            Match match = signum.Match(obj);
-
-            if (match.Success)
+            while (match.Success)
             {
-                obj = match.Result("$`$1*$2$'");
-                goto REPEAT;
+                sourceString = match.Result("$`$1*$2$'");
+                match = multiplicationSignInsertionRegex.Match(sourceString);
             }
 
-            return obj;
+            return sourceString;
         }
     }
     

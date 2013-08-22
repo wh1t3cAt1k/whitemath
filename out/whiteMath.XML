@@ -5969,10 +5969,12 @@
       <summary>
             Analyzes the function string and recursively forms the action list.
             </summary>
-      <param name="str" />
-      <param name="argument" />
-      <param name="curAc" />
+      <param name="currentFunctionString">The current part of the function string to be analyzed.</param>
+      <param name="argumentCharacter">The expected argument character (e.g. 'x').</param>
+      <param name="currentAction">The current action number.</param>
       <returns />
+      <requires description="currentFunctionString" exception="T:System.ArgumentNullException" csharp="currentFunctionString != null" vb="currentFunctionString &lt;&gt; Nothing">currentFunctionString != null</requires>
+      <exception cref="T:System.ArgumentNullException">currentFunctionString == null</exception>
     </member>
     <member name="P:whiteMath.Functions.AnalyticFunction.HasDerivative">
       <summary>
@@ -5989,13 +5991,23 @@
       <param name="str" />
       <returns />
     </member>
-    <member name="M:whiteMath.Functions.StringExtensions.findSign(System.String,System.Char[])">
+    <member name="M:whiteMath.Functions.StringExtensions.FindCharactersNotInParentheses(System.String,System.Char[])">
       <summary>
-            Finds the specified sign.
+            Finds all occurrences of the specified characters in a string
+            and returns the list of their indices; the characters
+            located inside the parentheses do not count.
             </summary>
-      <param name="str" />
-      <param name="signs" />
-      <returns />
+      <param name="sourceString">The string where the search is to be done.</param>
+      <param name="characters">A parameter array containing the characters to be found.</param>
+      <returns>
+            A list of indices in the <paramref name="sourceString" />
+            where any one of the characters in <paramref name="characters" /> 
+            has been found, excluding those located inside any parentheses.
+            </returns>
+      <requires description="sourceString" exception="T:System.ArgumentNullException" csharp="sourceString != null" vb="sourceString &lt;&gt; Nothing">sourceString != null</requires>
+      <exception cref="T:System.ArgumentNullException">sourceString == null</exception>
+      <requires description="characters" exception="T:System.ArgumentNullException" csharp="characters != null" vb="characters &lt;&gt; Nothing">characters != null</requires>
+      <exception cref="T:System.ArgumentNullException">characters == null</exception>
     </member>
     <member name="M:whiteMath.Functions.StringExtensions.hasOuterParentheses(System.String@)">
       <summary>
@@ -6062,9 +6074,11 @@
     </member>
     <member name="M:whiteMath.Functions.StringExtensions.insertMultiplicationSign(System.String)">
       <summary>
-            Вставляет знак умножения между всякой ерундой, вроде 25sin(x)
+            Inserts the multiplication sign where safe, e.g. 25sin(x) =&gt; 25*sin(x)
+            and returns the modified string.
             </summary>
-      <param name="obj" />
+      <param name="sourceString">The source string object (remains as is).</param>
+      <returns>The modified string with multiplication signs inserted where safe.</returns>
     </member>
     <member name="T:whiteMath.Functions.IFunctionDifferentiable`2">
       <summary>
@@ -10589,17 +10603,6 @@
         <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.get_Count" inheritedFromTypeName="ICollection" csharp="result &gt;= 0" vb="result &gt;= 0">result &gt;= 0</ensures>
       </getter>
     </member>
-    <member name="M:whiteMath.Graphers.DimensionTransformer`2.ToString">
-      <ensures inheritedFrom="M:System.Object.ToString" inheritedFromTypeName="Object" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
-    </member>
-    <member name="P:whiteMath.Graphers.GrapherGraphException.Message">
-      <getter>
-        <ensures inheritedFrom="M:System.Exception.get_Message" inheritedFromTypeName="Exception" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
-      </getter>
-    </member>
-    <member name="M:whiteMath.Graphers.HistoGraphingArgs.Clone">
-      <ensures inheritedFrom="M:System.ICloneable.Clone" inheritedFromTypeName="ICloneable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
-    </member>
     <member name="M:whiteMath.Graphers.CoordinateTransformer`2.#ctor(`0,`0,`0,`0,System.Func{`0,System.Double},System.Drawing.RectangleF)">
       <requires description="xMin" exception="T:System.ArgumentNullException" csharp="(object)xMin != null" vb="((Object)xMin) &lt;&gt; Nothing">(object)xMin != null</requires>
       <exception cref="T:System.ArgumentNullException">xMin == null</exception>
@@ -10614,6 +10617,17 @@
     </member>
     <member name="M:whiteMath.Graphers.CoordinateTransformer`2.ToString">
       <ensures inheritedFrom="M:System.Object.ToString" inheritedFromTypeName="Object" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="P:whiteMath.Graphers.GrapherGraphException.Message">
+      <getter>
+        <ensures inheritedFrom="M:System.Exception.get_Message" inheritedFromTypeName="Exception" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:whiteMath.Graphers.DimensionTransformer`2.ToString">
+      <ensures inheritedFrom="M:System.Object.ToString" inheritedFromTypeName="Object" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:whiteMath.Graphers.HistoGraphingArgs.Clone">
+      <ensures inheritedFrom="M:System.ICloneable.Clone" inheritedFromTypeName="ICloneable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
     </member>
     <member name="P:whiteMath.Graphers.GrapherSettingsException.Message">
       <getter>
@@ -10788,8 +10802,145 @@
     <member name="M:whiteMath.Randoms.RandomStandard.whiteMath#Randoms#IRandomBounded{System#UInt64}#Next(System.UInt64,System.UInt64)">
       <requires csharp="min &lt; max" vb="min &lt; max">min &lt; max</requires>
     </member>
-    <member name="M:whiteMath.General.TreeNode`1.ToString">
+    <member name="M:whiteMath.General.DefaultList`1.Add(`0)">
+      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Add(`0)" inheritedFromTypeName="ICollection" csharp="this.Count &gt;= old(this.Count)" vb="Me.Count &gt;= old(Me.Count)">this.Count &gt;= old(this.Count)</ensures>
+    </member>
+    <member name="M:whiteMath.General.DefaultList`1.Clear">
+      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Clear" inheritedFromTypeName="ICollection" csharp="this.Count == 0" vb="Me.Count = 0">this.Count == 0</ensures>
+    </member>
+    <member name="M:whiteMath.General.DefaultList`1.Contains(`0)">
+      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Contains(`0)" inheritedFromTypeName="ICollection" csharp="result ⇒ this.Count &gt; 0" vb="result Implies Me.Count &gt; 0">!result || this.Count &gt; 0</ensures>
+    </member>
+    <member name="M:whiteMath.General.DefaultList`1.CopyTo(`0[],System.Int32)">
+      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="array != null" vb="array &lt;&gt; Nothing">array != null</requires>
+      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="arrayIndex &gt;= 0" vb="arrayIndex &gt;= 0">arrayIndex &gt;= 0</requires>
+      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="arrayIndex &lt;= array.Length - this.Count" vb="arrayIndex &lt;= array.Length - Me.Count">arrayIndex &lt;= array.Length - this.Count</requires>
+    </member>
+    <member name="M:whiteMath.General.DefaultList`1.IndexOf(`0)">
+      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.IndexOf(`0)" inheritedFromTypeName="IList" csharp="result &gt;= -1" vb="result &gt;= -1">result &gt;= -1</ensures>
+      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.IndexOf(`0)" inheritedFromTypeName="IList" csharp="result &lt; this.Count" vb="result &lt; Me.Count">result &lt; this.Count</ensures>
+    </member>
+    <member name="M:whiteMath.General.DefaultList`1.Insert(System.Int32,`0)">
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt;= this.Count" vb="index &lt;= Me.Count">index &lt;= this.Count</requires>
+    </member>
+    <member name="M:whiteMath.General.DefaultList`1.RemoveAt(System.Int32)">
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
+      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="this.Count == old(this.Count) - 1" vb="Me.Count = old(Me.Count) - 1">this.Count == old(this.Count) - 1</ensures>
+    </member>
+    <member name="M:whiteMath.General.DefaultList`1.System#Collections#IEnumerable#GetEnumerator">
+      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
+      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_CurrentIndex == -1" vb="result.get_CurrentIndex = -1">result.get_CurrentIndex == -1</ensures>
+    </member>
+    <member name="M:whiteMath.General.DefaultList`1.GetEnumerator">
+      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
+    </member>
+    <member name="P:whiteMath.General.DefaultList`1.Item(System.Int32)">
+      <getter>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
+      </getter>
+      <setter>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
+      </setter>
+    </member>
+    <member name="P:whiteMath.General.DefaultList`1.Count">
+      <getter>
+        <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.get_Count" inheritedFromTypeName="ICollection" csharp="result &gt;= 0" vb="result &gt;= 0">result &gt;= 0</ensures>
+      </getter>
+    </member>
+    <member name="M:whiteMath.General.ListSegment`1.#ctor(System.Collections.Generic.IList{`0},System.Int32,System.Int32)">
+      <requires description="list" exception="T:System.ArgumentNullException" csharp="list != null" vb="list &lt;&gt; Nothing">list != null</requires>
+      <exception cref="T:System.ArgumentNullException">list == null</exception>
+      <requires description="The length must be non-negative" exception="T:System.ArgumentOutOfRangeException" csharp="length &gt;= 0" vb="length &gt;= 0">length &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">length &lt; 0</exception>
+      <requires description="The offset index is out of the list bounds." exception="T:System.IndexOutOfRangeException" csharp="offset &gt;= 0 &amp;&amp; offset &lt; list.Count" vb="offset &gt;= 0 AndAlso offset &lt; list.Count">offset &gt;= 0 &amp;&amp; offset &lt; list.Count</requires>
+      <exception cref="T:System.IndexOutOfRangeException">offset &lt; 0 || offset &gt;= list.Count</exception>
+      <requires description="The length specified runs out of the list bound." exception="T:System.IndexOutOfRangeException" csharp="offset + length &lt;= list.Count" vb="offset + length &lt;= list.Count">offset + length &lt;= list.Count</requires>
+      <exception cref="T:System.IndexOutOfRangeException">offset + length &gt; list.Count</exception>
+    </member>
+    <member name="M:whiteMath.General.ListSegment`1.GetEnumerator">
+      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
+    </member>
+    <member name="M:whiteMath.General.ListSegment`1.System#Collections#IEnumerable#GetEnumerator">
+      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
+      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_CurrentIndex == -1" vb="result.get_CurrentIndex = -1">result.get_CurrentIndex == -1</ensures>
+    </member>
+    <member name="M:whiteMath.General.ListSegment`1.Contains(`0)">
+      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Contains(`0)" inheritedFromTypeName="ICollection" csharp="result ⇒ this.Count &gt; 0" vb="result Implies Me.Count &gt; 0">!result || this.Count &gt; 0</ensures>
+    </member>
+    <member name="M:whiteMath.General.ListSegment`1.ToString">
       <ensures inheritedFrom="M:System.Object.ToString" inheritedFromTypeName="Object" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="P:whiteMath.General.ListSegment`1.Item(System.Int32)">
+      <getter>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
+      </getter>
+      <setter>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
+      </setter>
+    </member>
+    <member name="M:whiteMath.General.Point`1.PointComparer.#ctor(System.Collections.Generic.IComparer{`0},System.Boolean)">
+      <requires csharp="tComparer != null" vb="tComparer &lt;&gt; Nothing">tComparer != null</requires>
+    </member>
+    <member name="M:whiteMath.General.ReverseList`1.System#Collections#IEnumerable#GetEnumerator">
+      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
+      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_CurrentIndex == -1" vb="result.get_CurrentIndex = -1">result.get_CurrentIndex == -1</ensures>
+    </member>
+    <member name="M:whiteMath.General.ReverseList`1.GetEnumerator">
+      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
+    </member>
+    <member name="M:whiteMath.General.ReverseList`1.Add(`0)">
+      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Add(`0)" inheritedFromTypeName="ICollection" csharp="this.Count &gt;= old(this.Count)" vb="Me.Count &gt;= old(Me.Count)">this.Count &gt;= old(this.Count)</ensures>
+    </member>
+    <member name="M:whiteMath.General.ReverseList`1.Contains(`0)">
+      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Contains(`0)" inheritedFromTypeName="ICollection" csharp="result ⇒ this.Count &gt; 0" vb="result Implies Me.Count &gt; 0">!result || this.Count &gt; 0</ensures>
+    </member>
+    <member name="M:whiteMath.General.ReverseList`1.Clear">
+      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Clear" inheritedFromTypeName="ICollection" csharp="this.Count == 0" vb="Me.Count = 0">this.Count == 0</ensures>
+    </member>
+    <member name="M:whiteMath.General.ReverseList`1.IndexOf(`0)">
+      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.IndexOf(`0)" inheritedFromTypeName="IList" csharp="result &gt;= -1" vb="result &gt;= -1">result &gt;= -1</ensures>
+      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.IndexOf(`0)" inheritedFromTypeName="IList" csharp="result &lt; this.Count" vb="result &lt; Me.Count">result &lt; this.Count</ensures>
+    </member>
+    <member name="M:whiteMath.General.ReverseList`1.Insert(System.Int32,`0)">
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt;= this.Count" vb="index &lt;= Me.Count">index &lt;= this.Count</requires>
+    </member>
+    <member name="M:whiteMath.General.ReverseList`1.RemoveAt(System.Int32)">
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
+      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="this.Count == old(this.Count) - 1" vb="Me.Count = old(Me.Count) - 1">this.Count == old(this.Count) - 1</ensures>
+    </member>
+    <member name="M:whiteMath.General.ReverseList`1.CopyTo(`0[],System.Int32)">
+      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="array != null" vb="array &lt;&gt; Nothing">array != null</requires>
+      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="arrayIndex &gt;= 0" vb="arrayIndex &gt;= 0">arrayIndex &gt;= 0</requires>
+      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="arrayIndex &lt;= array.Length - this.Count" vb="arrayIndex &lt;= array.Length - Me.Count">arrayIndex &lt;= array.Length - this.Count</requires>
+    </member>
+    <member name="P:whiteMath.General.ReverseList`1.Count">
+      <getter>
+        <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.get_Count" inheritedFromTypeName="ICollection" csharp="result &gt;= 0" vb="result &gt;= 0">result &gt;= 0</ensures>
+      </getter>
+    </member>
+    <member name="P:whiteMath.General.ReverseList`1.Item(System.Int32)">
+      <getter>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
+      </getter>
+      <setter>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
+      </setter>
     </member>
     <member name="M:whiteMath.General.OddEvenListWrappers.HalfList`1.System#Collections#IEnumerable#GetEnumerator">
       <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
@@ -10842,58 +10993,8 @@
         <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.get_Count" inheritedFromTypeName="ICollection" csharp="result &gt;= 0" vb="result &gt;= 0">result &gt;= 0</ensures>
       </getter>
     </member>
-    <member name="M:whiteMath.General.TwoDimensionalArrayRow`1.Add(`0)">
-      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Add(`0)" inheritedFromTypeName="ICollection" csharp="this.Count &gt;= old(this.Count)" vb="Me.Count &gt;= old(Me.Count)">this.Count &gt;= old(this.Count)</ensures>
-    </member>
-    <member name="M:whiteMath.General.TwoDimensionalArrayRow`1.RemoveAt(System.Int32)">
-      <requires inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
-      <requires inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
-      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="this.Count == old(this.Count) - 1" vb="Me.Count = old(Me.Count) - 1">this.Count == old(this.Count) - 1</ensures>
-    </member>
-    <member name="M:whiteMath.General.TwoDimensionalArrayRow`1.Clear">
-      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Clear" inheritedFromTypeName="ICollection" csharp="this.Count == 0" vb="Me.Count = 0">this.Count == 0</ensures>
-    </member>
-    <member name="M:whiteMath.General.TwoDimensionalArrayRow`1.Insert(System.Int32,`0)">
-      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
-      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt;= this.Count" vb="index &lt;= Me.Count">index &lt;= this.Count</requires>
-    </member>
-    <member name="M:whiteMath.General.Point`1.PointComparer.#ctor(System.Collections.Generic.IComparer{`0},System.Boolean)">
-      <requires csharp="tComparer != null" vb="tComparer &lt;&gt; Nothing">tComparer != null</requires>
-    </member>
-    <member name="M:whiteMath.General.ListSegment`1.#ctor(System.Collections.Generic.IList{`0},System.Int32,System.Int32)">
-      <requires description="list" exception="T:System.ArgumentNullException" csharp="list != null" vb="list &lt;&gt; Nothing">list != null</requires>
-      <exception cref="T:System.ArgumentNullException">list == null</exception>
-      <requires description="The length must be non-negative" exception="T:System.ArgumentOutOfRangeException" csharp="length &gt;= 0" vb="length &gt;= 0">length &gt;= 0</requires>
-      <exception cref="T:System.ArgumentOutOfRangeException">length &lt; 0</exception>
-      <requires description="The offset index is out of the list bounds." exception="T:System.IndexOutOfRangeException" csharp="offset &gt;= 0 &amp;&amp; offset &lt; list.Count" vb="offset &gt;= 0 AndAlso offset &lt; list.Count">offset &gt;= 0 &amp;&amp; offset &lt; list.Count</requires>
-      <exception cref="T:System.IndexOutOfRangeException">offset &lt; 0 || offset &gt;= list.Count</exception>
-      <requires description="The length specified runs out of the list bound." exception="T:System.IndexOutOfRangeException" csharp="offset + length &lt;= list.Count" vb="offset + length &lt;= list.Count">offset + length &lt;= list.Count</requires>
-      <exception cref="T:System.IndexOutOfRangeException">offset + length &gt; list.Count</exception>
-    </member>
-    <member name="M:whiteMath.General.ListSegment`1.GetEnumerator">
-      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
-      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
-    </member>
-    <member name="M:whiteMath.General.ListSegment`1.System#Collections#IEnumerable#GetEnumerator">
-      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
-      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
-      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_CurrentIndex == -1" vb="result.get_CurrentIndex = -1">result.get_CurrentIndex == -1</ensures>
-    </member>
-    <member name="M:whiteMath.General.ListSegment`1.Contains(`0)">
-      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Contains(`0)" inheritedFromTypeName="ICollection" csharp="result ⇒ this.Count &gt; 0" vb="result Implies Me.Count &gt; 0">!result || this.Count &gt; 0</ensures>
-    </member>
-    <member name="M:whiteMath.General.ListSegment`1.ToString">
+    <member name="M:whiteMath.General.BinaryHeap`1.BinaryHeapNode.ToString">
       <ensures inheritedFrom="M:System.Object.ToString" inheritedFromTypeName="Object" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
-    </member>
-    <member name="P:whiteMath.General.ListSegment`1.Item(System.Int32)">
-      <getter>
-        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
-        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
-      </getter>
-      <setter>
-        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
-        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
-      </setter>
     </member>
     <member name="M:whiteMath.General.LTDefaultList`1.System#Collections#IEnumerable#GetEnumerator">
       <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
@@ -10946,13 +11047,6 @@
         <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
       </setter>
     </member>
-    <member name="T:whiteMath.General.HitTester`2">
-      <invariant>this.intervalList != null</invariant>
-      <invariant>this.intervalHits != null</invariant>
-    </member>
-    <member name="M:whiteMath.General.TreeNodeSmart`1.ToString">
-      <ensures inheritedFrom="M:System.Object.ToString" inheritedFromTypeName="Object" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
-    </member>
     <member name="M:whiteMath.General.ListFragment`1.System#Collections#IEnumerable#GetEnumerator">
       <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
       <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
@@ -10977,113 +11071,33 @@
       <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
       <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt;= this.Count" vb="index &lt;= Me.Count">index &lt;= this.Count</requires>
     </member>
-    <member name="M:whiteMath.General.BinaryHeap`1.BinaryHeapNode.ToString">
+    <member name="M:whiteMath.General.TreeNodeSmart`1.ToString">
       <ensures inheritedFrom="M:System.Object.ToString" inheritedFromTypeName="Object" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
     </member>
-    <member name="M:whiteMath.General.DefaultList`1.Add(`0)">
+    <member name="M:whiteMath.General.TwoDimensionalArrayRow`1.Add(`0)">
       <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Add(`0)" inheritedFromTypeName="ICollection" csharp="this.Count &gt;= old(this.Count)" vb="Me.Count &gt;= old(Me.Count)">this.Count &gt;= old(this.Count)</ensures>
     </member>
-    <member name="M:whiteMath.General.DefaultList`1.Clear">
-      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Clear" inheritedFromTypeName="ICollection" csharp="this.Count == 0" vb="Me.Count = 0">this.Count == 0</ensures>
-    </member>
-    <member name="M:whiteMath.General.DefaultList`1.Contains(`0)">
-      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Contains(`0)" inheritedFromTypeName="ICollection" csharp="result ⇒ this.Count &gt; 0" vb="result Implies Me.Count &gt; 0">!result || this.Count &gt; 0</ensures>
-    </member>
-    <member name="M:whiteMath.General.DefaultList`1.CopyTo(`0[],System.Int32)">
-      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="array != null" vb="array &lt;&gt; Nothing">array != null</requires>
-      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="arrayIndex &gt;= 0" vb="arrayIndex &gt;= 0">arrayIndex &gt;= 0</requires>
-      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="arrayIndex &lt;= array.Length - this.Count" vb="arrayIndex &lt;= array.Length - Me.Count">arrayIndex &lt;= array.Length - this.Count</requires>
-    </member>
-    <member name="M:whiteMath.General.DefaultList`1.IndexOf(`0)">
-      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.IndexOf(`0)" inheritedFromTypeName="IList" csharp="result &gt;= -1" vb="result &gt;= -1">result &gt;= -1</ensures>
-      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.IndexOf(`0)" inheritedFromTypeName="IList" csharp="result &lt; this.Count" vb="result &lt; Me.Count">result &lt; this.Count</ensures>
-    </member>
-    <member name="M:whiteMath.General.DefaultList`1.Insert(System.Int32,`0)">
-      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
-      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt;= this.Count" vb="index &lt;= Me.Count">index &lt;= this.Count</requires>
-    </member>
-    <member name="M:whiteMath.General.DefaultList`1.RemoveAt(System.Int32)">
+    <member name="M:whiteMath.General.TwoDimensionalArrayRow`1.RemoveAt(System.Int32)">
       <requires inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
       <requires inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
       <ensures inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="this.Count == old(this.Count) - 1" vb="Me.Count = old(Me.Count) - 1">this.Count == old(this.Count) - 1</ensures>
     </member>
-    <member name="M:whiteMath.General.DefaultList`1.System#Collections#IEnumerable#GetEnumerator">
-      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
-      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
-      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_CurrentIndex == -1" vb="result.get_CurrentIndex = -1">result.get_CurrentIndex == -1</ensures>
+    <member name="M:whiteMath.General.TwoDimensionalArrayRow`1.Clear">
+      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Clear" inheritedFromTypeName="ICollection" csharp="this.Count == 0" vb="Me.Count = 0">this.Count == 0</ensures>
     </member>
-    <member name="M:whiteMath.General.DefaultList`1.GetEnumerator">
-      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
-      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
+    <member name="M:whiteMath.General.TwoDimensionalArrayRow`1.Insert(System.Int32,`0)">
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt;= this.Count" vb="index &lt;= Me.Count">index &lt;= this.Count</requires>
     </member>
-    <member name="P:whiteMath.General.DefaultList`1.Item(System.Int32)">
-      <getter>
-        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
-        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
-      </getter>
-      <setter>
-        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
-        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
-      </setter>
+    <member name="M:whiteMath.General.TreeNode`1.ToString">
+      <ensures inheritedFrom="M:System.Object.ToString" inheritedFromTypeName="Object" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
     </member>
-    <member name="P:whiteMath.General.DefaultList`1.Count">
-      <getter>
-        <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.get_Count" inheritedFromTypeName="ICollection" csharp="result &gt;= 0" vb="result &gt;= 0">result &gt;= 0</ensures>
-      </getter>
+    <member name="T:whiteMath.General.HitTester`2">
+      <invariant>this.intervalList != null</invariant>
+      <invariant>this.intervalHits != null</invariant>
     </member>
     <member name="M:whiteMath.General.ClassicEnumerator`1.System#Collections#IEnumerator#get_Current">
       <ensures inheritedFrom="M:System.Collections.IEnumerator.get_Current" inheritedFromTypeName="IEnumerator" csharp="result == this.get_Model[this.get_CurrentIndex]" vb="result = Me.get_Model(Me.get_CurrentIndex)">result == this.get_Model[this.get_CurrentIndex]</ensures>
-    </member>
-    <member name="M:whiteMath.General.ReverseList`1.System#Collections#IEnumerable#GetEnumerator">
-      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
-      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
-      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_CurrentIndex == -1" vb="result.get_CurrentIndex = -1">result.get_CurrentIndex == -1</ensures>
-    </member>
-    <member name="M:whiteMath.General.ReverseList`1.GetEnumerator">
-      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
-      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
-    </member>
-    <member name="M:whiteMath.General.ReverseList`1.Add(`0)">
-      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Add(`0)" inheritedFromTypeName="ICollection" csharp="this.Count &gt;= old(this.Count)" vb="Me.Count &gt;= old(Me.Count)">this.Count &gt;= old(this.Count)</ensures>
-    </member>
-    <member name="M:whiteMath.General.ReverseList`1.Contains(`0)">
-      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Contains(`0)" inheritedFromTypeName="ICollection" csharp="result ⇒ this.Count &gt; 0" vb="result Implies Me.Count &gt; 0">!result || this.Count &gt; 0</ensures>
-    </member>
-    <member name="M:whiteMath.General.ReverseList`1.Clear">
-      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Clear" inheritedFromTypeName="ICollection" csharp="this.Count == 0" vb="Me.Count = 0">this.Count == 0</ensures>
-    </member>
-    <member name="M:whiteMath.General.ReverseList`1.IndexOf(`0)">
-      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.IndexOf(`0)" inheritedFromTypeName="IList" csharp="result &gt;= -1" vb="result &gt;= -1">result &gt;= -1</ensures>
-      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.IndexOf(`0)" inheritedFromTypeName="IList" csharp="result &lt; this.Count" vb="result &lt; Me.Count">result &lt; this.Count</ensures>
-    </member>
-    <member name="M:whiteMath.General.ReverseList`1.Insert(System.Int32,`0)">
-      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
-      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt;= this.Count" vb="index &lt;= Me.Count">index &lt;= this.Count</requires>
-    </member>
-    <member name="M:whiteMath.General.ReverseList`1.RemoveAt(System.Int32)">
-      <requires inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
-      <requires inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
-      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="this.Count == old(this.Count) - 1" vb="Me.Count = old(Me.Count) - 1">this.Count == old(this.Count) - 1</ensures>
-    </member>
-    <member name="M:whiteMath.General.ReverseList`1.CopyTo(`0[],System.Int32)">
-      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="array != null" vb="array &lt;&gt; Nothing">array != null</requires>
-      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="arrayIndex &gt;= 0" vb="arrayIndex &gt;= 0">arrayIndex &gt;= 0</requires>
-      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="arrayIndex &lt;= array.Length - this.Count" vb="arrayIndex &lt;= array.Length - Me.Count">arrayIndex &lt;= array.Length - this.Count</requires>
-    </member>
-    <member name="P:whiteMath.General.ReverseList`1.Count">
-      <getter>
-        <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.get_Count" inheritedFromTypeName="ICollection" csharp="result &gt;= 0" vb="result &gt;= 0">result &gt;= 0</ensures>
-      </getter>
-    </member>
-    <member name="P:whiteMath.General.ReverseList`1.Item(System.Int32)">
-      <getter>
-        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
-        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
-      </getter>
-      <setter>
-        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
-        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
-      </setter>
     </member>
     <member name="M:whiteMath.CalcULong.fromInt(System.Int64)">
       <requires description="Cannot convert a negative value to an ulong." exception="T:System.ArgumentOutOfRangeException" csharp="equivalent &gt;= (long)0" vb="equivalent &gt;= ((Long )0)">equivalent &gt;= (long)0</requires>

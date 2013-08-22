@@ -82,7 +82,7 @@ namespace whiteMath.Functions
             str = str.Replace("cosh", "@coh@");
             str = str.Replace("sin", "@sin@");
             str = str.Replace("cos", "@cos@");
-            str = str.Replace("ctg", "@ctg@");
+            str = str.Replace("ctg", "@cot@");
             str = str.Replace("tg", "@tan@");
             str = str.Replace("ln", "@lna@");
             str = str.Replace("lg", "@lg1@");
