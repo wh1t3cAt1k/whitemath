@@ -22,7 +22,7 @@ namespace whiteMath.General
         public ListSegment(IList<T> list, int offset, int length)
         {
             Contract.Requires<ArgumentNullException>(list != null, "list");
-            Contract.Requires<ArgumentOutOfRangeException>(length >= 0, "The length must be non-negative");
+            Contract.Requires<ArgumentOutOfRangeException>(length >= 0, "The length must be non-negative.");
             Contract.Requires<IndexOutOfRangeException>(offset >= 0 && offset < list.Count, "The offset index is out of the list bounds.");
             Contract.Requires<IndexOutOfRangeException>(offset + length <= list.Count, "The length specified runs out of the list bound.");
 
@@ -304,6 +304,93 @@ namespace whiteMath.General
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Creates a wrapper list segment containing elements from the
+        /// specified offset index in the parent list and to the end of the source list.
+        /// 
+        /// The resulting list segment is reindexed from zero. 
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <param name="list">A source list.</param>
+        /// <param name="offset">A zero-based offset inclusive index, starting with which the resulting list segment will be produced.</param>
+        /// <returns>
+        /// A wrapper list segment containing elements from the
+        /// specified offset index (inclusive) in the parent list and to the end of the source list.
+        /// </returns>
+        public static ListSegment<T> ListSegmentFrom<T>(this IList<T> list, int offset)
+        {
+            Contract.Requires<ArgumentNullException>(list != null, "list");
+            Contract.Requires<ArgumentOutOfRangeException>(offset >= 0 && offset < list.Count);
+
+            return new ListSegment<T>(list, offset, list.Count - offset);
+        }
+
+        /// <summary>
+        /// Creates a wrapper list segment containing elements from the
+        /// beginning of a source list and to the specified index (inclusively).
+        /// 
+        /// The resulting list segment is reindexed from zero.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <param name="list">A source list.</param>
+        /// <param name="toInclusiveIndex">A zero-based inclusive index, which will produce the last element for the wrapper segment.</param>
+        /// <returns>
+        /// A wrapper list segment containing elements from the
+        /// beginning of <paramref name="list"/> and to the specified <paramref name="toInclusiveIndex"/> (inclusively).
+        /// </returns>
+        public static ListSegment<T> ListSegmentTo<T>(this IList<T> list, int toInclusiveIndex)
+        {
+            Contract.Requires<ArgumentNullException>(list != null, "list");
+            Contract.Requires<ArgumentOutOfRangeException>(toInclusiveIndex >= 0 && toInclusiveIndex < list.Count - 1);
+
+            return new ListSegment<T>(list, 0, toInclusiveIndex + 1);
+        }
+
+        /// <summary>
+        /// Creates a wrapper list segment containing elements of a source list
+        /// located between a pair of specified inclusive indices.
+        /// 
+        /// The resulting list segment is reindexed from zero.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <param name="list">A source list.</param>
+        /// <param name="fromInclusiveIndex">A zero-based inclusive index, which will produce the first element for the wrapper segment.</param>
+        /// <param name="toInclusiveIndex">A zero-based inclusive index, which will produce the last element for the wrapper segment.</param>
+        /// <returns>
+        /// A wrapper list segment containing elements of a source list
+        /// starting from <paramref name="fromInclusiveIndex"/> (inclusively) and to
+        /// <paramref name="toInclusiveIndex"/> (inclusively).
+        /// </returns>
+        public static ListSegment<T> ListSegmentFromTo<T>(this IList<T> list, int fromInclusiveIndex, int toInclusiveIndex)
+        {
+            Contract.Requires<ArgumentNullException>(list != null, "list");
+            Contract.Requires<IndexOutOfRangeException>(fromInclusiveIndex >= 0 && fromInclusiveIndex < list.Count - 1);
+            Contract.Requires<IndexOutOfRangeException>(toInclusiveIndex >= 0 && toInclusiveIndex < list.Count - 1);
+            Contract.Requires<ArgumentException>(fromInclusiveIndex < toInclusiveIndex);
+
+            return new ListSegment<T>(list, fromInclusiveIndex, toInclusiveIndex - fromInclusiveIndex + 1);
+        }
+
+        /// <summary>
+        /// In a list containing two or more elements, excludes the boundaries
+        /// i.e. the leftmost and the rightmost element and
+        /// returns a wrapper list containing all but these elements,
+        /// reindexed from zero. The parent list object remains intact. 
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <param name="list">A source list object, containing two or more elements.</param>
+        /// <returns>
+        /// A zero-indexed wrapper list containing all but the leftmost
+        /// and the rightmost elements of the parents.
+        /// </returns>
+        public static ListSegment<T> ExcludeBoundaries<T>(this IList<T> list)
+        {
+            Contract.Requires<ArgumentNullException>(list != null, "list");
+            Contract.Requires<ArgumentException>(list.Count >= 2, "The list should contain at least two elements.");
+
+            return new ListSegment<T>(list, 1, list.Count - 2);
         }
     }
 }

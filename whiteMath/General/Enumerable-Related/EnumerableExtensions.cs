@@ -99,21 +99,38 @@ namespace whiteMath.General
         }
 
         /// <summary>
-        /// Finds the minimum and the maximum element in a sequence using the comparer specified.
+        /// Finds the minimum and the maximum elements in a sequence.
         /// </summary>
-        /// <typeparam name="T">The type of elements in the sequence.</typeparam>
-        /// <param name="sequence">The calling sequence object.</param>
-        /// <param name="comparer">A comparer for the T type. Its Compare() method should return a positive value in case when the first compared element is bigger than the second.</param>
-        /// <returns>A logical point whose X value is equal to the minimum element, and Y value is equal to the maximum element of the sequence.</returns>
-        public static Point<T> MinMax<T>(this IEnumerable<T> sequence, IComparer<T> comparer)
+        /// <typeparam name="T">
+        /// The type of elements in the sequence.
+        /// </typeparam>
+        /// <param name="sequence">
+        /// A sequence object in which the minimal and maximal elements would be found.
+        /// </param>
+        /// <param name="comparer">
+        /// An optional <see cref="IComparer&lt;T&gt;"/> for the <typeparamref name="T"/> type. 
+        /// </param>
+        /// <returns>
+        /// A logical point whose X value is equal to the minimum, and Y value is equal to the maximum.</returns>
+        public static Point<T> MinMax<T>(this IEnumerable<T> sequence, IComparer<T> comparer = null)
         {
+            Contract.Requires<ArgumentNullException>(sequence != null, "sequence");
+            Contract.Requires<ArgumentException>(!sequence.IsEmpty(), "The sequence should contain at least one element.");
+
+            if (comparer == null)
+            {
+                comparer = Comparer<T>.Default;
+            }
+
             T min;
             T max;
 
             IEnumerator<T> enumerator = sequence.GetEnumerator();
 
             if (!enumerator.MoveNext())
+            {
                 throw GeneralExceptions.__SEQUENCE_EMPTY;
+            }
             else
             {
                 min = max = enumerator.Current;

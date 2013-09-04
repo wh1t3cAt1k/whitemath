@@ -599,5 +599,85 @@ namespace whiteMath.Statistics
                 tailValuesHandling,
                 StatisticExtensionMethods.SampleAverage<T, C>);
         }
+
+        /// <summary>
+        /// From a sequence of objects, creates a dictionary of their absolute frequencies.
+        /// That is, for each unique value in the source sequence,
+        /// stores it as a key, then counts the number of its occurrences and stores the number as 
+        /// a value in the resulting key-value pair.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the sequence.</typeparam>
+        /// <param name="sequence">A source sequence object.</param>
+        /// <param name="equalityComparer">
+        /// An equality comparer for the <typeparamref name="T"/> type. 
+        /// If <c>null</c>, a default equality comparer will be used.
+        /// </param>
+        /// <returns>
+        /// A dictionary of unique values from the <paramref name="sequence"/> with 
+        /// their corresponding absolute frequencies (occurrence counts).
+        /// </returns>
+        public static Dictionary<T, int> FrequenciesAbsolute<T>(this IEnumerable<T> sequence, IEqualityComparer<T> equalityComparer = null)
+        {
+            Contract.Requires<ArgumentNullException>(sequence != null, "sequence");
+
+            if (equalityComparer == null)
+            {
+                equalityComparer = EqualityComparer<T>.Default;
+            }
+
+            Dictionary<T, int> result = new Dictionary<T, int>(equalityComparer);
+
+            foreach (T element in sequence)
+            {
+                if (result.ContainsKey(element))
+                {
+                    result[element]++;
+                }
+                else
+                {
+                    result.Add(element, 1);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// From a sequence of objects, creates a dictionary of their relative frequencies.
+        /// That is, for each unique value in the source sequence,
+        /// stores it as a key, then counts the number of its occurrences and stores its
+        /// proportion in the total source sequence element count as a value in the resulting key-value pair.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the sequence.</typeparam>
+        /// <param name="sequence">A source sequence object.</param>
+        /// <param name="equalityComparer">
+        /// An equality comparer for the <typeparamref name="T"/> type. 
+        /// If <c>null</c>, a default equality comparer will be used.
+        /// </param>
+        /// <returns>
+        /// A dictionary of unique values from the <paramref name="sequence"/> with 
+        /// their corresponding relative frequencies (proportions).
+        /// </returns>
+        public static Dictionary<T, double> FrequenciesRelative<T>(this IEnumerable<T> sequence, IEqualityComparer<T> equalityComparer = null)
+        {
+            Contract.Requires<ArgumentNullException>(sequence != null, "sequence");
+
+            if (equalityComparer == null)
+            {
+                equalityComparer = EqualityComparer<T>.Default;
+            }
+
+            int elementCount = sequence.Count();
+            Dictionary<T, int> absoluteFrequencies = sequence.FrequenciesAbsolute(equalityComparer);
+
+            Dictionary<T, double> result = new Dictionary<T, double>(absoluteFrequencies.Count);
+
+            foreach (KeyValuePair<T, int> keyValuePair in absoluteFrequencies)
+            {
+                result.Add(keyValuePair.Key, (double)keyValuePair.Value / elementCount);
+            }
+
+            return result;
+        }
     }
 }

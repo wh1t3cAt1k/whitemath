@@ -12,7 +12,7 @@ namespace whiteMath.General
     /// when the index specified is out of the bounds.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    class DefaultList<T>: IList<T>
+    public class DefaultList<T>: IList<T>
     {
         private IList<T> parent;
 

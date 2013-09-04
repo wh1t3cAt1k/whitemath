@@ -2,7 +2,7 @@ whiteMath + whiteStructs
 ========================
 
 An open-source programmer-friendly C# .NET mathematical++ library.
-Current version: 1.0.0.
+Current version: 1.0.1.
 Released under Apache v2 open-source license. 
 
 The library should not by any means be treated as something complete in terms

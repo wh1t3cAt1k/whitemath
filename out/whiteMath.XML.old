@@ -2746,12 +2746,19 @@
         </member>
         <member name="M:whiteMath.General.EnumerableExtensions.MinMax``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0})">
             <summary>
-            Finds the minimum and the maximum element in a sequence using the comparer specified.
+            Finds the minimum and the maximum elements in a sequence.
             </summary>
-            <typeparam name="T">The type of elements in the sequence.</typeparam>
-            <param name="sequence">The calling sequence object.</param>
-            <param name="comparer">A comparer for the T type. Its Compare() method should return a positive value in case when the first compared element is bigger than the second.</param>
-            <returns>A logical point whose X value is equal to the minimum element, and Y value is equal to the maximum element of the sequence.</returns>
+            <typeparam name="T">
+            The type of elements in the sequence.
+            </typeparam>
+            <param name="sequence">
+            A sequence object in which the minimal and maximal elements would be found.
+            </param>
+            <param name="comparer">
+            An optional <see cref="T:System.Collections.Generic.IComparer`1"/> for the <typeparamref name="T"/> type. 
+            </param>
+            <returns>
+            A logical point whose X value is equal to the minimum, and Y value is equal to the maximum.</returns>
         </member>
         <member name="M:whiteMath.General.EnumerableExtensions.To2DArrayColumn``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
@@ -6709,6 +6716,21 @@
             А также внешнюю окантовку графика (с насечками +))
             </summary>
         </member>
+        <member name="M:whiteMath.Graphers.ArrayGrapher.#ctor(System.Collections.Generic.IEnumerable{whiteMath.General.Point{System.Double}})">
+            <summary>
+            Constructs a new <see cref="T:whiteMath.Graphers.ArrayGrapher"/> object
+            using a list of (x, y) points.
+            </summary>
+            <param name="pointsArray">An enumerable list of (x, y) points.</param>
+        </member>
+        <member name="M:whiteMath.Graphers.ArrayGrapher.#ctor(System.Collections.Generic.IEnumerable{System.Double},System.Collections.Generic.IEnumerable{System.Double})">
+            <summary>
+            Constructs a new <see cref="T:whiteMath.Graphers.ArrayGrapher"/> object
+            using separate point lists for 'x' and 'y'.
+            </summary>
+            <param name="xList">An enumerable list of 'x' points.</param>
+            <param name="yList">An enumerable list of 'y' points.</param>
+        </member>
         <member name="T:whiteMath.Graphers.Services.DotListComparer`2">
             <summary>
             Compares the two points on the basis of their X coordinate.
@@ -8747,6 +8769,67 @@
             </param>
             <returns>A list of non-intersecting segments which cover the <paramref name="list"/>.</returns>
         </member>
+        <member name="M:whiteMath.General.ListSegmentationExtensions.ListSegmentFrom``1(System.Collections.Generic.IList{``0},System.Int32)">
+            <summary>
+            Creates a wrapper list segment containing elements from the
+            specified offset index in the parent list and to the end of the source list.
+            
+            The resulting list segment is reindexed from zero. 
+            </summary>
+            <typeparam name="T">The type of elements in the list.</typeparam>
+            <param name="list">A source list.</param>
+            <param name="offset">A zero-based offset inclusive index, starting with which the resulting list segment will be produced.</param>
+            <returns>
+            A wrapper list segment containing elements from the
+            specified offset index (inclusive) in the parent list and to the end of the source list.
+            </returns>
+        </member>
+        <member name="M:whiteMath.General.ListSegmentationExtensions.ListSegmentTo``1(System.Collections.Generic.IList{``0},System.Int32)">
+            <summary>
+            Creates a wrapper list segment containing elements from the
+            beginning of a source list and to the specified index (inclusively).
+            
+            The resulting list segment is reindexed from zero.
+            </summary>
+            <typeparam name="T">The type of elements in the list.</typeparam>
+            <param name="list">A source list.</param>
+            <param name="toInclusiveIndex">A zero-based inclusive index, which will produce the last element for the wrapper segment.</param>
+            <returns>
+            A wrapper list segment containing elements from the
+            beginning of <paramref name="list"/> and to the specified <paramref name="toInclusiveIndex"/> (inclusively).
+            </returns>
+        </member>
+        <member name="M:whiteMath.General.ListSegmentationExtensions.ListSegmentFromTo``1(System.Collections.Generic.IList{``0},System.Int32,System.Int32)">
+            <summary>
+            Creates a wrapper list segment containing elements of a source list
+            located between a pair of specified inclusive indices.
+            
+            The resulting list segment is reindexed from zero.
+            </summary>
+            <typeparam name="T">The type of elements in the list.</typeparam>
+            <param name="list">A source list.</param>
+            <param name="fromInclusiveIndex">A zero-based inclusive index, which will produce the first element for the wrapper segment.</param>
+            <param name="toInclusiveIndex">A zero-based inclusive index, which will produce the last element for the wrapper segment.</param>
+            <returns>
+            A wrapper list segment containing elements of a source list
+            starting from <paramref name="fromInclusiveIndex"/> (inclusively) and to
+            <paramref name="toInclusiveIndex"/> (inclusively).
+            </returns>
+        </member>
+        <member name="M:whiteMath.General.ListSegmentationExtensions.ExcludeBoundaries``1(System.Collections.Generic.IList{``0})">
+            <summary>
+            In a list containing two or more elements, excludes the boundaries
+            i.e. the leftmost and the rightmost element and
+            returns a wrapper list containing all but these elements,
+            reindexed from zero. The parent list object remains intact. 
+            </summary>
+            <typeparam name="T">The type of elements in the list.</typeparam>
+            <param name="list">A source list object, containing two or more elements.</param>
+            <returns>
+            A zero-indexed wrapper list containing all but the leftmost
+            and the rightmost elements of the parents.
+            </returns>
+        </member>
         <member name="T:whiteMath.General.ListSegmentationExtensions.SegmentationOptions">
             <summary>
             This enum contains options to specify when covering an <c>IList&lt;T&gt;</c> into a sequence of 
@@ -9116,11 +9199,25 @@
         </member>
         <member name="M:whiteMath.General.OtherExtensions.CreateComparer``1(System.Comparison{``0})">
             <summary>
-            Creates the IComparer<typeparamref name="T"/> object from the calling Comparison(<typeparamref name="T"/>) object.
+            Creates an <see cref="T:System.Collections.Generic.IComparer`1"/> object from a calling <see cref="T:System.Comparison`1"/> object.
             </summary>
             <typeparam name="T">The type of comparable values.</typeparam>
-            <param name="comparison">The comparison delegate comparing values of type <typeparamref name="T"/>.</param>
-            <returns>The IComparer(<typeparamref name="T"/>) object doing the same as the comparison object passed.</returns>
+            <param name="comparison">A comparison delegate comparing values of type <typeparamref name="T"/>.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IComparer`1"/> equal in functionality to the comparison object passed.</returns>
+        </member>
+        <member name="M:whiteMath.General.OtherExtensions.CreateEqualityComparer``1(System.Func{``0,``0,System.Boolean})">
+            <summary>
+            Creates an <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> object from a calling <see cref="!:Func&lt;T, T, bool&gt;"/> 
+            equality comparison functor.
+            </summary>
+            <typeparam name="T">
+            The type of comparable values.
+            </typeparam>
+            <param name="equalityComparison">
+            A comparison delegate comparing values of type <typeparamref name="T"/>, returning
+            <c>true</c> if two objects should be considered equal, and <c>false</c> otherwise.
+            </param>
+            <returns>An <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> equal in functionality to the functor object passed.</returns>
         </member>
         <member name="M:whiteMath.General.OtherExtensions.CharacterCount(System.String,System.Char)">
             <summary>
@@ -9163,6 +9260,17 @@
             <summary>
             Класс, создающий обратный компаратор на основе прямого компаратора.
             </summary>
+        </member>
+        <member name="T:whiteMath.General.OtherExtensions.FuncEqualityComparer`1">
+            <summary>
+            Creates an <see cref="T:System.Collections.Generic.EqualityComparer`1"/> using a
+            functor object taking two elements of <typeparamref name="T"/>
+            type (it should return <c>true</c> if they are equal and <c>false</c> otherwise). 
+            
+            Please not that a default implementation of <see cref="M:whiteMath.General.OtherExtensions.FuncEqualityComparer`1.GetHashCode(`0)"/>
+            will be used.
+            </summary>
+            <typeparam name="T">The type of compared elements.</typeparam>
         </member>
         <member name="T:whiteMath.General.OtherExtensions.ComparisonComparer`1">
             <summary>
@@ -9465,6 +9573,42 @@
             See <see cref="T:whiteMath.Statistics.StatisticExtensionMethods.TailValuesHandling"/>.
             </param>
             <returns>A sequence of moving medians calculated from the source sequence.</returns>
+        </member>
+        <member name="M:whiteMath.Statistics.StatisticExtensionMethods.FrequenciesAbsolute``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0})">
+            <summary>
+            From a sequence of objects, creates a dictionary of their absolute frequencies.
+            That is, for each unique value in the source sequence,
+            stores it as a key, then counts the number of its occurrences and stores the number as 
+            a value in the resulting key-value pair.
+            </summary>
+            <typeparam name="T">The type of elements in the sequence.</typeparam>
+            <param name="sequence">A source sequence object.</param>
+            <param name="equalityComparer">
+            An equality comparer for the <typeparamref name="T"/> type. 
+            If <c>null</c>, a default equality comparer will be used.
+            </param>
+            <returns>
+            A dictionary of unique values from the <paramref name="sequence"/> with 
+            their corresponding absolute frequencies (occurrence counts).
+            </returns>
+        </member>
+        <member name="M:whiteMath.Statistics.StatisticExtensionMethods.FrequenciesRelative``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0})">
+            <summary>
+            From a sequence of objects, creates a dictionary of their relative frequencies.
+            That is, for each unique value in the source sequence,
+            stores it as a key, then counts the number of its occurrences and stores its
+            proportion in the total source sequence element count as a value in the resulting key-value pair.
+            </summary>
+            <typeparam name="T">The type of elements in the sequence.</typeparam>
+            <param name="sequence">A source sequence object.</param>
+            <param name="equalityComparer">
+            An equality comparer for the <typeparamref name="T"/> type. 
+            If <c>null</c>, a default equality comparer will be used.
+            </param>
+            <returns>
+            A dictionary of unique values from the <paramref name="sequence"/> with 
+            their corresponding relative frequencies (proportions).
+            </returns>
         </member>
         <member name="T:whiteMath.Statistics.StatisticExtensionMethods.WindowType">
             <summary>
