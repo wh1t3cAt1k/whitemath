@@ -1,22 +1,23 @@
-whiteMath + whiteStructs
-========================
+# whiteMath + whiteStructs
 
-An open-source programmer-friendly C# .NET mathematical++ library.
+*Disclaimer (January 2016)*: This is a very old, badly written, obsolete readme, the code in the repo is probably of awful quality, and last updates were pushed here when I still didn't know how to use `git` properly (so it might even be dissynchronized with my machine).
+
+whiteMath is an open-source programmer-friendly C# .NET mathematical++ library.
+
 Current version: 1.0.1.
-Released under Apache v2 open-source license. 
 
-The library should not by any means be treated as something complete in terms
-of both functionality and documentation. Hopefully, it will never be complete
+Released under Apache v2 open-source license. *UPDATE January 2016: I will probably revisit the licensing terms ASAP and move to GPL*.
+
+This library should not by any means be treated as complete in terms
+of functionality and documentation. Hopefully, it will never be complete
 in terms of functionality; unfortunately, it is likely that the documentation
 isn't going to cover everything, either.
 
--2. WHAT?
+## -\2. WHAT?
 
-This is a mathematical++ (maths, data structures, helper classes) library initially
-designed to assist me in my student projects at the Higher School of Economics, 
-Moscow, Russia. What is it now? You decide.
+This is a mathematical (maths, data structures, helper classes) library that was initially designed to assist me in my student projects at the Higher School of Economics, Moscow, Russia. What is it now? You decide.
 
--1. WHY?
+## -\1. WHY?
 
 Because I believe that the majority of shareable ideas ought to be shared.
 
@@ -27,7 +28,7 @@ This never happened, as you could expect.
 So why now? Because today I stopped caring.
 Maybe we could do it together?
 
-0. TODO:
+## 0\. TODO:
 
 I understand that perhaps this isn't a very good readme for an open-source library.
 I honestly promise to write one very soon - just don't know where to begin.
@@ -38,7 +39,7 @@ included in repository.
 
 Stay tuned - and I will really appreciate any help. 
 
-1. BAD DOCUMENTATION:
+## 1\. BAD DOCUMENTATION:
 
 Currently, there are two types of hardly understandable and badly documented code 
 in the library:
@@ -56,33 +57,33 @@ Currently, the author tries to document everything thoroughly using XML and in-l
 comments. Sadly, part of these comments are still in Russian, so feel free to
 ask for an appropriate translation.
 
-2. BUGS: 
+## 2\. BUGS: 
 
 I suspect there are lots of them. Most of the functions were in real-life use from one to
-several times, and after that was happily abandoned. I have never bothered with thorough
+several times, and after that were happily abandoned. I have never bothered with thorough
 randomized testing either.
 
 Please report.
 
-3. COPYRIGHT NOTES:
+## 3\. COPYRIGHT NOTES:
 
 - The idea of Numeric<T, C> appears to be stolen/rewritten from somewhere. My conscience 
 eats me for that, but I just can't find the source. 
-- DoubleInfoExtraction.cs is also taken from somewhere.
+- DoubleInfoExtraction.cs is also taken from somewhere, I will happily give credit when possible.
 - There are other bits of code which I didn't care about when I took them from the Web, but 
 it is understood that all their authors deserve at least their name to be mentioned. 
 
 So please report if you find anything.
 You can also tell me what bad boy I was - I really know.
 
-3.5. TOOLS USED:
+## 3.5\. TOOLS USED:
 
 3.5.0 - Visual Studio 2012 Ultimate Edition
 3.5.1 - SandCastle for building HTML/CHM files from XML comments: http://shfb.codeplex.com/
 3.5.2 - .NET Code Contracts: http://visualstudiogallery.msdn.microsoft.com/1ec7db13-3363-46c9-851f-1ce455f66970
 3.5.3 - Brain
 
-4. ALL IN ALL,
+## 4\. ALL IN ALL,
 
 It can already do something:
 
@@ -114,8 +115,6 @@ on-line.
 - Primality tests
 
 - And more (c).
-
-- And more is coming.
 
 I wish you good luck and hope this thing helps somehow.
 
