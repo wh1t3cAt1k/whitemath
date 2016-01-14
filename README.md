@@ -13,11 +13,11 @@ of functionality and documentation. Hopefully, it will never be complete
 in terms of functionality; unfortunately, it is likely that the documentation
 isn't going to cover everything, either.
 
-## -\2. WHAT?
+## -2\. WHAT?
 
 This is a mathematical (maths, data structures, helper classes) library that was initially designed to assist me in my student projects at the Higher School of Economics, Moscow, Russia. What is it now? You decide.
 
-## -\1. WHY?
+## -1\. WHY?
 
 Because I believe that the majority of shareable ideas ought to be shared.
 
