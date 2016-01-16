@@ -1,8 +1,6 @@
 # whiteMath + whiteStructs
 
-*Disclaimer (January 2016)*: This is a very old, badly written, obsolete readme, the code in the repo is probably of awful quality, and last updates were pushed here when I still didn't know how to use `git` properly (so it might even be dissynchronized with my machine).
-
-whiteMath is an open-source programmer-friendly C# .NET mathematical++ library.
+whiteMath is an open-source and (hopefully) programmer-friendly C# .NET mathematical/algorithmic library.
 
 Current version: 0.1.0
 
