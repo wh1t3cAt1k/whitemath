@@ -17,7 +17,7 @@ namespace whiteMath
 
         public Rational<T, C> intPart(Rational<T, C> num)
         {
-            return calc.div(num.num, num.denom);
+            return calc.div(num.numerator, num.denominator);
         }
 
         // ----------------------------
@@ -75,13 +75,13 @@ namespace whiteMath
 
         public Rational<T, C> increment(Rational<T, C> one)
         {
-            one.num = calc.sum(one.num, one.denom);
+            one.numerator = calc.sum(one.numerator, one.denominator);
             return one;
         }
 
         public Rational<T, C> decrement(Rational<T,C> one)
         {
-            one.num = calc.dif(one.num, one.denom);     // вычтем из числителя знаменатель
+            one.numerator = calc.dif(one.numerator, one.denominator);     // вычтем из числителя знаменатель
             return one;
         }
 

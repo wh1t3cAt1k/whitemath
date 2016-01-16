@@ -13,9 +13,9 @@ namespace whiteMath
 
         //----------------------------------------------
 
-        private class Infinities : Rational<T, C> { }
+        private class SpecialRational : Rational<T, C> { }
 
-        private class Positive_Infinity: Infinities
+        private class Positive_Infinity: SpecialRational
         {
             public override bool Equals(object obj)
             {
@@ -34,7 +34,7 @@ namespace whiteMath
             }
         }
 
-        private class Negative_Infinity : Infinities
+        private class Negative_Infinity : SpecialRational
         {
             public override bool Equals(object obj)
             {
@@ -52,7 +52,7 @@ namespace whiteMath
             }
         }
 
-        private class NotANumber : Infinities
+        private class NotANumber : SpecialRational
         {
             public override bool Equals(object obj)
             {
