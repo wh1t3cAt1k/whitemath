@@ -4,7 +4,7 @@
 
 whiteMath is an open-source programmer-friendly C# .NET mathematical++ library.
 
-Current version: 1.0.1.
+Current version: 0.1.0
 
 Released under Apache v2 open-source license. *UPDATE January 2016: I will probably revisit the licensing terms ASAP and move to GPL*.
 
