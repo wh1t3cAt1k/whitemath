@@ -82,5 +82,3 @@ You can also tell me what a bad boy I was, but I seem to already know that.
 3.5.1 - SandCastle for building HTML/CHM files from XML comments: http://shfb.codeplex.com/  
 3.5.2 - .NET Code Contracts: http://visualstudiogallery.msdn.microsoft.com/1ec7db13-3363-46c9-851f-1ce455f66970  
 3.5.3 - Brain
-
-There are plans on moving away from SandCastle.
