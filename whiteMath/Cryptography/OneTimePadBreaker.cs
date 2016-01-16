@@ -109,7 +109,7 @@ namespace whiteMath.Cryptography
                         // -
                         byte trueCharacter = (byte)(cipherXor[j] ^ 0x20);
  
-
+						// TODO: IMPLEMENTATION NOT FINISHED.
                     }
                 }
             }

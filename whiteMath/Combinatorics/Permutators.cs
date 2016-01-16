@@ -126,7 +126,7 @@ namespace whiteMath.Combinatorics
 
         // ----------- FAIL -----------------------
 
-        private static readonly NotSupportedException ex = new NotSupportedException(Combinatorics.ErrorMessages.PermutatorsDoNotSupportAdditionRemoval);
+        private static readonly NotSupportedException ex = new NotSupportedException(Messages.PermutatorsDoNotSupportAdditionRemoval);
 
         void IList<T>.Insert(int index, T key) { throw ex; }
         void IList<T>.RemoveAt(int index) { throw ex; }

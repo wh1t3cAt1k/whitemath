@@ -617,14 +617,19 @@ namespace whiteMath
             Contract.Requires<ArgumentNullException>(list != null, "list");
             Contract.Ensures(Contract.Result<int>() < list.Count);
 
-            int index = list.WhiteBinarySearch((x => x.LeftBound), point, Numeric<T, C>.TComparer);
+			int index = list.WhiteBinarySearch<T, BoundedInterval<T, C>>(
+				(x => x.LeftBound), 
+				point, 
+				Numeric<T, C>.TComparer);
 
-            // Почему минус единица...
-            // Потому что левая граница "текущего" интервала
-            // после ~ по любому будет больше тестируемой точки.
-
-            if (index < 0)
-                index = ~index - 1;
+            // Why 1 is subtracted?
+            // Because the left boundary of the "current" interval
+            // after applying ~ will always be greater than the tested point.
+			// -
+			if (index < 0)
+			{
+				index = ~index - 1;
+			}
 
             if (index >= 0 && index < list.Count)
             {

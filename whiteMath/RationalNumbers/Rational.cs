@@ -283,55 +283,65 @@ namespace whiteMath
 
         public static implicit operator Rational<T, C>(double num)
         {
-            Rational<T, C> tmp = new Rational<T, C>(calc.zero, calc.fromInt(0));
+            string numberString = num.ToString();
 
-            string numStr = num.ToString();
+            T numeratorMultiplier;
 
-            T numeratorMultiplication;      // на что домножится числитель
-
-            if (numStr[0] == '-')           // отрицательное число
-            {
-                numStr = numStr.Substring(1);
-                numeratorMultiplication = calc.fromInt(-1);
-            }
-            else
-                numeratorMultiplication = calc.fromInt(1);
+			if (numberString.First().Equals('-'))
+			{
+				numberString = numberString.Substring(1);
+				numeratorMultiplier = calc.fromInt(-1);
+			}
+			else
+			{
+				numeratorMultiplier = calc.fromInt(1);
+			}
 
             T denominator = calc.fromInt(1);
 
-            int index = numStr.IndexOf("e", StringComparison.OrdinalIgnoreCase);
+            int exponentSymbolIndex = numberString.IndexOf("e", StringComparison.OrdinalIgnoreCase);
 
-            if (index > 0)
+            if (exponentSymbolIndex > 0)
             {
-                int exponent = int.Parse(numStr.Substring(index + 1));
+                int exponent = int.Parse(numberString.Substring(exponentSymbolIndex + 1));
 
-                if (exponent >= 0)
-                    numeratorMultiplication = WhiteMath<T, C>.PowerInteger(calc.fromInt(10), exponent);
-                
-                else
-                    denominator = WhiteMath<T, C>.PowerInteger(calc.fromInt(10), -exponent);
+				if (exponent >= 0)
+				{
+					numeratorMultiplier = WhiteMath<T, C>.PowerInteger(calc.fromInt(10), exponent);
+				}
+				else
+				{
+					denominator = WhiteMath<T, C>.PowerInteger(calc.fromInt(10), -exponent);
+				}
 
-                numStr = numStr.Substring(0, index);
+                numberString = numberString.Substring(0, exponentSymbolIndex);
             }
 
-            numStr.Trim('0');   // trim all the leading and trailing zeroes
+			// Trim all the leading and trailing zeroes
+			// -
+			numberString.Trim('0');
 
-            // Найдем запятую
-
+            // Find the 'commma'
+			// -
             string separator = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-            int separatorIndex = numStr.IndexOf(separator);
+            int separatorIndex = numberString.IndexOf(separator);
 
             if (separatorIndex > 0)
             {
-                int charsAfterSeparator = numStr.Length - separatorIndex - 1;
-                denominator = calc.mul(denominator, WhiteMath<T, C>.PowerInteger(calc.fromInt(10), charsAfterSeparator));
+                int numberOfCharactersAfterSeparator = numberString.Length - separatorIndex - 1;
 
-                numStr = numStr.Replace(System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "");
+				denominator = calc.mul(
+					denominator, 
+					WhiteMath<T, C>.PowerInteger(calc.fromInt(10), numberOfCharactersAfterSeparator));
+
+				numberString = numberString.Replace(
+					System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, 
+					"");
             }
 
-            T enumerator = calc.mul(calc.parse(numStr), numeratorMultiplication);
+            T numerator = calc.mul(calc.parse(numberString), numeratorMultiplier);
 
-            return new Rational<T,C>(enumerator, denominator);
+            return new Rational<T,C>(numerator, denominator);
         }
 
         /// <summary>

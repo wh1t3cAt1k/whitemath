@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if (!NOWINFORMS)
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -154,3 +156,5 @@ namespace whiteMath.Graphers.Components
 
     }
 }
+
+#endif

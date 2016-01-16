@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if (!NON_WINDOWS_ENVIRONMENT)
+
+using System;
 using whiteMath.Graphers;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -315,14 +317,16 @@ namespace whiteMath.Graphers
                 // ---- if multigrapher, set pens
                 // ---- and the width!
 
-                if (G is MultiGrapher)
+				var multiGrapher = G as MultiGrapher;
+
+                if (multiGrapher != null)
                 {
                     Pen[] arr = multiGrapherPens1.getCurveColors().pensFromColors();
 
                     for (int i = 0; i < arr.Length; i++)
                         arr[i].Width = (int)numericUpDownCW.Value;
 
-                    (G as MultiGrapher).setPens(arr);
+                    multiGrapher.setPens(arr);
                 }
 
                 // ---- do it.
@@ -347,32 +351,44 @@ namespace whiteMath.Graphers
 
             CurvePen.Dispose();
             CoordPen.Dispose();
-            this.somethingIsDrawn = true;       // что-то нарисовали.
+            this.somethingIsDrawn = true;
         }
 
         /// <summary>
-        /// Показывает кусочек каринки в pictureBox с учетом текущих координат.
+        /// Shows part of the picture in the picture box, taking the current
+		/// coordinates into account.
         /// </summary>
         private void ShowImageInPictureBox()
         {
-            int w = pictureBoxWindow.Width;
-            int h = pictureBoxWindow.Height;
+            int pictureBoxWidth = pictureBoxWindow.Width;
+            int pictureBoxHeight = pictureBoxWindow.Height;
             
-            // создается новая картинка
-            // ее и рисуем.
+            pictureBoxWindow.Image = new Bitmap(pictureBoxWidth, pictureBoxHeight);
+            Graphics graphics = Graphics.FromImage(pictureBoxWindow.Image);
 
-            pictureBoxWindow.Image = new Bitmap(w, h);
-            Graphics tmp = Graphics.FromImage(pictureBoxWindow.Image);
+			if (xImageCoordinate > drawnImage.Width - pictureBoxWidth)
+			{
+				xImageCoordinate = drawnImage.Width - pictureBoxWidth;
+			}
+			else if (xImageCoordinate < 0)
+			{
+				xImageCoordinate = 0;
+			}
 
-            if (xImageCoordinate > drawnImage.Width - w)
-                xImageCoordinate = drawnImage.Width - w;
-            else if (xImageCoordinate < 0) xImageCoordinate = 0;
+			if (yImageCoordinate >= drawnImage.Height - pictureBoxHeight)
+			{
+				yImageCoordinate = drawnImage.Height - pictureBoxHeight;
+			}
+			else if (yImageCoordinate < 0)
+			{
+				yImageCoordinate = 0;
+			}
 
-            if (yImageCoordinate >= drawnImage.Height - h) 
-                yImageCoordinate = drawnImage.Height - h;
-            else if (yImageCoordinate < 0) yImageCoordinate = 0;
-
-            tmp.DrawImage(drawnImage, new Rectangle(0, 0, w, h), new Rectangle(xImageCoordinate, yImageCoordinate, w, h), GraphicsUnit.Pixel);
+			graphics.DrawImage(
+				drawnImage, 
+				new Rectangle(0, 0, pictureBoxWidth, pictureBoxHeight), 
+				new Rectangle(xImageCoordinate, yImageCoordinate, pictureBoxWidth, pictureBoxHeight), 
+				GraphicsUnit.Pixel);
             
             pictureBoxWindow.Refresh();
         }
@@ -382,6 +398,7 @@ namespace whiteMath.Graphers
             if (checkBoxLineCurve.Checked) { LT = LineType.CardinalCurve; checkBoxLineBroken.Checked = false; }
             else { LT = LineType.Line; checkBoxLineBroken.Checked = true; }
         }
+
         private void checkBoxLineBroken_CheckedChanged(object sender, EventArgs e)
         {
             checkBoxLineCurve.Checked = !checkBoxLineBroken.Checked;
@@ -389,28 +406,39 @@ namespace whiteMath.Graphers
 
 
         /// <summary>
-        /// Сохраняет в файл построенный график.
+        /// Saves the displayed graph into a file.
         /// </summary>
-        /// <param name="sender">Источник события</param>
-        /// <param name="e">Параметры события</param>
+        /// <param name="sender">Event sender. Not used.</param>
+        /// <param name="e">Event arguments. Not used.</param>
         private void buttonGraphToFile_Click(object sender, EventArgs e)
         {
-            if(!somethingIsDrawn || saveFileDialog.ShowDialog()!=DialogResult.OK) 
-                return;
+            if (!somethingIsDrawn || saveFileDialog.ShowDialog() != DialogResult.OK)
+				return;
 
-            System.Drawing.Imaging.ImageFormat fm;
+            System.Drawing.Imaging.ImageFormat imageFormat;
 
-            if (saveFileDialog.FilterIndex == 1)
-                fm = System.Drawing.Imaging.ImageFormat.Png;
-            else if (saveFileDialog.FilterIndex == 2)
-                fm = System.Drawing.Imaging.ImageFormat.Bmp;
-            else
-                fm = System.Drawing.Imaging.ImageFormat.Jpeg;
+			switch (saveFileDialog.FilterIndex)
+			{
+				case 1:
+					imageFormat = System.Drawing.Imaging.ImageFormat.Png;
+					break;
+				case 2:
+					imageFormat = System.Drawing.Imaging.ImageFormat.Bmp;
+					break;
+				default:
+					imageFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
+					break;
+			}                
 
             buttonGraph_Click(this, EventArgs.Empty);
+            drawnImage.Save(saveFileDialog.FileName, imageFormat);
 
-            drawnImage.Save(saveFileDialog.FileName, fm);
-            MessageBox.Show(this, "Файл успешно сохранен: " + saveFileDialog.FileName, "Удалось!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+			MessageBox.Show(
+				this, 
+				string.Format(Graphers.Messages.GraphSuccessfullySaved, saveFileDialog.FileName),
+				Graphers.Messages.Success,
+				MessageBoxButtons.OK, 
+				MessageBoxIcon.Asterisk);
         }
 
         #region MouseOperations
@@ -776,3 +804,5 @@ namespace whiteMath.Graphers
     }
 
 }
+
+#endif

@@ -78,60 +78,66 @@ namespace whiteMath.General
         // ----------------------------------
 
         /// <summary>
-        /// Событие, вызываемое для родителя при добавлении потомка.
+        /// Event that is called upon the parent when a descendant is added.
         /// </summary>
         private void descendantAdded()
         {
-            this.DescendantsCount++;
+            ++this.DescendantsCount;
 
-            if (Parent != null)
-                Parent.descendantAdded();
+			if (Parent != null)
+			{
+				Parent.descendantAdded();
+			}
         }
 
         /// <summary>
-        /// Событие, вызываемое для родителя при удалении потомка.
+        /// Event that is called upon the parent when a descendant is deleted.
         /// </summary>
         private void descendantRemoved()
         {
-            this.DescendantsCount--;
+            --this.DescendantsCount;
 
-            if (Parent != null)
-                Parent.descendantRemoved();
+			if (Parent != null)
+			{
+				Parent.descendantRemoved();
+			}
         }
 
         /// <summary>
-        /// Событие, вызываемое для родителя при изменении высоты ребенка.
+		/// Event that is called upon the parent when a child's
+		/// order is changed.
         /// </summary>
-        /// <param name="oldOrder">Старая высота ребенка</param>
-        /// <param name="newOrder">Новая высота ребенка</param>
+        /// <param name="oldOrder">Old descendant order.</param>
+        /// <param name="newOrder">New descendant order.</param>
         private void childOrderChanged(int oldOrder, int newOrder)
         {
-            // Если старая высота + 1 равна текущей,
-            // возможно, такой высоты больше нет и надо искать новую.
-
+			// If the old order + 1 is equal to the current order,
+			// perhaps there is no such order anymore and we need
+			// to find new.
+			// -
             if (newOrder + 1 > this.Height)
             {
-                int thisOld = this.Height;
+                int thisOldHeight = this.Height;
 
                 this.Height = newOrder + 1;
 
-                if (Parent != null)
-                    Parent.childOrderChanged(thisOld, this.Height);
+				if (Parent != null)
+				{
+					Parent.childOrderChanged(thisOldHeight, this.Height);
+				}
             }
             else if (oldOrder + 1 == this.Height)
             {
-                int thisOld = this.Height;
+                int thisOldHeight = this.Height;
 
-                this.Height = children.Max(delegate(TreeNodeSmart<T> obj) { return obj.Height; }) + 1;
+				this.Height = children.Max(treeNode => treeNode.Height) + 1;
 
-                if (thisOld < this.Height && Parent != null)
-                    Parent.childOrderChanged(thisOld, this.Height);
+				if (thisOldHeight < this.Height && Parent != null)
+				{
+					Parent.childOrderChanged(thisOldHeight, this.Height);
+				}
             }
         }
-
-        // -------------------------------
-        // -------- ANOTHER --------------
-        // -------------------------------
 
         private List<TreeNodeSmart<T>> children = null;
 
@@ -159,8 +165,8 @@ namespace whiteMath.General
             children.Insert(index, child);
             child.Parent = this;
 
-            // Высота
-
+            // Height
+			// -
             if (child.Height + 1 > this.Height)
             {
                 int old = this.Height;
@@ -192,8 +198,8 @@ namespace whiteMath.General
 
             children.RemoveAt(index);
 
-            // Высота
-
+            // Height
+			// -
             if (child.Height + 1 == this.Height)
             {
                 int oldOrder = this.Height;
@@ -231,16 +237,21 @@ namespace whiteMath.General
         }
 
         /// <summary>
-        /// Gets the tree root which could be either this node - if it has no parents -
-        /// or the the highest grandparent who has no parent node.
+        /// Gets the tree root for the current node, i.e. the farthest
+		/// ascendant that has no parent node.
         /// </summary>
         public TreeNodeSmart<T> TreeRoot
         {
             get
             {
-                if (this.Parent == null) return this;
-                else
-                    return this.Parent.TreeRoot;
+				if (this.IsRoot)
+				{
+					return this;
+				}
+				else
+				{
+					return this.Parent.TreeRoot;
+				}
             }
         }
 
@@ -254,7 +265,7 @@ namespace whiteMath.General
         }
 
         // -----------------------------------
-        // ----------- conversion ------------
+        // ----------- Conversion ------------
         // -----------------------------------
 
         public static implicit operator TreeNodeSmart<T>(T value)
@@ -263,7 +274,7 @@ namespace whiteMath.General
         }
 
         // -----------------------------------
-        // ----------- swapping --------------
+        // ----------- Swapping --------------
         // -----------------------------------
 
         /// <summary>
@@ -277,30 +288,30 @@ namespace whiteMath.General
 
             TreeNodeSmart<T> child = this.children[i];
 
-            // Каждому из детей ребенка говорим, что теперь я - ваш родитель.
-
+            // Tell each of this child's children that we are their new parent.
+			// 
             foreach (TreeNodeSmart<T> childChild in child.children)
                 childChild.Parent = this;
 
-            // Каждому из собственных детей говорим, что теперь ребенок - ваш родитель.
-
+            // Tell each of our own children that this child is your new parent.
+			//
             for (int j = 0; j < children.Count; j++)
                 if (i != j)
                     this.children[j].Parent = child;
 
-            // Делаем себя своим ребенком вместо child.
-
+            // Make ourselves our child.
+			// -
             this.children[i] = this;
 
-            // Меняемся детьми
-
+            // Exchange children
+			// -
             List<TreeNodeSmart<T>> childChildren = child.children;
 
             child.children = this.children;
             this.children = childChildren;
 
-            // Родителями
-
+            // Exchange parents
+			// -
             if (this.Parent != null)
             {
                 this.Parent.children.Remove(this);
@@ -310,15 +321,15 @@ namespace whiteMath.General
             child.Parent = this.Parent;
             this.Parent = child;
 
-            // Высотами
-
+            // Exchange heights
+			// -
             int tmp = child.Height;
             
             child.Height = this.Height;
             this.Height = tmp;
 
-            // Количеством потомков
-
+            // Exchange descendants counts
+			// -
             tmp = child.DescendantsCount;
 
             child.DescendantsCount = this.DescendantsCount;

@@ -1,4 +1,5 @@
-﻿namespace whiteMath.Graphers.Components
+﻿#if (!NOWINFORMS)
+namespace whiteMath.Graphers.Components
 {
     partial class MultiGrapherPens
     {
@@ -134,3 +135,4 @@
 
     }
 }
+#endif

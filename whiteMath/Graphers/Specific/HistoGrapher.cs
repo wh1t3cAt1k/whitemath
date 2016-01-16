@@ -52,8 +52,8 @@ namespace whiteMath.Graphers
         {
             Contract.Requires<ArgumentNullException>(points != null, nameof(points));
             Contract.Requires<ArgumentNullException>(values != null, nameof(values));
-            Contract.Requires<ArgumentException>(points.Count == values.Count, ErrorMessages.SequenceLengthsAreNotEqual);
-            Contract.Requires<ArgumentOutOfRangeException>(points.Any(), ErrorMessages.SequenceShouldContainAtLeastOneElement);
+			Contract.Requires<ArgumentException>(points.Count == values.Count, Messages.SequenceLengthsAreNotEqual);
+            Contract.Requires<ArgumentOutOfRangeException>(points.Any(), Messages.SequenceShouldContainAtLeastOneElement);
 
             _initialize(points.Select((point, pointIndex) => new KeyValuePair<string, double>(point, values[pointIndex])));
         }
@@ -65,7 +65,7 @@ namespace whiteMath.Graphers
         public HistoGrapher(IEnumerable<KeyValuePair<string, double>> pointValuePairs)
         {
             Contract.Requires<ArgumentNullException>(pointValuePairs != null, nameof(pointValuePairs));
-            Contract.Requires<ArgumentOutOfRangeException>(pointValuePairs.Any(), ErrorMessages.SequenceShouldContainAtLeastOneElement);
+            Contract.Requires<ArgumentOutOfRangeException>(pointValuePairs.Any(), Messages.SequenceShouldContainAtLeastOneElement);
 
             _initialize(pointValuePairs);
         }

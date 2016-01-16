@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if (!NON_WINDOWS_ENVIRONMENT)
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
@@ -297,7 +298,11 @@ namespace whiteMath.Graphers
                 if (beta.Value2 == null || !double.TryParse(beta.Value2.ToString().Trim(), out y))
                     throw new GrapherActionImpossibleException("Данные в стартовой ячейке оси Y отсутствуют или являются некорректными!");
 
-                Coll.Add(new Point<double> ( x*amc.Axis1Coefficient + amc.Axis1Addition, y*amc.Axis2Coefficient + amc.Axis2Addition )); // добавляем первую точку
+				// Adding the first point
+				// -
+                Coll.Add(new Point<double>(
+					x*amc.Axis1Coefficient + amc.Axis1Addition, 
+					y*amc.Axis2Coefficient + amc.Axis2Addition));
 
                 LastRC1 = alpha.get_AddressLocal(Type.Missing, Type.Missing, XlReferenceStyle.xlA1,
                         Type.Missing, Type.Missing).Replace("$", "");
@@ -370,3 +375,4 @@ namespace whiteMath.Graphers
         }
     }
 }
+#endif

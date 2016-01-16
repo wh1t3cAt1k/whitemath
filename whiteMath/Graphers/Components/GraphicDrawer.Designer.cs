@@ -1,4 +1,5 @@
-﻿namespace whiteMath.Graphers
+﻿#if (!NON_WINDOWS_ENVIRONMENT)
+namespace whiteMath.Graphers
 {
     partial class GraphicDrawer
     {
@@ -989,3 +990,4 @@
         private System.Windows.Forms.NumericUpDown numericUpDownCW;
     }
 }
+#endif
