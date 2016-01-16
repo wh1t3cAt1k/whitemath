@@ -68,13 +68,13 @@ Please report.
 ## 3\. COPYRIGHT NOTES:
 
 - The idea of Numeric<T, C> appears to be stolen/rewritten from somewhere. My conscience 
-eats me for that, but I just can't find the source. 
-- DoubleInfoExtraction.cs is also taken from somewhere, I will happily give credit when possible.
+eats me for that, but I just can't find the source.
+- DoubleInfoExtraction.cs is also taken from somewhere, I will happily give credit if someone points out the author.
 - There are other bits of code which I didn't care about when I took them from the Web, but 
 it is understood that all their authors deserve at least their name to be mentioned. 
 
-So please report if you find anything.
-You can also tell me what bad boy I was - I really know.
+So please drop me an email if you find anything.
+You can also tell me what a bad boy I was, but I seem to already know that.
 
 ## 3.5\. TOOLS USED:
 
