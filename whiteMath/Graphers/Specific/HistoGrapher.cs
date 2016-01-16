@@ -42,7 +42,7 @@ namespace whiteMath.Graphers
         public double MaxValue { get { return pointValuePairs.Max(kvp => kvp.Value); } }
 
         /// <summary>
-        /// Initializes the HistoGrapher object with separate lists of
+        /// Initializes a HistoGrapher object with separate lists of
         /// points and values.
         /// </summary>
         /// <remarks>The lengths of the lists should be equal.</remarks>
@@ -50,12 +50,12 @@ namespace whiteMath.Graphers
         /// <param name="values">A list containing the values for corresponding points.</param>
         public HistoGrapher(IList<string> points, IList<double> values)
         {
-            Contract.Requires<ArgumentNullException>(points != null, "points");
-            Contract.Requires<ArgumentNullException>(values != null, "values");
-            Contract.Requires<ArgumentException>(points.Count == values.Count, "Lengths of the lists should be equal.");
-            Contract.Requires<ArgumentOutOfRangeException>(points.Count > 0, "The sequence should contain at least one point.");
+            Contract.Requires<ArgumentNullException>(points != null, nameof(points));
+            Contract.Requires<ArgumentNullException>(values != null, nameof(values));
+            Contract.Requires<ArgumentException>(points.Count == values.Count, ErrorMessages.SequenceLengthsAreNotEqual);
+            Contract.Requires<ArgumentOutOfRangeException>(points.Any(), ErrorMessages.SequenceShouldContainAtLeastOneElement);
 
-            ___init(points.Select((point, pointIndex) => new KeyValuePair<string, double>(point, values[pointIndex])));
+            _initialize(points.Select((point, pointIndex) => new KeyValuePair<string, double>(point, values[pointIndex])));
         }
 
         /// <summary>
@@ -64,16 +64,16 @@ namespace whiteMath.Graphers
         /// <param name="pointValuePairs">A sequence (e.g. a <c>Dictionary</c>) containing point-value pairs to draw.</param>
         public HistoGrapher(IEnumerable<KeyValuePair<string, double>> pointValuePairs)
         {
-            Contract.Requires<ArgumentNullException>(pointValuePairs != null, "pointValuePairs");
-            Contract.Requires<ArgumentOutOfRangeException>(pointValuePairs.Count() > 0, "The sequence should contain at least one point.");
+            Contract.Requires<ArgumentNullException>(pointValuePairs != null, nameof(pointValuePairs));
+            Contract.Requires<ArgumentOutOfRangeException>(pointValuePairs.Any(), ErrorMessages.SequenceShouldContainAtLeastOneElement);
 
-            ___init(pointValuePairs);
+            _initialize(pointValuePairs);
         }
 
-        private void ___init(IEnumerable<KeyValuePair<string, double>> pointValuePairs)
+        private void _initialize(IEnumerable<KeyValuePair<string, double>> pointValuePairs)
         {
             Contract.Assume(pointValuePairs != null);
-            Contract.Assume(pointValuePairs.Count() > 0);
+            Contract.Assume(pointValuePairs.Any());
             
             this.pointValuePairs = new SortedDictionary<string, double>();
 
@@ -107,8 +107,8 @@ namespace whiteMath.Graphers
         /// <param name="contourPen">The point used to draw columns' contours. May be null.</param>
         public void HistoGraph2D(double minValue, double baseValue, double maxValue, double columnPortion, Graphics G, RectangleF drawingArea, Dictionary<string, Brush> pointBrushes, Pen contourPen)
         {
-            Contract.Requires<ArgumentNullException>(G != null, "G");
-            Contract.Requires<ArgumentNullException>(pointBrushes != null, "pointBrushes");
+            Contract.Requires<ArgumentNullException>(G != null, nameof(G));
+            Contract.Requires<ArgumentNullException>(pointBrushes != null, nameof(pointBrushes));
             Contract.Requires<ArgumentException>(minValue <= baseValue && baseValue <= maxValue && minValue < maxValue, "The condition minValue <= baseValue <= maxValue AND minValue < maxValue must be met.");
             Contract.Requires<ArgumentException>(!drawingArea.IsEmpty, "The drawing area should be a non-empty rectangle.");
             Contract.Requires<ArgumentException>(Contract.ForAll(pointValuePairs, kvp => (kvp.Value >= minValue && kvp.Value <= maxValue)), "The graphing range does not contain one or more HistoGrapher internal values.");
@@ -134,8 +134,8 @@ namespace whiteMath.Graphers
 
                 if (kvp.Value >= minValue && kvp.Value <= baseValue)
                 {
-                    // Колонка "растет вниз"
-
+                    // The bar "grows down"
+                    // -
                     double currentDataHeight = baseValue - kvp.Value;
                     float pixelCurrentDataHeight = (float)(currentDataHeight / coefficient);
 
@@ -143,8 +143,8 @@ namespace whiteMath.Graphers
                 }
                 else
                 {
-                    // Колонка "растет вверх"
-
+                    // The bar "grows up"
+                    // -
                     double currentDataHeight = kvp.Value - baseValue;
                     float pixelCurrentDataHeight = (float)(currentDataHeight / coefficient);
 
@@ -161,12 +161,14 @@ namespace whiteMath.Graphers
                 G.FillRectangle(pointBrushes[rectPair.Key], columnRectangle);
             }
 
-            if(contourPen != null)
+            if (contourPen != null)
+            {
                 foreach (KeyValuePair<string, RectangleF> rectPair in rectangleDictionary)
                 {
                     RectangleF columnRectangle = rectPair.Value;
                     G.DrawRectangle(contourPen, columnRectangle.X, columnRectangle.Y, columnRectangle.Width, columnRectangle.Height);
                 }
+            }
         }
     }
 }

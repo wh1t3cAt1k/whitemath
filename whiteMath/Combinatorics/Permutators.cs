@@ -52,7 +52,7 @@ namespace whiteMath.Combinatorics
         /// </summary>
         public virtual void Reset()
         {
-            this.permutation.FillByAssign(delegate(int i) { return i; });
+            this.permutation.FillByAssign(currentIndex => currentIndex);
         }
 
         // ----------------------------------------
@@ -72,16 +72,16 @@ namespace whiteMath.Combinatorics
 
                 while(true)
                 {
-                    // находим непосещенный элемент перестановки
-
+                    // Find an unvisited permutation element.
+                    //
                     i = Array.IndexOf(visits, false);
 
-                    // если таких нет, выходим.
-
+                    // If there are none, exit.
+                    //
                     if (i < 0) break;
 
-                    // если есть, имеется новый цикл.
-
+                    // If there is, there is a new cycle.
+                    // 
                     cycles.Add(new List<int>());
                     cycles.Last().Add(i);
 
@@ -101,8 +101,8 @@ namespace whiteMath.Combinatorics
                     }
                 }
 
-                // -- Все циклы найдены.
-
+                // All cycles discovered.
+                // -
                 int k = 0;
 
                 foreach (List<int> cycle in cycles)
@@ -126,7 +126,7 @@ namespace whiteMath.Combinatorics
 
         // ----------- FAIL -----------------------
 
-        private static readonly NotSupportedException ex = new NotSupportedException("Permutators do not support any additions or removals within the list.");
+        private static readonly NotSupportedException ex = new NotSupportedException(Combinatorics.ErrorMessages.PermutatorsDoNotSupportAdditionRemoval);
 
         void IList<T>.Insert(int index, T key) { throw ex; }
         void IList<T>.RemoveAt(int index) { throw ex; }
@@ -141,11 +141,7 @@ namespace whiteMath.Combinatorics
 
         public bool Contains(T key) 
         {
-            foreach (T obj in this)
-                if (obj.Equals(key))
-                    return true;
-
-            return false;
+            return Enumerable.Contains(this, key);
         }
 
         public void CopyTo(T[] arr, int startIndex)

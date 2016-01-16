@@ -14,8 +14,8 @@ namespace whiteMath.Graphers
 {
     public enum FileType
     {
-        Excel2007=0, 
-        ExcelOld=1
+        Excel2007 = 0,
+        ExcelOld = 1
     }
 
     public enum Direction
