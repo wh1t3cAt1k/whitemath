@@ -8,7 +8,7 @@ The source code of the libary is licensed under GNU GPL v.3.
 
 This library should not by any means be treated as complete in terms of functionality and documentation. Hopefully, it will never be complete in terms of functionality; unfortunately, it is likely that the documentation isn't going to cover everything, either.
 
-## -2\. WHAT?
+## Description
 
 This is a math/algorithms/data structures that was initially designed to assist me in my student projects at the Higher School of Economics, Moscow, Russia. What is it now? You decide.
 
@@ -34,7 +34,14 @@ All the statistical functions, such as SampleAverage, MovingAverage etc. are als
 
 - And more, which I hope do describe someday.
 
-## -1\. WHY?
+## Tools used
+
+1. IDE: Microsoft Visual Studio (Windows) and Xamarin Studio (Mac)
+2. Help/Documentation: SandCastle, a tool building HTML/CHM files from XML comments (https://github.com/EWSoftware/SHFB)
+3. Design by contract: .NET Code Contracts (in-place testing of method pre-conditions / post-conditions and class invariants)
+4. Unit testing: NUnit 3.0 (http://www.nunit.org/)
+
+## Why?
 
 Because I believe that the majority of shareable ideas ought to be shared.
 
@@ -42,13 +49,13 @@ I wanted to go open-source more than four years ago, but thought to write a thor
 
 So why now? Because today I stopped caring. Maybe we could do it together?
 
-## 0\. TODO:
+## Declaration
 
 I understand that perhaps this isn't a very good readme for an open-source library. It will eventually get better, probably not without your help.
 
 Also, the code isn't too consistent in structure and perhaps not very self-explanatory. Something can be learnt from the XML doc comments in the source files, and something should be discussed together in order to be worked on together.
 
-## 1\. BAD DOCUMENTATION:
+## Bad documentation
 
 Currently, there are two types of hardly understandable and badly documented code in the library:
 
@@ -59,7 +66,7 @@ The second type should be urgently reported using appropriate media (e.g. the is
 
 Currently, the author tries to document everything thoroughly using XML and in-line comments. Sadly, part of these comments are still in Russian, so feel free to ask for an appropriate translation.
 
-## 2\. BUGS: 
+## Bugs / Issues
 
 I suspect there are lots of them. Most of the functions were in real-life use from one to several times, and after that were happily abandoned. I have never bothered with thorough randomized testing either.
 
@@ -67,7 +74,7 @@ Please report.
 
 I am also planning on introducing unit testing ASAP.
 
-## 3\. COPYRIGHT NOTES:
+## Important Copyright Notes
 
 - The idea of Numeric<T, C> appears to be stolen/rewritten from somewhere. My conscience eats me for that, but I just can't find the source.
 - DoubleInfoExtraction.cs is also taken from somewhere, I will happily give credit if someone points out the author.
@@ -75,10 +82,3 @@ I am also planning on introducing unit testing ASAP.
 
 So please drop me an email if you find anything.
 You can also tell me what a bad boy I was, but I seem to already know that.
-
-## 3.5\. TOOLS USED:
-
-3.5.0 - Visual Studio 2012 Ultimate Edition / Xamarin Studio on Mac
-3.5.1 - SandCastle for building HTML/CHM files from XML comments: http://shfb.codeplex.com/  
-3.5.2 - .NET Code Contracts: http://visualstudiogallery.msdn.microsoft.com/1ec7db13-3363-46c9-851f-1ce455f66970  
-3.5.3 - Brain
