@@ -12,3 +12,6 @@
 
 # Mac OS's ever-present annoying .DS_Store
 **/.DS_Store
+
+# Xamarin Studio's user preferences file
+*.userprefs
