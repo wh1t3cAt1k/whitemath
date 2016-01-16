@@ -1,13 +1,13 @@
 /out
 
 /whiteMath/obj
-
 /whiteStructs/obj
 
 /out/DebugVersion
 /out/BenchmarkVersion
 
-/backup20100730.7z
-/backup_12072010.rar
-/backup_20100729.7z
-/backup_20110425.zip
+# Old repository backups made prior to initializing a git repo
+/repo_backups
+
+# Mac OS's ever-present annoying .DS_Store
+**/.DS_Store
