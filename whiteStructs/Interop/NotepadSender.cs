@@ -1,5 +1,4 @@
-﻿#if (!NON_WINDOWS_ENVIRONMENT)
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -38,4 +37,3 @@ namespace whiteStructs.Interop
         }
     }
 }
-#endif
