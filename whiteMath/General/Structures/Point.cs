@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics.Contracts;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.General
 {
@@ -11,7 +10,6 @@ namespace whiteMath.General
     /// </summary>
     /// <typeparam name="T">The type of the objects in the point.</typeparam>
     [Serializable]
-    [ContractVerification(true)]
     public struct Point<T>
     {
         // ----------------------------
@@ -67,18 +65,24 @@ namespace whiteMath.General
         {
             get
             {
-                if (index == 0) return X;
-                else if (index == 1) return Y;
-                else
-                    throw new IndexOutOfRangeException("Only 0 and 1 can be used to access point elements.");
+				Condition.Validate(index == 0 || index == 1)
+					.OrThrowIndexOutOfRangeException(Messages.OnlyZeroAndOneCanBeUsedToAccessPointCoordinates);
+
+                if (index == 0) 
+					return X;
+                else 
+					return Y;
             }
 
             set
             {
-                if (index == 0) X = value;
-                else if (index == 1) Y = value;
-                else
-                    throw new IndexOutOfRangeException("Only 0 and 1 can be used to access point elements.");
+				Condition.Validate(index == 0 || index == 1)
+					.OrThrowIndexOutOfRangeException(Messages.OnlyZeroAndOneCanBeUsedToAccessPointCoordinates);
+
+                if (index == 0)
+					X = value;
+                else 
+					Y = value;             
             }
         }
 
@@ -149,7 +153,7 @@ namespace whiteMath.General
         // ----------- Non-generic operators ------
         // ----------------------------------------
 
-        // Not working. Should be moved to a separa
+		// TODO: Not working. Should be moved to a separate (?)
 
         /*
         /// <summary>
