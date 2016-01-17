@@ -25,13 +25,21 @@ namespace whiteStructs.Conditions
 
 		public class ConditionTestResult
 		{
-			bool Holds { get; }
+			/// <summary>
+			/// Gets a value indicating whether this <see cref="whiteStructs.Conditions.Condition+ConditionTestResult"/> holds.
+			/// </summary>
+			/// <value><c>true</c> if the condition holds; otherwise, <c>false</c>.</value>
+			public bool Holds { get; }
 
-			public ConditionTestResult(bool condition)
+			internal ConditionTestResult(bool condition)
 			{
 				this.Holds = condition;
 			}
 
+			/// <summary>
+			/// Throws a <see cref="System.ArgumentException"/> if the condition doesn't hold.
+			/// </summary>
+			/// <param name="exceptionMessage">An optional exception message.</param>
 			public void OrThrowArgumentException(string exceptionMessage = null)
 			{
 				if (Holds)
@@ -47,9 +55,13 @@ namespace whiteStructs.Conditions
 				}
 			}
 
+			/// <summary>
+			/// Throws a <see cref="System.ArgumentNullException"/> if the condition doesn't hold.
+			/// </summary>
+			/// <param name="exceptionMessage">An optional exception message.</param>
 			public void OrThrowArgumentNullException(string exceptionMessage = null)
 			{
-				if (Holds)
+				if (this.Holds)
 					return;
 
 				if (exceptionMessage != null)
@@ -62,6 +74,11 @@ namespace whiteStructs.Conditions
 				}
 			}
 
+			/// <summary>
+			/// Throws a <see cref="System.ArgumentOutOfRangeException"/> if the 
+			/// condition doesn't hold.
+			/// </summary>
+			/// <param name="exceptionMessage">An optional exception message.</param>
 			public void OrThrowArgumentOutOfRangeException(string exceptionMessage = null)
 			{
 				if (Holds)
@@ -77,6 +94,11 @@ namespace whiteStructs.Conditions
 				}
 			}
 
+			/// <summary>
+			/// Throws a <see cref="System.IndexOutOfRangeException"/> if the 
+			/// condition doesn't hold.
+			/// </summary>
+			/// <param name="exceptionMessage">An optional exception message.</param>
 			public void OrThrowIndexOutOfRangeException(string exceptionMessage = null)
 			{
 				if (Holds)
