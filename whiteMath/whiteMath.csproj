@@ -380,6 +380,7 @@
     <Compile Include="RationalNumbers\UnitTests.cs" />
     <Compile Include="Drawing\ColorPath.cs" />
     <Compile Include="Functions\Messages.cs" />
+    <Compile Include="ArithmeticLong\Messages.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Graphers\Components\GraphicDrawer.resx">

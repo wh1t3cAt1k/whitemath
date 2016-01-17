@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Diagnostics.Contracts;
 
 using whiteMath.General;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.ArithmeticLong
 {
@@ -12,7 +12,6 @@ namespace whiteMath.ArithmeticLong
     /// This class provides static methods
     /// for different long integer calculation purposes.
     /// </summary>
-    [ContractVerification(true)]
     public static class LongIntegerMethods
     {
         // -------------------------------------
@@ -27,13 +26,14 @@ namespace whiteMath.ArithmeticLong
         /// <returns>True if the long integer number defined by <paramref name="operand"/> is even, false otherwise.</returns>
         public static bool IsEven(int BASE, IList<int> operand)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(BASE > 1, "The digit base should be a positive number bigger than 1.");
-            Contract.Requires<ArgumentNullException>(operand != null, "operand");
-            Contract.Requires<ArgumentException>(operand.Count > 0, "The digits array should contain at least one digit.");
+			Condition.Validate(BASE > 1).OrThrowArgumentOutOfRangeException(Messages.DigitBaseNeedsToBeBiggerThanOne);
+			Condition.ValidateNotNull(operand, nameof(operand));
+			Condition.ValidateNotEmpty(operand, Messages.DigitArrayNeedsToHaveAtLeastOneDigit);
 
-            if (BASE % 2 == 0)
-                return operand[0] % 2 == 0;
-
+			if (BASE % 2 == 0)
+			{
+				return operand[0] % 2 == 0;
+			}
             else
             {
                 // Можно считать, что существует "виртуальная нулевая цифра".
@@ -68,9 +68,9 @@ namespace whiteMath.ArithmeticLong
         /// <returns>True if the long integer number defined by <paramref name="operand"/> is divisible by five, false otherwise.</returns>
         public static bool IsDivisibleByFive(int BASE, IList<int> operand)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(BASE > 1, "The digit base should be a positive number bigger than 1.");
-            Contract.Requires<ArgumentNullException>(operand != null, "operand");
-            Contract.Requires<ArgumentException>(operand.Count > 0, "The digits array should contain at least one digit.");
+			Condition.Validate(BASE > 1).OrThrowArgumentOutOfRangeException(Messages.DigitBaseNeedsToBeBiggerThanOne);
+			Condition.ValidateNotNull(operand, nameof(operand));
+			Condition.ValidateNotEmpty(operand, Messages.DigitArrayNeedsToHaveAtLeastOneDigit);
 
             if (BASE % 5 == 0)
                 return operand[0] % 5 == 0;
@@ -125,8 +125,8 @@ namespace whiteMath.ArithmeticLong
         /// <returns></returns>
         public static bool More(IList<int> one, IList<int> two, out bool equals)
         {
-            Contract.Requires<ArgumentNullException>(one != null, "one");
-            Contract.Requires<ArgumentNullException>(two != null, "two");
+			Condition.ValidateNotNull(one, nameof(one));
+			Condition.ValidateNotNull(two, nameof(two));
 
             equals = true;
 
@@ -180,8 +180,8 @@ namespace whiteMath.ArithmeticLong
         /// <returns></returns>
         public static bool Equals(IList<int> one, IList<int> two)
         {
-            Contract.Requires<ArgumentNullException>(one != null, "one");
-            Contract.Requires<ArgumentNullException>(two != null, "two");
+			Condition.ValidateNotNull(one, nameof(one));
+			Condition.ValidateNotNull(two, nameof(two));
 
             int i;
 
@@ -211,13 +211,13 @@ namespace whiteMath.ArithmeticLong
         /// Returns the sum of several long integer numbers.
         /// </summary>
         /// <param name="BASE">The base of digits in numbers (ex.: 10, 100, 1000)</param>
-        /// <param name="sumOperands">The list of sum operands.</param>
+        /// <param name="sumOperands">An array of sum operands.</param>
         /// <returns>The digit array containing the sum and NO trailing zeroes.</returns>
         public static int[] Sum(int BASE, params IList<int>[] sumOperands)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(BASE > 1, "The digit base should be a positive number bigger than 1.");
-            Contract.Requires<ArgumentNullException>(sumOperands != null, "sumOperands");
-            Contract.Requires<ArgumentException>(sumOperands.Length > 1, "The number of the operands should be more than 1.");
+			Condition.Validate(BASE > 1).OrThrowArgumentOutOfRangeException(Messages.DigitBaseNeedsToBeBiggerThanOne);
+			Condition.ValidateNotNull(sumOperands, nameof(sumOperands));
+			Condition.Validate(sumOperands.Length > 1).OrThrowArgumentException(Messages.MoreThanOneOperandRequired);
 
             int n = sumOperands.Max(delegate(IList<int> operand) { return operand.Count; });
             int m = sumOperands.Length;
@@ -241,10 +241,10 @@ namespace whiteMath.ArithmeticLong
         /// <param name="BASE">The base of digits in numbers (ex.: 10, 100, 1000)</param>
         public static void Sum(int BASE, IList<int> result, params IList<int>[] sumOperands)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(BASE > 1, "The digit base should be a positive number bigger than 1.");
-            Contract.Requires<ArgumentNullException>(result != null, "result");
-            Contract.Requires<ArgumentNullException>(sumOperands != null, "sumOperands");
-            Contract.Requires<ArgumentException>(sumOperands.Length > 1, "The number of the operands should be more than 1.");
+			Condition.Validate(BASE > 1).OrThrowArgumentOutOfRangeException(Messages.DigitBaseNeedsToBeBiggerThanOne);
+			Condition.ValidateNotNull(result, nameof(result));
+			Condition.ValidateNotNull(sumOperands, nameof(sumOperands));
+			Condition.Validate(sumOperands.Length > 1).OrThrowArgumentException(Messages.MoreThanOneOperandRequired);
 
             int i;
             long tmp;
@@ -274,10 +274,14 @@ namespace whiteMath.ArithmeticLong
         /// <returns>The digits array of the result containing only significant digits.</returns>
         public static int[] SumShifted(int BASE, IList<int> operand1, int shift1, IList<int> operand2, int shift2)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(shift1 >= 0, "The left shift should have a positive amount of bits.");
-            Contract.Requires<ArgumentOutOfRangeException>(shift2 >= 0, "The left shift should have a positive amount of bits.");
-            Contract.Requires<ArgumentNullException>(operand1 != null, "operand1");
-            Contract.Requires<ArgumentNullException>(operand2 != null, "operand2");
+			Condition
+				.Validate(shift1 >= 0)
+				.OrThrowArgumentOutOfRangeException(Messages.CannotShiftByNegativeNumberOfDigits);
+			Condition
+				.Validate(shift2 >= 0)
+				.OrThrowArgumentOutOfRangeException(Messages.CannotShiftByNegativeNumberOfDigits);
+			Condition.ValidateNotNull(operand1, nameof(operand1));
+			Condition.ValidateNotNull(operand2, nameof(operand2));
 
             int[] result = new int[Math.Max(operand1.Count + shift1, operand2.Count + shift2) + 1];
 
@@ -298,11 +302,15 @@ namespace whiteMath.ArithmeticLong
         /// <param name="shift2">A positive amount of digits for the second number to shift left by.</param>
         public static void SumShifted(int BASE, IList<int> result, IList<int> operand1, int shift1, IList<int> operand2, int shift2)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(shift1 >= 0, "The left shift should have a positive amount of bits.");
-            Contract.Requires<ArgumentOutOfRangeException>(shift2 >= 0, "The left shift should have a positive amount of bits.");
-            Contract.Requires<ArgumentNullException>(operand1 != null, "operand1");
-            Contract.Requires<ArgumentNullException>(operand2 != null, "operand2");
-            Contract.Requires<ArgumentNullException>(result != null, "result");
+			Condition
+				.Validate(shift1 >= 0)
+				.OrThrowArgumentOutOfRangeException(Messages.CannotShiftByNegativeNumberOfDigits);
+			Condition
+				.Validate(shift2 >= 0)
+				.OrThrowArgumentOutOfRangeException(Messages.CannotShiftByNegativeNumberOfDigits);
+			Condition.ValidateNotNull(operand1, nameof(operand1));
+			Condition.ValidateNotNull(operand2, nameof(operand2));
+			Condition.ValidateNotNull(result, nameof(result));
 
             int i;
             long tmp;
@@ -346,11 +354,12 @@ namespace whiteMath.ArithmeticLong
         /// <param name="BASE"></param>
         public static bool Dif(int BASE, IList<int> result, IList<int> one, IList<int> two)
         {
-            Contract.Requires<ArgumentNullException>(one != null, "one");
-            Contract.Requires<ArgumentNullException>(two != null, "two");
-            Contract.Requires<ArgumentNullException>(result != null, "result");
+			Condition.ValidateNotNull(one, nameof(one));
+			Condition.ValidateNotNull(two, nameof(two));
+			Condition.ValidateNotNull(result, nameof(result));
 
-            Contract.Ensures(Contract.ForAll(result, x => (x >= 0)));           // all digits should be positive.
+            // TODO: turn this into a unit test
+			// Contract.Ensures(Contract.ForAll(result, x => (x >= 0)));           // all digits should be positive.
 
             int i;
             int temp;
@@ -394,13 +403,17 @@ namespace whiteMath.ArithmeticLong
         /// <returns>The quotient containing only significant digits (no trailing zeroes).</returns>
         public static IList<int> Div(int BASE, IList<int> one, IList<int> two, out IList<int> remainder)
         {
-            Contract.Requires<ArgumentNullException>(one != null, "one");
-            Contract.Requires<ArgumentNullException>(two != null, "two");
+			Condition.ValidateNotNull(one, nameof(one));
+			Condition.ValidateNotNull(two, nameof(two));
 
+			/*
+			 * TODO: make this into a unit test
+			 * 
             Contract.Ensures(Contract.Result<IList<int>>() != null);                            // result's not null
             Contract.Ensures(Contract.ValueAtReturn<IList<int>>(out remainder) != null);        // remainder's not null
             Contract.Ensures(Contract.ForAll(Contract.Result<IList<int>>(), (x => (x >= 0))));  // the result has positive digits
             Contract.Ensures(Contract.ForAll(Contract.ValueAtReturn<IList<int>>(out remainder), (x => (x >= 0))));  // the remainder has positive digits
+			*/
 
             int[] result = new int[one.CountSignificant() - two.CountSignificant() + 1];
 
@@ -420,17 +433,21 @@ namespace whiteMath.ArithmeticLong
         /// <param name="two">The digits array containing the second operand.</param>
         public static IList<int> Div(int BASE, IList<int> result, IList<int> one, IList<int> two)
         {
-            Contract.Requires<ArgumentNullException>(result != null, "result");
-            Contract.Requires<ArgumentNullException>(one != null, "one");
-            Contract.Requires<ArgumentNullException>(two != null, "two");
+			Condition.ValidateNotNull(one, nameof(one));
+			Condition.ValidateNotNull(two, nameof(two));
+			Condition.ValidateNotNull(result, nameof(result));
 
+			/*
             Contract.Requires(Contract.ForAll(one, x => x >= 0));    // first contains only positive digits
             Contract.Requires(Contract.ForAll(two, x => x >= 0));    // second contains only positive digits
+			*/
 
+			/*
+			 * TODO: turn this into a unit test
             Contract.Ensures(Contract.Result<IList<int>>() != null);                        // remainder's not null
             Contract.Ensures(Contract.ForAll(Contract.Result<IList<int>>(), x => x >= 0));  // remainder has positive digits
             Contract.Ensures(Contract.ForAll(result, x => x >= 0));                         // quot has positive digits
-
+			*/
             // Обнуляем результат
             result.FillByAssign(0);
             // ------------------
@@ -606,8 +623,8 @@ namespace whiteMath.ArithmeticLong
         /// <returns>An array containing only significant digits of the quotient.</returns>
         public static int[] DivideByInteger(int BASE, IList<int> one, int two, out int remainder)
         {
-            Contract.Requires<ArgumentNullException>(one != null, "one");
-            Contract.Requires<ArgumentOutOfRangeException>(two >= 0, "The divisor should be a non-negative integer number.");
+			Condition.ValidateNotNull(one, nameof(one));
+			Condition.Validate(two > 0).OrThrowArgumentOutOfRangeException(Messages.DivisorShouldBePositive);
 
             int[] result = new int[one.Count];
 
