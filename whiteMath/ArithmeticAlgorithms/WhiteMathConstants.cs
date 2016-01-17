@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using whiteMath.ArithmeticLong;
 using whiteMath.General;
 
 using LongInt = whiteMath.ArithmeticLong.LongInt<whiteMath.ArithmeticLong.Precisions.P_50k_10k>;
-using Rational = whiteMath.Rational<whiteMath.ArithmeticLong.LongInt<whiteMath.ArithmeticLong.Precisions.P_50k_10k>, whiteMath.ArithmeticLong.CalcLongInt<whiteMath.ArithmeticLong.Precisions.P_50k_10k>>;
+
+using Rational = whiteMath.RationalNumbers.Rational<
+	whiteMath.ArithmeticLong.LongInt<whiteMath.ArithmeticLong.Precisions.P_50k_10k>, 
+	whiteMath.ArithmeticLong.CalcLongInt<whiteMath.ArithmeticLong.Precisions.P_50k_10k>>;
 
 namespace whiteMath
 {

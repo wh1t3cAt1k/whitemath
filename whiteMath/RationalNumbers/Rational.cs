@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace whiteMath
+namespace whiteMath.RationalNumbers
 {
     /// <summary>
     /// The struct representing the rational number as a pair of integer-like numbers.

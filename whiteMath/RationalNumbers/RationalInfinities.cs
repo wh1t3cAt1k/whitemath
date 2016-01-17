@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace whiteMath
+namespace whiteMath.RationalNumbers
 {
     public partial class Rational<T,C>: ICloneable where C: ICalc<T>, new()
     {
@@ -12,6 +9,18 @@ namespace whiteMath
         public static readonly Rational<T, C> NaN = new NotANumber();
 
         //----------------------------------------------
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is not an infinity or a NaN.
+		/// </summary>
+		/// <value><c>true</c> if this instance is a normal number; otherwise, <c>false</c>.</value>
+		public bool IsNormalNumber 
+		{ 
+			get
+			{
+				return !(this is SpecialRational); 
+			} 
+		}
 
         private class SpecialRational : Rational<T, C> { }
 

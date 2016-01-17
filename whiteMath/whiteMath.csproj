@@ -186,6 +186,9 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\external\nunit.framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArithmeticAlgorithms\WhiteMathCombinatoric.cs" />
@@ -379,6 +382,7 @@
     <Compile Include="Graphers\Messages.cs" />
     <Compile Include="Combinatorics\Messages.cs" />
     <Compile Include="General\Messages.cs" />
+    <Compile Include="RationalNumbers\UnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Graphers\Components\GraphicDrawer.resx">
