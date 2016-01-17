@@ -180,6 +180,8 @@
     <Compile Include="Testing\PerformanceTesting.cs" />
     <Compile Include="Testing\ResultTesting.cs" />
     <Compile Include="Conditions\Condition.cs" />
+    <Compile Include="Time\NanoStopwatch.cs" />
+    <Compile Include="Time\NativeMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -204,5 +206,6 @@
   -->
   <ItemGroup>
     <Folder Include="Conditions\" />
+    <Folder Include="Time\" />
   </ItemGroup>
 </Project>

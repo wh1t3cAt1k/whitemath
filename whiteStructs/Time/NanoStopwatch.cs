@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using whiteMath.General;
 
-namespace whiteMath.Time
+namespace whiteStructs.Time
 {
     /// <summary>
     /// The class designed to accurately measure time intervals.

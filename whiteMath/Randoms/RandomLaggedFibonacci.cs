@@ -52,10 +52,11 @@ namespace whiteMath.Randoms
             
             if(seed < 0)
             {
-                long val = 0;
-                whiteMath.General.NativeMethods.QueryPerformanceCounter(ref val);
+                // long val = 0;
+                // whiteMath.General.NativeMethods.QueryPerformanceCounter(ref val);
 
-                seed = (int)val;
+                // seed = (int)val;
+				seed = (int)(DateTime.Now.Ticks % int.MaxValue);
             }
 
             Random gen = new Random(seed);

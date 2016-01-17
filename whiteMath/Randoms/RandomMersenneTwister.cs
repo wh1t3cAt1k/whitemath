@@ -47,10 +47,10 @@ namespace whiteMath.Randoms
                 // Test query performance counter. If it's not available, use less-precision value from the clock.
                 long x = -1;
 
-                if (NativeMethods.QueryPerformanceCounter(ref x) <= 0)
+                // if (NativeMethods.QueryPerformanceCounter(ref x) <= 0)
                     seed = (uint)DateTime.Now.Ticks;
-                else
-                    seed = (uint)x;
+                // else
+                //    seed = (uint)x;
             }
 
             /* setting initial seeds to mt[N] using         */

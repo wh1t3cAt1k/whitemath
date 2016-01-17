@@ -369,12 +369,10 @@
     <Compile Include="General\Collection-Related\OddEvenListWrappers.cs" />
     <Compile Include="General\Collection-Related\ReverseList.cs" />
     <Compile Include="General\Collection-Related\ServiceMethods.cs" />
-    <Compile Include="General\Native\NativeMethods.cs" />
     <Compile Include="General\Other\OtherExtensions.cs" />
     <Compile Include="Statistics\Modeling\SequenceExtensions.cs" />
     <Compile Include="Statistics\PairRegression.cs" />
     <Compile Include="Statistics\StatisticExtensionMethods.cs" />
-    <Compile Include="Time\NanoStopwatch.cs" />
     <Compile Include="Vectors\Vector.cs" />
     <Compile Include="Graphers\Messages.cs" />
     <Compile Include="Combinatorics\Messages.cs" />
