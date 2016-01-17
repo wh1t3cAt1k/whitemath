@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace whiteStructs.Conditions
 {
@@ -18,9 +20,27 @@ namespace whiteStructs.Conditions
 			return new ConditionTestResult(condition);
 		}
 
+		/// <summary>
+		/// Validates that a given value is not <c>null</c>,
+		/// or throws a <see cref="System.ArgumentNullException"/>.
+		/// </summary>
+		/// <param name="argument">A value to test for <c>null</c>.</param>
+		/// <param name="exceptionMessage">An optional exception message.</param>
 		public static void ValidateNotNull<T>(T argument, string exceptionMessage = null)
 		{
 			Condition.Validate(argument != null).OrThrowArgumentNullException(exceptionMessage);
+		}
+
+		/// <summary>
+		/// Validates that a given sequence is not empty, or throws
+		/// a <see cref="System.ArgumentException"/>. Does not test that 
+		/// the sequence is not <c>null</c>.
+		/// </summary>
+		/// <param name="sequence">The sequence to test for.</param>
+		/// <param name="exceptionMessage">An optional exception message.</param>
+		public static void ValidateNotEmpty<T>(IEnumerable<T> sequence, string exceptionMessage = null)
+		{
+			Condition.Validate(sequence.Any()).OrThrowArgumentException(exceptionMessage);
 		}
 
 		public class ConditionTestResult

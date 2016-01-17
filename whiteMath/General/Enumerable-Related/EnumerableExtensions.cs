@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Diagnostics.Contracts;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.General
 {
-    [ContractVerification(true)]
     public static class EnumerableExtensions
     {
         /// <summary>
@@ -22,8 +22,6 @@ namespace whiteMath.General
         /// <returns>A string which enumerates the values of the sequence through the separator string specified.</returns>
         public static string ToElementString<T>(this IEnumerable<T> sequence, string separator = "|", Func<T, string> toString = null)
         {
-            Contract.Requires<ArgumentNullException>(sequence != null, "sequence");
-
             StringBuilder res = new StringBuilder();
 
             foreach (T obj in sequence)
@@ -56,19 +54,24 @@ namespace whiteMath.General
         /// <returns>The maximum element in the sequence.</returns>
         public static T Max<T>(this IEnumerable<T> sequence, IComparer<T> comparer)
         {
+			Condition.ValidateNotNull(sequence);
+			Condition.ValidateNotEmpty(sequence, Messages.SequenceShouldContainAtLeastOneElement);
+
             T max;
 
             IEnumerator<T> enumerator = sequence.GetEnumerator();
 
-            if (!enumerator.MoveNext())
-                throw GeneralExceptions.__SEQUENCE_EMPTY;
-            else
-                max = enumerator.Current;
+			enumerator.MoveNext();
+			max = enumerator.Current;
 
-            while (enumerator.MoveNext())
-                if (comparer.Compare(enumerator.Current, max) > 0)
-                    max = enumerator.Current;
-            
+			while (enumerator.MoveNext())
+			{
+				if (comparer.Compare(enumerator.Current, max) > 0)
+				{
+					max = enumerator.Current;
+				}
+			}
+
             return max;
         }
 
@@ -82,6 +85,9 @@ namespace whiteMath.General
         /// <returns>The minimum element in the sequence.</returns>
         public static T Min<T>(this IEnumerable<T> sequence, IComparer<T> comparer)
         {
+			Condition.ValidateNotNull(sequence);
+			Condition.ValidateNotEmpty(sequence, Messages.SequenceShouldContainAtLeastOneElement);
+
             T min;
 
             IEnumerator<T> enumerator = sequence.GetEnumerator();
@@ -114,8 +120,8 @@ namespace whiteMath.General
         /// A logical point whose X value is equal to the minimum, and Y value is equal to the maximum.</returns>
         public static Point<T> MinMax<T>(this IEnumerable<T> sequence, IComparer<T> comparer = null)
         {
-            Contract.Requires<ArgumentNullException>(sequence != null, "sequence");
-            Contract.Requires<ArgumentException>(!sequence.IsEmpty(), "The sequence should contain at least one element.");
+			Condition.ValidateNotNull(sequence, nameof(sequence));
+			Condition.ValidateNotEmpty(sequence, Messages.SequenceShouldContainAtLeastOneElement);
 
             if (comparer == null)
             {
@@ -162,7 +168,7 @@ namespace whiteMath.General
         /// </returns>
         public static T[,] To2DArrayColumn<T>(this IEnumerable<T> enumerable)
         {
-            Contract.Requires<ArgumentNullException>(enumerable != null, "enumerable");
+			Condition.ValidateNotNull(enumerable, nameof(enumerable));
 
             int elementCount = enumerable.Count();
 
@@ -190,7 +196,7 @@ namespace whiteMath.General
         /// </returns>
         public static T[,] To2DArrayRow<T>(this IEnumerable<T> enumerable)
         {
-            Contract.Requires<ArgumentNullException>(enumerable != null, "enumerable");
+			Condition.ValidateNotNull(enumerable, nameof(enumerable));
 
             int elementCount = enumerable.Count();
 
