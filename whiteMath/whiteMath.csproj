@@ -379,6 +379,7 @@
     <Compile Include="General\Messages.cs" />
     <Compile Include="RationalNumbers\UnitTests.cs" />
     <Compile Include="Drawing\ColorPath.cs" />
+    <Compile Include="Functions\Messages.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Graphers\Components\GraphicDrawer.resx">

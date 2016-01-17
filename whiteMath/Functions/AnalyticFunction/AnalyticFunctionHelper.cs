@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Globalization;
 using System.Diagnostics.Contracts;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.Functions
 {
@@ -19,12 +20,10 @@ namespace whiteMath.Functions
         /// <returns></returns>
         internal static List<string> Analyze(string currentFunctionString, char argumentCharacter, int currentAction)
         {
-            Contract.Requires<ArgumentNullException>(currentFunctionString != null, "currentFunctionString");
-
-            if (string.IsNullOrWhiteSpace(currentFunctionString))
-            {
-                throw new FunctionStringSyntaxException("Unknown error: the string is either empty or whitespace-only.");
-            }
+			Condition.ValidateNotNull(currentFunctionString, nameof(currentFunctionString));
+			Condition
+				.Validate(!string.IsNullOrWhiteSpace(currentFunctionString))
+				.OrThrowException(new FunctionStringSyntaxException("Unknown error: the string is either empty or whitespace-only."));
 
             List<string> actionList = new List<string>();
 

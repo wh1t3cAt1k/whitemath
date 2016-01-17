@@ -133,21 +133,19 @@ namespace whiteMath.General
 
             IEnumerator<T> enumerator = sequence.GetEnumerator();
 
-            if (!enumerator.MoveNext())
-            {
-                throw GeneralExceptions.__SEQUENCE_EMPTY;
-            }
-            else
-            {
-                min = max = enumerator.Current;
-            }
-
+			enumerator.MoveNext();
+			min = max = enumerator.Current;
+            
             while (enumerator.MoveNext())
             {
-                if (comparer.Compare(enumerator.Current, min) < 0)
-                    min = enumerator.Current;
-                else if (comparer.Compare(enumerator.Current, max) > 0)
-                    max = enumerator.Current;
+				if (comparer.Compare(enumerator.Current, min) < 0)
+				{
+					min = enumerator.Current;
+				}
+				else if (comparer.Compare(enumerator.Current, max) > 0)
+				{
+					max = enumerator.Current;
+				}
             }
 
             return new Point<T>(min, max);

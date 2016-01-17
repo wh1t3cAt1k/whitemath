@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics.Contracts;
+﻿using System.Collections.Generic;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.General
 {
@@ -11,13 +10,6 @@ namespace whiteMath.General
         private List<int> intervalHits;
 
         private int lastFoundIndex = -1;
-
-		[ContractInvariantMethod]
-        private void __invariant()
-        {
-            Contract.Invariant(this.intervalList != null);
-            Contract.Invariant(this.intervalHits != null);
-        }
 
         /// <summary>
         /// Initializes the <c>HitTester</c> with a sequence
@@ -30,8 +22,10 @@ namespace whiteMath.General
         /// <param name="intervalSequence">A sequence of non-intersecting intervals.</param>
         public HitTester(IEnumerable<BoundedInterval<T, C>> intervalSequence)
         {
-            Contract.Requires<ArgumentNullException>(intervalSequence != null, "intervalSequence");
-            Contract.Requires<ArgumentException>(intervalSequence.Count() > 0, "The interval sequence should contain at least 1 interval for reasonable hit testing.");
+			Condition.ValidateNotNull(intervalSequence, nameof(intervalSequence));
+			Condition.ValidateNotEmpty(
+				intervalSequence,
+				Messages.HitTestIntervalSequenceShouldContainAtLeastOneElement);
 
             this.intervalList = new List<BoundedInterval<T, C>>(intervalSequence);
 
@@ -52,8 +46,6 @@ namespace whiteMath.General
         public bool HitTest(T point)
         {
             lastFoundIndex = intervalList.HitTest(point);
-
-            Contract.Assume(lastFoundIndex < this.intervalHits.Count);
 
             if (lastFoundIndex >= 0)
             {
@@ -79,8 +71,6 @@ namespace whiteMath.General
                 if (lastFoundIndex < 0)
                     return null;
 
-                Contract.Assume(lastFoundIndex < this.intervalList.Count);
-
                 return intervalList[lastFoundIndex];
             }
         }
@@ -97,12 +87,10 @@ namespace whiteMath.General
         {
             int index = this.intervalList.WhiteBinarySearch(interval, BoundedInterval<T, C>.IntervalComparisons.LeftBoundComparison.CreateComparer());
 
-            Contract.Assume(index >= 0 && index < this.intervalHits.Count && index < this.intervalList.Count);
-
             if (this.intervalList[index].Equals(interval))
                 return this.intervalHits[index];
-
-            return -1;
+			else
+	            return -1;
         }
 
         /// <summary>

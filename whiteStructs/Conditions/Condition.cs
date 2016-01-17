@@ -133,6 +133,19 @@ namespace whiteStructs.Conditions
 					throw new IndexOutOfRangeException();
 				}
 			}
+
+			/// <summary>
+			/// Throws a given <see cref="System.Exception"/> if the 
+			/// condition doesn't hold.
+			/// </summary>
+			/// <param name="exception">The exception to throw.</param>
+			public void OrThrowException(Exception exception)
+			{
+				if (Holds)
+					return;
+				else
+					throw exception;
+			}
 		}
 	}
 }

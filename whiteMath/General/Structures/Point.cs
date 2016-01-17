@@ -100,7 +100,7 @@ namespace whiteMath.General
 
             public PointComparer(IComparer<T> tComparer, bool onArgument)
             {
-                Contract.Requires(tComparer != null);
+				Condition.ValidateNotNull(tComparer, nameof(tComparer));
 
                 this.onArgument = onArgument;
                 this.tComparer = tComparer;
@@ -112,12 +112,6 @@ namespace whiteMath.General
                     return tComparer.Compare(one.X, two.X);
                 else
                     return tComparer.Compare(one.Y, two.Y);
-            }
-
-            [ContractInvariantMethod]
-            private void __ContractInvariant()
-            {
-                Contract.Invariant(this.tComparer != null);
             }
         }
 
@@ -131,7 +125,7 @@ namespace whiteMath.General
         /// <returns>The resulting comparer that compares two points on their X values.</returns>
         public static IComparer<Point<T>> GetComparerOnX(IComparer<T> tComparer)
         {
-            Contract.Requires<ArgumentNullException>(tComparer != null, "tComparer");
+			Condition.ValidateNotNull(tComparer);
             return new PointComparer(tComparer, true);
         }
 
@@ -145,7 +139,7 @@ namespace whiteMath.General
         /// <returns>The resulting comparer that compares two points on their Y values.</returns>
         public static IComparer<Point<T>> GetComparerOnY(IComparer<T> tComparer)
         {
-            Contract.Requires<ArgumentNullException>(tComparer != null, "tComparer");     
+			Condition.ValidateNotNull(tComparer, nameof(tComparer));
             return new PointComparer(tComparer, false);
         }
 
