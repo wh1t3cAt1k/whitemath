@@ -156,8 +156,7 @@ namespace whiteMath.Graphers
                 (CoordFont          == null ? null : CoordFont.Clone() as Font),                
                 (GridPen            == null ? null : GridPen.Clone() as Pen),
                 (CurvePen           == null ? null : CurvePen.Clone() as Pen),
-                CurveType
-                );
+                CurveType);
         }
     }
 

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Diagnostics.Contracts;
 
 namespace whiteMath.General
 {
-    [ContractVerification(true)]
     public class HitTester<T, C> where C: ICalc<T>, new()
     {
         private List<BoundedInterval<T, C>> intervalList;
@@ -14,7 +12,7 @@ namespace whiteMath.General
 
         private int lastFoundIndex = -1;
 
-        [ContractInvariantMethod]
+		[ContractInvariantMethod]
         private void __invariant()
         {
             Contract.Invariant(this.intervalList != null);

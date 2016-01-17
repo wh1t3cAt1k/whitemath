@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics.Contracts;
-using System.Collections;
-
-using whiteMath.General;
 
 namespace whiteMath
 {
@@ -40,45 +35,51 @@ namespace whiteMath
             Numeric<T, C> lowerBound = searchInterval.Value.LeftBound;
             Numeric<T, C> upperBound = searchInterval.Value.RightBound;
 
-            if (!searchInterval.Value.IsLeftInclusive)
-                lowerBound++;
+			if (!searchInterval.Value.IsLeftInclusive)
+			{
+				lowerBound++;
+			}
 
-            if (!searchInterval.Value.IsRightInclusive)
-                upperBound--;
+			if (!searchInterval.Value.IsRightInclusive)
+			{
+				upperBound--;
+			}
 
             // Contract.Requires<ArgumentOutOfRangeException>(lowerBound > Numeric<T, C>.Zero && upperBound < module - Numeric<T, C>.CONST_1, "The search interval should be located inside the [0; N-1] interval.");
             
-            // Нам нужны только уникальные значения
-            // поэтому сгенерируем множество
-
+			// We need just the unique values!
+			// -
             ISet<Numeric<T, C>> rootDegreeSet = new HashSet<Numeric<T, C>>();
 
-            foreach (T degree in rootDegrees)
-                rootDegreeSet.Add(degree);
+			foreach (T degree in rootDegrees)
+			{
+				rootDegreeSet.Add(degree);
+			}
 
             // -----------------------------
 
             bool evenModule = calc.isEven(module);
 
-            // Если нижняя граница четная, и модуль четный - по любому взаимно не простые.
-            // Значит число - делитель нуля, и не может быть корнем из единицы ни при каких условиях.
-            // Прибавляем единицу.
-
-            if (calc.isEven(lowerBound) && evenModule)
-                lowerBound++;
+			// If the lower bound is even, and the modulus is even – definitely not coprime.
+			// Which means that the number is a zero divisor and cannot be a root of unity.
+			// Thus, increment.
+			// -
+			if (calc.isEven(lowerBound) && evenModule)
+			{
+				lowerBound++;
+			}
 
             Dictionary<T, List<T>> result = new Dictionary<T, List<T>>();
 
             for (Numeric<T, C> current = lowerBound; current <= upperBound; current++)
             {
-                // Если не взаимно просты с модулем - по-любому не может быть
-                // примитивным корнем.
-
+				// Of not coprime with modulus – cannot be a primitive root.
+				// -
                 if (WhiteMath<T, C>.GreatestCommonDivisor(current, module) != Numeric<T, C>._1)
                     goto ENDING;
 
-                // Теперь занимаемся тестированием.
-
+                // Now we test.
+				// -
                 Numeric<T, C> currentPower = Numeric<T,C>._1;
 
                 Numeric<T, C> tmp = current;
@@ -87,7 +88,8 @@ namespace whiteMath
                 {
                     if (tmp == Numeric<T, C>._1)
                     {
-                        // Проверить степень корня
+                        // Check the root degree
+						// -
                         if (rootDegreeSet.Contains(currentPower))
                         {
                             if (!result.ContainsKey(currentPower))
@@ -108,10 +110,12 @@ namespace whiteMath
                 
                 ENDING:
 
-                // Если четный модуль - надо перескочить через два.
-
-                if (evenModule)
-                    current++;
+                // We need to increment in twos for an even modulus.
+				// -
+				if (evenModule)
+				{
+					current++;
+				}
             }
 
             return result;
