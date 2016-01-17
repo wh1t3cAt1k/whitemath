@@ -19,8 +19,8 @@ namespace whiteMath
         {
             public override bool Equals(object obj)
             {
-                if(obj is Positive_Infinity) return true;
-                return false;
+                if (obj is Positive_Infinity) return true;
+                else return false;
             }
 
             public override int GetHashCode()
