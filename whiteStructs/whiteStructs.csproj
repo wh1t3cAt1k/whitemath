@@ -166,7 +166,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Drawing\ColorPath.cs" />
     <Compile Include="Forms\FormExtensions.cs" />
     <Compile Include="Interop\NotepadSender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -188,13 +187,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\whiteMath\whiteMath.csproj">
-      <Project>{8C8113ED-81C6-413C-B8A3-D8336ACBAAAA}</Project>
-      <Name>whiteMath</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

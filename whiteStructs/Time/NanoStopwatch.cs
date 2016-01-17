@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using whiteMath.General;
 
 namespace whiteStructs.Time
 {

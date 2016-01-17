@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace whiteMath.General
+namespace whiteStructs.Time
 {
     public static class NativeMethods
     {
@@ -21,6 +21,5 @@ namespace whiteMath.General
         /// <returns>Negative value if the call is unsuccessful, and a positive value otherwise.</returns>
         [DllImport("kernel32.dll")]
         public extern static int QueryPerformanceFrequency(ref long x);
-
     }
 }
