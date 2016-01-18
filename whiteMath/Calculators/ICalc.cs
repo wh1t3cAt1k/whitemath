@@ -11,13 +11,14 @@ namespace whiteMath
     /// The exception class which signalizes that the operation
     /// is supported only for integer numeric types.
     /// </summary>
-    public class NonIntegerTypeException : NotSupportedException
+	public class NonIntegerTypeException : NotSupportedException
     {
         /// <summary>
         /// Creates a new instance of <c>NonIntegerTypeException</c>.
         /// </summary>
         /// <param name="message">The name of the type that does not support the operation which thus results in an exception.</param>
-        public NonIntegerTypeException(string message): base("This operation is not supported for non-integer type " + message)
+        public NonIntegerTypeException(string typeName)
+			: base("This operation is not supported for non-integer type " + typeName)
         { }
     }
 

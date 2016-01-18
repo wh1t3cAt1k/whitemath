@@ -23,7 +23,7 @@ namespace whiteMath.Functions
 			Condition.ValidateNotNull(currentFunctionString, nameof(currentFunctionString));
 			Condition
 				.Validate(!string.IsNullOrWhiteSpace(currentFunctionString))
-				.OrThrowException(new FunctionStringSyntaxException("Unknown error: the string is either empty or whitespace-only."));
+				.OrException(new FunctionStringSyntaxException("Unknown error: the string is either empty or whitespace-only."));
 
             List<string> actionList = new List<string>();
 

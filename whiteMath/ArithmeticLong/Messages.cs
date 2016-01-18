@@ -7,5 +7,6 @@
 		public const string MoreThanOneOperandRequired = "The number of operands should be more than one.";
 		public const string CannotShiftByNegativeNumberOfDigits = "Cannot shift by a negative number of BASE-based digits.";
 		public const string DivisorShouldBePositive = "The divisor should be a positive integer.";
+		public const string OperandShouldNotContainNegativeDigits = "The operand should not contain negative digits.";
 	}
 }

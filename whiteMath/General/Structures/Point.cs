@@ -66,7 +66,7 @@ namespace whiteMath.General
             get
             {
 				Condition.Validate(index == 0 || index == 1)
-					.OrThrowIndexOutOfRangeException(Messages.OnlyZeroAndOneCanBeUsedToAccessPointCoordinates);
+					.OrIndexOutOfRangeException(Messages.OnlyZeroAndOneCanBeUsedToAccessPointCoordinates);
 
                 if (index == 0) 
 					return X;
@@ -77,7 +77,7 @@ namespace whiteMath.General
             set
             {
 				Condition.Validate(index == 0 || index == 1)
-					.OrThrowIndexOutOfRangeException(Messages.OnlyZeroAndOneCanBeUsedToAccessPointCoordinates);
+					.OrIndexOutOfRangeException(Messages.OnlyZeroAndOneCanBeUsedToAccessPointCoordinates);
 
                 if (index == 0)
 					X = value;

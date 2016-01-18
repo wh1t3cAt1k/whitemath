@@ -28,7 +28,7 @@ namespace whiteStructs.Conditions
 		/// <param name="exceptionMessage">An optional exception message.</param>
 		public static void ValidateNotNull<T>(T argument, string exceptionMessage = null)
 		{
-			Condition.Validate(argument != null).OrThrowArgumentNullException(exceptionMessage);
+			Condition.Validate(argument != null).OrArgumentNullException(exceptionMessage);
 		}
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace whiteStructs.Conditions
 		/// <param name="exceptionMessage">An optional exception message.</param>
 		public static void ValidateNotEmpty<T>(IEnumerable<T> sequence, string exceptionMessage = null)
 		{
-			Condition.Validate(sequence.Any()).OrThrowArgumentException(exceptionMessage);
+			Condition.Validate(sequence.Any()).OrArgumentException(exceptionMessage);
 		}
 
 		public class ConditionTestResult
@@ -60,7 +60,7 @@ namespace whiteStructs.Conditions
 			/// Throws a <see cref="System.ArgumentException"/> if the condition doesn't hold.
 			/// </summary>
 			/// <param name="exceptionMessage">An optional exception message.</param>
-			public void OrThrowArgumentException(string exceptionMessage = null)
+			public void OrArgumentException(string exceptionMessage = null)
 			{
 				if (Holds)
 					return;
@@ -79,7 +79,7 @@ namespace whiteStructs.Conditions
 			/// Throws a <see cref="System.ArgumentNullException"/> if the condition doesn't hold.
 			/// </summary>
 			/// <param name="exceptionMessage">An optional exception message.</param>
-			public void OrThrowArgumentNullException(string exceptionMessage = null)
+			public void OrArgumentNullException(string exceptionMessage = null)
 			{
 				if (this.Holds)
 					return;
@@ -99,7 +99,7 @@ namespace whiteStructs.Conditions
 			/// condition doesn't hold.
 			/// </summary>
 			/// <param name="exceptionMessage">An optional exception message.</param>
-			public void OrThrowArgumentOutOfRangeException(string exceptionMessage = null)
+			public void OrArgumentOutOfRangeException(string exceptionMessage = null)
 			{
 				if (Holds)
 					return;
@@ -119,7 +119,7 @@ namespace whiteStructs.Conditions
 			/// condition doesn't hold.
 			/// </summary>
 			/// <param name="exceptionMessage">An optional exception message.</param>
-			public void OrThrowIndexOutOfRangeException(string exceptionMessage = null)
+			public void OrIndexOutOfRangeException(string exceptionMessage = null)
 			{
 				if (Holds)
 					return;
@@ -139,7 +139,7 @@ namespace whiteStructs.Conditions
 			/// condition doesn't hold.
 			/// </summary>
 			/// <param name="exception">The exception to throw.</param>
-			public void OrThrowException(Exception exception)
+			public void OrException(Exception exception)
 			{
 				if (Holds)
 					return;
