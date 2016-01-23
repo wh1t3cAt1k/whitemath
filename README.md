@@ -1,12 +1,12 @@
 # whiteMath + whiteStructs
 
-whiteMath is an open-source and (hopefully) programmer-friendly C# .NET mathematical/algorithmic library.
+whiteMath is an open-source, [hopefully] programmer-friendly C# .NET mathematical/algorithmic library.
 
-Current version: 0.1.0
+Current version: 0.2.0
 
 The source code of the libary is licensed under GNU GPL v.3.
 
-This library should not by any means be treated as complete in terms of functionality and documentation. Hopefully, it will never be complete in terms of functionality; unfortunately, it is likely that the documentation isn't going to cover everything, either.
+This library should not by any means be treated as complete in terms of functionality and documentation. It does not look like it will ever be complete in terms of functionality; unfortunately, it is likely that the documentation isn't going to cover everything, either.
 
 ## Description
 
@@ -38,20 +38,21 @@ All the statistical functions, such as SampleAverage, MovingAverage etc. are als
 
 1. IDE: Microsoft Visual Studio (Windows) and Xamarin Studio (Mac)
 2. Help/Documentation: SandCastle, a tool building HTML/CHM files from XML comments (https://github.com/EWSoftware/SHFB)
-3. Design by contract: .NET Code Contracts (in-place testing of method pre-conditions / post-conditions and class invariants)
-4. Unit testing: NUnit 3.0 (http://www.nunit.org/)
+3. Unit testing: NUnit 3.0 (http://www.nunit.org/)
+
+We used to use the Design By Contract approach (using .NET Code Contracts), but due to terrible Mono support the contracts have been dropped since 0.2.0. Currently, an internal validation instrument, whiteStructs.Conditions, is being used and developed.
 
 ## Why?
 
-Because I believe that the majority of shareable ideas ought to be shared.
+Because I believe that some shareable ideas ought to be shared.
 
-I wanted to go open-source more than four years ago, but thought to write a thorough documentation before I would disclose all that stuff. This never happened, as you could expect.
+I wanted to open-source this more than four years ago, but thought to write a thorough documentation and brush it all up before making it public. This never happened, as you could expect.
 
-So why now? Because today I stopped caring. Maybe we could do it together?
+So why now? Because today I stopped caring. Perhaps together is better?
 
 ## Declaration
 
-I understand that perhaps this isn't a very good readme for an open-source library. It will eventually get better, probably not without your help.
+I understand that this probably isn't a very good readme for an open-source math library. It will eventually get better, probably not without your help.
 
 Also, the code isn't too consistent in structure and perhaps not very self-explanatory. Something can be learnt from the XML doc comments in the source files, and something should be discussed together in order to be worked on together.
 
@@ -68,11 +69,9 @@ Currently, the author tries to document everything thoroughly using XML and in-l
 
 ## Bugs / Issues
 
-I suspect there are lots of them. Most of the functions were in real-life use from one to several times, and after that were happily abandoned. I have never bothered with thorough randomized testing either.
+I suspect there are lots of them. Most of the functions were in real-life use from one to several times, and after that were happily abandoned. I have never bothered with thorough testing either.
 
-Please report.
-
-I am also planning on introducing unit testing ASAP.
+We have introduced unit tests in 0.1.0, so please report and contribute meaningful tests.
 
 ## Important Copyright Notes
 
