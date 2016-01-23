@@ -30,10 +30,8 @@ namespace whiteMath.ArithmeticLong
             public static LongInt<B> MultiplyKaratsuba(LongInt<B> one, LongInt<B> two)
             {
                 LongInt<B> bigger = one.Length > two.Length ? one : two;
-                int twoPower = 1;
-
-                // Последовательное умножение на два, пока
-                // не достигнем нужной длины.
+                
+				int twoPower = 1;
 
                 while (bigger.Length > twoPower)
                     twoPower <<= 1;

@@ -193,7 +193,6 @@
     <Compile Include="ArithmeticLong\LongArithmeticMethods.cs" />
     <Compile Include="ArithmeticLong\LongExponential\LongExp.cs" />
     <Compile Include="ArithmeticLong\Bases\Bases_And_Precisions.cs" />
-    <Compile Include="ArithmeticLong\LongInt\LongIntHelperMultiplyNTTFast.cs" />
     <Compile Include="ArithmeticLong\LongInt\LongIntHelperMultiplyNTT_2.cs" />
     <Compile Include="ArithmeticLong\LongInt\LongIntHelperMultiplyNTT_1.cs" />
     <Compile Include="ArithmeticLong\LongInt\LongIntHelperMultiplyFFT.cs" />
