@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
+using whiteMath.Calculators;
 
 namespace whiteMath.Matrices
 {
@@ -21,16 +20,8 @@ namespace whiteMath.Matrices
     /// </summary>
     /// <typeparam name="T">The type of matrix elements</typeparam>
     public abstract partial class Matrix<T, C> : 
-        
-        // Interfaces implemented
-
-        ICloneable, 
-        IMutableMatrix,
-        IMutableMatrix<T>, 
-        IMutableMatrix<Numeric<T,C>> 
-
-        where C:ICalc<T>, new()
-
+        ICloneable, IMutableMatrix, IMutableMatrix<T>, IMutableMatrix<Numeric<T,C>> 
+		where C: ICalc<T>, new()
     {
         public static C calc = new C();
 

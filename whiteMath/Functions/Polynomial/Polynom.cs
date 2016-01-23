@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 using whiteMath.Algorithms;
+using whiteMath.Calculators;
 using whiteMath.General;
-
-using System.Reflection;
 
 namespace whiteMath.Functions
 {
@@ -241,7 +241,7 @@ namespace whiteMath.Functions
             Matrices.Matrix_SDA<T, C> matrix = new Matrices.Matrix_SDA<T, C>(n, n);
 
             Numeric<T, C>[] argument = new Numeric<T, C>[n];
-            argument.FillByAssign(calc.fromInt(1));
+			argument.FillByAssign((Numeric<T, C>)calc.fromInt(1));
 
             for (int i = 0; i < n; i++)
                 for (int j = 0; j < n; j++)
@@ -256,6 +256,7 @@ namespace whiteMath.Functions
 
             // Конвертируем в массив и обрезаем ведущие нули.
             // Радуемся жизни.
+			// -
             this.coefficients = result.AsNumericArray().Cut();
 
             return;

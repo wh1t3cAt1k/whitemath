@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace whiteMath.Matrices
 {
@@ -17,12 +14,14 @@ namespace whiteMath.Matrices
     public class MinorMatrix<T,C>: Matrix<T,C> where C: ICalc<T>, new()
     {
         /// <summary>
-        /// Gets the row of the parent matrix which has been removed to get current minor matrix.
+        /// Gets the row intex of the parent matrix, which has been removed 
+		/// to get the current minor matrix.
         /// </summary>
         public int RemovedRow { get; private set; }
 
         /// <summary>
-        /// Gets the column of the parent matrix which has been removed to get current minor matrix.
+        /// Gets the column index of the parent matrix, which has been removed 
+		/// to get current minor matrix.
         /// </summary>
         public int RemovedColumn { get; private set; }
 

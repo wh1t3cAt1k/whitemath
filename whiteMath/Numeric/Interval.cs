@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
+using whiteMath.Algorithms;
+using whiteMath.Calculators;
 using whiteMath.General;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath
 {
@@ -38,7 +40,7 @@ namespace whiteMath
     /// </summary>
     /// <typeparam name="T">The type of numbers in the interval.</typeparam>
     /// <typeparam name="C">The calculator for the number type.</typeparam>
-    public struct BoundedInterval<T, C> where C:ICalc<T>, new()
+    public struct BoundedInterval<T, C> where C: ICalc<T>, new()
     {
         private static ICalc<T> calc = Numeric<T, C>.Calculator;
         
@@ -528,9 +530,13 @@ namespace whiteMath
         public static PotentialResult<Numeric<T, C>> Max_LinearSearch<T, C>(this BoundedInterval<T, C> interval, Predicate<T> predicate)
             where C: ICalc<T>, new()
         {
-            Contract.Requires<ArgumentException>(Numeric<T, C>.Calculator.isIntegerCalculator, "This method works only for integer numbers.");
-            Contract.Requires<ArgumentNullException>(predicate != null, "predicate");
-            Contract.Requires<ArgumentException>(!interval.IsEmptyInteger, "The interval should contain at least one integer point.");
+			Condition
+				.Validate(Numeric<T, C>.Calculator.isIntegerCalculator)
+				.OrException(new NonIntegerTypeException(typeof(T).Name));
+			Condition
+				.Validate(!interval.IsEmptyInteger)
+				.OrArgumentException("The interval should contain at least one integer point.");
+			Condition.ValidateNotNull(predicate, nameof(predicate));
 
             BoundedInterval<T, C> inclusive = interval.ToInclusiveIntegerInterval();
 
@@ -578,27 +584,36 @@ namespace whiteMath
         /// <returns>The maximum number within a given interval for which the <paramref name="predicate"/> holds.</returns>
         public static T Max_BinarySearch<T, C>(this BoundedInterval<T, C> interval, Predicate<T> predicate)
             where C: ICalc<T>, new()
-        {
-            Contract.Requires<NonIntegerTypeException>(Numeric<T, C>.Calculator.isIntegerCalculator, "This method works only for integer numbers.");
-            Contract.Requires<ArgumentException>(!interval.IsEmptyInteger, "The interval should contain at least one integer point.");
+        {			
+			Condition
+				.Validate(Numeric<T, C>.Calculator.isIntegerCalculator)
+				.OrException(new NonIntegerTypeException(typeof(T).Name));
+			Condition
+				.Validate(!interval.IsEmptyInteger)
+			    .OrArgumentException("The interval should contain at least one integer point.");
+			Condition.ValidateNotNull(predicate, nameof(predicate));
 
-            Numeric<T, C> lb = (interval.IsLeftInclusive ? interval.LeftBound : interval.LeftBound + Numeric<T, C>._1);
-            Numeric<T, C> rb = (interval.IsRightInclusive ? interval.RightBound : interval.RightBound - Numeric<T, C>._1); 
+            Numeric<T, C> leftBoundary = (interval.IsLeftInclusive ? interval.LeftBound : interval.LeftBound + Numeric<T, C>._1);
+            Numeric<T, C> rightBoundary = (interval.IsRightInclusive ? interval.RightBound : interval.RightBound - Numeric<T, C>._1); 
 
             Numeric<T, C> one = Numeric<T, C>._1;
             Numeric<T, C> two = Numeric<T, C>._2;
 
-            while (!(lb > rb))
+            while (!(leftBoundary > rightBoundary))
             {
-                Numeric<T, C> mid = (lb + rb) / two;
+                Numeric<T, C> middle = (leftBoundary + rightBoundary) / two;
 
-                if (predicate(mid))
-                    lb = mid + one;
-                else
-                    rb = mid - one;
+				if (predicate(middle))
+				{
+					leftBoundary = middle + one;
+				}
+				else
+				{
+					rightBoundary = middle - one;
+				}
             }
 
-            return lb - one;
+            return leftBoundary - one;
         }
 
         /// <summary>
@@ -613,9 +628,12 @@ namespace whiteMath
         /// <returns>The index of interval containing the specified point, or a negative value if such interval hasn't been found.</returns>
         public static int HitTest<T, C>(this IList<BoundedInterval<T, C>> list, T point) where C : ICalc<T>, new()
         {
-            Contract.Requires<ArgumentNullException>(list != null, "list");
-            Contract.Ensures(Contract.Result<int>() < list.Count);
+			Condition.ValidateNotNull(list, nameof(list));
 
+			/*
+			Contract.Ensures(Contract.Result<int>() < list.Count);
+			*/
+			
 			int index = list.WhiteBinarySearch<T, BoundedInterval<T, C>>(
 				(x => x.LeftBound), 
 				point, 

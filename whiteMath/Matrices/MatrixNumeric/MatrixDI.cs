@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using whiteMath.Calculators;
 
 namespace whiteMath.Matrices.MatrixNumeric
 {
-#if TODO
     class MatrixDI<T,C>: Matrix<T,C> where C: ICalc<T>, new()
     {
+		// TODO: understand what this meant.
+		// Gosh I should've written doc comments timely.
     }
-#endif
 }

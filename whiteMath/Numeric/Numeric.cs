@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
+using whiteMath.Calculators;
 using whiteMath.General;
 
 namespace whiteMath
 {
-    public struct Numeric<T, C>: IComparable<Numeric<T,C>>, IEquatable<Numeric<T,C>> where C:ICalc<T>, new()
+    public struct Numeric<T, C> : IComparable<Numeric<T, C>>, IEquatable<Numeric<T, C>> 
+		where C : ICalc<T>, new()
     {
         private T value;                     // the value within the number
         private static C calc = new C();     // the calculator used with numbers

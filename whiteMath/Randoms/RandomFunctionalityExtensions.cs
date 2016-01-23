@@ -1,5 +1,9 @@
 ﻿using System;
 
+using whiteMath.Calculators;
+
+using whiteStructs.Conditions;
+
 namespace whiteMath.Randoms
 {
     // -----------------------------------------------------------
@@ -129,8 +133,10 @@ namespace whiteMath.Randoms
             /// <param name="max">The upper exclusive bound of generated numbers.</param>
             public T Next(T min, T max)
             {
-                Contract.Requires<ArgumentException>(Numeric<T, C>.Calculator.mor(max, min), "The lower boundary of generated values should be less than the upper boundary.");
-
+				Condition
+					.Validate(Numeric<T, C>.Calculator.mor(max, min))
+					.OrArgumentOutOfRangeException("The lower boundary should be less than the upper boundary.");
+                
                 Numeric<T, C> minValue = min;
                 Numeric<T, C> maxValue = max;
 
@@ -141,10 +147,11 @@ namespace whiteMath.Randoms
             /// Initializes the wrapper instance with a floating-point generator.
             /// </summary>
             /// <param name="gen">A floating-point generator for the type <typeparamref name="T"/></param>
-            public ___RandomFP_BoundedWrapper(IRandomFloatingPoint<T> gen)
+            public ___RandomFP_BoundedWrapper(IRandomFloatingPoint<T> generator)
             {
-                Contract.Requires<ArgumentNullException>(gen != null, "gen");
-                this.Generator = gen;
+				Condition.ValidateNotNull(generator, nameof(generator));
+
+                this.Generator = generator;
             }
         }
 
@@ -198,12 +205,14 @@ namespace whiteMath.Randoms
             /// <param name="gen">A floating-point generator.</param>
             /// <param name="minimum">The lower inclusive boundary for generated numbers.</param>
             /// <param name="maximum">The upper exclusive boundary for generated numbers.</param>
-            public ___RandomFP_UnboundedWrapper(IRandomFloatingPoint<T> gen, T minimum, T maximum)
+            public ___RandomFP_UnboundedWrapper(IRandomFloatingPoint<T> generator, T minimum, T maximum)
             {
-                Contract.Requires<ArgumentNullException>(gen != null, "gen");
-                Contract.Requires<ArgumentException>(Numeric<T, C>.Calculator.mor(maximum, minimum), "The upper boundary of generated values should be bigger than the lower boundary.");
-
-                this.Generator = gen;
+				Condition.ValidateNotNull(generator, nameof(generator));
+				Condition
+					.Validate(Numeric<T, C>.Calculator.mor(maximum, minimum))
+					.OrArgumentOutOfRangeException("The lower boundary should be less than the upper boundary.");
+				
+                this.Generator = generator;
                 this.Minimum = minimum;
                 this.Maximum = maximum;
             }

@@ -25,7 +25,6 @@ namespace whiteMath.Graphers
     /// <typeparam name="C">The calculator for the <typeparamref name="T"/> type.</typeparam>
     /// </summary>
     [Serializable]
-    [ContractVerification(true)]
     public class CoordinateTransformer<T,C> where C: ICalc<T>, new()
     {
         private Numeric<T, C> kx, ky;                       // сколько пикселей стоит единичный интервал икса и игрека соответственно

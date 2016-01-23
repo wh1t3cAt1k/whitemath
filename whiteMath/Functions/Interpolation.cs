@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+
+using whiteMath.Calculators;
 using whiteMath.General;
 
 namespace whiteMath.Functions
@@ -13,7 +12,7 @@ namespace whiteMath.Functions
     /// <typeparam name="T">The type of numeric arguments of the function.</typeparam>
     /// <typeparam name="C">The calculator for the numeric type T.</typeparam>
     /// </summary>
-    public static class Interpolation<T,C> where C: ICalc<T>, new()
+    public static class Interpolation<T, C> where C: ICalc<T>, new()
     {
         private static ICalc<T> calc = Numeric<T, C>.Calculator;
 

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Text;
 
+using whiteMath.Calculators;
 using whiteMath.General;
-
-// предоставляет интерфейс-наследник IComparer для сортировки считанного массива точек.
 
 namespace whiteMath.Graphers.Services
 {

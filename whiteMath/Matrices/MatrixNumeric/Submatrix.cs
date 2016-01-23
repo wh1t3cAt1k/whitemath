@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
+using whiteMath.Calculators;
 
 namespace whiteMath.Matrices
 {
@@ -16,7 +15,7 @@ namespace whiteMath.Matrices
     /// </summary>
     public class Submatrix<T,C>: Matrix<T,C> where C: ICalc<T>, new()
     {
-        private MatrixType mt;
+        private MatrixType _matrixType;
 
         protected int offsetRow = 0;
         protected int offsetColumn = 0;
@@ -45,9 +44,9 @@ namespace whiteMath.Matrices
         internal Submatrix(Matrix<T,C> matrix, int rowOffset, int columnOffset, int rows, int columns)
         {
             if (matrix is Matrix_SDA<T, C>) 
-                mt = MatrixType.SDA;
+                _matrixType = MatrixType.SDA;
             else 
-                mt = MatrixType.DI;
+                _matrixType = MatrixType.DI;
 
             this.offsetRow = rowOffset;
             this.offsetColumn = columnOffset;
@@ -99,7 +98,7 @@ namespace whiteMath.Matrices
             if (this.ColumnCount != another.RowCount)
                 throw new ArgumentException("The column count of the first matrix and the row count of the second matrix must match.");
 
-            Matrix<T,C> temp = MatrixNumericHelper<T,C>.getMatrixOfSize(mt, this.rows, another.ColumnCount);
+            Matrix<T,C> temp = MatrixNumericHelper<T,C>.getMatrixOfSize(_matrixType, this.rows, another.ColumnCount);
             MatrixNumericHelper<T,C>.multiplySimple(this, another, temp);
 
             return temp;
@@ -107,7 +106,7 @@ namespace whiteMath.Matrices
 
         protected override Matrix<T,C> negate()
         {
-            Matrix<T,C> temp = MatrixNumericHelper<T,C>.getMatrixOfSize(mt, rows, columns);
+            Matrix<T,C> temp = MatrixNumericHelper<T,C>.getMatrixOfSize(_matrixType, rows, columns);
 
             for (int i = 0; i < rows; i++)
                 for (int j = 0; j < columns; j++)
@@ -121,7 +120,7 @@ namespace whiteMath.Matrices
             if (this.rows != another.RowCount || this.columns != another.ColumnCount)
                 throw new ArgumentException("Matrices must be of the same size in order to sum.");
 
-            Matrix<T,C> temp = MatrixNumericHelper<T,C>.getMatrixOfSize(mt, rows, columns);
+            Matrix<T,C> temp = MatrixNumericHelper<T,C>.getMatrixOfSize(_matrixType, rows, columns);
             MatrixNumericHelper<T,C>.sum(this, another, temp);
             return temp;
         }
@@ -131,7 +130,7 @@ namespace whiteMath.Matrices
             if (this.rows != another.RowCount || this.columns != another.ColumnCount)
                 throw new ArgumentException("Matrices must be of the same size in order to substract.");
 
-            Matrix<T,C> temp = MatrixNumericHelper<T,C>.getMatrixOfSize(mt, rows, columns);
+            Matrix<T,C> temp = MatrixNumericHelper<T,C>.getMatrixOfSize(_matrixType, rows, columns);
             MatrixNumericHelper<T,C>.dif(this, another, temp);
             return temp;
         }

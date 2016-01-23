@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 
 using whiteMath.Algorithms;
+using whiteMath.Calculators;
 using whiteMath.General;
 using whiteMath.Randoms;
 

@@ -4,7 +4,7 @@ using whiteMath.Calculators;
 
 namespace whiteMath.Algorithms
 {
-    public partial class WhiteMath<T,C> where C: ICalc<T>, new() 
+    public partial class WhiteMath<T, C> where C: ICalc<T>, new() 
     {
         // --------------------------------
         // --------- DIFFERENT ------------

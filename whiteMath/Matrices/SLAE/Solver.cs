@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-using whiteMath.Matrices;
+using whiteMath.Calculators;
 
 namespace whiteMath.Matrices
 {
@@ -19,7 +16,8 @@ namespace whiteMath.Matrices
         /// <param name="coefficients">A square matrix of unknown terms' coefficients.</param>
         /// <param name="freeTerm">A vector of free terms.</param>
         /// <param name="x">The vector containing the solution of the equation system.</param>
-        public static void LU_FactorizationSolving<T,C>(Matrix<T,C> coefficients, Vector<T,C> freeTerm, out Vector<T,C> x) where C:ICalc<T>, new()
+        public static void LU_FactorizationSolving<T, C>(Matrix<T, C> coefficients, Vector<T, C> freeTerm, out Vector<T, C> x) 
+			where C : ICalc<T>, new()
         {
             if (coefficients.RowCount != coefficients.ColumnCount)
                 throw new ArgumentException("Only square matrices are supported.");

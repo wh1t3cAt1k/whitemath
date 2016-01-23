@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-using whiteMath.General;
+using whiteMath.Algorithms;
+using whiteMath.Calculators;
 using whiteMath.Statistics;
 using whiteMath.Randoms;
 

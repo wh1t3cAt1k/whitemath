@@ -2,13 +2,15 @@
 
 using whiteMath.Calculators;
 
+using whiteStructs.Conditions;
+
 namespace whiteMath.Graphers
 {
     /// <summary>
     /// A generic class dedicated to perform bidirectional mapping
     /// between an image axis interval and a function plane axis interval.
-    /// <see cref="Numeric&lt;T,C&gt;"/>
-    /// <see cref="ICalc&lt;T&gt;"/>
+	/// <see cref="Numeric{T,C}"/>
+	/// <see cref="ICalc{T}"/>
     /// <typeparam name="T">
     /// The numeric type which specifies the coordinate of the function.
     /// Should support fractional numbers and conversion to <c>double</c> type at least
@@ -80,9 +82,13 @@ namespace whiteMath.Graphers
         /// <param name="reverseImageAxis">A flag indicating if lower values on image axis scale should correspond to higher values on function plane axis scale.</param>
         public DimensionTransformer(double imageAxisMin, double imageAxisMax, T functionAxisMin, T functionAxisMax, Func<T, double> toDouble, bool reverseImageAxis = false)
         {
-            Contract.Requires<ArgumentNullException>(toDouble != null, "toDouble");
-            Contract.Requires<ArgumentOutOfRangeException>(imageAxisMin < imageAxisMax, "Invalid image axis interval, the specified minimal value exceeds the specified maximal value.");
-            Contract.Requires<ArgumentOutOfRangeException>((Numeric<T,C>)functionAxisMin <= functionAxisMax, "Invalid function axis interval, the specified minimal value exceeds the specified maximal value.");
+			Condition.ValidateNotNull(toDouble, nameof(toDouble));
+			Condition
+				.Validate(imageAxisMin < imageAxisMax)
+				.OrArgumentOutOfRangeException("Invalid image axis interval, the specified minimal value exceeds the specified maximal value.");
+			Condition
+				.Validate((Numeric<T,C>)functionAxisMin <= functionAxisMax)
+				.OrArgumentOutOfRangeException("Invalid function axis interval, the specified minimal value exceeds the specified maximal value.");
 
             this.imageMin = imageAxisMin;
             this.imageMax = imageAxisMax;
@@ -96,11 +102,13 @@ namespace whiteMath.Graphers
             this.k = (functionMax - functionMin) / (Numeric<T,C>)(imageMax - imageMin);
         }
 
+		/*
         [ContractInvariantMethod]
         private void ContractInvariant()
         {
             Contract.Invariant(this.toDouble != null);
         }
+        */
 
         // --------------------------------------------------
         // --------------------- Point transform ------------

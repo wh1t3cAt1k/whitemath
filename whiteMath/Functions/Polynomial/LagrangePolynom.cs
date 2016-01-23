@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using whiteMath.General;
-using whiteMath.Matrices;
 
 using whiteMath.Calculators;
+using whiteMath.General;
+using whiteMath.Matrices;
 
 namespace whiteMath.Functions
 {

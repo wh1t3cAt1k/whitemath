@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
 
+using whiteMath.Algorithms;
+using whiteMath.Calculators;
+
 namespace whiteMath.RationalNumbers
 {
     /// <summary>

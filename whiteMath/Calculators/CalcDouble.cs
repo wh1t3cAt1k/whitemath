@@ -1,4 +1,6 @@
-﻿namespace whiteMath.Calculators
+﻿using System;
+
+namespace whiteMath.Calculators
 {
     public class CalcDouble : ICalc<double>
     {
