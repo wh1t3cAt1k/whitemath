@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using whiteMath.Calculators;
+
 using whiteStructs.Conditions;
 
 namespace whiteMath.General

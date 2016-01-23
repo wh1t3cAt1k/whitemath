@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Diagnostics.Contracts;
 
 using whiteMath.General;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.Functions
 {
@@ -36,7 +36,7 @@ namespace whiteMath.Functions
         {
             string copy = str.Clone() as string;
 
-            while(hasOuterParentheses(ref copy))
+            while(RemoveOuterParentheses(ref copy))
                 ;
 
             return copy;
@@ -56,8 +56,8 @@ namespace whiteMath.Functions
         /// </returns>
         internal static List<int> FindCharactersNotInParentheses(this string sourceString, params char[] characters)
         {
-            Contract.Requires<ArgumentNullException>(sourceString != null, "sourceString");
-            Contract.Requires<ArgumentNullException>(characters != null, "characters");
+			Condition.ValidateNotNull(sourceString, nameof(sourceString));
+			Condition.ValidateNotNull(characters, nameof(characters));
 
             List<int> indexes = new List<int>();
 
@@ -101,7 +101,7 @@ namespace whiteMath.Functions
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        private static bool hasOuterParentheses(ref string str)
+        private static bool RemoveOuterParentheses(ref string str)
         {
             if (str.Length == 0 || str[0] != '(' || str[str.Length - 1] != ')') return false;
 
@@ -136,7 +136,7 @@ namespace whiteMath.Functions
         /// </summary>
         /// <param name="str">The calling string object.</param>
         /// <returns>THe flag indicating whether the string has outer parentheses.</returns>
-        public static bool hasOuterParentheses(this string str)
+        public static bool HasOuterParentheses(this string str)
         {
             return fullParentRegex.Match(str).Success;
         }
@@ -144,14 +144,12 @@ namespace whiteMath.Functions
         /// <summary>
         /// Encloses the calling object in parentheses if it symbolizes a negative value.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        internal static string encloseIfNegative(this string obj)
+        internal static string ParenthesizeIfNegative(this string text)
         {
-            if (obj.Length > 0 && obj[0] == '-')
-                return "(" + obj + ")";
+            if (text.Length > 0 && text[0] == '-')
+                return "(" + text + ")";
             else
-                return obj;
+                return text;
         }
 
         // ------------ PARSE OPERATION --------
@@ -177,7 +175,7 @@ namespace whiteMath.Functions
 
             // парсим обратно в строку и закрываем в скобки, если результат отрицателен
 
-            return operation(x, y).ToString().Replace(decimalSeparator, ".").encloseIfNegative();
+            return operation(x, y).ToString().Replace(decimalSeparator, ".").ParenthesizeIfNegative();
         }
 
         /// ------------------------------------------
@@ -342,7 +340,7 @@ namespace whiteMath.Functions
         /// <returns></returns>
         public static bool hasUnneededParentheses(ref string obj)
         {
-            return true;
+			throw new NotImplementedException();
         }
 
         // ------------------------------

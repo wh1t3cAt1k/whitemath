@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics.Contracts;
 
-namespace whiteMath
+using whiteMath.Calculators;
+
+using whiteStructs.Conditions;
+
+namespace whiteMath.Algorithms
 {
     public partial class WhiteMath<T, C> where C : ICalc<T>, new()
     {
@@ -15,18 +15,22 @@ namespace whiteMath
         /// numerator and denominators taken from the factorization
         /// of Jacobi symbol's denominator.
         /// </summary>
-        /// <param name="num">The numerator of the Jacobi symbol.</param>
-        /// <param name="denom">The denominator of the Jacobi symbol. Should be odd and positive.</param>
-        /// <returns>The value of the Jacobi symbol for <paramref name="num"/> and <paramref name="denom"/>.</returns>
-        public static int JacobiSymbol(T num, T denom)
+        /// <param name="numerator">The numerator of the Jacobi symbol.</param>
+        /// <param name="denominator">The denominator of the Jacobi symbol. Should be odd and positive.</param>
+        /// <returns>The value of the Jacobi symbol for <paramref name="numerator"/> and <paramref name="denominator"/>.</returns>
+        public static int JacobiSymbol(T numerator, T denominator)
         {
-            Contract.Requires<NonIntegerTypeException>(Numeric<T, C>.Calculator.isIntegerCalculator, "The method works only for integer numeric types.");
-            Contract.Requires<ArgumentException>(denom > Numeric<T, C>.Zero && !Numeric<T,C>.Calculator.isEven(denom), "The denominator of the Jacobi symbol should be odd and positive.");
+			Condition
+				.Validate(calc.isIntegerCalculator)
+				.OrException(new NonIntegerTypeException(typeof(T).Name));
+			Condition
+				.Validate(denominator > Numeric<T, C>.Zero && !Numeric<T,C>.Calculator.isEven(denominator))
+				.OrArgumentException("The denominator of the Jacobi symbol should be odd and positive.");
 
-            bool minus = false;     // флаг минуса
+            bool minus = false;
 
-            Numeric<T, C> x = num;
-            Numeric<T, C> y = denom;
+            Numeric<T, C> x = numerator;
+            Numeric<T, C> y = denominator;
 
             if(y == Numeric<T, C>._1)
                 return 1;
@@ -45,8 +49,9 @@ namespace whiteMath
                 x = -x;
             }
 
-            // На этом шаге ни в числителе,
-            // ни в знаменателе не осталось отрицательных чисел.
+			// Neither the numerator
+			// nor the denominator have negative
+			// values at this step.
 
             while (true)
             {
@@ -112,13 +117,19 @@ namespace whiteMath
         /// <returns>The greatest common divisor of <paramref name="one"/> and <paramref name="two"/>.</returns>
         public static T ExtendedEuclideanAlgorithm(T one, T two, out T x, out T y)
         {
-            Contract.Requires<NonIntegerTypeException>(Numeric<T,C>.Calculator.isIntegerCalculator, "The method works only for integer numeric types.");
-            Contract.Requires<ArgumentException>(one != Numeric<T,C>.Zero && two != Numeric<T,C>.Zero, "None of the numbers should be zero.");
+			Condition
+				.Validate(calc.isIntegerCalculator)
+				.OrException(new NonIntegerTypeException(typeof(T).Name));
+			Condition
+				.Validate(one != Numeric<T,C>.Zero && two != Numeric<T,C>.Zero)
+				.OrArgumentOutOfRangeException("None of the numbers should be zero.");
 
+			/*
             Contract.Ensures(Contract.Result<T>() > Numeric<T,C>.Zero);
             Contract.Ensures((Numeric<T, C>)one % Contract.Result<T>() == Numeric<T, C>.Zero);
             Contract.Ensures((Numeric<T, C>)two % Contract.Result<T>() == Numeric<T, C>.Zero);
-            
+            */
+
             // Uncomment only on tests
             // because int often overflows here.
             // Contract.Ensures((Numeric<T, C>)one * Contract.ValueAtReturn<T>(out x) + (Numeric<T, C>)two * Contract.ValueAtReturn<T>(out y) == Contract.Result<T>());
@@ -194,33 +205,43 @@ namespace whiteMath
         }
 
         /// <summary>
-        /// Using an Extended Euclidean Algorithm, finds a multiplicative
-        /// inverse of a positive number on a coprime module.
+        /// Finds a multiplicative inverse of a positive number on a coprime module.
         /// </summary>
-        /// <param name="number">A positive number coprime to and less than '<paramref name="module"/>'.</param>
-        /// <param name="module">A positive number coprime to and bigger than '<paramref name="number"/>'.</param>
-        /// <remarks>
-        /// If <paramref name="number"/> and <paramref name="module"/> are not coprime, the result
-        /// of the function is incorrect.
-        /// </remarks>
-        /// <returns>A number which, multiplied by <paramref name="number"/>, results in <see cref="Numeric&lt;T,C&gt;"/>.CONST_1</returns>
-        public static T MultiplicativeInverse(T number, T module)
+		/// <param name="number">A positive number coprime to and less than '<paramref name="modulus"/>'.</param>
+		/// <param name="modulus">A positive number coprime to and bigger than '<paramref name="number"/>'.</param>
+        /// <exception>
+		/// If <paramref name="number"/> and <paramref name="modulus"/> are not coprime, 
+		/// an <see cref="ArgumentException"/> is thrown.
+        /// </exception>
+		/// <returns>A number which, multiplied by <paramref name="number"/>, results in <see cref="Numeric{T,C}._1"/></returns>
+        public static T MultiplicativeInverse(T number, T modulus)
         {
-            Contract.Requires<ArgumentOutOfRangeException>((Numeric<T, C>)module > number, "The module should be bigger than the number.");
-            Contract.Requires<ArgumentOutOfRangeException>(number > Numeric<T,C>.Zero, "The number should be positive.");
-            Contract.Requires(GreatestCommonDivisor(number, module) == Numeric<T,C>._1);
-
+			Condition
+				.Validate((Numeric<T, C>)modulus > number)
+				.OrArgumentOutOfRangeException("The modulus should be larger than the number.");	
+			Condition
+				.Validate(number > Numeric<T,C>.Zero)
+				.OrArgumentOutOfRangeException("The number should be positive.");
+			
+			/*
             Contract.Ensures((Numeric<T,C>)number * Contract.Result<T>() % module == Numeric<T,C>._1);
+			*/
 
-            T x, y;
+            T gcd, x, y;
 
-            ExtendedEuclideanAlgorithm(number, module, out x, out y);
+            gcd = ExtendedEuclideanAlgorithm(number, modulus, out x, out y);
 
-            // Результат может быть отрицательным,
-            // поэтому надо все время прибавлять модуль.
+			Condition
+				.Validate(gcd == Numeric<T,C>._1)
+				.OrArgumentException("The number and the modulus are not coprime.");
 
-            while (calc.mor(calc.zero, x))
-                x = calc.sum(x, module);
+            // Since the result might be negative,
+            // add modulus until it is positive.
+
+			while (calc.mor(calc.zero, x))
+			{
+				x = calc.sum(x, modulus);
+			}
 
             return x;
         }
@@ -241,11 +262,15 @@ namespace whiteMath
         /// <returns></returns>
         public static T GreatestCommonDivisor(T one, T two)
         {
-            Contract.Requires<ArgumentException>(one != Numeric<T,C>.Zero && two != Numeric<T,C>.Zero, "None of the numbers may be zero.");
-
+			Condition
+				.Validate(one != Numeric<T,C>.Zero && two != Numeric<T,C>.Zero)
+				.OrArgumentException("None of the arguments may be zero.");
+            
+			/*
             Contract.Ensures(Contract.Result<T>() > Numeric<T,C>.Zero);
             Contract.Ensures((Numeric<T,C>)one % Contract.Result<T>() == Numeric<T,C>.Zero);
             Contract.Ensures((Numeric<T,C>)two % Contract.Result<T>() == Numeric<T,C>.Zero);
+			*/
 
             // T может быть ссылочным типом, поэтому необходимо
             // предостеречь объекты от изменения
@@ -387,19 +412,25 @@ namespace whiteMath
         /// <param name="number">An integer number to be exponentiated.</param>
         /// <param name="power">A non-negative integer exponent.</param>
         /// <param name="modulus">An integer modulus of the operation.</param>
-        /// <returns>The result of raising <paramref name="number"/> to power <paramref name="power"/> modulo <paramref name="modulus"/>.</returns>
-        [Pure]
+        /// <returns>
+		/// The result of raising the <paramref name="number"/> to 
+		/// power <paramref name="power"/> modulo <paramref name="modulus"/>.
+		/// </returns>
         public static T PowerIntegerModular(T number, ulong power, T modulus)
         {
-            Contract.Requires<NonIntegerTypeException>(Numeric<T,C>.Calculator.isIntegerCalculator, "This method works only for integer numeric types.");
+			Condition
+				.Validate(calc.isIntegerCalculator)
+				.OrException(new NonIntegerTypeException(typeof(T).Name));
             
-            Numeric<T, C> result = Numeric<T, C>._1;                                  // результат возведения в степень
+            Numeric<T, C> result = Numeric<T, C>._1;
             Numeric<T, C> numberNumeric = number;
 
             while (power > 0)
             {
-                if ((power & 1) == 1)
-                    result = (result * numberNumeric) % modulus;
+				if ((power & 1) == 1)
+				{
+					result = (result * numberNumeric) % modulus;
+				}
 
                 power >>= 1;
                 numberNumeric = (numberNumeric * numberNumeric) % modulus;
@@ -422,8 +453,12 @@ namespace whiteMath
         [Obsolete("This method works very slowly. Consider using SquareRootInteger instead.")]
         public static T SquareRootIntegerSimple(T number)
         {
-            Contract.Requires<NonIntegerTypeException>(Numeric<T,C>.Calculator.isIntegerCalculator, "This method works only for integer numeric types.");
-            Contract.Requires<ArgumentException>((Numeric<T,C>)number >= Numeric<T,C>.Zero, "The number passed to this method should not be negative.");
+			Condition
+				.Validate(calc.isIntegerCalculator)
+				.OrException(new NonIntegerTypeException(typeof(T).Name));
+            Condition
+				.Validate((Numeric<T,C>)number >= Numeric<T,C>.Zero)
+				.OrArgumentOutOfRangeException("The number passed to this method should not be negative.");
 
             Numeric<T, C> numberNumeric = number;
             Numeric<T, C> reduction     = Numeric<T, C>._1;
@@ -458,8 +493,12 @@ namespace whiteMath
         /// <returns>The integer part of the square root of the <paramref name="number"/>.</returns>
         public static T SquareRootInteger(T number, T firstEstimate)
         {
-            Contract.Requires<NonIntegerTypeException>(Numeric<T, C>.Calculator.isIntegerCalculator, "This method works only for integer numeric types.");
-            Contract.Requires<ArgumentException>((Numeric<T, C>)number >= Numeric<T, C>.Zero, "The number passed to this method should not be negative.");
+			Condition
+				.Validate(calc.isIntegerCalculator)
+				.OrException(new NonIntegerTypeException(typeof(T).Name));
+			Condition
+				.Validate((Numeric<T,C>)number >= Numeric<T,C>.Zero)
+				.OrArgumentOutOfRangeException("The number passed to this method should not be negative.");
 
             Numeric<T, C> 
                 xPrev = Numeric<T,C>._0, 

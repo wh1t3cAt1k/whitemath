@@ -146,7 +146,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugNonWindows|AnyCPU' ">
     <Optimize>false</Optimize>
-    <OutputPath>..\out\DebugNoWinForms</OutputPath>
+    <OutputPath>..\out\DebugNonWindows</OutputPath>
     <DefineConstants>DEBUG;TRACE;NON_WINDOWS_ENVIRONMENT</DefineConstants>
     <WarningLevel>4</WarningLevel>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>

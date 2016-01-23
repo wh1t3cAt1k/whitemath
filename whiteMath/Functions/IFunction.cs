@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
+using System.Collections.Generic;
+
+using whiteMath.Algorithms;
 using whiteMath.General;
-using System;
 using whiteMath.Randoms;
 
 namespace whiteMath.Functions

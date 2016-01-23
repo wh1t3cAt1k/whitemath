@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Diagnostics.Contracts;
 
-using whiteMath.General;
+using whiteStructs.Conditions;
 
 namespace whiteMath.Graphers
 {
@@ -50,10 +49,10 @@ namespace whiteMath.Graphers
         /// <param name="values">A list containing the values for corresponding points.</param>
         public HistoGrapher(IList<string> points, IList<double> values)
         {
-            Contract.Requires<ArgumentNullException>(points != null, nameof(points));
-            Contract.Requires<ArgumentNullException>(values != null, nameof(values));
-			Contract.Requires<ArgumentException>(points.Count == values.Count, Messages.SequenceLengthsAreNotEqual);
-            Contract.Requires<ArgumentOutOfRangeException>(points.Any(), Messages.SequenceShouldContainAtLeastOneElement);
+			Condition.ValidateNotNull(points, nameof(points));
+			Condition.ValidateNotNull(values, nameof(values));
+			Condition.Validate(points.Count == values.Count).OrArgumentException(General.Messages.SequenceLengthsAreNotEqual);
+			Condition.ValidateNotEmpty(points, General.Messages.SequenceShouldContainAtLeastOneElement);
 
             _initialize(points.Select((point, pointIndex) => new KeyValuePair<string, double>(point, values[pointIndex])));
         }
@@ -64,34 +63,23 @@ namespace whiteMath.Graphers
         /// <param name="pointValuePairs">A sequence (e.g. a <c>Dictionary</c>) containing point-value pairs to draw.</param>
         public HistoGrapher(IEnumerable<KeyValuePair<string, double>> pointValuePairs)
         {
-            Contract.Requires<ArgumentNullException>(pointValuePairs != null, nameof(pointValuePairs));
-            Contract.Requires<ArgumentOutOfRangeException>(pointValuePairs.Any(), Messages.SequenceShouldContainAtLeastOneElement);
+			Condition.ValidateNotNull(pointValuePairs, nameof(pointValuePairs));
+			Condition.ValidateNotEmpty(pointValuePairs, General.Messages.SequenceShouldContainAtLeastOneElement);
 
             _initialize(pointValuePairs);
         }
 
         private void _initialize(IEnumerable<KeyValuePair<string, double>> pointValuePairs)
-        {
-            Contract.Assume(pointValuePairs != null);
-            Contract.Assume(pointValuePairs.Any());
-            
+        {            
             this.pointValuePairs = new SortedDictionary<string, double>();
 
             foreach (KeyValuePair<string, double> kvp in pointValuePairs)
                 this.pointValuePairs.Add(kvp.Key, kvp.Value);
         }
-
-        [ContractInvariantMethod]
-        private void __invariant()
-        {
-            Contract.Invariant(this.pointValuePairs != null);
-        }
-
-        // ---------------------------------------------------
-
+			
         private class HistoGraphingArgs
         {
-            // double minValue
+            // TODO: what is this?
         }
 
         /// <summary>
@@ -107,20 +95,23 @@ namespace whiteMath.Graphers
         /// <param name="contourPen">The point used to draw columns' contours. May be null.</param>
         public void HistoGraph2D(double minValue, double baseValue, double maxValue, double columnPortion, Graphics G, RectangleF drawingArea, Dictionary<string, Brush> pointBrushes, Pen contourPen)
         {
-            Contract.Requires<ArgumentNullException>(G != null, nameof(G));
-            Contract.Requires<ArgumentNullException>(pointBrushes != null, nameof(pointBrushes));
-            Contract.Requires<ArgumentException>(minValue <= baseValue && baseValue <= maxValue && minValue < maxValue, "The condition minValue <= baseValue <= maxValue AND minValue < maxValue must be met.");
-            Contract.Requires<ArgumentException>(!drawingArea.IsEmpty, "The drawing area should be a non-empty rectangle.");
-            Contract.Requires<ArgumentException>(Contract.ForAll(pointValuePairs, kvp => (kvp.Value >= minValue && kvp.Value <= maxValue)), "The graphing range does not contain one or more HistoGrapher internal values.");
-            Contract.Requires<ArgumentException>(Contract.ForAll(pointValuePairs, kvp => pointBrushes.ContainsKey(kvp.Key)), "The brushes dictionary must contain brushes for all grapher points.");
+			Condition.ValidateNotNull(G, nameof(G));
+			Condition.ValidateNotNull(pointBrushes, nameof(pointBrushes));
+			Condition
+				.Validate(minValue <= baseValue && baseValue <= maxValue && minValue < maxValue)
+				.OrArgumentOutOfRangeException(Messages.HistoGrapherInconsistentValues);
+			Condition.Validate(!drawingArea.IsEmpty).OrArgumentException(Messages.DrawingAreaShouldNotBeEmpty);
+			Condition
+				.Validate(pointValuePairs.All(pair => pointBrushes.ContainsKey(pair.Key)))
+				.OrArgumentException(Messages.BrushesDictionaryShouldContainBrushesForAllPoints);
 
             double absoluteDataHeight = maxValue - minValue;
-            double coefficient = absoluteDataHeight / drawingArea.Height;   // сколько реальной величины приходится на 1 пиксель
+            double coefficient = absoluteDataHeight / drawingArea.Height;   // how much is 1 pixel worth
 
-            float columnAllocatedWidth = drawingArea.Width / pointValuePairs.Count;  // ширина пространства под колонку в гистограмме
-            float columnFactWidth = (float)(columnAllocatedWidth * columnPortion);   // фактическая ширина колонки.
+            float columnAllocatedWidth = drawingArea.Width / pointValuePairs.Count;  // horizontal space for each bar
+            float columnFactWidth = (float)(columnAllocatedWidth * columnPortion);   // actual bar width
 
-            float baseLinePixelY = (float)((maxValue - baseValue) / coefficient);    // координата Y на картинке базовой линии
+            float baseLinePixelY = (float)((maxValue - baseValue) / coefficient);    // baseline Y coordinate in the image
 
             int k = 0;
 
@@ -128,7 +119,9 @@ namespace whiteMath.Graphers
 
             foreach (KeyValuePair<string, double> kvp in pointValuePairs)
             {
-                float leftXPosition = k * columnAllocatedWidth + (columnAllocatedWidth - columnFactWidth) / 2;      // координата X нижнего левого угла колонки.
+				// the bar's X coordinate of lower left corner
+				// -
+                float leftXPosition = k * columnAllocatedWidth + (columnAllocatedWidth - columnFactWidth) / 2;
 
                 RectangleF columnRectangle;
 

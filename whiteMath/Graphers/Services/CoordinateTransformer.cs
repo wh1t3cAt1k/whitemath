@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
-using whiteMath.Geometry;
 
-using System.Diagnostics.Contracts;
+using whiteMath.Calculators;
+using whiteMath.Geometry;
 using whiteMath.General;
 
 namespace whiteMath.Graphers
@@ -13,8 +10,8 @@ namespace whiteMath.Graphers
     /// <summary>
     /// A generic class whose purpose is to transform between
     /// image coordinates and 2D function plane coordinates.
-    /// <see cref="Numeric&lt;T,C&gt;"/>
-    /// <see cref="ICalc&lt;T&gt;"/>
+	/// <see cref="Numeric{T,C}"/>
+	/// <see cref="ICalc{T}"/>
     /// <typeparam name="T">
     /// The numeric type which specifies the coordinates of the function.
     /// Should support fractional numbers and conversion to <c>double</c> type at least
@@ -23,7 +20,6 @@ namespace whiteMath.Graphers
     /// <typeparam name="C">The calculator for the <typeparamref name="T"/> type.</typeparam>
     /// </summary>
     [Serializable]
-    [ContractVerification(true)]
     public class CoordinateTransformer<T,C> where C: ICalc<T>, new()
     {
         private Func<T, double> toDouble;

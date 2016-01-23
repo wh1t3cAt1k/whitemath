@@ -15,6 +15,10 @@ namespace whiteStructs.Conditions
 	/// </summary>
 	public static class Condition
 	{
+		public sealed class ValidationException: Exception
+		{
+		}
+
 		public static ConditionTestResult Validate(bool condition)
 		{
 			return new ConditionTestResult(condition);
@@ -29,6 +33,32 @@ namespace whiteStructs.Conditions
 		public static void ValidateNotNull<T>(T argument, string exceptionMessage = null)
 		{
 			Condition.Validate(argument != null).OrArgumentNullException(exceptionMessage);
+		}
+
+		/// <summary>
+		/// Validates that a given value is positive, or throws a 
+		/// <see cref="System.ArgumentOutOfRangeException"/>.
+		/// </summary>
+		/// <param name="argument">A value to test for being positive.</param>
+		/// <param name="exceptionMessage">An optional exception message.</param>
+		public static void ValidatePositive(long argument, string exceptionMessage = null)
+		{
+			Condition
+				.Validate(argument > 0)
+				.OrArgumentOutOfRangeException(exceptionMessage);
+		}
+
+		/// <summary>
+		/// Validates that a given value is non-negative, or throws a 
+		/// <see cref="System.ArgumentOutOfRangeException"/>.
+		/// </summary>
+		/// <param name="argument">A value to test for being non-negative.</param>
+		/// <param name="exceptionMessage">An optional exception message.</param>
+		public static void ValidateNonNegative(long argument, string exceptionMessage = null)
+		{
+			Condition
+				.Validate(argument >= 0)
+				.OrArgumentOutOfRangeException(exceptionMessage);
 		}
 
 		/// <summary>
@@ -139,8 +169,10 @@ namespace whiteStructs.Conditions
 			/// condition doesn't hold.
 			/// </summary>
 			/// <param name="exception">The exception to throw.</param>
-			public void OrException(Exception exception)
+			public void OrException(Exception exception = null)
 			{
+				exception = exception ?? new ValidationException();
+
 				if (Holds)
 					return;
 				else

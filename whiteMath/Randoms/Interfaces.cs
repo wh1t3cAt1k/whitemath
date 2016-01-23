@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Diagnostics.Contracts;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.Randoms
 {
@@ -95,9 +94,11 @@ namespace whiteMath.Randoms
         /// <returns>A random string of the desired length containing characters from a <c>char</c> list.</returns>
         public static string NextString(this IRandomBounded<int> gen, IList<char> characters, int length)
         {
-            Contract.Requires<ArgumentNullException>(gen != null, "gen");
-            Contract.Requires<ArgumentNullException>(characters != null, "characters");
-            Contract.Requires<ArgumentOutOfRangeException>(length >= 0, "The length of the string should be a non-negative value.");
+			Condition.ValidateNotNull(gen, nameof(gen));
+			Condition.ValidateNotNull(characters, nameof(characters));
+			Condition
+				.Validate(length >= 0)
+				.OrArgumentOutOfRangeException("The length of the string should be non-negative.");
 
             StringBuilder builder = new StringBuilder(length);
 

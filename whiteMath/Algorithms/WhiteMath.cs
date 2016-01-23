@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using whiteMath.ArithmeticLong;
 
-namespace whiteMath
+using whiteMath.Calculators;
+
+using whiteStructs.Conditions;
+
+namespace whiteMath.Algorithms
 {
     /// <summary>
     /// This class provides generic mathematic algorithms for different purposes.
@@ -75,8 +75,10 @@ namespace whiteMath
         /// <returns>The result of square root computation.</returns>
         public static T SquareRootHeron(T number, T epsilon)
         {
+			Condition.Validate(!calc.mor(calc.zero, number)).OrArgumentException();
+
             if (calc.mor(calc.zero, number))
-                throw new ArgumentException("The number passed: "+number.ToString()+" is a forbidden negative value.");
+				throw new ArgumentException(Messages.ArgumentShouldBeNonNegative);
 
             Numeric<T,C> twoEquivalent = calc.fromInt(2);
 
@@ -95,8 +97,6 @@ namespace whiteMath
             return xNew;
         }
 
-        /// POWER INTEGER
-        /// 
         /// <summary>
         /// Performs the quick mathematical power operation.
         /// Works only for integer exponent values.
@@ -106,37 +106,38 @@ namespace whiteMath
         /// <returns>The number raised to the integer power.</returns>
         public static T PowerInteger(T number, long power)
         {
-            if (power == 0) return calc.fromInt(1);
+			if (power == 0)
+			{
+				return calc.fromInt(1);
+			}
             else if (power < 0)
             {
-                if (!calc.mor(number, calc.zero))
-                    throw new ArgumentException("Cannot raise a non-positive number to a negative power.");
+				Condition.Validate(calc.mor(number, calc.zero)).OrArgumentException(Messages.CannotRaiseNonPositiveArgumentToNegativePower);
                 return calc.div(calc.fromInt(1), PowerInteger(number, -power));
             }
 
-            // Ноль в любой степени будет ноль:
+			if (calc.eqv(number, calc.zero))
+			{
+				return calc.zero;
+			}
 
-            if (calc.eqv(number, calc.zero))
-                return calc.zero;
-
-            Numeric<T,C> res = Numeric<T,C>._1;              // результат возведения в степень
-            Numeric<T,C> copy = calc.getCopy(number);        // изменяемая копия (переданное число может быть ссылочным типом)
+            Numeric<T,C> result = Numeric<T,C>._1;
+            Numeric<T,C> numberCopy = calc.getCopy(number);
 
             while (power > 0)
             {
-                // Если остаток от деления на 2 равен 1
-                if ((power & 1) == 1)
-                    res *= copy;
+				if ((power & 1) == 1)
+				{
+					result *= numberCopy;
+				}
             
-                copy *= copy;
+                numberCopy *= numberCopy;
                 power >>= 1;
             }
 
-            return res;
+            return result;
         }
-
-        /// POWER INTEGER
-        /// 
+			
         /// <summary>
         /// Performs the quick mathematical power operation.
         /// Works only for integer exponent values.
@@ -151,39 +152,42 @@ namespace whiteMath
         /// <returns>The number raised to the integer power.</returns>
         public static T PowerInteger_Generic(T number, T power)
         {
-            power = calc.intPart(power);
+			T powerCopy = calc.getCopy(power);
+			powerCopy = calc.intPart(powerCopy);
 
-            if (power == Numeric<T,C>.Zero) return calc.fromInt(1);
-            
-            else if (power < Numeric<T,C>.Zero)
+			if (calc.eqv(powerCopy, calc.zero))
+			{
+				return calc.fromInt(1);
+			}
+			else if (calc.mor(calc.zero, powerCopy))
             {
-                if (number <= Numeric<T,C>.Zero)
-                    throw new ArgumentException("Cannot raise a non-positive number to a negative power.");
-                return calc.div(calc.fromInt(1), PowerInteger_Generic(number, calc.negate(power)));
+				Condition.Validate(calc.mor(number, calc.zero)).OrArgumentException(Messages.CannotRaiseNonPositiveArgumentToNegativePower);
+				return calc.div(calc.fromInt(1), PowerInteger_Generic(number, calc.negate(power)));
             }
 
-            // Ноль в любой степени будет ноль:
+			if (calc.eqv(number, calc.zero))
+			{
+				return calc.zero;
+			}
 
-            if (calc.eqv(number, calc.zero))
-                return calc.zero;
+			Numeric<T, C> result = Numeric<T, C>._1;
+            Numeric<T, C> numberCopy = calc.getCopy(number);
 
-            Numeric<T, C> res = calc.fromInt(1);              // результат возведения в степень
-            Numeric<T, C> copy = calc.getCopy(number);        // изменяемая копия (переданное число может быть ссылочным типом)
+			T two = Numeric<T, C>._2;
+			T one = Numeric<T, C>._1;
 
-            T two = calc.fromInt(2);
-            T one = calc.fromInt(1);
-
-            while (power > Numeric<T,C>.Zero)
+			while (powerCopy > Numeric<T,C>.Zero)
             {
-                // Если остаток от деления на 2 равен 1
-                if (calc.eqv(WhiteMath<T,C>.Modulus(power, two), one))
-                    res *= copy;
+				if (calc.eqv(WhiteMath<T,C>.Modulus(powerCopy, two), one))
+				{
+					result *= numberCopy;
+				}
 
-                copy *= copy;
-                power = calc.intPart(calc.div(power, two));
+                numberCopy *= numberCopy;
+				powerCopy = calc.intPart(calc.div(powerCopy, two));
             }
 
-            return res;
+            return result;
         }
     }
 }

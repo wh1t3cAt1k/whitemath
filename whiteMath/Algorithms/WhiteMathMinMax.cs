@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using whiteMath.Calculators;
 
 // This code file contains a part of whiteMath class
 // devoted to:
@@ -9,7 +6,7 @@ using System.Text;
 //     2. Finding the maximum of two numbers
 //     3. Finding the absolute of two numbers
 
-namespace whiteMath
+namespace whiteMath.Algorithms
 {
     public static partial class WhiteMath<T, C> where C : ICalc<T>, new()
     {

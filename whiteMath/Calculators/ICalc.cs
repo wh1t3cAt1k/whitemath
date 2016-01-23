@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
+
 using whiteMath.General;
 
-namespace whiteMath
+namespace whiteMath.Calculators
 {
     /// <summary>
     /// The exception class which signalizes that the operation
@@ -14,11 +12,11 @@ namespace whiteMath
 	public class NonIntegerTypeException : NotSupportedException
     {
         /// <summary>
-        /// Creates a new instance of <c>NonIntegerTypeException</c>.
+        /// Creates a new instance of <see cref="NonIntegerTypeException"/>.
         /// </summary>
-        /// <param name="message">The name of the type that does not support the operation which thus results in an exception.</param>
+        /// <param name="message">The name of the type that does not support the operation, resulting in the current exception.</param>
         public NonIntegerTypeException(string typeName)
-			: base("This operation is not supported for non-integer type " + typeName)
+			: base(string.Format(Messages.OperationNotSupportedForNonIntegralType, typeName))
         { }
     }
 
@@ -29,7 +27,7 @@ namespace whiteMath
     public class NonFractionalTypeException : NotSupportedException
     {
         /// <summary>
-        /// Creates a new instance of <c>NonFractionalTypeException</c>.
+        /// Creates a new instance of <see cref="NonFractionalTypeException"/>.
         /// </summary>
         /// <param name="message">The name of the type that does not support the operation which thus results in an exception.</param>
         public NonFractionalTypeException(string message): base("This operation is not supported for non-fractional type " + message)
@@ -43,7 +41,7 @@ namespace whiteMath
     public class NonNegativeTypeException : NotSupportedException
     {
         /// <summary>
-        /// Creates a new instance of <c>NonNegativeTypeException</c>
+        /// Creates a new instance of <see cref="NonNegativeTypeException"/>
         /// </summary>
         /// <param name="message">The name of the type that does not support the operation which thus results in an exception.</param>
         public NonNegativeTypeException(string message): base("This operation is not supported for non-negative type " + message)

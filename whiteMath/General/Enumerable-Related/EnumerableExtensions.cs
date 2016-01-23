@@ -34,16 +34,32 @@ namespace whiteMath.General
         }
 
         /// <summary>
-        /// Tests whether a sequence is empty, i.e. contains not a single element.
+        /// Tests whether a sequence contains no elements.
         /// </summary>
         /// <typeparam name="T">The type of elements in the sequence.</typeparam>
         /// <param name="sequence">The calling sequence object.</param>
-        /// <returns>True if the sequence is empty, false otherwise.</returns>
+		/// <returns><c>true</c>, if the sequence is empty, <c>false</c> otherwise.</returns>
         public static bool IsEmpty<T>(this IEnumerable<T> sequence)
         {
-            return 
-                sequence.GetEnumerator().MoveNext() == false;
+			Condition.ValidateNotNull(sequence, nameof(sequence));
+
+            return !sequence.GetEnumerator().MoveNext();
         }
+
+		/// <summary>
+		/// Determines if the specified sequence contains exactly one element.
+		/// </summary>
+		/// <returns><c>true</c> if is the specified sequence has exactly one element; otherwise, <c>false</c>.</returns>
+		/// <param name="sequence">The calling sequence object.</param>
+		public static bool IsSingleton<T>(this IEnumerable<T> sequence)
+		{
+			Condition.ValidateNotNull(sequence, nameof(sequence));
+
+			IEnumerator<T> enumerator = sequence.GetEnumerator();
+
+			return
+				enumerator.MoveNext() && !enumerator.MoveNext();
+		}
 
         /// <summary>
         /// Finds the maximum element in a generic sequence using the comparer object specified.
@@ -54,7 +70,7 @@ namespace whiteMath.General
         /// <returns>The maximum element in the sequence.</returns>
         public static T Max<T>(this IEnumerable<T> sequence, IComparer<T> comparer)
         {
-			Condition.ValidateNotNull(sequence);
+			Condition.ValidateNotNull(sequence, nameof(sequence));
 			Condition.ValidateNotEmpty(sequence, Messages.SequenceShouldContainAtLeastOneElement);
 
             T max;
@@ -85,7 +101,7 @@ namespace whiteMath.General
         /// <returns>The minimum element in the sequence.</returns>
         public static T Min<T>(this IEnumerable<T> sequence, IComparer<T> comparer)
         {
-			Condition.ValidateNotNull(sequence);
+			Condition.ValidateNotNull(sequence, nameof(sequence));
 			Condition.ValidateNotEmpty(sequence, Messages.SequenceShouldContainAtLeastOneElement);
 
             T min;
@@ -111,7 +127,7 @@ namespace whiteMath.General
         /// The type of elements in the sequence.
         /// </typeparam>
         /// <param name="sequence">
-        /// A sequence object in which the minimal and maximal elements would be found.
+        /// A sequence in which the minimal and maximal elements would be found.
         /// </param>
         /// <param name="comparer">
         /// An optional <see cref="IComparer&lt;T&gt;"/> for the <typeparamref name="T"/> type. 
@@ -150,6 +166,28 @@ namespace whiteMath.General
 
             return new Point<T>(min, max);
         }
+
+		/// <summary>
+		/// Performs an action upon each element of a sequence.
+		/// </summary>
+		/// <param name="sequence">
+		/// A sequence whose elements will be each passed as an 
+		/// argument to the action.
+		/// </param>
+		/// <param name="action">
+		/// An action to be performed upon each element of the 
+		/// incoming sequence.
+		/// </param>
+		/// <typeparam name="T">
+		/// The type of elements in the sequence.
+		/// </typeparam>
+		public static void ForEach<T>(this IEnumerable<T> sequence, Action<T> action)
+		{
+			foreach (T element in sequence)
+			{
+				action(element);
+			}
+		}
 
         // ------------------------------------
         // ------- TO 2D ARRAY ---------------

@@ -40,7 +40,7 @@ namespace whiteMath.Functions
             // handle the *'s.
             analyzeRemainder = analyzeRemainder.insertMultiplicationSign();
 
-            return new AnalyticFunction(match.Groups["firstPart"].Value + FindDerivative(analyzeRemainder, this.argument).encloseIfNegative());
+            return new AnalyticFunction(match.Groups["firstPart"].Value + FindDerivative(analyzeRemainder, this.argument).ParenthesizeIfNegative());
         }
 
         // ------------------------------------------
@@ -78,47 +78,47 @@ namespace whiteMath.Functions
             Match sin = Regex.Match(functionString, @"sin\((?<inner>.*)\)");
 
             if (isSuccessfulFunctionMatch(sin, functionString))
-                return string.Format("{0}*cos({1})", FindDerivative(sin.Groups["inner"].Value, argument).encloseIfNegative(), sin.Groups["inner"].Value);
+                return string.Format("{0}*cos({1})", FindDerivative(sin.Groups["inner"].Value, argument).ParenthesizeIfNegative(), sin.Groups["inner"].Value);
 
             Match cos = Regex.Match(functionString, @"cos\((?<inner>.*)\)");
 
             if (isSuccessfulFunctionMatch(cos, functionString))
-                return string.Format("{0}*(-sin({1}))", FindDerivative(cos.Groups["inner"].Value, argument).encloseIfNegative(), cos.Groups["inner"].Value);
+                return string.Format("{0}*(-sin({1}))", FindDerivative(cos.Groups["inner"].Value, argument).ParenthesizeIfNegative(), cos.Groups["inner"].Value);
 
             Match tg = Regex.Match(functionString, @"tg\((?<inner>.*)\)");
 
             if (isSuccessfulFunctionMatch(tg, functionString))
-                return string.Format("{0}/((cos({1})^2)", FindDerivative(tg.Groups["inner"].Value, argument).encloseIfNegative(), tg.Groups["inner"].Value);
+                return string.Format("{0}/((cos({1})^2)", FindDerivative(tg.Groups["inner"].Value, argument).ParenthesizeIfNegative(), tg.Groups["inner"].Value);
 
             Match ctg = Regex.Match(functionString, @"ctg\((?<inner>.*)\)");
 
             if (isSuccessfulFunctionMatch(ctg, functionString))
-                return string.Format("(-{0})/((sin({1})^2)", FindDerivative(ctg.Groups["inner"].Value, argument).encloseIfNegative(), ctg.Groups["inner"].Value);
+                return string.Format("(-{0})/((sin({1})^2)", FindDerivative(ctg.Groups["inner"].Value, argument).ParenthesizeIfNegative(), ctg.Groups["inner"].Value);
 
             Match arcsin = Regex.Match(functionString, @"arcsin\((?<inner>.*)\)");
 
             if (isSuccessfulFunctionMatch(arcsin, functionString))
-                return string.Format("{0}/sqrt(1-({1})^2)", FindDerivative(arcsin.Groups["inner"].Value, argument).encloseIfNegative(), arcsin.Groups["inner"].Value);
+                return string.Format("{0}/sqrt(1-({1})^2)", FindDerivative(arcsin.Groups["inner"].Value, argument).ParenthesizeIfNegative(), arcsin.Groups["inner"].Value);
 
             Match arccos = Regex.Match(functionString, @"arccos\((?<inner>.*)\)");
 
             if (isSuccessfulFunctionMatch(arccos, functionString))
-                return string.Format("-{0}/sqrt(1-({1})^2)", FindDerivative(arccos.Groups["inner"].Value, argument).encloseIfNegative(), arccos.Groups["inner"].Value);
+                return string.Format("-{0}/sqrt(1-({1})^2)", FindDerivative(arccos.Groups["inner"].Value, argument).ParenthesizeIfNegative(), arccos.Groups["inner"].Value);
 
             Match arctg = Regex.Match(functionString, @"arctg\((?<inner>.*)\)");
 
             if (isSuccessfulFunctionMatch(arctg, functionString))
-                return string.Format("{0}/(1+({1})^2)", FindDerivative(arctg.Groups["inner"].Value, argument).encloseIfNegative(), arctg.Groups["inner"].Value);
+                return string.Format("{0}/(1+({1})^2)", FindDerivative(arctg.Groups["inner"].Value, argument).ParenthesizeIfNegative(), arctg.Groups["inner"].Value);
             
             Match exp = Regex.Match(functionString, @"exp\((?<inner>.*)\)");
 
             if (isSuccessfulFunctionMatch(exp, functionString))
-                return string.Format("{0}*exp({1})", FindDerivative(exp.Groups["inner"].Value, argument).encloseIfNegative(), exp.Groups["inner"].Value);
+                return string.Format("{0}*exp({1})", FindDerivative(exp.Groups["inner"].Value, argument).ParenthesizeIfNegative(), exp.Groups["inner"].Value);
 
             Match ln = Regex.Match(functionString, @"ln\((?<inner>.*)\)");
 
             if (isSuccessfulFunctionMatch(ln, functionString))
-                return string.Format("{0}/{1}", FindDerivative(ln.Groups["inner"].Value, argument).encloseIfNegative(), ln.Groups["inner"].Value.encloseIfNegative());
+                return string.Format("{0}/{1}", FindDerivative(ln.Groups["inner"].Value, argument).ParenthesizeIfNegative(), ln.Groups["inner"].Value.ParenthesizeIfNegative());
 
             Match log = Regex.Match(functionString, string.Format(@"log\((?<first>{0}),(?<second>{0})\)", argPattern));
 
@@ -188,11 +188,11 @@ namespace whiteMath.Functions
                 string second = current.Groups["secondArgument"].Value;
 
                 if (first.Contains(argument) && second.Contains(argument))
-                    return string.Format("(({0})^({1}))*({2}*ln({0})+{3}*{4}/{5})", first, second, FindDerivative(second, argument).encloseIfNegative(), second.encloseIfNegative(), FindDerivative(first, argument).encloseIfNegative(), first.encloseIfNegative());
+                    return string.Format("(({0})^({1}))*({2}*ln({0})+{3}*{4}/{5})", first, second, FindDerivative(second, argument).ParenthesizeIfNegative(), second.ParenthesizeIfNegative(), FindDerivative(first, argument).ParenthesizeIfNegative(), first.ParenthesizeIfNegative());
                 else if (first.Contains(argument) && !second.Contains(argument))
-                    return string.Format("{0}*{1}*(({2})^({1}-1))", FindDerivative(first, argument).encloseIfNegative(), second, first);
+                    return string.Format("{0}*{1}*(({2})^({1}-1))", FindDerivative(first, argument).ParenthesizeIfNegative(), second, first);
                 else if (!first.Contains(argument) && second.Contains(argument))
-                    return string.Format("{0}*ln({1})*(({1})^({2}))", FindDerivative(second, argument).encloseIfNegative(), first, second);
+                    return string.Format("{0}*ln({1})*(({1})^({2}))", FindDerivative(second, argument).ParenthesizeIfNegative(), first, second);
             }
 
             return "0";

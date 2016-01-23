@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Numerics;
-using System.Resources;
-using System.Diagnostics.Contracts;
 
+using whiteMath.Algorithms;
 using whiteMath.General;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.ArithmeticLong
 {
@@ -232,8 +232,8 @@ namespace whiteMath.ArithmeticLong
             /// <param name="two"></param>
             public static LongInt<B> MultiplyNTT(LongInt<B> one, LongInt<B> two)
             {
-                Contract.Requires<ArgumentNullException>(one != null, "one");
-                Contract.Requires<ArgumentNullException>(two != null, "two");
+				Condition.ValidateNotNull(one, nameof(one));
+				Condition.ValidateNotNull(two, nameof(two));
 
                 LongInt<B> result = new LongInt<B>(one.Length + two.Length);                
                 long[] longResult = new long[one.Length + two.Length];
@@ -260,9 +260,9 @@ namespace whiteMath.ArithmeticLong
             /// <param name="two"></param>
             public static void MultiplyNTT(int BASE, IList<long> result, IList<int> one, IList<int> two)
             {
-                Contract.Requires<ArgumentNullException>(result != null, "result");
-                Contract.Requires<ArgumentNullException>(one != null, "one");
-                Contract.Requires<ArgumentNullException>(two != null, "two");
+				Condition.ValidateNotNull(one, nameof(one));
+				Condition.ValidateNotNull(two, nameof(two));
+				Condition.ValidateNotNull(result, nameof(result));
                 
                 int maxLength = Math.Max(one.Count, two.Count);
 
@@ -437,11 +437,16 @@ namespace whiteMath.ArithmeticLong
                 int rootDegree, 
                 bool inverted)
             {
-                Contract.Requires<ArgumentOutOfRangeException>(rootDegree > 0, "The degree of the root should be a positive power of two.");                
-                Contract.Ensures(
+				Condition
+					.Validate(rootDegree > 0)
+					.OrArgumentOutOfRangeException("The degree of the root should be a positive power of two.");                
+                
+				/*
+				Contract.Ensures(
                     Contract.ForAll(
                         Contract.Result<BigInteger[]>(), 
                         (x => WhiteMath<BigInteger, CalcBigInteger>.PowerIntegerModular(x, (ulong)rootDegree, finiteFieldInfo.primeModulus) == 1)));
+				*/
 
                 BigInteger[] result = new BigInteger[rootDegree / 2];
 

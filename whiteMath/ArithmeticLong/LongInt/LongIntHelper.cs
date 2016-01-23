@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using whiteMath.General;
 
-using WhiteMath = whiteMath.WhiteMath<int, whiteMath.CalcInt>;
-using System.Diagnostics.Contracts;
+using whiteMath.Algorithms;
+using WhiteMath = whiteMath.Algorithms.WhiteMath<int, whiteMath.CalcInt>;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.ArithmeticLong
 {
@@ -50,10 +49,12 @@ namespace whiteMath.ArithmeticLong
             /// <returns>The result of integral division without the remainder.</returns>
             public static LongInt<B> Div(LongInt<B> one, LongInt<B> two)
             {
-                Contract.Requires<ArgumentNullException>(one != null, "one");
-                Contract.Requires<ArgumentNullException>(two != null, "two");
+				Condition.ValidateNotNull(one, nameof(one));
+				Condition.ValidateNotNull(two, nameof(two));
 
+				/*
                 Contract.Ensures(Contract.ForAll(Contract.Result<LongInt<B>>().Digits, x => (x >= 0)));
+				*/
 
                 LongInt<B> junk;                
                 
@@ -70,10 +71,12 @@ namespace whiteMath.ArithmeticLong
             /// <returns>The result of integral division.</returns>
             public static LongInt<B> Div(LongInt<B> one, LongInt<B> two, out LongInt<B> remainder)
             {
-                Contract.Requires<ArgumentNullException>(one != null, "one");
-                Contract.Requires<ArgumentNullException>(two != null, "two");
+				Condition.ValidateNotNull(one, nameof(one));
+				Condition.ValidateNotNull(two, nameof(two));
 
+				/*
                 Contract.Ensures(Contract.ForAll(Contract.Result<LongInt<B>>().Digits, x => (x >= 0)));
+				*/
 
                 // Проверка на тупые случаи - деление на большее число или деление на единичную цифру.
 
@@ -175,8 +178,10 @@ namespace whiteMath.ArithmeticLong
             /// <returns>The integer part of the square root of the <paramref name="number"/>.</returns>
             public static LongInt<B> SquareRootInteger(LongInt<B> number)
             {
-                Contract.Requires<ArgumentNullException>(number != null, "number");
-                Contract.Requires<ArgumentOutOfRangeException>(number > 0);
+				Condition.ValidateNotNull(number, nameof(number));
+				Condition
+					.Validate(number > 0)
+					.OrArgumentOutOfRangeException("Cannot extract a square root of a negative number.");
 
                 LongInt<B> firstEstimate = number;
 
@@ -210,9 +215,9 @@ namespace whiteMath.ArithmeticLong
             [Obsolete]
             public static LongInt<B> PowerIntegerModularSlow<B>(LongInt<B> number, LongInt<B> power, LongInt<B> modulus) where B : IBase, new()
             {
-                Contract.Requires<ArgumentNullException>(number != null, "number");
-                Contract.Requires<ArgumentNullException>(power != null, "power");
-                Contract.Requires<ArgumentNullException>(modulus != null, "modulus");
+				Condition.ValidateNotNull(number, nameof(number));
+				Condition.ValidateNotNull(power, nameof(power));
+				Condition.ValidateNotNull(modulus, nameof(modulus));
 
                 if (power == 0)
                     return 1;
@@ -235,10 +240,10 @@ namespace whiteMath.ArithmeticLong
             /// <returns>The result of raising <paramref name="number"/> to power <paramref name="power"/> modulo <paramref name="modulus"/>.</returns>
             public static LongInt<B> PowerIntegerModular<B>(LongInt<B> number, ulong power, LongInt<B> modulus) where B : IBase, new()
             {
-                Contract.Requires<ArgumentNullException>(number != null, "number");
-                Contract.Requires<ArgumentNullException>(modulus != null, "modulus");
+				Condition.ValidateNotNull(number, nameof(number));
+				Condition.ValidateNotNull(modulus, nameof(modulus));
 
-                LongInt<B> result = 1;                                  // результат возведения в степень
+                LongInt<B> result = 1;
                 
                 while (power > 0)
                 {
@@ -266,13 +271,18 @@ namespace whiteMath.ArithmeticLong
                 where B : IBase, new()
                 where T : IBase, new()
             {
-                Contract.Requires<ArgumentNullException>(number != null, "number");
-                Contract.Requires<ArgumentNullException>(power != null, "power");
-                Contract.Requires<ArgumentNullException>(modulus != null, "modulus");
-                
-                Contract.Requires<ArgumentException>(modulus > 0, "The modulus should be a positive number.");
-                Contract.Requires<ArgumentException>(!power.Negative, "The power should be a non-negativen number.");
+				Condition.ValidateNotNull(number, nameof(number));
+				Condition.ValidateNotNull(power, nameof(power));
+				Condition.ValidateNotNull(modulus, nameof(modulus));
 
+				Condition
+					.Validate(modulus > 0)
+					.OrArgumentOutOfRangeException("The modulus should be a positive number");
+				
+				Condition
+					.Validate(!power.Negative)
+					.OrArgumentOutOfRangeException("The power should be a non-negative number.");
+				
                 LongInt<B> result = 1;                                  // результат возведения в степень
                 
                 while (power > 0)

@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using whiteMath.Geometry;
 
-using System.Diagnostics.Contracts;
-using whiteMath.General;
+using whiteMath.Calculators;
 
 namespace whiteMath.Graphers
 {
@@ -23,7 +17,6 @@ namespace whiteMath.Graphers
     /// <typeparam name="C">The calculator for the <typeparamref name="T"/> type.</typeparam>
     /// </summary>
     [Serializable]
-    [ContractVerification(true)]
     public class DimensionTransformer<T,C> where C: ICalc<T>, new()
     {
         private Numeric<T, C> k;                            // какой интервал икса приходится на один пиксель

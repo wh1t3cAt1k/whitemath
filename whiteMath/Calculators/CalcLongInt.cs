@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using whiteMath.ArithmeticLong;
 
-using whiteMath.ArithmeticLong;
-
-namespace whiteMath.ArithmeticLong
+namespace whiteMath.Calculators
 {
     /// <summary>
     /// The default calculator for whiteMath long integer numbers.

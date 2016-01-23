@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
+using whiteMath.Algorithms;
 using whiteMath.General;
 using whiteMath.Randoms;
-using System.Diagnostics.Contracts;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.ArithmeticLong
 {
     /// <summary>
     /// Represents a long integer number with theoretically unlimited precision.
     /// </summary>
-    [ContractVerification(true)]
     [Serializable]
     public partial class LongInt<B>: ICloneable where B: IBase, new()
     {
@@ -115,13 +114,14 @@ namespace whiteMath.ArithmeticLong
         //---------INVARIANTS ---------------
         //-----------------------------------
 
+		/*
         [ContractInvariantMethod]
         private void ___invariant()
         {
             Contract.Invariant(this.Digits != null);
             Contract.Invariant(Contract.ForAll(this.Digits, x => (x >= 0)));    // never should a digit be negative
         }
-
+		*/
         
         //-----------------------------------
         //---------PUBLIC PROPERTIES---------
@@ -206,7 +206,7 @@ namespace whiteMath.ArithmeticLong
         /// <param name="allowNegative">An optional parameter which signalizes whether negative numbers should be allowed.</param>
         public LongInt(int digitCount, IRandomBounded<int> generator, bool allowNegative = false)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(digitCount > 0, "The number of digits should be positive");
+			Condition.ValidatePositive(digitCount, "The number of digits should be positive.");
 
             if(allowNegative)
                 this.Negative = (generator.Next(0, 2) == 0 ? false : true);
@@ -228,8 +228,10 @@ namespace whiteMath.ArithmeticLong
         /// <param name="negative">If this flag is true, the number will be considered negative.</param>
         public LongInt(int digitCount, int digit, bool negative = false)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(digitCount > 0, "The number of digits should be positive");
-            Contract.Requires<ArgumentOutOfRangeException>(digit < BASE, "The digit to fill the number with should be less than BASE.");
+			Condition.ValidatePositive(digitCount, "The number of digits should be positive.");
+			Condition
+				.Validate(digit < BASE)
+				.OrArgumentOutOfRangeException("The digit to fill the number should be less than BASE.");
 
             this.Digits = new List<int>(digitCount);
             this.Negative = negative;
@@ -332,7 +334,7 @@ namespace whiteMath.ArithmeticLong
         /// </returns>
         public static LongInt<B> CreatePowerOfBase(int basePower)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(basePower >= 0, "The power of BASE should not be negative.");
+			Condition.ValidateNonNegative(basePower, "The power of BASE should not be negative.");
 
             LongInt<B> result = new LongInt<B>(basePower + 1);
             result.Digits.AddRange(new int[basePower + 1]);
@@ -1238,7 +1240,7 @@ namespace whiteMath.ArithmeticLong
         /// <returns>The long integer value containing all of the digits specified.</returns>
         public static LongInt<B> Parse(string value)
         {
-            Contract.Requires<ArgumentNullException>(value != null, "value");
+			Condition.ValidateNotNull(value, nameof(value));
 
             // Работает только для десятичных чисел.
             // Если нет, то придется сначала преобразовывать в десятичное, а потом

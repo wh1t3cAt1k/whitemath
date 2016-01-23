@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics.Contracts;
 
+using whiteMath.Algorithms;
 using whiteMath.Randoms;
 using whiteMath.ArithmeticLong;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.Cryptography
 {
@@ -38,9 +37,13 @@ namespace whiteMath.Cryptography
         public static bool IsPrime_Miller<B>(this LongInt<B> num)
             where B: IBase, new()
         {
-            Contract.Requires<ArgumentException>(LongInt<B>.BASE_is_power_of_two, "The digit base of the number should be a strict power of two.");
-            Contract.Requires<ArgumentNullException>(num != null, "num");
-            Contract.Requires<ArgumentOutOfRangeException>(num > 1, "The tested number should be bigger than 1.");
+			Condition.ValidateNotNull(num, nameof(num));
+			Condition
+				.Validate(LongInt<B>.BASE_is_power_of_two)
+			    .OrArgumentException("The digit base of the number should be a strict power of two.");
+			Condition
+				.Validate(num > 1)
+				.OrArgumentOutOfRangeException("The tested number should be bigger than 1.");
 
             if (num.IsEven)
             {
@@ -86,8 +89,10 @@ namespace whiteMath.Cryptography
         public static bool IsPrime_WilsonTheorem<B>(this LongInt<B> num)
             where B: IBase, new()
         {
-            Contract.Requires<ArgumentNullException>(num != null, "num");
-            Contract.Requires<ArgumentOutOfRangeException>(num > 1, "The tested number should be bigger than 1.");
+			Condition.ValidateNotNull(num, nameof(num));
+			Condition
+				.Validate(num > 1)
+				.OrArgumentOutOfRangeException("The tested number should be bigger than 1");
 
             LongInt<B> res = 1;
 
@@ -113,8 +118,10 @@ namespace whiteMath.Cryptography
         public static bool IsPrime_TrialDivision<B>(this LongInt<B> num)
             where B: IBase, new()
         {
-            Contract.Requires<ArgumentNullException>(num != null, "num");
-            Contract.Requires<ArgumentOutOfRangeException>(num > 1, "The tested number should be bigger than 1.");
+			Condition.ValidateNotNull(num, nameof(num));
+			Condition
+				.Validate(num > 1)
+				.OrArgumentOutOfRangeException("The tested number should be biggre than 1.");
 
             LongInt<B> sqrtNum = LongInt<B>.Helper.SquareRootInteger(num);
 
@@ -147,10 +154,14 @@ namespace whiteMath.Cryptography
         public static double IsPrime_SolovayStrassen<B>(this LongInt<B> num, IRandomBounded<LongInt<B>> gen, long rounds)
             where B : IBase, new()
         {
-            Contract.Requires<ArgumentNullException>(num != null, "num");
-            Contract.Requires<ArgumentNullException>(gen != null, "gen");
-            Contract.Requires<ArgumentOutOfRangeException>(num > 1, "The tested number should be bigger than 2.");
-            Contract.Requires<ArgumentOutOfRangeException>(rounds > 0, "The number of rounds should be positive.");
+			Condition.ValidateNotNull(num, nameof(num));
+			Condition.ValidateNotNull(gen, nameof(gen));
+			Condition
+				.Validate(num > 1)
+				.OrArgumentOutOfRangeException("The tested number should be bigger than 1.");
+			Condition
+				.Validate(rounds > 0)
+				.OrArgumentOutOfRangeException("The number of rounds should be positive.");
 
             if(num.IsEven)
             {
@@ -203,10 +214,14 @@ namespace whiteMath.Cryptography
         public static bool IsPrime_Fermat<B>(this LongInt<B> num, IRandomBounded<LongInt<B>> gen, long rounds)
             where B: IBase, new()
         {
-            Contract.Requires<ArgumentNullException>(num != null, "num");
-            Contract.Requires<ArgumentNullException>(gen != null, "gen");
-            Contract.Requires<ArgumentOutOfRangeException>(num > 1, "The number to test should be bigger than 1.");
-            Contract.Requires<ArgumentOutOfRangeException>(rounds > 0, "The number of rounds should be positive.");
+			Condition.ValidateNotNull(num, nameof(num));
+			Condition.ValidateNotNull(gen, nameof(gen));
+			Condition
+				.Validate(num > 1)
+				.OrArgumentOutOfRangeException("The number to test should be bigger than 1.");
+			Condition
+				.Validate(rounds > 0)
+				.OrArgumentOutOfRangeException("The number of rounds should be positive");
 
             if (num.IsEven)
             {
@@ -249,11 +264,15 @@ namespace whiteMath.Cryptography
         public static double IsPrime_MillerRabin<B>(this LongInt<B> num, IRandomBounded<LongInt<B>> gen, long rounds) 
             where B: IBase, new()
         {
-            Contract.Requires<ArgumentNullException>(num != null, "num");
-            Contract.Requires<ArgumentNullException>(gen != null, "gen");
-            Contract.Requires<ArgumentOutOfRangeException>(num > 1, "The number to test should be bigger than 1.");
-            Contract.Requires<ArgumentOutOfRangeException>(rounds > 0, "The number of rounds should be positive.");
-
+			Condition.ValidateNotNull(num, nameof(num));
+			Condition.ValidateNotNull(gen, nameof(gen));
+			Condition
+				.Validate(num > 1)
+				.OrArgumentOutOfRangeException("The number to test should be bigger than 1.");
+			Condition
+				.Validate(rounds > 0)
+				.OrArgumentOutOfRangeException("The number of rounds should be positive");
+			
             if (num.IsEven)
             {
                 if (num == 2)
@@ -297,7 +316,7 @@ namespace whiteMath.Cryptography
             // Число должно быть четным.
             // -------------------------
 
-            Contract.Requires(number.IsEven);
+			Condition.Validate(number.IsEven).OrException(new Exception());
 
             s = 0;         // показатель степени вряд ли будет больше 9223372036854775807, можно long :-)
 

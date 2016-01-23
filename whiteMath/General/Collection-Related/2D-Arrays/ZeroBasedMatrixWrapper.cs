@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using System.Diagnostics.Contracts;
+﻿using whiteStructs.Conditions;
 
 namespace whiteMath.General
 {
@@ -71,7 +66,7 @@ namespace whiteMath.General
         /// <param name="parentMatrix">The parent matrix object.</param>
         public ZeroBasedMatrixWrapper(T[,] parentMatrix)
         {
-            Contract.Requires<ArgumentNullException>(parentMatrix != null, "parentMatrix");
+			Condition.ValidateNotNull(parentMatrix, nameof(parentMatrix));
 
             this.ParentMatrix = parentMatrix; 
         }

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using whiteMath.Calculators;
 
 namespace whiteMath.Functions
 {
     public class ChebyshevPolynomGenerator<T, C> where C: ICalc<T>, new()
     {
+		// TODO: Not implemented
     }
 }

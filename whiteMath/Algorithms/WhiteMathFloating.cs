@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 
-namespace whiteMath
+using whiteMath.Calculators;
+
+namespace whiteMath.Algorithms
 {
     public partial class WhiteMath<T,C> where C: ICalc<T>, new() 
     {
@@ -59,8 +60,10 @@ namespace whiteMath
         /// <returns>The nearest lower integer number.</returns>
         public static T Floor(T number)
         {
+			/*
             Contract.Ensures(number - (Numeric<T, C>)Contract.Result<T>() >= Numeric<T, C>.Zero);
             Contract.Ensures(number - (Numeric<T, C>)Contract.Result<T>() < Numeric<T, C>._1);
+			*/
 
             // Если число отрицательно и содержит дробную часть, напр. -4.5,
             // то необходимо вернуть МЕНЬШЕЕ. Т.е. (-4-1) = -5.
@@ -81,8 +84,10 @@ namespace whiteMath
         /// <returns>The nearest bigger integer number.</returns>
         public static T Ceiling(T number)
         {
+			/*
             Contract.Ensures((Numeric<T, C>)Contract.Result<T>() - number >= Numeric<T, C>.Zero);
             Contract.Ensures((Numeric<T, C>)Contract.Result<T>() - number < Numeric<T, C>._1);
+			*/
 
             // Если дробной части нет, то надо вернуть само число.
 

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using whiteMath.ArithmeticLong;
 
-using System.Diagnostics.Contracts;
+using whiteMath.Algorithms;
+using whiteMath.ArithmeticLong;
 using whiteMath.General;
 using whiteMath.Randoms;
-using System.Security.Cryptography;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.Cryptography
 {
@@ -15,7 +15,6 @@ namespace whiteMath.Cryptography
     /// This class provides methods for encryption and decryption of arbitrary data using
     /// RSA algorithm.
     /// </summary>
-    [ContractVerification(true)]
     public static class RSA
     {
         /// <summary>
@@ -67,8 +66,8 @@ namespace whiteMath.Cryptography
         /// <returns>A <c>LongInt&lt;B&gt;</c> number which, being converted to base 256, would contain the same numeric values and in the same order as <paramref name="sequence"/>.</returns>
         public static LongInt<B> ToLongInt<B>(this IEnumerable<byte> sequence) where B: IBase, new()
         {
-            Contract.Requires<ArgumentNullException>(sequence != null, "sequence");
-            Contract.Requires<ArgumentException>(sequence.Count() > 0, "The sequence should contain at least one element.");
+			Condition.ValidateNotNull(sequence, nameof(sequence));
+			Condition.ValidateNotEmpty(sequence, "The sequence should contain at least one element.");
 
             int[] intArray = new int[sequence.Count()];
 
@@ -88,8 +87,10 @@ namespace whiteMath.Cryptography
         /// <returns>The byte array containing the same numeric values and in the same order as <paramref name="number"/> converted to base 256.</returns>
         public static byte[] ToByteArray<B>(this LongInt<B> number) where B : IBase, new()
         {
-            Contract.Requires<ArgumentNullException>(number != null, "number");
-            Contract.Requires<ArgumentException>(!number.Negative, "The number should not be negative.");
+			Condition.ValidateNotNull(number, nameof(number));
+			Condition
+				.Validate(!number.Negative)
+				.OrArgumentOutOfRangeException("The number should not be negative.");
 
             byte[] result;
 
@@ -196,7 +197,9 @@ namespace whiteMath.Cryptography
         /// <returns></returns>
         public static Point<LongInt<B>> GetKey<B>(int digits, IRandomBounded<LongInt<B>> randomGenerator = null, Func<LongInt<B>, bool> primalityTest = null) where B: IBase, new()
         {
-            Contract.Requires<ArgumentOutOfRangeException>(digits > 1, "The amount of digits in the key should be more than 1.");
+			Condition
+				.Validate(digits > 1)
+				.OrArgumentOutOfRangeException("The number of digits in the key should be more than 1.");
             
             /*
             Contract.Ensures(
@@ -250,9 +253,9 @@ namespace whiteMath.Cryptography
         public static LongInt<B> GetSecretExponent<B>(Point<LongInt<B>> secretKey, LongInt<B> publicExponent)
             where B: IBase, new()
         {
-            Contract.Requires<ArgumentNullException>(publicExponent != null, "publicExponent");
-            Contract.Requires<ArgumentNullException>(secretKey.X != null, "secretKey.X");
-            Contract.Requires<ArgumentNullException>(secretKey.Y != null, "secretKey.Y");
+			Condition.ValidateNotNull(publicExponent, nameof(publicExponent));
+			Condition.ValidateNotNull(secretKey.X, nameof(secretKey.X));
+			Condition.ValidateNotNull(secretKey.Y, nameof(secretKey.Y));
 
             LongInt<B> totient = LongInt<B>.Helper.MultiplyFFTComplex(secretKey.X - 1, secretKey.Y - 1);
 
@@ -274,12 +277,18 @@ namespace whiteMath.Cryptography
             where B: IBase, new()
             where E: IBase, new()
         {
-            Contract.Requires<ArgumentNullException>(number != null, "number");
-            Contract.Requires<ArgumentNullException>(publicKey != null, "publicKey");
-            Contract.Requires<ArgumentException>(!number.Negative, "The decrypted number should not be negative.");
-            Contract.Requires<ArgumentException>(!publicKey.Negative, "The public key should not be negative.");
-            Contract.Requires<ArgumentException>(secretExponent > 0, "The secret exponent should be positive.");
-
+			Condition.ValidateNotNull(number, nameof(number));
+			Condition.ValidateNotNull(publicKey, nameof(publicKey));
+			Condition
+				.Validate(!number.Negative)
+				.OrArgumentOutOfRangeException("The decrypted number should not be negative.");
+			Condition
+				.Validate(!publicKey.Negative)
+				.OrArgumentOutOfRangeException("The public key should not be negative.");
+			Condition
+				.Validate(secretExponent > 0)
+				.OrArgumentOutOfRangeException("The secret exponent should be positive.");
+			
             return LongInt<B>.Helper.PowerIntegerModular(number, secretExponent, publicKey);
         }
 
@@ -300,37 +309,47 @@ namespace whiteMath.Cryptography
             where B : IBase, new()
             where E : IBase, new()
         {
-            Contract.Requires<ArgumentNullException>(numberSequence != null, "numberSequence");
-            Contract.Requires<ArgumentException>(numberSequence.Count() > 0, "The sequence should contain at least one encrypted number.");
-            Contract.Requires<ArgumentException>(secretExponent > 0, "The secret exponent should be positive.");
-
+			Condition.ValidateNotNull(numberSequence, nameof(numberSequence));
+			Condition.ValidateNotEmpty(numberSequence, "The sequence should containt at least one element.");
+			Condition
+				.Validate(secretExponent > 0)
+				.OrArgumentOutOfRangeException("The secret exponent should be positive.");
+			
+			/*
             Contract.Requires(Contract.ForAll(numberSequence, x => x != null), "At least one number in the sequence is null.");
             Contract.Requires(Contract.ForAll(numberSequence, x => !x.Negative), "At least one number in the sequence is negative.");
-            
-            int count = numberSequence.Count();
+            */
 
-            if (count == 1)
-                return Decrypt(numberSequence.Single(), publicKey, secretExponent);
+			if (numberSequence.IsSingleton())
+			{
+				return Decrypt(numberSequence.First(), publicKey, secretExponent);
+			}
 
-            List<LongInt<B>> list = new List<LongInt<B>>(count);
+            List<LongInt<B>> list = new List<LongInt<B>>();
 
-            foreach (LongInt<B> encryptedNumber in numberSequence)
-                list.Add(Decrypt(encryptedNumber, publicKey, secretExponent));
+			foreach (LongInt<B> encryptedNumber in numberSequence)
+			{
+				list.Add(
+					Decrypt(encryptedNumber, publicKey, secretExponent));
+			}
 
-            if (bnem == BigNumberEncryptionMethod.Splitting)
-                return new LongInt<B>(LongInt<B>.BASE, list.SelectMany(x => x.Digits).ToList(), false);
+			if (bnem == BigNumberEncryptionMethod.Splitting)
+			{
+				return new LongInt<B>(LongInt<B>.BASE, list.SelectMany(x => x.Digits).ToList(), false);
+			}
+			else if (bnem == BigNumberEncryptionMethod.Division)
+			{
+				LongInt<B> result = list[list.Count - 1];
 
-            else if (bnem == BigNumberEncryptionMethod.Division)
-            {
-                LongInt<B> result = list[list.Count - 1];
+				for (int i = list.Count - 2; i >= 0; --i)
+					result = result * publicKey + list[i];
 
-                for (int i = list.Count - 2; i >= 0; --i)
-                    result = result * publicKey + list[i];
-
-                return result;
-            }
-
-            throw new EnumFattenedException("Big number encryption method enum has been fattened, decryption process stuck.");
+				return result;
+			}
+			else
+			{
+				throw new EnumFattenedException("Big number encryption method enum has fattened, decryption process stuck.");
+			}
         }
 
         /// <summary>
@@ -350,12 +369,17 @@ namespace whiteMath.Cryptography
             where B: IBase, new()
             where E: IBase, new()
         {
-            Contract.Requires<ArgumentNullException>(number != null, "number");
-            Contract.Requires<ArgumentNullException>(publicKey != null, "publicKey");
-
-            Contract.Requires<ArgumentException>(number > 0, "The encrypted number should not be negative.");
-            Contract.Requires<ArgumentException>(publicExponent > 0, "The public exponent should not be zero.");
-            Contract.Requires<ArgumentException>(publicKey.Length > 1 || bnem != BigNumberEncryptionMethod.Splitting, "When using the 'splitting' big number encryption option, the number of digits in the public key should be more than 1.");
+			Condition.ValidateNotNull(number, nameof(number));
+			Condition.ValidateNotNull(publicKey, nameof(publicKey));
+			Condition
+				.Validate(number > 0)
+				.OrArgumentOutOfRangeException("The encrypted number should be positive.");
+			Condition
+				.Validate(publicExponent > 0)
+				.OrArgumentOutOfRangeException("The public exponent should be positive.");
+			Condition
+				.Validate(publicKey.Length > 1 || bnem != BigNumberEncryptionMethod.Splitting)
+				.OrArgumentException("When using the 'splitting' big number encryption option, the number of digits in the public key should be more than 1.");
 
             List<LongInt<B>> result = new List<LongInt<B>>();
 

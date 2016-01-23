@@ -1,15 +1,16 @@
 ﻿using System;
 
 using whiteMath.ArithmeticLong;
+using whiteMath.Calculators;
 using whiteMath.General;
 
 using LongInt = whiteMath.ArithmeticLong.LongInt<whiteMath.ArithmeticLong.Precisions.P_50k_10k>;
 
 using Rational = whiteMath.RationalNumbers.Rational<
 	whiteMath.ArithmeticLong.LongInt<whiteMath.ArithmeticLong.Precisions.P_50k_10k>, 
-	whiteMath.ArithmeticLong.CalcLongInt<whiteMath.ArithmeticLong.Precisions.P_50k_10k>>;
+	whiteMath.Calculators.CalcLongInt<whiteMath.ArithmeticLong.Precisions.P_50k_10k>>;
 
-namespace whiteMath
+namespace whiteMath.Algorithms
 {
     public static partial class WhiteMathConstants
     {

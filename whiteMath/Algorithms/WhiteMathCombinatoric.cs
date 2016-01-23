@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace whiteMath
+using whiteMath.Calculators;
+
+namespace whiteMath.Algorithms
 {
     public partial class WhiteMath<T, C> where C: ICalc<T>, new()
     {

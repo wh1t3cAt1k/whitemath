@@ -1,8 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+﻿using System.Collections.Generic;
+using System.Linq;
 
-namespace whiteMath
+using whiteMath.Calculators;
+
+using whiteStructs.Conditions;
+
+namespace whiteMath.Algorithms
 {
     public static partial class WhiteMath<T,C> where C: ICalc<T>, new()
     {
@@ -16,21 +19,22 @@ namespace whiteMath
         /// The default value of this parameter is <c>null</c>, and in this case, the interval <c>[0; N-1]</c> will be
         /// substituted automatically.
         /// </param>
-        /// <param name="module">The module of the residue class ring, expected to be >= 2.</param>
+        /// <param name="modulus">The modulus of the residue class ring, expected to be >= 2.</param>
         /// <param name="rootDegrees">
         /// An enumeration of root degrees for which the primitive roots should be found.
         /// </param>
         /// <returns></returns>
-        [ContractVerification(true)]
-        public static Dictionary<T, List<T>> RootsOfUnity(T module, IEnumerable<T> rootDegrees, BoundedInterval<T, C>? searchInterval = null)
+        public static Dictionary<T, List<T>> RootsOfUnity(T modulus, IEnumerable<T> rootDegrees, BoundedInterval<T, C>? searchInterval = null)
         {
-            Contract.Requires<NonIntegerTypeException>(Numeric<T, C>.Calculator.isIntegerCalculator, "This method supports only integral types.");
-            Contract.Requires<ArgumentNullException>(module != null, "module");
-            Contract.Requires<ArgumentOutOfRangeException>(module > Numeric<T, C>._1, "The module should be more than 1.");
-            Contract.Requires<ArgumentOutOfRangeException>(Contract.ForAll<T>(rootDegrees, (x => x >= Numeric<T, C>._1 && x < (Numeric<T, C>)module)), "All of the root degrees specified should be located inside the [1; N-1] interval.");
-
+			Condition.Validate(calc.isIntegerCalculator).OrException(new NonIntegerTypeException(typeof(T).Name));
+			Condition.ValidateNotNull(modulus);
+			Condition.Validate(modulus > Numeric<T, C>._1).OrArgumentOutOfRangeException("The module should be more than 1.");
+			Condition
+				.Validate(rootDegrees.All(x => x >= Numeric<T, C>._1 && x < (Numeric<T, C>)modulus))
+				.OrArgumentOutOfRangeException("All of the root degrees specified should be located inside the [1; N-1] interval.");
+//			
             if (!searchInterval.HasValue)
-                searchInterval = new BoundedInterval<T, C>(Numeric<T, C>.Zero, module - Numeric<T, C>._1, true, true);
+                searchInterval = new BoundedInterval<T, C>(Numeric<T, C>.Zero, modulus - Numeric<T, C>._1, true, true);
 
             Numeric<T, C> lowerBound = searchInterval.Value.LeftBound;
             Numeric<T, C> upperBound = searchInterval.Value.RightBound;
@@ -58,7 +62,7 @@ namespace whiteMath
 
             // -----------------------------
 
-            bool evenModule = calc.isEven(module);
+            bool evenModule = calc.isEven(modulus);
 
 			// If the lower bound is even, and the modulus is even – definitely not coprime.
 			// Which means that the number is a zero divisor and cannot be a root of unity.
@@ -75,7 +79,7 @@ namespace whiteMath
             {
 				// Of not coprime with modulus – cannot be a primitive root.
 				// -
-                if (WhiteMath<T, C>.GreatestCommonDivisor(current, module) != Numeric<T, C>._1)
+                if (WhiteMath<T, C>.GreatestCommonDivisor(current, modulus) != Numeric<T, C>._1)
                     goto ENDING;
 
                 // Now we test.
@@ -104,7 +108,7 @@ namespace whiteMath
                     else if (tmp == Numeric<T, C>.Zero) 
                         goto ENDING;
 
-                    tmp = (tmp * tmp) % module;
+                    tmp = (tmp * tmp) % modulus;
                     ++currentPower;
                 }
                 

@@ -1,6 +1,8 @@
 ﻿using System;
 
-namespace whiteMath.RationalNumbers
+using whiteMath.RationalNumbers;
+
+namespace whiteMath.Calculators
 {
     public class CalcRational<T,C>: ICalc<Rational<T,C>> where C: ICalc<T>, new()
     {

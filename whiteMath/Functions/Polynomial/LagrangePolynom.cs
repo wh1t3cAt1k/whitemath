@@ -6,6 +6,8 @@ using System.Text;
 using whiteMath.General;
 using whiteMath.Matrices;
 
+using whiteMath.Calculators;
+
 namespace whiteMath.Functions
 {
     /// <summary>

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics.Contracts;
+﻿using whiteStructs.Conditions;
 
-namespace whiteMath
+namespace whiteMath.Calculators
 {
     /// <summary>
-    /// Standard calculator for integers.
+    /// Standard calculator for unsigned long integers.
     /// </summary>
-    [ContractVerification(true)]
     public class CalcULong : ICalc<ulong>
     {
         public bool isIntegerCalculator     { get { return true; } }
@@ -40,12 +35,19 @@ namespace whiteMath
 
         public ulong fromInt(long equivalent)         
         {
-            Contract.Requires<ArgumentOutOfRangeException>(equivalent >= 0, "Cannot convert a negative value to an ulong.");
-            return (ulong)equivalent; 
+			Condition.ValidateNonNegative(equivalent, Calculators.Messages.CannotConvertNegativeValueToUnsignedType);
+
+			return (ulong)equivalent; 
         }
         
-        public ulong fromDouble(double equivalent)    { throw new NonFractionalTypeException("ulong"); }
+        public ulong fromDouble(double equivalent) 
+		{ 
+			throw new NonFractionalTypeException("ulong"); 
+		}
 
-        public ulong parse(string value) { return ulong.Parse(value); }
+        public ulong parse(string value) 
+		{
+			return ulong.Parse(value); 
+		}
     }
 }

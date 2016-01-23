@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using whiteMath.General;
 
-using WhiteMath = whiteMath.WhiteMath<int, whiteMath.CalcInt>;
+using WhiteMath = whiteMath.Algorithms.WhiteMath<int, whiteMath.Calculators.CalcInt>;
 
 namespace whiteMath.ArithmeticLong
 {

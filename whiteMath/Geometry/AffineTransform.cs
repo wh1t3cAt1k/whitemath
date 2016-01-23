@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
+using whiteMath.Calculators;
 using whiteMath.Matrices;
 
 namespace whiteMath.Geometry
 {
-    using DoubleMatrix = whiteMath.Matrices.Matrix<double,CalcDouble>;
+    using DoubleMatrix = whiteMath.Matrices.Matrix<double, CalcDouble>;
     using DoubleVector = whiteMath.Vector<double, CalcDouble>;
 
     public static class AffineTransform

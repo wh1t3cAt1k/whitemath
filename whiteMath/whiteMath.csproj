@@ -163,7 +163,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugNonWindows|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <OutputPath>..\out\DebugNoWinForms</OutputPath>
+    <OutputPath>..\out\DebugNonWindows</OutputPath>
     <DefineConstants>DEBUG;TRACE;NON_WINDOWS_ENVIRONMENT</DefineConstants>
     <WarningLevel>4</WarningLevel>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
@@ -188,15 +188,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArithmeticAlgorithms\WhiteMathCombinatoric.cs" />
-    <Compile Include="ArithmeticAlgorithms\WhiteMathComplex.cs" />
-    <Compile Include="ArithmeticAlgorithms\WhiteMathConstants.cs" />
-    <Compile Include="ArithmeticAlgorithms\WhiteMathModular.cs" />
-    <Compile Include="ArithmeticAlgorithms\WhiteMathTrigonometric.cs" />
-    <Compile Include="ArithmeticAlgorithms\WhiteMathFloating.cs" />
-    <Compile Include="ArithmeticAlgorithms\WhiteMath.cs" />
-    <Compile Include="ArithmeticAlgorithms\WhiteMathInteger.cs" />
-    <Compile Include="ArithmeticAlgorithms\WhiteMathMinMax.cs" />
     <Compile Include="ArithmeticLong\Bases\BaseConversion.cs" />
     <Compile Include="ArithmeticLong\Interfaces.cs" />
     <Compile Include="ArithmeticLong\LongArithmeticMethods.cs" />
@@ -215,7 +206,6 @@
     <Compile Include="Calculators\CalcLong.cs" />
     <Compile Include="Calculators\CalcULong.cs" />
     <Compile Include="Calculators\CalcBigInteger.cs" />
-    <Compile Include="CodeContractShutupper.cs" />
     <Compile Include="Combinatorics\Permutators.cs" />
     <Compile Include="Cryptography\OneTimePadBreaker.cs" />
     <Compile Include="Cryptography\PrimalityTests.cs" />
@@ -381,6 +371,17 @@
     <Compile Include="Drawing\ColorPath.cs" />
     <Compile Include="Functions\Messages.cs" />
     <Compile Include="ArithmeticLong\Messages.cs" />
+    <Compile Include="Calculators\Messages.cs" />
+    <Compile Include="Algorithms\WhiteMathCombinatoric.cs" />
+    <Compile Include="Algorithms\WhiteMathComplex.cs" />
+    <Compile Include="Algorithms\WhiteMathConstants.cs" />
+    <Compile Include="Algorithms\WhiteMathModular.cs" />
+    <Compile Include="Algorithms\WhiteMathTrigonometric.cs" />
+    <Compile Include="Algorithms\WhiteMathFloating.cs" />
+    <Compile Include="Algorithms\WhiteMath.cs" />
+    <Compile Include="Algorithms\WhiteMathInteger.cs" />
+    <Compile Include="Algorithms\WhiteMathMinMax.cs" />
+    <Compile Include="Algorithms\Messages.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Graphers\Components\GraphicDrawer.resx">

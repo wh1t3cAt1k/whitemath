@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using whiteMath.Algorithms;
 using whiteMath.General;
 
 using System.Reflection;

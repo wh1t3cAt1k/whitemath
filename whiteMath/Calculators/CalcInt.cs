@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Numerics;
+﻿using System.Numerics;
 
-namespace whiteMath
+namespace whiteMath.Calculators
 {
     /// <summary>
     /// Standard calculator for integers.
