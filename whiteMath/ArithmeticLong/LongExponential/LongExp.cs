@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
+using whiteMath.Calculators;
 using whiteMath.General;
 
 namespace whiteMath.ArithmeticLong
