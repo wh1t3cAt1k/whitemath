@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Numerics;
 
 using whiteMath.Algorithms;
+using whiteMath.Calculators;
 using whiteMath.General;
 
 using whiteStructs.Conditions;

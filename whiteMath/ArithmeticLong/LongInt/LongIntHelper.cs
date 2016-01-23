@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 
 using whiteMath.Algorithms;
-using WhiteMath = whiteMath.Algorithms.WhiteMath<int, whiteMath.CalcInt>;
+using whiteMath.Calculators;
 
 using whiteStructs.Conditions;
+
+using WhiteMath = whiteMath.Algorithms.WhiteMath<int, whiteMath.Calculators.CalcInt>;
 
 namespace whiteMath.ArithmeticLong
 {

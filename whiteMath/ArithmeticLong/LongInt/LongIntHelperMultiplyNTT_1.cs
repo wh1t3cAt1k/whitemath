@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 
 using whiteMath.Algorithms;
+using whiteMath.Calculators;
 
 using whiteStructs.Conditions;
 
