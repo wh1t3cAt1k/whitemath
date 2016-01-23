@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 
-using System.Collections;
+using whiteStructs.Conditions;
 
 namespace whiteMath.General
 {
@@ -18,10 +19,14 @@ namespace whiteMath.General
 
         public ListSegment(IList<T> list, int offset, int length)
         {
-            Contract.Requires<ArgumentNullException>(list != null, "list");
-            Contract.Requires<ArgumentOutOfRangeException>(length >= 0, "The length must be non-negative.");
-            Contract.Requires<IndexOutOfRangeException>(offset >= 0 && offset < list.Count, "The offset index is out of the list bounds.");
-            Contract.Requires<IndexOutOfRangeException>(offset + length <= list.Count, "The length specified runs out of the list bound.");
+			Condition.ValidateNotNull(list, nameof(list));
+			Condition.ValidateNonNegative(length, "The length must be non-negative.");
+			Condition
+				.Validate(offset >= 0 && offset < list.Count)
+				.OrIndexOutOfRangeException("The offset index is out of the list boundaries.");
+			Condition
+				.Validate(offset + length <= list.Count)
+				.OrIndexOutOfRangeException("The length specified runs out of the list boundaries.");
 
             this.list = list;
             this.offset = offset;
@@ -215,8 +220,7 @@ namespace whiteMath.General
     /// This class provides convenience extension methods for <c>IList&lt;T&gt;</c> objects 
     /// related to creating <c>ListSegment</c>'s from them.
     /// </summary>
-    /// <see cref="ListSegment&lt;T&gt;"/>
-    [ContractVerification(true)]
+	/// <see cref="ListSegment{T}"/>
     public static class ListSegmentationExtensions
     {
         /// <summary>
@@ -258,16 +262,16 @@ namespace whiteMath.General
         /// <returns>A list of non-intersecting segments which cover the <paramref name="list"/>.</returns>
         public static List<ListSegment<T>> CoverWithSegments<T>(this IList<T> list, int segmentLength, SegmentationOptions options)
         {
-            Contract.Requires<ArgumentNullException>(list != null, "list");
+			Condition.ValidateNotNull(list, nameof(list));
 
-            var cr = Contract.Result<List<ListSegment<T>>>();
-
+			/*
             Contract.Ensures(cr != null);
             Contract.Ensures(cr.Sum(x => x.Count) == list.Count);
             Contract.Ensures(
                 options == SegmentationOptions.BiggerLastSegment && cr.Last().Count >= segmentLength ||
                 options == SegmentationOptions.SmallerLastSegment && cr.Last().Count <= segmentLength);
-            
+            */
+
             List<ListSegment<T>> result = new List<ListSegment<T>>(list.Count / segmentLength + 1);
 
             int remainingCount = list.Count;
@@ -318,8 +322,12 @@ namespace whiteMath.General
         /// </returns>
         public static ListSegment<T> ListSegmentFrom<T>(this IList<T> list, int offset)
         {
-            Contract.Requires<ArgumentNullException>(list != null, "list");
-            Contract.Requires<ArgumentOutOfRangeException>(offset >= 0 && offset < list.Count);
+			Condition.ValidateNotNull(list, nameof(list));
+			Condition
+				.Validate(offset >= 0 && offset < list.Count)
+				.OrIndexOutOfRangeException("The offset is outside of the list boundaries.");
+
+			// TODO: fishy edge conditions
 
             return new ListSegment<T>(list, offset, list.Count - offset);
         }
@@ -339,8 +347,12 @@ namespace whiteMath.General
         /// </returns>
         public static ListSegment<T> ListSegmentTo<T>(this IList<T> list, int toInclusiveIndex)
         {
-            Contract.Requires<ArgumentNullException>(list != null, "list");
-            Contract.Requires<ArgumentOutOfRangeException>(toInclusiveIndex >= 0 && toInclusiveIndex < list.Count - 1);
+			Condition.ValidateNotNull(list, nameof(list));
+			Condition
+				.Validate(toInclusiveIndex >= 0 && toInclusiveIndex < list.Count - 1)
+				.OrIndexOutOfRangeException("The index is outside of the list boundaries.");
+
+			// TODO: fishy edge conditions
 
             return new ListSegment<T>(list, 0, toInclusiveIndex + 1);
         }
@@ -362,10 +374,15 @@ namespace whiteMath.General
         /// </returns>
         public static ListSegment<T> ListSegmentFromTo<T>(this IList<T> list, int fromInclusiveIndex, int toInclusiveIndex)
         {
-            Contract.Requires<ArgumentNullException>(list != null, "list");
-            Contract.Requires<IndexOutOfRangeException>(fromInclusiveIndex >= 0 && fromInclusiveIndex < list.Count - 1);
-            Contract.Requires<IndexOutOfRangeException>(toInclusiveIndex >= 0 && toInclusiveIndex < list.Count - 1);
-            Contract.Requires<ArgumentException>(fromInclusiveIndex < toInclusiveIndex);
+			Condition.ValidateNotNull(list, nameof(list));
+			Condition
+				.Validate(fromInclusiveIndex >= 0 && fromInclusiveIndex < list.Count - 1)
+				.OrIndexOutOfRangeException("The index is outside of the list boundaries.");
+			Condition
+				.Validate(fromInclusiveIndex < toInclusiveIndex)
+				.OrArgumentException("The starting index should not exceed the ending index.");
+
+			// TODO: fishy edge conditions
 
             return new ListSegment<T>(list, fromInclusiveIndex, toInclusiveIndex - fromInclusiveIndex + 1);
         }
@@ -384,8 +401,10 @@ namespace whiteMath.General
         /// </returns>
         public static ListSegment<T> ExcludeBoundaries<T>(this IList<T> list)
         {
-            Contract.Requires<ArgumentNullException>(list != null, "list");
-            Contract.Requires<ArgumentException>(list.Count >= 2, "The list should contain at least two elements.");
+			Condition.ValidateNotNull(list, nameof(list));
+			Condition
+				.Validate(list.Count > 1)
+			    .OrArgumentException("The list should contain at least two elements.");
 
             return new ListSegment<T>(list, 1, list.Count - 2);
         }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 
+using whiteStructs.Conditions;
+
 namespace whiteMath.Graphers
 {
     /// <summary>
@@ -120,7 +122,7 @@ namespace whiteMath.Graphers
             Pen curvePen, 
             LineType curveType = LineType.Line): this()
         {
-            Contract.Requires<ArgumentOutOfRangeException>(indentFromBounds >=0, "The indent from image bounds must be a non-negative value.");
+			Condition.ValidateNonNegative(indentFromBounds, "The indent from image bounds must be a non-negative value.");
 
             this.IndentFromBounds = indentFromBounds;
             
@@ -131,12 +133,6 @@ namespace whiteMath.Graphers
 
             this.CoordFont = coordFont;
             this.CurveType = curveType;
-        }
-
-        [ContractInvariantMethod]
-        private void __invariant()
-        {
-            Contract.Invariant(this.IndentFromBounds >= 0);
         }
 
         /// <summary>
@@ -184,7 +180,6 @@ namespace whiteMath.Graphers
     /// graphing methods of <c>HistoGraphers</c>.
     /// </summary>
     /// <see cref="HistoGrapher"/>
-    [ContractVerification(true)]
     [Serializable]
     public struct HistoGraphingArgs : ICloneable
     {

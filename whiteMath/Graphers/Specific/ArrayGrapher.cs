@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using whiteMath.General;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.Graphers
 {
@@ -12,16 +13,13 @@ namespace whiteMath.Graphers
         /// Constructs a new <see cref="ArrayGrapher"/> object
         /// using a list of (x, y) points.
         /// </summary>
-        /// <param name="pointsArray">An enumerable list of (x, y) points.</param>
-        public ArrayGrapher(IEnumerable<Point<double>> pointsArray)
+        /// <param name="pointSequence">An enumerable list of (x, y) points.</param>
+        public ArrayGrapher(IEnumerable<Point<double>> pointSequence)
         {
-            Contract.Requires<ArgumentNullException>(pointsArray != null, "pointsArray");
-            Contract.Requires<ArgumentException>(pointsArray.Count() > 0, "The point list does not contain any points.");
+			Condition.ValidateNotNull(pointSequence, nameof(pointSequence));
+			Condition.ValidateNotEmpty(pointSequence, "The point sequence should contain at least one point.");
 
-            // No need to sort?
-            // GrapherArrayWork.DoublePointSort(PointsArray);            
-
-            this.PointsArray = pointsArray.ToArray();
+            this.PointsArray = pointSequence.ToArray();
             FindMaximumsAndMinimums();
         }
 
@@ -29,17 +27,19 @@ namespace whiteMath.Graphers
         /// Constructs a new <see cref="ArrayGrapher"/> object
         /// using separate point lists for 'x' and 'y'.
         /// </summary>
-        /// <param name="xList">An enumerable list of 'x' points.</param>
-        /// <param name="yList">An enumerable list of 'y' points.</param>
-        public ArrayGrapher(IEnumerable<double> xList, IEnumerable<double> yList)
+        /// <param name="xSequence">An enumerable list of 'x' points.</param>
+        /// <param name="ySequence">An enumerable list of 'y' points.</param>
+        public ArrayGrapher(IEnumerable<double> xSequence, IEnumerable<double> ySequence)
         {
-            Contract.Requires<ArgumentNullException>(xList != null, "xList");
-            Contract.Requires<ArgumentNullException>(yList != null, "yList");
-            Contract.Requires<ArgumentException>(xList.Count() > 0, "The 'xList' does not contain any points.");
-            Contract.Requires<ArgumentException>(xList.Count() == yList.Count(), "The lengths of 'x' and 'y' point lists must be equal.");
+			Condition.ValidateNotNull(xSequence, nameof(xSequence));
+			Condition.ValidateNotNull(ySequence, nameof(ySequence));
+			Condition.ValidateNotEmpty(xSequence, "The sequence of x values should not be empty.");
+			Condition
+				.Validate(xSequence.Count() == ySequence.Count())
+				.OrArgumentException("The lengths of 'x' and 'y' point sequences must be equal.");
 
-            this.PointsArray = xList
-                .Zip(yList, (x, y) => new Point<double>(x, y))
+            this.PointsArray = xSequence
+                .Zip(ySequence, (x, y) => new Point<double>(x, y))
                 .ToArray();
 
             FindMaximumsAndMinimums();

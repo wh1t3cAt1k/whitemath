@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics.Contracts;
 
 namespace whiteMath.Randoms
@@ -12,7 +9,6 @@ namespace whiteMath.Randoms
     /// <c>IRandomBounded&lt;T&gt;</c>, <c>IRandomUnbounded&lt;T&gt;</c> and <c>IRandomFloatingPoint&lt;T&gt;</c> interfaces 
     /// for compatibility with whiteMath library methods.
     /// </summary>
-    [ContractVerification(true)]
     public class RandomStandard: 
         IRandomBoundedUnbounded<int>, 
         IRandomBoundedUnbounded<long>, 

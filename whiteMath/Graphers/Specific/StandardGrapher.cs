@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Text;
-using System.IO;
 using System.Drawing.Text;
-using System.Drawing.Drawing2D;
-using System.Windows.Forms;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Drawing.Design;
 
 using whiteMath.Graphers.Services;
 using whiteMath.General;
 
-using CoordinateTransformer = whiteMath.Graphers.CoordinateTransformer<double, whiteMath.CalcDouble>;
+using CoordinateTransformer = whiteMath.Graphers.CoordinateTransformer<double, whiteMath.Calculators.CalcDouble>;
 
 namespace whiteMath.Graphers
 {

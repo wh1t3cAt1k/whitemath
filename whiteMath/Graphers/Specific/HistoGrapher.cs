@@ -14,7 +14,6 @@ namespace whiteMath.Graphers
         /// <summary>
         /// Hidden field.
         /// </summary>
-        [ContractPublicPropertyName("PointValuePairs")]
         internal SortedDictionary<string, double> pointValuePairs;
 
         /// <summary>

@@ -1,8 +1,8 @@
 ﻿#if (DEBUG)
 using NUnit.Framework;
 
-using IntRational = whiteMath.RationalNumbers.Rational<int, whiteMath.CalcInt>;
-using IntRationalCalculator = whiteMath.RationalNumbers.CalcRational<int, whiteMath.CalcInt>;
+using IntRational = whiteMath.RationalNumbers.Rational<int, whiteMath.Calculators.CalcInt>;
+using IntRationalCalculator = whiteMath.Calculators.CalcRational<int, whiteMath.Calculators.CalcInt>;
 
 namespace whiteMath.RationalNumbers
 {

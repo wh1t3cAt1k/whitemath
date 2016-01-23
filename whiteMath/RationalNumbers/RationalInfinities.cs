@@ -1,5 +1,7 @@
 ﻿using System;
 
+using whiteMath.Calculators;
+
 namespace whiteMath.RationalNumbers
 {
     public partial class Rational<T,C>: ICloneable where C: ICalc<T>, new()

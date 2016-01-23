@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
+using whiteStructs.Conditions;
 
 using whiteMath.ArithmeticLong;
 
@@ -74,8 +73,10 @@ namespace whiteMath.Randoms
         /// </returns>
         public LongInt<B> NextInclusive(LongInt<B> maxInclusive)
         {
-            Contract.Requires<ArgumentNullException>(maxInclusive != null, "maxInclusive");
-            Contract.Requires<ArgumentOutOfRangeException>(!maxInclusive.Negative, "The maximum inclusive number should not be negative.");
+			Condition.ValidateNotNull(maxInclusive, nameof(maxInclusive));
+			Condition
+				.Validate(!maxInclusive.Negative)
+				.OrArgumentOutOfRangeException("The maximum inclusive number should not be negative.");
 
             // Будем генерировать числа длины такой же, как maxInclusive.
             // Все цифры - от 0 до BASE - 1
@@ -122,8 +123,10 @@ namespace whiteMath.Randoms
         /// </returns>
         public LongInt<B> Next(LongInt<B> maxExclusive)
         {
-            Contract.Requires<ArgumentNullException>(maxExclusive != null, "maxExclusive");
-            Contract.Requires<ArgumentOutOfRangeException>(maxExclusive > 0, "The maximum exclusive bound should be a positive number.");
+			Condition.ValidateNotNull(maxExclusive, nameof(maxExclusive));
+			Condition
+				.Validate(maxExclusive > 0)
+				.OrArgumentOutOfRangeException("The maximum exclusive bound should be a positive number.");
 
             return NextInclusive(maxExclusive - 1);
         }
@@ -140,9 +143,11 @@ namespace whiteMath.Randoms
         /// </returns>
         public LongInt<B> Next(LongInt<B> minInclusive, LongInt<B> maxExclusive)
         {
-            Contract.Requires<ArgumentNullException>(minInclusive != null, "minInclusive");
-            Contract.Requires<ArgumentNullException>(maxExclusive != null, "maxExclusive");
-            Contract.Requires<ArgumentException>(minInclusive < maxExclusive, "The minimum inclusive bound should be less than the maximum exclusive.");
+			Condition.ValidateNotNull(minInclusive, nameof(minInclusive));
+			Condition.ValidateNotNull(maxExclusive, nameof(maxExclusive));
+			Condition
+				.Validate(minInclusive < maxExclusive)
+				.OrArgumentException("The minimum inclusive bound should be less than the maximum exclusive.");
 
             return minInclusive + this.NextInclusive(maxExclusive - minInclusive - 1);
         }

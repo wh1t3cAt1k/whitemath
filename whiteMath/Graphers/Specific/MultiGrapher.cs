@@ -1,42 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 
 namespace whiteMath.Graphers
 {
     /// <summary>
+	/// <para>
     /// Support multiple graphs on a single surface.
     /// Because the grapher objects passed to the constructor can be a mix of bounded
     /// and unbounded graphers, the graph methods expects you to explicitly mention
     /// the graphing diap.
-    /// 
+	/// </para>
+	/// <para>
     /// Once again: call ONLY the <code>Graph()</code> methods with ALL of the bounds
     /// written explicitly. Otherwise, it would throw NotSupportedException.
-    /// 
+	/// </para>
+	/// <para>>
     /// Although the grapher derives from the IBoundedGrapher interface,
     /// be careful as its properties <code>MinAxis1</code>, <code>MaxAxis1</code>,
     /// will return non-infinity values --ONLY-- if the graphers passed to the constructor 
     /// are bounded and provide explicit implementation of these methods respectively, 
     /// deriving from the <code>IGrapherBounded</code> interface.
-    /// 
+	/// </para>
+	/// <para>
     /// Values of the MinAxis2, MaxAxis2 should always be checked for infinities
     /// because of the possibly infinite function range on the bounded argument diap.
-    /// 
-    /// For example, <example>imagine a FunctionGrapher containing f(x)=tg(x).</example>
+	/// </para>
+	/// <para>
+    /// For example, imagine a FunctionGrapher containing f(x)=tg(x).
     /// The argument range may be finite on (0; 2*pi), but, the function varies from -inf to +inf.
-    /// 
-    /// <see>FunctionGrapher</see>
-    /// 
+	/// </para>
+    /// <see cref="FunctionGrapher"/>
     /// Otherwise, if a single unbounded grapher comes around, these properties will return
     /// infinity values.
-    /// 
-    /// <see>IGrapherBounded</see>
-    /// 
-    /// Author: Pavel Kabir
-    /// Version: 0.9
-    /// Revised: 04.07.2010
+    /// <see cref="IGrapherBounded"/>
     /// </summary>
     public class MultiGrapher: AbstractGrapher, IGrapherBounded
     {
@@ -109,7 +105,7 @@ namespace whiteMath.Graphers
         /// passed to the constructor. Otherwise, a <code>GrapherException</code> is thrown.
         /// </summary>
         /// <param name="pens">A list of pens matching the graphers list. </param>
-        public void setPens(params Pen[] pens)
+        public void SetPens(params Pen[] pens)
         {
             if (pens.Length != grapherArray.Length)
                 throw new GrapherException("Pens array must be of the same length as the graphers array.");
@@ -117,17 +113,17 @@ namespace whiteMath.Graphers
             this.pens = pens;
         }
 
-        public override void Graph(System.Drawing.Image dest, GraphingArgs ga, double xMin, double xMax, double yMin, double yMax)
+        public override void Graph(Image destinationImage, GraphingArgs graphingArgs, double xMin, double xMax, double yMin, double yMax)
         {
             if (pens != null)
-                ga.CurvePen = pens[0];                
+                graphingArgs.CurvePen = pens[0];                
             
             copyGrapherSignature(this, grapherArray[0]);
-            grapherArray[0].Graph(dest, ga, xMin, xMax, yMin, yMax);
+            grapherArray[0].Graph(destinationImage, graphingArgs, xMin, xMax, yMin, yMax);
 
-            // Отключим рисование сетки, насечек и номеров
-
-            GraphingArgs newArgs = (GraphingArgs)ga.Clone();
+            // Disable grid, ticks, and numbers
+			// -
+            GraphingArgs newArgs = (GraphingArgs)graphingArgs.Clone();
 
             newArgs.GridPen = null;
             newArgs.CoordFont = null;
@@ -140,7 +136,7 @@ namespace whiteMath.Graphers
                     newArgs.CurvePen = pens[i];
 
                 copyGrapherSignature(this, grapherArray[i]);
-                grapherArray[i].Graph(dest, newArgs, xMin, xMax, yMin, yMax);
+                grapherArray[i].Graph(destinationImage, newArgs, xMin, xMax, yMin, yMax);
             }
         }
     }

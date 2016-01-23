@@ -940,7 +940,7 @@ namespace whiteMath.ArithmeticLong
 
             // Unquick part.
 
-            LongInt<B> twoPower = WhiteMath<LongInt<B>, whiteMath.ArithmeticLong.CalcLongInt<B>>.PowerInteger(2, howMuch);
+			LongInt<B> twoPower = WhiteMath<LongInt<B>, CalcLongInt<B>>.PowerInteger(2, howMuch);
             one *= twoPower;
 
             return one;
@@ -965,7 +965,7 @@ namespace whiteMath.ArithmeticLong
 
             // Unquick part.
 
-            LongInt<B> twoPower = WhiteMath<LongInt<B>, whiteMath.ArithmeticLong.CalcLongInt<B>>.PowerInteger(2, howMuch);
+            LongInt<B> twoPower = WhiteMath<LongInt<B>, CalcLongInt<B>>.PowerInteger(2, howMuch);
             one /= twoPower;
 
             return one;

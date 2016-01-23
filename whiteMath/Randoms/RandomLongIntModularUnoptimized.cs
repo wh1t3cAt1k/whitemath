@@ -2,6 +2,8 @@
 
 using whiteMath.ArithmeticLong;
 
+using whiteStructs.Conditions;
+
 namespace whiteMath.Randoms
 {
     /// <summary>
@@ -74,8 +76,10 @@ namespace whiteMath.Randoms
         /// </returns>
         public LongInt<B> Next(LongInt<B> maxExclusive)
         {
-            Contract.Requires<ArgumentNullException>(maxExclusive != null, "maxExclusive");
-            Contract.Requires<ArgumentOutOfRangeException>(maxExclusive > 0, "The maximum exclusive bound should be a positive number.");
+			Condition.ValidateNotNull(maxExclusive, nameof(maxExclusive));
+			Condition
+				.Validate(maxExclusive > 0)
+				.OrArgumentOutOfRangeException("The maximum exclusive bound should be a positive number.");
 
             // Мы будем генерировать ВСЕ цифры от 0 до BASE - 1.
             // НО:
@@ -121,9 +125,11 @@ namespace whiteMath.Randoms
         /// </returns>
         public LongInt<B> Next(LongInt<B> minInclusive, LongInt<B> maxExclusive)
         {
-            Contract.Requires<ArgumentNullException>(minInclusive != null, "minInclusive");
-            Contract.Requires<ArgumentNullException>(maxExclusive != null, "maxExclusive");
-            Contract.Requires<ArgumentException>(minInclusive < maxExclusive, "The minimum inclusive bound should be less than the maximum exclusive.");
+			Condition.ValidateNotNull(minInclusive, nameof(minInclusive));
+			Condition.ValidateNotNull(maxExclusive, nameof(maxExclusive));
+			Condition
+				.Validate(minInclusive < maxExclusive)
+				.OrArgumentException("The minimum inclusive bound should be less than the maximum exclusive.");
 
             return minInclusive + this.Next(maxExclusive - minInclusive);
         }

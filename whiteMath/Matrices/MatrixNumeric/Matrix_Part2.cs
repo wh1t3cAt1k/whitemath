@@ -1,5 +1,6 @@
 ﻿using System;
 
+using whiteMath.Algorithms;
 using whiteMath.Calculators;
 using whiteMath.General;
 using whiteMath.Combinatorics;

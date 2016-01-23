@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.IO;
-using System.Windows.Forms;
 using System.Text;
 
-using whiteMath.Graphers.Services;
 using whiteMath.General;
 
 namespace whiteMath.Graphers
@@ -117,8 +114,6 @@ namespace whiteMath.Graphers
             SR.Close();
             return count;
         }
-
-        
     }
 
 }

@@ -2,6 +2,8 @@
 
 using whiteMath.ArithmeticLong;
 
+using whiteStructs.Conditions;
+
 namespace whiteMath.Randoms
 {
     /// <summary>
@@ -74,8 +76,10 @@ namespace whiteMath.Randoms
         /// </returns>
         public LongInt<B> Next(LongInt<B> maxExclusive)
         {
-            Contract.Requires<ArgumentNullException>(maxExclusive != null, "maxExclusive");
-            Contract.Requires<ArgumentOutOfRangeException>(maxExclusive > 0, "The maximum exclusive bound should be a positive number.");
+			Condition.ValidateNotNull(maxExclusive, nameof(maxExclusive));
+			Condition
+				.Validate(maxExclusive > 0)
+				.OrArgumentOutOfRangeException("The maximum exclusive bound should be a positive number.");
 
             LongInt<B> basePowered = LongInt<B>.CreatePowerOfBase(maxExclusive.Length);
             LongInt<B> upperBound;
@@ -140,9 +144,11 @@ namespace whiteMath.Randoms
         /// </returns>
         public LongInt<B> Next(LongInt<B> minInclusive, LongInt<B> maxExclusive)
         {
-            Contract.Requires<ArgumentNullException>(minInclusive != null, "minInclusive");
-            Contract.Requires<ArgumentNullException>(maxExclusive != null, "maxExclusive");
-            Contract.Requires<ArgumentException>(minInclusive < maxExclusive, "The minimum inclusive bound should be less than the maximum exclusive.");
+			Condition.ValidateNotNull(minInclusive, nameof(minInclusive));
+			Condition.ValidateNotNull(maxExclusive, nameof(maxExclusive));
+			Condition
+				.Validate(minInclusive < maxExclusive)
+				.OrArgumentException("The minimum inclusive bound should be less than the maximum exclusive.");
 
             return minInclusive + this.Next(maxExclusive - minInclusive);
         }
@@ -163,10 +169,12 @@ namespace whiteMath.Randoms
         private static LongInt<B> Max_BinarySearch<B>(LongInt<B> leftInclusive, LongInt<B> rightInclusive, Predicate<LongInt<B>> predicate)
             where B : IBase, new()
         {
-            Contract.Requires<ArgumentNullException>(leftInclusive != null, "leftInclusive");
-            Contract.Requires<ArgumentNullException>(rightInclusive != null, "rightInclusive");
-            Contract.Requires<ArgumentNullException>(predicate != null, "predicate");
-            Contract.Requires<ArgumentException>(!(leftInclusive > rightInclusive));
+			Condition.ValidateNotNull(leftInclusive, nameof(leftInclusive));
+			Condition.ValidateNotNull(rightInclusive, nameof(rightInclusive));
+			Condition.ValidateNotNull(predicate, nameof(predicate));
+			Condition
+				.Validate(leftInclusive <= rightInclusive)
+				.OrArgumentException();
 
             LongInt<B> lb = leftInclusive;
             LongInt<B> rb = rightInclusive;

@@ -107,7 +107,9 @@ namespace whiteMath
         {
             get
             {
-                Contract.Requires<NonIntegerTypeException>(Numeric<T, C>.Calculator.isIntegerCalculator, "The bounds of the interval should be of integer type.");
+				Condition
+					.Validate(Numeric<T, C>.Calculator.isIntegerCalculator)
+					.OrException(new NonIntegerTypeException(typeof(T).Name));
 
                 Numeric<T, C> leftInclusive = (this.IsLeftInclusive ? this.LeftBound : (this.LeftBound + Numeric<T,C>._1));
                 Numeric<T, C> rightInclusive = (this.IsRightInclusive ? this.RightBound : (this.RightBound - Numeric<T,C>._1));
@@ -186,8 +188,10 @@ namespace whiteMath
         /// </returns>
         public BoundedInterval<T, C> ToInclusiveIntegerInterval()
         {
-            Contract.Requires<NonIntegerTypeException>(Numeric<T,C>.Calculator.isIntegerCalculator, "The bounds of the interval should be of integer type.");
-            
+			Condition
+				.Validate(Numeric<T, C>.Calculator.isIntegerCalculator)
+				.OrException(new NonIntegerTypeException(typeof(T).Name));
+			
             Numeric<T, C> leftInclusive = this.IsLeftInclusive ? this.LeftBound : (this.LeftBound + Numeric<T, C>._1);
             Numeric<T, C> rightInclusive = this.IsRightInclusive ? this.RightBound : (this.RightBound - Numeric<T, C>._1);
 
@@ -213,7 +217,9 @@ namespace whiteMath
         /// </returns>
         public BoundedInterval<T, C> ToExclusiveIntegerInterval()
         {
-            Contract.Requires<NonIntegerTypeException>(Numeric<T,C>.Calculator.isIntegerCalculator, "The bounds of the interval should be of integer type.");
+			Condition
+				.Validate(Numeric<T, C>.Calculator.isIntegerCalculator)
+				.OrException(new NonIntegerTypeException(typeof(T).Name));
             
             Numeric<T, C> leftExclusive = this.IsLeftInclusive ? (this.LeftBound - Numeric<T, C>._1) : this.LeftBound;
             Numeric<T, C> rightExclusive = this.IsRightInclusive ? (this.RightBound + Numeric<T, C>._1) : this.RightBound;
@@ -239,11 +245,17 @@ namespace whiteMath
         /// </returns>
         public List<BoundedInterval<T, C>> Split(int parts)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(parts > 0, "The amount of parts should be a positive integer number.");
-            Contract.Requires<ArgumentException>(this.Length / (Numeric<T,C>)parts != Numeric<T,C>.Zero, "The specified amount of parts will result in zero-length intervals due to the numeric precision.");
+			Condition
+				.Validate(parts > 0)
+				.OrArgumentOutOfRangeException("The number of parts should be positive.");
+			Condition
+				.Validate(this.Length / (Numeric<T,C>)parts != Numeric<T,C>.Zero)
+				.OrArgumentException("The specified amount of parts will result in zero-length intervals due to numeric precision.");
 
+			/*
             Contract.Ensures(Contract.Result<List<BoundedInterval<T, C>>>() != null);
             Contract.Ensures(Contract.Result<List<BoundedInterval<T,C>>>().Count > 0);
+			*/
 
             return this.Split(this.Length / (Numeric<T,C>)parts, BoundedIntervalSplitOptions.BiggerLastInterval);
         }
@@ -262,9 +274,14 @@ namespace whiteMath
         /// </returns>
         public List<BoundedInterval<T, C>> Split(T length, BoundedIntervalSplitOptions options)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(length > Numeric<T,C>.Zero, "The desired length should be positive.");
-            Contract.Requires<ArgumentOutOfRangeException>(length <= (Numeric<T,C>)this.Length, "The desired length should not exceed the current interval's length.");
-            Contract.Ensures(Contract.Result<List<BoundedInterval<T, C>>>() != null);
+			Condition
+				.Validate(length > Numeric<T,C>.Zero)
+				.OrArgumentOutOfRangeException("The desired length should be positive.");
+			Condition
+				.Validate(length <= (Numeric<T,C>)this.Length)
+				.OrArgumentOutOfRangeException("The desired length should not exceed the current interval's length.");
+            
+			// Contract.Ensures(Contract.Result<List<BoundedInterval<T, C>>>() != null);
 
             Numeric<T, C> parts = ((Numeric<T, C>)this.Length / length).IntegerPart;
 

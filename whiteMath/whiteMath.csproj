@@ -245,8 +245,6 @@
     <Compile Include="Geometry\PointD.cs" />
     <Compile Include="Geometry\VectorD.cs" />
     <Compile Include="Graphers\Services\CoordinateTransformer.cs" />
-    <Compile Include="Graphers\Services\CoordinateTransformerOld2.cs" />
-    <Compile Include="Graphers\Services\CoordinateTransformerOld3.cs" />
     <Compile Include="Graphers\Services\DimensionTransformer.cs" />
     <Compile Include="Graphers\Specific\HistoGrapher.cs" />
     <Compile Include="Graphers\Specific\HistoGrapherBrushFactory.cs" />
@@ -298,7 +296,6 @@
     <Compile Include="Graphers\Generic\General.cs" />
     <Compile Include="Graphers\Generic\MainInterfaces.cs" />
     <Compile Include="Graphers\Services\AddMultiplyConverter.cs" />
-    <Compile Include="Graphers\Services\CoordinateTransformerOld1.cs" />
     <Compile Include="Graphers\Services\Helper.cs" />
     <Compile Include="Graphers\Specific\AbstractGrapher.cs" />
     <Compile Include="Graphers\Specific\ArrayGrapher.cs" />
@@ -317,12 +314,9 @@
     <Compile Include="Matrices\IndexPair.cs" />
     <Compile Include="Matrices\MatrixNumeric\MatrixElementCopyAdapter.cs" />
     <Compile Include="Matrices\MatrixNumeric\Matrix_Part1.cs" />
-    <Compile Include="Matrices\DoubleMatrix\DoubleMatrix.cs" />
-    <Compile Include="Matrices\DoubleMatrix\MatrixSDA.cs" />
     <Compile Include="Matrices\MatrixNumeric\Submatrix.cs" />
     <Compile Include="Matrices\MatrixNumeric\Matrix_Part2.cs" />
     <Compile Include="Matrices\MatrixNumeric\MatrixSDA.cs" />
-    <Compile Include="Matrices\DoubleMatrix\DoubleSubmatrix.cs" />
     <Compile Include="Matrices\SLAE\Solver.cs" />
     <Compile Include="Matrices\Winders\01_RowByRowWinder.cs" />
     <Compile Include="Matrices\Winders\03_SpiralWinder.cs" />
@@ -395,10 +389,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\LICENSE" />
     <None Include="Resources\NTTPrimeModuli.txt" />
     <None Include="Resources\NTTFastPrimeModuli.txt" />
-    <None Include="Resources\README.md" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

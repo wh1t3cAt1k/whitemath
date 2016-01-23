@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.Graphers
 {
     public static class HistoGrapherBrushFactory
     {
-        public static Dictionary<string, Brush> CreateValueDependentBrushes(this HistoGrapher hg, double minValue, double maxValue, Color minColor, Color maxColor)
+        public static Dictionary<string, Brush> CreateValueDependentBrushes(this HistoGrapher histographer, double minValue, double maxValue, Color minColor, Color maxColor)
         {
-            Contract.Requires<ArgumentNullException>(hg != null, "hg");
-            Contract.Requires<ArgumentException>(minValue < maxValue, "The minimum value should be less than the maximum value.");
-            Contract.Requires<ArgumentException>(hg.MinValue >= minValue && hg.MaxValue <= maxValue, "HistoGrapher's values should not exceed the explicitly specified bounds of colour.");
+			Condition.ValidateNotNull(histographer, nameof(histographer));
+			Condition
+				.Validate(minValue < maxValue)
+				.OrArgumentException("The minimum value should not exceed the maximum value.");
+			Condition
+				.Validate(histographer.MinValue >= minValue && histographer.MaxValue <= maxValue)
+				.OrArgumentException("HistoGrapher's values should not exceed the explicitly specified bounds of colour.");
 
             double rDiff = maxColor.R - minColor.R;
             double gDiff = maxColor.G - minColor.G;
@@ -29,31 +33,39 @@ namespace whiteMath.Graphers
                 return Color.FromArgb(aNew, rNew, gNew, bNew);
             };
 
-            return hg.CreateValueDependentBrushes(minValue, maxValue, colorMapper);
+            return histographer.CreateValueDependentBrushes(minValue, maxValue, colorMapper);
         }
 
-        public static Dictionary<string, Brush> CreateValueDependentBrushes(this HistoGrapher hg, double minValue, double maxValue, Func<double, Color> colorMapper)
+        public static Dictionary<string, Brush> CreateValueDependentBrushes(this HistoGrapher histographer, double minValue, double maxValue, Func<double, Color> colorMapper)
         {
-            Contract.Requires<ArgumentNullException>(hg != null, "hg");
-            Contract.Requires<ArgumentNullException>(colorMapper != null, "colorMapper");
-            Contract.Requires<ArgumentException>(minValue < maxValue, "The minimum value should be less than the maximum value.");
-            Contract.Requires<ArgumentException>(hg.MinValue >= minValue && hg.MaxValue <= maxValue, "HistoGrapher's values should not exceed the explicitly specified bounds of colour.");
-
-            return hg.CreateValueDependentBrushes(minValue, maxValue, (x => new SolidBrush(colorMapper(x))));
+			Condition.ValidateNotNull(histographer, nameof(histographer));
+			Condition.ValidateNotNull(colorMapper, nameof(colorMapper));
+			Condition
+				.Validate(minValue < maxValue)
+				.OrArgumentException("The minimum value should not exceed the maximum value.");
+			Condition
+				.Validate(histographer.MinValue >= minValue && histographer.MaxValue <= maxValue)
+				.OrArgumentException("HistoGrapher's values should not exceed the explicitly specified bounds of colour.");
+			
+            return histographer.CreateValueDependentBrushes(minValue, maxValue, (x => new SolidBrush(colorMapper(x))));
         }
 
-        public static Dictionary<string, Brush> CreateValueDependentBrushes(this HistoGrapher hg, double minValue, double maxValue, Func<double, Brush> brushMapper)
+        public static Dictionary<string, Brush> CreateValueDependentBrushes(this HistoGrapher histographer, double minValue, double maxValue, Func<double, Brush> brushMapper)
         {
-            Contract.Requires<ArgumentNullException>(hg != null, "hg");
-            Contract.Requires<ArgumentNullException>(brushMapper != null, "brushMapper");
-            Contract.Requires<ArgumentException>(minValue < maxValue, "The minimum value should be less than the maximum value.");
-            Contract.Requires<ArgumentException>(hg.MinValue >= minValue && hg.MaxValue <= maxValue, "HistoGrapher's values should not exceed the explicitly specified bounds of colour.");
-
+			Condition.ValidateNotNull(histographer, nameof(histographer));
+			Condition.ValidateNotNull(brushMapper, nameof(brushMapper));
+			Condition
+				.Validate(minValue < maxValue)
+				.OrArgumentException("The minimum value should not exceed the maximum value.");
+			Condition
+				.Validate(histographer.MinValue >= minValue && histographer.MaxValue <= maxValue)
+				.OrArgumentException("HistoGrapher's values should not exceed the explicitly specified bounds of colour.");
+			
             Dictionary<string, Brush> result = new Dictionary<string, Brush>();
 
             double rangeLength = maxValue - minValue;
 
-            foreach (KeyValuePair<string, double> kvp in hg.pointValuePairs)
+            foreach (KeyValuePair<string, double> kvp in histographer.pointValuePairs)
             {
                 double coefficient = (kvp.Value - minValue) / rangeLength;
                 result.Add(kvp.Key, brushMapper(coefficient));

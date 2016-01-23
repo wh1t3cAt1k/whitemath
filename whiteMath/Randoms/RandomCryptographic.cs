@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using System.Security.Cryptography;
-using System.Diagnostics.Contracts;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.Randoms
 {
@@ -12,8 +9,6 @@ namespace whiteMath.Randoms
     /// Represents a random number generator wrapper built
     /// on a cryptographically strong <see cref="RandomNumberGenerator"/> instance.
     /// </summary>
-    [ContractVerification(true)]
-    // 
     public class RandomCryptographic:
         IRandomBoundedUnbounded<int>,
         IRandomBoundedUnbounded<uint>,
@@ -92,7 +87,7 @@ namespace whiteMath.Randoms
         /// <returns>A random <c>uint</c> number which is smaller than <paramref name="maxValue"/>.</returns>
         public uint NextUInt(uint maxValue)
         {
-            Contract.Requires<ArgumentException>(maxValue > 0, "The upper exclusive boundary for generated values should not be equal to zero.");
+			Condition.ValidatePositive(maxValue, "The upper exclusive boundary for generated values should be positive.");
 
             return
                 ___nextUIntUB(maxValue);
@@ -107,7 +102,9 @@ namespace whiteMath.Randoms
         /// <returns>A random <c>uint</c> number which is bigger than or equal to <paramref name="minValue"/> and less than <paramref name="maxValue"/>.</returns>
         public uint NextUInt(uint minValue, uint maxValue)
         {
-            Contract.Requires<ArgumentException>(maxValue > minValue, "The upper exclusive boundary should be bigger than the lower inclusive.");
+			Condition
+				.Validate(maxValue > minValue)
+				.OrArgumentException("The upper exclusive boundary should be bigger than the lower inclusive boundary.");
 
             return
                 ___nextUIntB(minValue, maxValue);
@@ -133,7 +130,9 @@ namespace whiteMath.Randoms
         /// <returns>A random <c>ulong</c> number which is smaller than <paramref name="maxValue"/>.</returns>
         public ulong NextULong(ulong maxValue)
         {
-            Contract.Requires<ArgumentException>(maxValue > 0, "The upper exclusive boundary for generated values should not be equal to zero.");
+			Condition
+				.Validate(maxValue > 0)
+				.OrArgumentOutOfRangeException("The upper exclusive boundary for generated values should be positive.");
 
             return
                 ___nextULongUB(maxValue);
@@ -148,7 +147,9 @@ namespace whiteMath.Randoms
         /// <returns>A random <c>ulong</c> number which is bigger than or equal to <paramref name="minValue"/> and less than <paramref name="maxValue"/>.</returns>
         public ulong NextULong(ulong minValue, ulong maxValue)
         {
-            Contract.Requires<ArgumentException>(maxValue > minValue, "The upper exclusive boundary should be bigger than the lower inclusive.");
+			Condition
+				.Validate(maxValue > minValue)
+				.OrArgumentException("The upper exclusive boundary should be bigger than the lower inclusive boundary.");
 
             return
                 ___nextULongB(minValue, maxValue);
@@ -173,7 +174,7 @@ namespace whiteMath.Randoms
         /// <returns>A non-negative <c>int</c> number that is less than <paramref name="maxValue"/></returns>
         public int NextInt(int maxValue)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(maxValue > 0, "The upper exclusive boundary should be a positive number.");
+			Condition.ValidatePositive(maxValue, "The upper exclusive boundary should be a positive number.");
 
             return
                 ___nextIntUB(maxValue);
@@ -188,7 +189,9 @@ namespace whiteMath.Randoms
         /// <returns>The next <c>int</c> value in the <c>[minValue; maxValue)</c> interval.</returns>
         public int NextInt(int minValue, int maxValue)
         {
-            Contract.Requires<ArgumentException>(maxValue > minValue, "The lower inclusive boundary should be less than the upper exclusive.");
+			Condition
+				.Validate(maxValue > minValue)
+				.OrArgumentException("The upper exclusive boundary should be bigger than the lower inclusive boundary.");
 
             return
                 ___nextIntB(minValue, maxValue);
@@ -214,7 +217,7 @@ namespace whiteMath.Randoms
         /// <returns>A non-negative <c>long</c> number that is less than <paramref name="maxValue"/></returns>
         public long NextLong(long maxValue)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(maxValue > 0, "The upper exclusive boundary should be a positive number.");
+			Condition.ValidatePositive(maxValue, "The upper exclusive boundary should be a positive number.");
 
             return
                 ___nextLongUB(maxValue);
@@ -229,8 +232,10 @@ namespace whiteMath.Randoms
         /// <returns>The next <c>long</c> value in the <c>[minValue; maxValue)</c> interval.</returns>
         public long NextLong(long minValue, long maxValue)
         {
-            Contract.Requires<ArgumentException>(maxValue > minValue, "The lower inclusive boundary should be less than the upper exclusive.");
-
+			Condition
+				.Validate(maxValue > minValue)
+				.OrArgumentException("The upper exclusive boundary should be bigger than the lower inclusive boundary.");
+			
             return
                 ___nextLongB(minValue, maxValue);
         }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace whiteMath
+﻿namespace whiteMath
 {
     /// <summary>
     /// A generic interface for providing generic type <typeparamref name="T"/>

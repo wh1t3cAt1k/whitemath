@@ -16,7 +16,7 @@ namespace whiteMath.Imaging
         public static void drawDecals(this Graphics G, IList<IDecal> decals)
         {
             foreach (IDecal decal in decals)
-                decal.drawMe(G);
+				decal.drawMe(G);
         }
 
         /// <summary>

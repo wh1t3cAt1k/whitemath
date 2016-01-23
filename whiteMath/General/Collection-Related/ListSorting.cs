@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace whiteMath.General
 {
     public static class ListSorting
     {
-        // -----------------------------------
-        // ------- СОРТИРОВКА СПИСКОВ --------
-        // -----------------------------------
-
         /// <summary>
         /// Checks whether the sequence of objects is ascending sorted, uses the comparer passed
         /// for sequence elements, or, if a null value is specified, the standard system
@@ -24,11 +18,12 @@ namespace whiteMath.General
         /// <returns>True if the sequence is ascending sorted according to the comparer specified, false otherwise.</returns>
         public static bool IsSorted<T>(this IEnumerable<T> sequence, IComparer<T> comparer = null)
         {
-            if (comparer == null)
-                comparer = Comparer<T>.Default;
+            comparer = comparer ?? Comparer<T>.Default;
 
-            if (sequence.Count() < 2)
-                return true;                // коллекция в 0 или 1 элемент всегда сортирована.
+			if (sequence.IsEmpty() || sequence.IsSingleton())
+			{
+				return true;
+			}
 
             IEnumerator<T> previous = sequence.GetEnumerator();
             IEnumerator<T> next = sequence.GetEnumerator();
@@ -43,7 +38,7 @@ namespace whiteMath.General
         }
 
         /// <summary>
-        /// Возвращает последовательность Пратта для сортировки Шелла.
+        /// Returns the Pratt Sequence for Shell Sort algorithm.
         /// </summary>
         private static IList<int> getPrattSequence(int n)
         {

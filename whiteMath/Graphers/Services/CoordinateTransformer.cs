@@ -5,6 +5,8 @@ using whiteMath.Calculators;
 using whiteMath.Geometry;
 using whiteMath.General;
 
+using whiteStructs.Conditions;
+
 namespace whiteMath.Graphers
 {
     /// <summary>
@@ -139,20 +141,15 @@ namespace whiteMath.Graphers
             toDoubleConversion, 
             new RectangleF(imgBorderIndent, imgBorderIndent, imgSize.Width - 2 * imgBorderIndent, imgSize.Height - 2 * imgBorderIndent)) 
         {
-            Contract.Assume(xMin != null);
-            Contract.Assume(xMax != null);
-            Contract.Assume(yMin != null);
-            Contract.Assume(yMax != null);
-            Contract.Assume(toDoubleConversion != null);
         }
 
         public CoordinateTransformer(T xMin, T xMax, T yMin, T yMax, Func<T, double> toDouble, RectangleF drawingRectangle)
         {
-            Contract.Requires<ArgumentNullException>(xMin != null, "xMin");
-            Contract.Requires<ArgumentNullException>(xMax != null, "xMax");
-            Contract.Requires<ArgumentNullException>(yMin != null, "yMin");
-            Contract.Requires<ArgumentNullException>(yMax != null, "yMax");
-            Contract.Requires<ArgumentNullException>(toDouble != null, "toDouble");
+			Condition.ValidateNotNull(xMin, nameof(xMin));
+			Condition.ValidateNotNull(xMax, nameof(xMax));
+			Condition.ValidateNotNull(yMin, nameof(yMin));
+			Condition.ValidateNotNull(yMax, nameof(yMax));
+			Condition.ValidateNotNull(toDouble, nameof(toDouble));
 
             xMinIsMoreThanZero = (xMin >= Numeric<T, C>.Zero);
             yMinIsMoreThanZero = (yMin >= Numeric<T, C>.Zero);
@@ -171,12 +168,6 @@ namespace whiteMath.Graphers
             yMaxInPixels = (Numeric<T,C>)yMax / this.TransformerAxisY.ScaleFactor;
 
             calculateCoordinateSystemPoints();
-        }
-
-        [ContractInvariantMethod]
-        private void ContractInvariant()
-        {
-            Contract.Invariant(this.toDouble != null);
         }
 
         // ------------Transforming methods--------------------

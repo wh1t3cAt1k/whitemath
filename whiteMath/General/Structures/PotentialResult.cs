@@ -1,5 +1,7 @@
 ﻿using System;
 
+using whiteStructs.Conditions;
+
 namespace whiteMath.General
 {
     /// <summary>
@@ -7,7 +9,6 @@ namespace whiteMath.General
     /// which can succeed in calculating some value or fail to do that.
     /// </summary>
     /// <typeparam name="T">The type of result which can be potentially calculated by a function.</typeparam>
-    [ContractVerification(true)]
     public struct PotentialResult<T>
     {
         /// <summary>
@@ -27,7 +28,9 @@ namespace whiteMath.General
         {
             get 
             {
-                Contract.Requires<InvalidOperationException>(this.Success);
+				Condition
+					.Validate(this.Success)
+					.OrException(new InvalidOperationException("There is no value."));
 
                 return 
                     ___value;

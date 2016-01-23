@@ -1,5 +1,7 @@
 ﻿using System;
 
+using whiteMath.Calculators;
+
 namespace whiteMath.Matrices
 {
     /// <summary>
