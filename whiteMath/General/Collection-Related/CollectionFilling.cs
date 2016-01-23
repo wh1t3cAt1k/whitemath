@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using whiteMath.Randoms;
 
+using whiteStructs.Conditions;
+
 namespace whiteMath.General
 {
     /// <summary>
@@ -24,8 +26,8 @@ namespace whiteMath.General
         /// <param name="value">The value to fill the collection with.</param>
         public static void FillByAppending<T>(this ICollection<T> collection, int elementCount, T value)
         {
-            Contract.Requires<ArgumentNullException>(collection != null, "collection");
-            Contract.Requires<ArgumentOutOfRangeException>(elementCount >= 0, "The element count should be a non-negative value.");
+			Condition.ValidateNotNull(collection, nameof(collection));
+			Condition.ValidateNonNegative(elementCount, "The element count should be non-negative.");
 
             for (int i = 0; i < elementCount; i++)
                 collection.Add(value);
@@ -47,9 +49,9 @@ namespace whiteMath.General
         /// <param name="max">The upper exclusive bound of numbers to be generated.</param>
         public static void FillByAppending<T>(this ICollection<T> collection, int elementCount, IRandomBounded<T> randomGenerator, T min, T max)
         {
-            Contract.Requires<ArgumentNullException>(collection != null, "collection");
-            Contract.Requires<ArgumentNullException>(randomGenerator != null, "randomGenerator");
-            Contract.Requires<ArgumentOutOfRangeException>(elementCount >= 0, "The element count should be a non-negative value.");
+			Condition.ValidateNotNull(collection, nameof(collection));
+			Condition.ValidateNotNull(randomGenerator, nameof(randomGenerator));
+			Condition.ValidateNonNegative(elementCount, "The element count should be non-negative.");
 
             for (int i = 0; i < elementCount; i++)
                 collection.Add(randomGenerator.Next(min, max));
@@ -68,12 +70,14 @@ namespace whiteMath.General
         /// <param name="function">A function that maps integer indices to <typeparamref name="T"/> values.</param>
         public static void FillByAppending<T>(this ICollection<T> collection, int elementCount, Func<int, T> function)
         {
-            Contract.Requires<ArgumentNullException>(collection != null, "collection");
-            Contract.Requires<ArgumentNullException>(function != null, "function");
-            Contract.Requires<ArgumentOutOfRangeException>(elementCount >= 0, "The element count should be a non-negative value.");
-        
-            for (int i = 0; i < elementCount; i++)
-                collection.Add(function(i));
+			Condition.ValidateNotNull(collection, nameof(collection));
+			Condition.ValidateNotNull(function, nameof(function));
+			Condition.ValidateNonNegative(elementCount, "The element count should be non-negative.");
+
+			for (int i = 0; i < elementCount; i++)
+			{
+				collection.Add(function(i));
+			}
         }
 
         /// <summary>
@@ -95,9 +99,9 @@ namespace whiteMath.General
         /// </param>
         public static void FillByAppending<T>(this ICollection<T> collection, int elementCount, Func<T, T> function, T firstElement)
         {
-            Contract.Requires<ArgumentNullException>(collection != null, "collection");
-            Contract.Requires<ArgumentNullException>(function != null, "function");
-            Contract.Requires<ArgumentOutOfRangeException>(elementCount >= 0, "The element count should be a non-negative value.");
+			Condition.ValidateNotNull(collection, nameof(collection));
+			Condition.ValidateNotNull(function, nameof(function));
+			Condition.ValidateNonNegative(elementCount, "The element count should be non-negative.");
 
             T current;
             T last = firstElement;
@@ -130,9 +134,9 @@ namespace whiteMath.General
         /// The next element would be created using the function passed with this element as an argument.</param>
         public static void FillByAppending<T>(this ICollection<T> collection, int elementCount, Func<T, int, T> function, T firstElement)
         {
-            Contract.Requires<ArgumentNullException>(collection != null, "collection");
-            Contract.Requires<ArgumentNullException>(function != null, "function");
-            Contract.Requires<ArgumentOutOfRangeException>(elementCount >= 0, "The element count should be a non-negative value.");
+			Condition.ValidateNotNull(collection, nameof(collection));
+			Condition.ValidateNotNull(function, nameof(function));
+			Condition.ValidateNonNegative(elementCount, "The element count should be non-negative.");
 
             T current;
             T last = firstElement;

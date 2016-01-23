@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace whiteMath.Functions
+﻿namespace whiteMath.Functions
 {
 	public static class Messages
 	{

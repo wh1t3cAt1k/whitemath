@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using whiteStructs.Conditions;
+
 namespace whiteMath.General
 {
     /// <summary>
@@ -12,7 +14,7 @@ namespace whiteMath.General
     public static class ByteSequenceToString
     {
         /// <summary>
-        /// Цифирку - в гекс =0)
+        /// Digit to hexadecimal.
         /// </summary>
         private static string ___toHexSymbol(this int digit, bool upperCase)
         {
@@ -49,7 +51,7 @@ namespace whiteMath.General
         /// <returns>A hexadecimal string </returns>
         public static string ToHexString(IEnumerable<byte> sequence, bool upperCase, bool bigEndian = false)
         {
-            Contract.Requires<ArgumentNullException>(sequence != null, "sequence");
+			Condition.ValidateNotNull(sequence, nameof(sequence));
 
             StringBuilder builder = new StringBuilder(sequence.Count() * 2);
 
@@ -86,7 +88,7 @@ namespace whiteMath.General
         /// <returns>A byte array made from <paramref name="hexString"/>.</returns>
         public static byte[] RestoreFromHexString(string hexString, bool bigEndian = false)
         {
-            Contract.Requires<ArgumentNullException>(hexString != null, "hexString");
+			Condition.ValidateNotNull(hexString, nameof(hexString));
 
             // Remove prefixes of 
             // "#" or "0x"

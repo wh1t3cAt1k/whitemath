@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections;
 
+using whiteStructs.Conditions;
+
 namespace whiteMath.General
 {
     /// <summary>
@@ -197,8 +199,10 @@ namespace whiteMath.General
         /// </param>
         public TwoDimensionalArrayRow(T[,] matrix, int rowIndex)
         {
-            Contract.Requires<ArgumentNullException>(matrix != null, "matrix");
-            Contract.Requires<ArgumentOutOfRangeException>(rowIndex >= 0 && rowIndex < matrix.GetLength(0));
+			Condition.ValidateNotNull(matrix, nameof(matrix));
+			Condition
+				.Validate(rowIndex >= 0 && rowIndex < matrix.GetLength(0))
+				.OrArgumentOutOfRangeException("The row index is out of range.");
 
             this.Parent = matrix;
             this.ParentRow = rowIndex;

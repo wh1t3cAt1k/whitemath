@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Diagnostics.Contracts;
 
 using whiteMath.General;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.Cryptography
 {
@@ -16,7 +15,6 @@ namespace whiteMath.Cryptography
     /// 
     /// The messages are expected to contain ONLY whitespace 0x20 and letter characters.
     /// </summary>
-    [ContractVerification(true)]
     [Serializable]
     public class OneTimePadBreaker
     {
@@ -34,15 +32,15 @@ namespace whiteMath.Cryptography
         /// <param name="bigEndian"></param>
         public void addCipherText(string hexString, bool bigEndian = false)
         {
-            Contract.Requires<ArgumentNullException>(hexString != null, "hexString");
+			Condition.ValidateNotNull(hexString, nameof(hexString));
 
             this.addCipherText(ByteSequenceToString.RestoreFromHexString(hexString, bigEndian));
         }
 
         public void addCipherText(byte[] cipherText)
         {
-            Contract.Requires<ArgumentNullException>(cipherText != null, "cipherText");
-            Contract.Requires<ArgumentException>(cipherText.Length > 0, "The ciphertext should not be empty");
+			Condition.ValidateNotNull(cipherText, nameof(cipherText));
+			Condition.ValidateNonNegative(cipherText.Length, "The cipher text should not be empty");
 
             m_cipherTexts.Add(cipherText.Clone() as byte[]);
             m_messages.Add(new byte?[cipherText.Length]);
@@ -113,6 +111,8 @@ namespace whiteMath.Cryptography
                     }
                 }
             }
+
+			throw new NotImplementedException();
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.General
 {
@@ -22,7 +23,7 @@ namespace whiteMath.General
         /// </returns>
         public static T[,] ToZeroBasedTwoDimensionalArray<T>(this T[,] matrix)
         {
-            Contract.Requires<ArgumentNullException>(matrix != null, "matrix");
+			Condition.ValidateNotNull(matrix, nameof(matrix));
 
             // If the object is already zero-indexed, just return its copy.
             // -
@@ -54,10 +55,10 @@ namespace whiteMath.General
         /// </returns>
         public static DataTable ToDataTable<T>(this T[,] matrix, IList<string> columnHeaders = null)
         {
-            Contract.Requires<ArgumentNullException>(matrix != null, "matrix");
-            Contract.Requires<ArgumentException>(
-                columnHeaders == null || matrix.GetLength(1) == columnHeaders.Count, 
-                "The column headers list length must match the matrix' column count.");
+			Condition.ValidateNotNull(matrix, nameof(matrix));
+			Condition
+				.Validate(columnHeaders == null || matrix.GetLength(1) == columnHeaders.Count)
+				.OrArgumentException("The column headers list length must match the matrix' column count.");
 
             int rowCount = matrix.GetLength(0);
             int columnCount = matrix.GetLength(1);
@@ -104,9 +105,8 @@ namespace whiteMath.General
         /// </returns>
         public static T[][] ToJaggedArray<T>(this T[,] matrix)
         {
-            Contract.Requires<ArgumentNullException>(matrix != null, "matrix");
-            Contract.Ensures(Contract.Result<T[][]>() != null);
-
+			Condition.ValidateNotNull(matrix, nameof(matrix));
+            
             int resultRowCount = matrix.GetLength(0);
             int resultColumnCount = matrix.GetLength(1);
 
@@ -134,8 +134,10 @@ namespace whiteMath.General
         /// <returns>A one-dimensional wrapper for the row at the specified row index.</returns>
         public static TwoDimensionalArrayRow<T> GetRowWrapper<T>(this T[,] matrix, int rowIndex)
         {
-            Contract.Requires<ArgumentNullException>(matrix != null, "matrix");
-            Contract.Requires<ArgumentOutOfRangeException>(rowIndex >= 0 && rowIndex < matrix.GetLength(0), "The row index is out of range.");
+			Condition.ValidateNotNull(matrix, nameof(matrix));
+			Condition
+				.Validate(rowIndex >= 0 && rowIndex < matrix.GetLength(0))
+				.OrIndexOutOfRangeException("The row index is out of range.");
 
             return new TwoDimensionalArrayRow<T>(matrix, rowIndex);
         }
@@ -150,10 +152,12 @@ namespace whiteMath.General
         /// <param name="list">The list containing the values to be placed in the specified row.</param>
         public static void SetRowAt<T>(this T[,] matrix, int rowIndex, IList<T> list)
         {
-            Contract.Requires<ArgumentNullException>(matrix != null, "matrix");
-            Contract.Requires<ArgumentNullException>(list != null, "list");
-            Contract.Requires<ArgumentOutOfRangeException>(rowIndex >= 0 && rowIndex < matrix.GetLength(0), "The row index is out of range.");
-
+			Condition.ValidateNotNull(matrix, nameof(matrix));
+			Condition.ValidateNotNull(list, nameof(list));
+			Condition
+				.Validate(rowIndex >= 0 && rowIndex < matrix.GetLength(0))
+				.OrIndexOutOfRangeException("The row index is out of range.");
+			
             TwoDimensionalArrayRow<T> matrixRow = matrix.GetRowWrapper(rowIndex);
 
             ServiceMethods.Copy(list, matrixRow);
@@ -182,7 +186,6 @@ namespace whiteMath.General
         /// starting from row <paramref name="atRowIndex"/> and column <paramref name="atColumnIndex"/>
         /// and spanning <paramref name="rowCount"/> rows and <paramref name="columnCount"/> columns.
         /// </returns>
-        [Pure]
         public static T[,] GetSubArray<T>(
             this T[,] matrix,
             int atRowIndex,
@@ -190,29 +193,21 @@ namespace whiteMath.General
             int rowCount,
             int columnCount)
         {
-            Contract.Requires<ArgumentNullException>(matrix != null, "matrix");
- 
-            Contract.Requires<IndexOutOfRangeException>(
-                atRowIndex >= 0 && atRowIndex < matrix.GetLength(0), 
-                "The row index of the source 2D array is out of range.");
-            
-            Contract.Requires<IndexOutOfRangeException>(
-                atColumnIndex >= 0 && atColumnIndex < matrix.GetLength(1),
-                "The column index of the source 2D array is out of range.");
-
-            Contract.Requires<ArgumentOutOfRangeException>(
-                rowCount >= 0, "The row count of the result subarray should not be negative.");
-            
-            Contract.Requires<ArgumentOutOfRangeException>(columnCount >= 0, 
-                "The column count of the result subarray should not be negative.");
-
-            Contract.Requires<ArgumentOutOfRangeException>(
-                atRowIndex + rowCount <= matrix.GetLength(0),
-                "The resulting subarray would exceed the row range of the source 2D array.");
-
-            Contract.Requires<ArgumentOutOfRangeException>(
-                atColumnIndex + columnCount <= matrix.GetLength(1),
-                "The resulting subarray would exceed the column range of the source 2D array.");
+			Condition.ValidateNotNull(matrix, nameof(matrix));
+			Condition
+				.Validate(atRowIndex >= 0 && atRowIndex < matrix.GetLength(0))
+				.OrIndexOutOfRangeException("The row index of the source 2D array is out of range.");            
+            Condition
+				.Validate(atColumnIndex >= 0 && atColumnIndex < matrix.GetLength(1))
+				.OrIndexOutOfRangeException("The column index of the source 2D array is out of range.");
+			Condition.ValidateNonNegative(rowCount, "The row count of the result subarray should not be negative.");
+			Condition.ValidateNonNegative(columnCount, "The column count of the result subarray should not be negative.");
+			Condition
+				.Validate(atRowIndex + rowCount <= matrix.GetLength(0))
+				.OrArgumentOutOfRangeException("The resulting subarray would exceed the row range of the source 2D array.");
+			Condition
+				.Validate(atColumnIndex + columnCount <= matrix.GetLength(1))
+				.OrArgumentOutOfRangeException("The resulting subarray would exceed the column range of the source 2D array.");
 
             if (rowCount == 0 || columnCount == 0)
             {
@@ -258,22 +253,22 @@ namespace whiteMath.General
         /// </exception>
         public static void PlaceMatrixAt<T>(this T[,] matrix, int atRowIndex, int atColumnIndex, T[,] patch)
         {
-            Contract.Requires<ArgumentNullException>(matrix != null, "matrix");
-            Contract.Requires<ArgumentNullException>(patch != null, "another");
-
-            Contract.Requires<IndexOutOfRangeException>(
-                atRowIndex >= 0 && atRowIndex < matrix.GetLength(0),
-                "The row index in the source array is out of range.");
-            
-            Contract.Requires<IndexOutOfRangeException>(
-                atColumnIndex >= 0 && atColumnIndex < matrix.GetLength(1),
-                "The column index in the source array is out of range.");
-            
-            Contract.Requires<ArgumentException>(
-                atRowIndex + patch.GetLength(0) <= matrix.GetLength(0), 
-                "'patch' does not fit within the rows of the 'matrix'.");
-            
-            int patchRowCount = patch.GetLength(0);
+			Condition.ValidateNotNull(matrix, nameof(matrix));
+			Condition.ValidateNotNull(patch, nameof(patch));
+			Condition
+				.Validate(atRowIndex >= 0 && atRowIndex < matrix.GetLength(0))
+				.OrIndexOutOfRangeException("The row index of the source 2D array is out of range.");            
+			Condition
+				.Validate(atColumnIndex >= 0 && atColumnIndex < matrix.GetLength(1))
+				.OrIndexOutOfRangeException("The column index of the source 2D array is out of range.");
+			Condition
+				.Validate(atRowIndex + patch.GetLength(0) <= matrix.GetLength(0))
+				.OrIndexOutOfRangeException("The patch 2D array does not fit within the rows of the source 2D array.");
+			Condition
+				.Validate(atColumnIndex + patch.GetLength(1) <= matrix.GetLength(1))
+				.OrIndexOutOfRangeException("The patch 2D array does not fit within the columns of the source 2D array.");
+			                   
+			int patchRowCount = patch.GetLength(0);
             int patchColumnCount = patch.GetLength(1);
 
             for (int rowIndex = 0; rowIndex < patchRowCount; ++rowIndex)
@@ -300,7 +295,7 @@ namespace whiteMath.General
         /// <returns>The transposed two-dimensional array.</returns>
         public static T[,] GetTransposedArray<T>(this T[,] matrix)
         {
-            Contract.Requires<ArgumentNullException>(matrix != null, "matrix");
+			Condition.ValidateNotNull(matrix, nameof(matrix));
 
             int rowCount = matrix.GetLength(0);
             int columnCount = matrix.GetLength(1);
@@ -343,14 +338,16 @@ namespace whiteMath.General
         /// </returns>
         public static T[,] WithAttachedToTheLeft<T>(this T[,] matrix, T[,] leftPatch) 
         {
-            Contract.Requires<ArgumentNullException>(matrix != null, "matrix");
-            Contract.Requires<ArgumentNullException>(leftPatch != null, "leftPatch");
-            Contract.Requires<ArgumentException>(
-                matrix.GetLength(0) == leftPatch.GetLength(0), 
-                "The 2D arrays should have the same row count in order to be attached to each other.");
+			Condition.ValidateNotNull(matrix, nameof(matrix));
+			Condition.ValidateNotNull(leftPatch, nameof(leftPatch));
+			Condition
+				.Validate(matrix.GetLength(0) == leftPatch.GetLength(0))
+				.OrArgumentException("The 2D arrays should have the same row count in order to be attached to each other.");
 
+			/*
             Contract.Ensures(Contract.Result<T[,]>().GetLength(0) == matrix.GetLength(0));
             Contract.Ensures(Contract.Result<T[,]>().GetLength(1) == matrix.GetLength(1) + leftPatch.GetLength(1));
+			*/
 
             int rowCount = matrix.GetLength(0);
             int matrixColumnCount = matrix.GetLength(1);
@@ -386,14 +383,16 @@ namespace whiteMath.General
         /// </returns>
         public static T[,] WithAttachedToTheRight<T>(this T[,] matrix, T[,] rightPatch)
         {
-            Contract.Requires<ArgumentNullException>(matrix != null, "matrix");
-            Contract.Requires<ArgumentNullException>(rightPatch != null, "leftPatch");
-            Contract.Requires<ArgumentException>(
-                matrix.GetLength(0) == rightPatch.GetLength(0),
-                "The 2D arrays should have the same row count in order to be attached to each other.");
+			Condition.ValidateNotNull(matrix, nameof(matrix));
+			Condition.ValidateNotNull(rightPatch, nameof(rightPatch));
+			Condition
+				.Validate(matrix.GetLength(0) == rightPatch.GetLength(0))
+				.OrArgumentException("The 2D arrays should have the same row count in order to be attached to each other.");
 
+			/*
             Contract.Ensures(Contract.Result<T[,]>().GetLength(0) == matrix.GetLength(0));
             Contract.Ensures(Contract.Result<T[,]>().GetLength(1) == matrix.GetLength(1) + rightPatch.GetLength(1));
+			*/
 
             int rowCount = matrix.GetLength(0);
             int matrixColumnCount = matrix.GetLength(1);

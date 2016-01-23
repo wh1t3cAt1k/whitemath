@@ -4,6 +4,10 @@ using System.Linq;
 using System.Drawing;
 
 using whiteMath;
+using whiteMath.General;
+using whiteMath.Calculators;
+
+using whiteStructs.Conditions;
 
 namespace whiteStructs.Drawing
 {
@@ -32,7 +36,9 @@ namespace whiteStructs.Drawing
         /// <returns>A <c>Color</c> structure 'between' the first color and the last color of the linear path, according to the coefficient's value.</returns>
         public Color Map(double coefficient)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(coefficient >= 0 && coefficient <= 1, "The coefficient must belong to [0; 1] segment.");
+			Condition
+				.Validate(coefficient >= 0 && coefficient <= 1)
+				.OrArgumentOutOfRangeException("The coefficient must belong to [0; 1] segment.");
 
             int i = 0;
 
@@ -69,8 +75,10 @@ namespace whiteStructs.Drawing
         /// <param name="colors">A parameter array of two or more colors.</param>
         public ColorPath(params Color[] colors)
         {
-            Contract.Requires<ArgumentNullException>(colors != null, "colors");
-            Contract.Requires<ArgumentException>(colors.Length >= 2, "The color path must consist of at least two colors.");
+			Condition.ValidateNotNull(colors, nameof(colors));
+			Condition
+				.Validate(colors.Length >= 2)
+				.OrArgumentException("The color path must consist of at least two colors.");
 
             __init(colors);
         }
@@ -81,17 +89,16 @@ namespace whiteStructs.Drawing
         /// <param name="colorSequence">A sequence of two or more colors.</param>
         public ColorPath(IEnumerable<Color> colorSequence)
         {
-            Contract.Requires<ArgumentNullException>(colorSequence != null, "colorSequence");
-            Contract.Requires<ArgumentException>(colorSequence.Count() > 1, "The color path must consist of at least two colors.");
+			Condition.ValidateNotNull(colorSequence, nameof(colorSequence));
+			Condition
+				.Validate(!colorSequence.IsEmpty() && !colorSequence.IsSingleton())
+				.OrArgumentException("The color path must consist of at least two colors.");
 
             __init(colorSequence);
         }
 
         private void __init(IEnumerable<Color> colorSequence)
         {
-            Contract.Assume(colorSequence != null);
-            Contract.Assume(colorSequence.Count () > 1);
-
             int colorCount = colorSequence.Count();
 
             this.intervals = new BoundedInterval<double,CalcDouble>[colorCount - 1];

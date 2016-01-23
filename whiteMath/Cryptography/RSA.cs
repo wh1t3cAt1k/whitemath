@@ -4,6 +4,7 @@ using System.Linq;
 
 using whiteMath.Algorithms;
 using whiteMath.ArithmeticLong;
+using whiteMath.Calculators;
 using whiteMath.General;
 using whiteMath.Randoms;
 

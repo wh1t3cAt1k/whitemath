@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using System.Diagnostics.Contracts;
+using whiteStructs.Conditions;
 
 namespace whiteMath.General
 {
     /// <summary>
     /// This class provides extension methods for multidimensional arrays.
     /// </summary>
-    [ContractVerification(true)]
     public static class MultiDimensionalArrayExtensions
     {
         // -------------------------------------
@@ -17,16 +16,16 @@ namespace whiteMath.General
         // -------------------------------------
 
         /// <summary>
-        /// Returns whether two arrays are
-        /// equal in size within each dimension.
+        /// Returns whether two multi-dimensional arrays are equal in size
+		/// across every dimension.
         /// </summary>
-        /// <param name="matrix">The first array.</param>
-        /// <param name="another">The second array.</param>
+        /// <param name="first">The first array.</param>
+        /// <param name="second">The second array.</param>
         /// <returns><c>true</c> if the sizes are equal, <c>false</c> otherwise.</returns>
         public static bool IsSizeEqualTo(this Array first, Array second)
         {
-            Contract.Requires<ArgumentNullException>(first != null, "first");
-            Contract.Requires<ArgumentNullException>(second != null, "second");
+			Condition.ValidateNotNull(first, nameof(first));
+			Condition.ValidateNotNull(second, nameof(second));
 
             return 
                 first.Rank == second.Rank &&
@@ -60,15 +59,14 @@ namespace whiteMath.General
         /// <c>true</c> if two arrays are of the same size and contain equal
         /// elements for every combination of indices, <c>false</c> otherwise.
         /// </returns>
-        [Pure]
         public static bool IsElementwiseEqualTo<T>(
             this Array first, 
             Array second, 
             IEqualityComparer<T> equalityComparer = null,
             bool NaNEqualsNaN = false)
         {
-            Contract.Requires<ArgumentNullException>(first != null, "first");
-            Contract.Requires<ArgumentNullException>(second != null, "second");
+			Condition.ValidateNotNull(first, nameof(first));
+			Condition.ValidateNotNull(second, nameof(second));
 
             if (equalityComparer == null)
             {

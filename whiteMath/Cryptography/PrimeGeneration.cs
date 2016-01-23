@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.Cryptography
 {
@@ -16,7 +17,7 @@ namespace whiteMath.Cryptography
         /// <returns>A list of all prime numbers which are less than or equal to <paramref name="num"/>.</returns>
         public static List<int> EratospheneSieve(int num)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(num > 0, "The upper bound of generated numbers should be positive.");
+			Condition.ValidatePositive(num, "The upper boundary should be positive.");
 
             BitArray ba = new BitArray(num, true);
             List<int> result = new List<int>();

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 
+using whiteStructs.Conditions;
+
 namespace whiteMath.General
 {
     /// <summary>
@@ -34,11 +36,13 @@ namespace whiteMath.General
         /// </returns>
         public static T[,] To2DArray<T>(this T[][] jagged)
         {
-            Contract.Requires<ArgumentNullException>(jagged != null, "jagged");
-            Contract.Requires<ArgumentException>(Contract.ForAll<T[]>(jagged, (x => x != null)), "The source array must contain no null rows.");
-            Contract.Requires<ArgumentException>(Contract.ForAll<T[]>(jagged, (x => x.Length == jagged[0].Length)), "The source array must be rectangular.");
-
-            Contract.Ensures(Contract.Result<T[,]>() != null);
+			Condition.ValidateNotNull(jagged, nameof(jagged));
+			Condition
+				.Validate(jagged.All(x => x != null))
+				.OrArgumentException("The source array must contain no null rows.");
+			Condition
+				.Validate(jagged.All(x => (x.Length == jagged.First().Length)))
+				.OrArgumentException("The source array must be rectangular.");
 
             // We are now sure that every row (if any rows are present)
             // contains the same number of columns.
@@ -83,10 +87,11 @@ namespace whiteMath.General
         /// </returns>
         public static T[][] RemoveNullRows<T>(this T[][] jagged)
         {
-            Contract.Requires<ArgumentNullException>(jagged != null, "jagged");
-            Contract.Ensures(Contract.ForAll<T[]>(Contract.Result<T[][]>(), (x => x != null)));
-
-            return jagged.Where(x => x != null).ToArray();
+			Condition.ValidateNotNull(jagged, nameof(jagged));
+            
+            return jagged
+				.Where(x => x != null)
+				.ToArray();
         }
     }
 }
