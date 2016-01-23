@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
-using System.Diagnostics.Contracts;
 
 using whiteMath;
 
@@ -13,7 +12,6 @@ namespace whiteStructs.Drawing
     /// in the [0; 1] segment to RGB color space using a pre-specified sequence of colors and
     /// the linear gradient method.
     /// </summary>
-    [ContractVerification(true)]
     public class ColorPath
     {
         BoundedInterval<double, CalcDouble>[] intervals;

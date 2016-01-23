@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Diagnostics.Contracts;
-
 namespace whiteMath.General
 {
     /// <summary>
     /// This class allows to convert byte sequences to hexadecimal string
     /// representations and to restore sequences from such strings.
     /// </summary>
-    [ContractVerification(true)]
     public static class ByteSequenceToString
     {
         /// <summary>

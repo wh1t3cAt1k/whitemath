@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics.Contracts;
-
-namespace whiteMath.ArithmeticLong
+﻿namespace whiteMath.ArithmeticLong
 {
     /// <summary>
     /// Provides the needed information on long integers numeric base
@@ -14,7 +8,6 @@ namespace whiteMath.ArithmeticLong
     /// arithmetic operation unless the user explicitly calls the
     /// baseConvert() method or the appropriate LongInt constructor.
     /// </summary>
-    [ContractClass(typeof(___IBaseContract))]
     public interface IBase
     {
         /// <summary>
@@ -33,7 +26,6 @@ namespace whiteMath.ArithmeticLong
     /// precisionConvert() method for the number (precision may be extended or lost depending
     /// on the calculator to convert to).
     /// </summary>
-    [ContractClass(typeof(___IPrecisionContract))]
     public interface IPrecision: IBase
     {
         /// <summary>
@@ -46,6 +38,7 @@ namespace whiteMath.ArithmeticLong
     // ---------------------------------------------------------------------------
     // ------------------------------- CONTRACTS ---------------------------------
 
+	/*
     [ContractClassFor(typeof(IBase))]
     abstract class ___IBaseContract: IBase
     {
@@ -70,4 +63,5 @@ namespace whiteMath.ArithmeticLong
             return 0;
         }
     }
+    */
 }

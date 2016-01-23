@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Diagnostics.Contracts;
 
 using whiteMath.ArithmeticLong;
 
@@ -25,7 +24,6 @@ namespace whiteMath.Randoms
     /// </remarks>
     /// <see cref="RandomLongIntModularUnoptimized&lt;B&gt;"/>
     /// <typeparam name="B">The type specifying the digit base for the <c>LongInt&lt;B&gt;</c> type.</typeparam>
-    [ContractVerification(true)]
     [Obsolete("This class is for illustrative purposes only. Please use RandomLongIntModular<B> instead.")]
     public class RandomLongIntRejection<B> : IRandomBounded<LongInt<B>> where B : IBase, new()
     {

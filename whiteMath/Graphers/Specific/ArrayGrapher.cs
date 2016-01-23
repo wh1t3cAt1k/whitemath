@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Data.Common;
-using System.Diagnostics.Contracts;
 
-using whiteMath.Graphers.Services;
 using whiteMath.General;
 
 namespace whiteMath.Graphers
 {
-    [ContractVerification(true)]
     public class ArrayGrapher: StandardGrapher
     {
         /// <summary>

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
-using System.Diagnostics.Contracts;
 
 namespace whiteMath.Graphers
 {
@@ -37,7 +34,6 @@ namespace whiteMath.Graphers
     /// <see cref="IGrapher"/>
     /// <see cref="AbstractGrapher"/>
     /// <see cref="StandardGrapher"/>
-    [ContractVerification(true)]
     [Serializable]
     public struct GraphingArgs: ICloneable
     {

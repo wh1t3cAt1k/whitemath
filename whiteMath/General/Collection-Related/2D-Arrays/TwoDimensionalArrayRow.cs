@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using System.Diagnostics.Contracts;
 using System.Collections;
 
 namespace whiteMath.General
@@ -11,7 +7,6 @@ namespace whiteMath.General
     /// <summary>
     /// Represents a row of a two-dimensional array.
     /// </summary>
-    [ContractVerification(true)]
     public class TwoDimensionalArrayRow<T>: IList<T>
     {
         #region Not Implemented Interface Members

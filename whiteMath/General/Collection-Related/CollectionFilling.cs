@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics.Contracts;
+
 using whiteMath.Randoms;
 
 namespace whiteMath.General
@@ -11,7 +9,6 @@ namespace whiteMath.General
     /// This static class provides extension methods
     /// for filling collections with new elements.
     /// </summary>
-    [ContractVerification(true)]
     public static class CollectionFillingExtensions
     {
         /// <summary>

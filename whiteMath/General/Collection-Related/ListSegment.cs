@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 
 using System.Collections;
-using System.Diagnostics.Contracts;
 
 namespace whiteMath.General
 {
@@ -12,7 +11,6 @@ namespace whiteMath.General
     /// Wrapper class which represents a segment of an IList&lt;<typeparamref name="T"/>&gt;.
     /// </summary>
     /// <typeparam name="T">The type of elements in the list.</typeparam>
-    [ContractVerification(true)]
     public class ListSegment<T>: IList<T>
     {
         int offset;

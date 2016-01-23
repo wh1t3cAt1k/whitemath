@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
 
 namespace whiteMath.General
 {
     /// <summary>
     /// Provides extension methods for two-dimensional arrays.
     /// </summary>
-    [ContractVerification(true)]
     public static class TwoDimensionalArrayExtensions
     {
         /// <summary>

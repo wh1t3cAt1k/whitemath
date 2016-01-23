@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Diagnostics.Contracts;
 
+using whiteMath.Algorithms;
+using whiteMath.Calculators;
 using whiteMath.General;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.Statistics
 {
-    [ContractVerification(true)]
     public static class StatisticExtensionMethods
     {
         /// <summary>
@@ -20,17 +21,18 @@ namespace whiteMath.Statistics
         /// <returns>The sample average for the sequence of observations passed.</returns>
         public static T SampleAverage<T, C>(this IEnumerable<T> values) where C : ICalc<T>, new()
         {
-            int count = values.Count();
-
-            if (count == 0)
-                throw new ArgumentException("Cannot calculate the sample average value for an empty sequence.");
+			Condition.ValidateNotEmpty(values, "Cannot calculate sample average for an empty sequence.");
 
             Numeric<T, C> sum = Numeric<T, C>.Zero;
+			Numeric<T, C> count = Numeric<T, C>.Zero;
 
-            foreach (T value in values)
-                sum += value;
+			foreach (T value in values)
+			{
+				sum += value;
+				count++;
+			}
 
-            return sum / (Numeric<T,C>)values.Count();
+            return sum / count;
         }
 
         /// <summary>
@@ -50,13 +52,15 @@ namespace whiteMath.Statistics
         /// <returns>The sample median for the sequence of observations passed.</returns>
         public static T SampleMedian<T, C>(this IEnumerable<T> values, IComparer<T> comparer = null) where C : ICalc<T>, new()
         {
-            Contract.Requires<ArgumentNullException>(values != null, "values");
-            Contract.Ensures(
+			Condition.ValidateNotNull(values, nameof(values));
+
+			/*
+			Contract.Ensures(
                 values.Where(x => (Numeric<T, C>)x < Contract.Result<T>()).Count() == values.Count() / 2,
                 "The value returned does not satisfy the requirements for the median.");
+			*/
 
-            if(values.Count() == 0)
-                throw new ArgumentException("Cannot evaluate the sample median value for an empty sequence.");
+			Condition.ValidateNotEmpty(values, "Cannot calculate the sample median for an empty sequence.");
 
             T[] sortedSequence = values.ToArray();
 
@@ -89,10 +93,14 @@ namespace whiteMath.Statistics
         {
             int count = values.Count();
 
-            if (count == 0)
-                throw new ArgumentException("Cannot return the series count for an empty sequence.");
-            else if (count == 1)
-                return 0;
+			if (count == 0)
+			{
+				throw new ArgumentException("Cannot return the series count for an empty sequence.");
+			}
+			else if (count == 1)
+			{
+				return 0;
+			}
 
             int signChanges = 0;
 
@@ -136,15 +144,22 @@ namespace whiteMath.Statistics
         /// <returns>The sample unbiased variation for the sequence of observations.</returns>
         public static T SampleUnbiasedVariance<T, C>(this IEnumerable<T> values, T sampleAverage) where C : ICalc<T>, new()
         {
-            Contract.Requires<ArgumentNullException>(values != null, "values");
+			Condition.ValidateNotNull(values, nameof(values));
+
+			/*
             Contract.Ensures(Contract.Result<T>() >= Numeric<T, C>._0, "The variance should not be negative.");
+			*/
 
             int count = values.Count();
 
-            if (count == 0)
-                throw new ArgumentException("Cannot calculate the sample variance for an empty sequence.");
-            else if (count == 1)
-                return Numeric<T, C>.Zero;
+			if (count == 0)
+			{
+				throw new ArgumentException("Cannot calculate the sample variance for an empty sequence.");
+			}
+			else if (count == 1)
+			{
+				return Numeric<T, C>.Zero;
+			}
 
             Numeric<T, C> sum = Numeric<T, C>.Zero;
             ICalc<T> calc = Numeric<T, C>.Calculator;
@@ -165,8 +180,11 @@ namespace whiteMath.Statistics
         /// <returns>The sample biased variation for the sequence of observations.</returns>
         public static T SampleVariance<T, C>(this IEnumerable<T> values, T sampleAverage) where C : ICalc<T>, new()
         {
-            Contract.Requires<ArgumentNullException>(values != null, "values");
+			Condition.ValidateNotNull(values, nameof(values));
+
+			/*
             Contract.Ensures(Contract.Result<T>() >= Numeric<T, C>._0, "The variance should not be negative.");
+			*/
 
             return SampleUnbiasedVariance<T, C>(values, sampleAverage) * (Numeric<T,C>)(values.Count() - 1) / (Numeric<T,C>)(values.Count());
         }
@@ -363,9 +381,11 @@ namespace whiteMath.Statistics
             TailValuesHandling tailValuesHandling,
             int currentIndex)
         {
-            Contract.Requires<ArgumentNullException>(values != null, "values");
-            Contract.Requires<ArgumentOutOfRangeException>(windowWidth >= 0, "The window width should be non-negative.");
-            Contract.Requires<IndexOutOfRangeException>(currentIndex >= 0 && currentIndex < values.Count, "The index is out of range");
+			Condition.ValidateNotNull(values, nameof(values));
+			Condition.ValidateNonNegative(windowWidth, "The window width should be non-negative.");
+			Condition
+				.Validate(currentIndex >= 0 && currentIndex < values.Count)
+				.OrIndexOutOfRangeException("The index is outside the list boundaries.");
 
             // Check the available number of elements to the left 
             // and to the right of the current value.
@@ -476,12 +496,11 @@ namespace whiteMath.Statistics
             Func<IEnumerable<T>, T> statistic)
             where C : ICalc<T>, new()
         {
-            Contract.Requires<ArgumentNullException>(values != null, "values");
-            Contract.Requires<ArgumentOutOfRangeException>(windowWidth >= 0, "The window width should be non-negative");
-            Contract.Requires<ArgumentException>(
-                tailValuesHandling != TailValuesHandling.UseSymmetricAvailableWindow ||
-                windowType == WindowType.Symmetric,
-                "Symmetric tail values handling is only available for symmetric windows.");
+			Condition.ValidateNotNull(values, nameof(values));
+			Condition.ValidateNonNegative(windowWidth, "The window width should be non-negative.");
+			Condition
+				.Validate(tailValuesHandling != TailValuesHandling.UseSymmetricAvailableWindow || windowType == WindowType.Symmetric)
+				.OrArgumentException("Symmetric tail values handling is only available for symmetric windows.");
 
             List<T> result = new List<T>(values.Count);
 
@@ -539,12 +558,11 @@ namespace whiteMath.Statistics
             TailValuesHandling tailValuesHandling = TailValuesHandling.UseSymmetricAvailableWindow) 
             where C : ICalc<T>, new()
         {
-            Contract.Requires<ArgumentNullException>(values != null, "values");
-            Contract.Requires<ArgumentOutOfRangeException>(windowWidth >= 0, "The window width should be non-negative");
-            Contract.Requires<ArgumentException>(
-                tailValuesHandling != TailValuesHandling.UseSymmetricAvailableWindow ||
-                windowType == WindowType.Symmetric,
-                "Symmetric tail values handling is only available for symmetric windows.");
+			Condition.ValidateNotNull(values, nameof(values));
+			Condition.ValidateNonNegative(windowWidth, "The window width should be non-negative.");
+			Condition
+				.Validate(tailValuesHandling != TailValuesHandling.UseSymmetricAvailableWindow || windowType == WindowType.Symmetric)
+				.OrArgumentException("Symmetric tail values handling is only available for symmetric windows.");
 
             return MovingStatistic<T, C>(
                 values,
@@ -585,12 +603,11 @@ namespace whiteMath.Statistics
             TailValuesHandling tailValuesHandling = TailValuesHandling.UseSymmetricAvailableWindow)
             where C : ICalc<T>, new()
         {
-            Contract.Requires<ArgumentNullException>(values != null, "values");
-            Contract.Requires<ArgumentOutOfRangeException>(windowWidth >= 0, "The window width should be non-negative");
-            Contract.Requires<ArgumentException>(
-                tailValuesHandling != TailValuesHandling.UseSymmetricAvailableWindow ||
-                windowType == WindowType.Symmetric,
-                "Symmetric tail values handling is only available for symmetric windows.");
+			Condition.ValidateNotNull(values, nameof(values));
+			Condition.ValidateNonNegative(windowWidth, "The window width should be non-negative.");
+			Condition
+				.Validate(tailValuesHandling != TailValuesHandling.UseSymmetricAvailableWindow || windowType == WindowType.Symmetric)
+				.OrArgumentException("Symmetric tail values handling is only available for symmetric windows.");
 
             return MovingStatistic<T, C>(
                 values,
@@ -618,12 +635,9 @@ namespace whiteMath.Statistics
         /// </returns>
         public static Dictionary<T, int> FrequenciesAbsolute<T>(this IEnumerable<T> sequence, IEqualityComparer<T> equalityComparer = null)
         {
-            Contract.Requires<ArgumentNullException>(sequence != null, "sequence");
+			Condition.ValidateNotNull(sequence, nameof(sequence));
 
-            if (equalityComparer == null)
-            {
-                equalityComparer = EqualityComparer<T>.Default;
-            }
+			equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             Dictionary<T, int> result = new Dictionary<T, int>(equalityComparer);
 
@@ -660,13 +674,10 @@ namespace whiteMath.Statistics
         /// </returns>
         public static Dictionary<T, double> FrequenciesRelative<T>(this IEnumerable<T> sequence, IEqualityComparer<T> equalityComparer = null)
         {
-            Contract.Requires<ArgumentNullException>(sequence != null, "sequence");
+			Condition.ValidateNotNull(sequence, nameof(sequence));
 
-            if (equalityComparer == null)
-            {
-                equalityComparer = EqualityComparer<T>.Default;
-            }
-
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
+            
             int elementCount = sequence.Count();
             Dictionary<T, int> absoluteFrequencies = sequence.FrequenciesAbsolute(equalityComparer);
 

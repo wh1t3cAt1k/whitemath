@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Diagnostics.Contracts;
+
+using whiteMath.Calculators;
 using whiteMath.Randoms;
+
+using whiteStructs.Conditions;
 
 namespace whiteMath.General
 {
-    [ContractVerification(true)]
     public static class ListShufflingExtensions
     {
         /// <summary>
@@ -20,7 +19,7 @@ namespace whiteMath.General
         /// <param name="list">The calling list object.</param>
         public static void ShuffleQuick<T>(this IList<T> list)
         {
-            Contract.Requires<ArgumentNullException>(list != null, "list");
+			Condition.ValidateNotNull(list, nameof(list));
 
             list.ShuffleQuick<T>(new RandomStandard());
         }
@@ -35,8 +34,8 @@ namespace whiteMath.General
         /// <param name="randomGenerator">A user-provided integer random number generator.</param>
         public static void ShuffleQuick<T>(this IList<T> list, IRandomBounded<int> randomGenerator)
         {
-            Contract.Requires<ArgumentNullException>(list != null, "list");
-            Contract.Requires<ArgumentNullException>(randomGenerator != null, "randomGenerator");
+			Condition.ValidateNotNull(list, nameof(list));
+			Condition.ValidateNotNull(randomGenerator, nameof(randomGenerator));
 
             for (int i = 0; i < list.Count - 1; i++)
             {
@@ -52,7 +51,7 @@ namespace whiteMath.General
         /// <param name="list">The calling list object.</param>
         public static void Shuffle<T>(this IList<T> list)
         {
-            Contract.Requires<ArgumentNullException>(list != null, "list");
+			Condition.ValidateNotNull(list, nameof(list));
 
             list.Shuffle(new RandomLaggedFibonacci(), Comparer<double>.Default);
         }
@@ -68,11 +67,10 @@ namespace whiteMath.General
         /// <param name="numericComparer">An optional numeric comparer for <typeparamref name="N"/> type. If <c>null</c>, a standard comparer will be used (if exists, otherwise, an exception will be thrown).</param>
         public static void Shuffle<T, N>(this IList<T> list, IRandomFloatingPoint<N> generator, IComparer<N> numericComparer = null)
         {
-            Contract.Requires<ArgumentNullException>(list != null, "list");
-            Contract.Requires<ArgumentNullException>(generator != null, "generator");
+			Condition.ValidateNotNull(list, nameof(list));
+			Condition.ValidateNotNull(generator, nameof(generator));
 
-            if(numericComparer == null)
-                numericComparer = Comparer<N>.Default;
+			numericComparer = numericComparer ?? Comparer<N>.Default;
 
             // Генерируем массив пар со случайными ключами, 
             // сортируем их по ключу (а значения оказываются случайно перемешанными).
@@ -117,6 +115,8 @@ namespace whiteMath.General
         /// <returns>The array of linked list nodes.</returns>
         public static LinkedListNode<T>[] GetNodes<T>(this LinkedList<T> list)
         {
+			Condition.ValidateNotNull(list, nameof(list));
+
             LinkedListNode<T>[] arr = new LinkedListNode<T>[list.Count];
 
             LinkedListNode<T> current = list.First;
@@ -144,6 +144,9 @@ namespace whiteMath.General
         /// <returns>The boolean flag equal to true if the nodes array is obsolete, false otherwise.</returns>
         public static bool IsObsolete<T>(this IList<LinkedListNode<T>> nodesList, LinkedList<T> list, bool checkOrder = true)
         {
+			Condition.ValidateNotNull(nodesList, nameof(nodesList));
+			Condition.ValidateNotNull(list, nameof(list));
+
             if (list.Count != nodesList.Count)
                 return true;
 
@@ -189,6 +192,9 @@ namespace whiteMath.General
         /// <param name="nodesList">A nodes list containing unrepeatedly all the nodes of the linked list, and nothing more.</param>
         public static void Reorder_As_In_NodeList<T>(this LinkedList<T> list, IList<LinkedListNode<T>> nodesList)
         {
+			Condition.ValidateNotNull(list, nameof(list));
+			Condition.ValidateNotNull(nodesList, nameof(nodesList));
+
             HashSet<LinkedListNode<T>> set = new HashSet<LinkedListNode<T>>();  // будем смотреть, нет ли в списке узлов повторений.
 
             if (list.Count != nodesList.Count)
@@ -249,21 +255,13 @@ namespace whiteMath.General
         /// <param name="one">The first node to be exchanged.</param>
         /// <param name="two">The second node to be exchanged.</param>
         public static void ExchangeNodes<T>(this LinkedList<T> list, LinkedListNode<T> one, LinkedListNode<T> two)
-        { 
-            // null. Кидаем ексепшн.
+        {
+			Condition.ValidateNotNull(list, nameof(list));
+			Condition.ValidateNotNull(one, nameof(one));
+			Condition.ValidateNotNull(two, nameof(two));
 
-            if(one == null || two == null)
-                throw new ArgumentNullException("The linked list nodes passed to exchange should not be null.");
-
-            // Тривиальный случай. Обмен не нужен.
-
-            if (one == two)
-                return;
-
-            // -----------------------------------
-            
-            // Сначала рассмотрим случай, когда они рядом.
-            
+            if (one == two) return;
+			            
             if (one.Next == two)
             {
                 LinkedListNode<T> beforeOne = one.Previous;
@@ -308,10 +306,7 @@ namespace whiteMath.General
                     return;
                 }
             }
-
-            // Когда разделены одним или более узлами.
-
-            if (one != list.Last)
+            else if (one != list.Last)
             {
                 LinkedListNode<T> afterOne = one.Next;
                 list.Remove(one);
@@ -336,12 +331,15 @@ namespace whiteMath.General
                     return;
                 }
             }
-            else    // первый узел - последний в списке
+            else
             {
+				// The first node is last in the list.
+				// -
                 list.RemoveLast();
 
-                // Поскольку узлы не рядом, то второй - по любому - не последний.
-
+                // Since nodes were not neighbouring, there is a
+				// node after the second node.
+				// -
                 LinkedListNode<T> afterTwo = two.Next;
                 list.Remove(two);
 
@@ -365,6 +363,9 @@ namespace whiteMath.General
         /// <param name="destination">The destination list.</param>
         public static void Copy<T>(IList<T> source, IList<T> destination)
         {
+			Condition.ValidateNotNull(source, nameof(source));
+			Condition.ValidateNotNull(destination, nameof(destination));
+
             Copy(source, 0, destination, 0, source.Count);
         }
 
@@ -380,6 +381,8 @@ namespace whiteMath.General
         /// <param name="destinationIndex"></param>
         public static void Copy<T>(IList<T> source, int sourceIndex, IList<T> destination, int destinationIndex)
         {
+			Condition.ValidateNotNull(source, nameof(source));
+
             Copy(source, sourceIndex, destination, destinationIndex, source.Count);
         }
 
@@ -396,6 +399,8 @@ namespace whiteMath.General
         /// <param name="length"></param>
         public static void Copy<T>(IList<T> source, int sourceIndex, IList<T> destination, int destinationIndex, int length)
         {
+			Condition.ValidateNotNull(source, nameof(source));
+
             for (int i = 0; i < length; i++)
                 destination[destinationIndex + i] = source[sourceIndex + i];
 
@@ -415,6 +420,8 @@ namespace whiteMath.General
         /// <param name="index2">The index of the second element to be swapped.</param>
         public static void Swap<T>(this IList<T> list, int index1, int index2)
         {
+			Condition.ValidateNotNull(list, nameof(list));
+
             T temp = list[index1];
 
             list[index1] = list[index2];
@@ -434,6 +441,8 @@ namespace whiteMath.General
         /// <param name="BASE">The base of the digits in the long integer number.</param>
         public static void Randomize(this IList<int> arr, int BASE)
         {
+			Condition.ValidateNotNull(arr, nameof(arr));
+
             for (int i = 0; i < arr.Count; i++)
                 arr[i] = gen.Next(0, BASE);
         }
@@ -447,6 +456,8 @@ namespace whiteMath.General
         /// <param name="maxExclusive">The upper exclusive bound of elements' value.</param>
         public static void Randomize(this IList<int> arr, int minInclusive, int maxExclusive)
         {
+			Condition.ValidateNotNull(arr, nameof(arr));
+
             for (int i = 0; i < arr.Count; i++)
                 arr[i] = gen.Next(minInclusive, maxExclusive);
         }
@@ -476,7 +487,7 @@ namespace whiteMath.General
         /// </returns>
         public static int WhiteBinarySearch<T>(this IList<T> list, T key, IComparer<T> comparer = null)
         {
-            Contract.Requires<ArgumentNullException>(list != null, "list");
+			Condition.ValidateNotNull(list, nameof(list));
 
             return 
                 WhiteBinarySearch<T, T>(list, x => x, key, comparer);
@@ -507,10 +518,9 @@ namespace whiteMath.General
         /// </returns>
         public static int WhiteBinarySearch<T, M>(this IList<M> list, Func<M, T> projector, T key, IComparer<T> comparer = null)
         {
-            Contract.Requires<ArgumentNullException>(list != null, "list");
+			Condition.ValidateNotNull(list, nameof(list));
 
-            if (comparer == null)
-                comparer = Comparer<T>.Default;
+            comparer = comparer ?? Comparer<T>.Default;
 
             int lb = 0;
             int rb = list.Count - 1;
@@ -549,6 +559,8 @@ namespace whiteMath.General
         /// <returns>The number of significant digits in the number.</returns>
         public static int CountSignificant(this IList<int> list)
         {
+			Condition.ValidateNotNull(list, nameof(list));
+
             int ret = list.Count - 1;
 
             while (list[ret] == 0 && ret > 0)
@@ -567,6 +579,8 @@ namespace whiteMath.General
         /// <returns>The number of significant coefficients of the polynom.</returns>
         public static int CountSignificant<T, C>(this IList<Numeric<T, C>> list) where C: ICalc<T>, new()
         {
+			Condition.ValidateNotNull(list, nameof(list));
+
             C calc = Numeric<T, C>.Calculator;
 
             int ret = list.Count - 1;
@@ -585,6 +599,8 @@ namespace whiteMath.General
         /// <returns>The list without leading zeroes.</returns>
         public static int[] Cut(this IList<int> list)
         {
+			Condition.ValidateNotNull(list, nameof(list));
+
             int[] newList = new int[list.CountSignificant()];
 
             General.ServiceMethods.Copy(list, 0, newList, 0, newList.Length);
@@ -600,6 +616,8 @@ namespace whiteMath.General
         /// <returns>The list without any leading zeroes.</returns>
         public static List<int> Cut(this List<int> list)
         {
+			Condition.ValidateNotNull(list, nameof(list));
+
             List<int> newList = new List<int>(list.CountSignificant());
             newList.AddRange(new int[newList.Capacity]);
 
@@ -617,6 +635,8 @@ namespace whiteMath.General
         /// <param name="list">The digits list to be cut.</param>
         public static void CutInPlace(this List<int> list)
         {
+			Condition.ValidateNotNull(list, nameof(list));
+
             int difference = list.Count - list.CountSignificant();
 
             if (difference > 0)
@@ -633,6 +653,8 @@ namespace whiteMath.General
         /// <returns>The list without leading zeroes.</returns>
         public static Numeric<T,C>[] Cut<T,C>(this IList<Numeric<T,C>> list) where C: ICalc<T>, new()
         {
+			Condition.ValidateNotNull(list, nameof(list));
+
             Numeric<T,C>[] newList = new Numeric<T,C>[list.CountSignificant()];
 
             General.ServiceMethods.Copy(list, 0, newList, 0, newList.Length);

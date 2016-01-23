@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
-using System.Linq;
-using System.Text;
-
-using System.Diagnostics.Contracts;
 
 namespace whiteMath.Cryptography
 {
     /// <summary>
     /// This class provides methods for generating prime numbers.
     /// </summary>
-    [ContractVerification(true)]
     public static class PrimeGeneration
     {
         /// <summary>

@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using System.Diagnostics.Contracts;
 
 namespace whiteMath.Graphers
 {
-    [ContractVerification(true)]
     public static class HistoGrapherBrushFactory
     {
         public static Dictionary<string, Brush> CreateValueDependentBrushes(this HistoGrapher hg, double minValue, double maxValue, Color minColor, Color maxColor)

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics.Contracts;
 
 using whiteMath.ArithmeticLong;
 
@@ -13,7 +9,6 @@ namespace whiteMath.Randoms
     /// generation. 
     /// </summary>
     /// <typeparam name="B">The type specifying the digit base for the <c>LongInt&lt;B&gt;</c> type.</typeparam>
-    [ContractVerification(true)]
     public class RandomLongIntModular<B> : IRandomBounded<LongInt<B>> where B : IBase, new()
     {
         private IRandomBounded<int>                         intGenerator;           // integer generator
