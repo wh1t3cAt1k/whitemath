@@ -5,7 +5,7 @@ using System.Text;
 
 using whiteStructs.Conditions;
 
-namespace whiteMath.General
+namespace whiteStructs.Collections
 {
     public static class EnumerableExtensions
     {
@@ -71,7 +71,7 @@ namespace whiteMath.General
         public static T Max<T>(this IEnumerable<T> sequence, IComparer<T> comparer)
         {
 			Condition.ValidateNotNull(sequence, nameof(sequence));
-			Condition.ValidateNotEmpty(sequence, Messages.SequenceShouldContainAtLeastOneElement);
+			Condition.ValidateNotEmpty(sequence, Messages.SequenceShouldNotBeEmpty);
 
             T max;
 
@@ -102,16 +102,15 @@ namespace whiteMath.General
         public static T Min<T>(this IEnumerable<T> sequence, IComparer<T> comparer)
         {
 			Condition.ValidateNotNull(sequence, nameof(sequence));
-			Condition.ValidateNotEmpty(sequence, Messages.SequenceShouldContainAtLeastOneElement);
-
-            T min;
+			Condition.ValidateNotEmpty(sequence, Messages.SequenceShouldNotBeEmpty);
 
             IEnumerator<T> enumerator = sequence.GetEnumerator();
 
-            if (!enumerator.MoveNext())
-                throw GeneralExceptions.__SEQUENCE_EMPTY;
-            else
-                min = enumerator.Current;
+			Condition
+				.Validate(enumerator.MoveNext())
+				.OrArgumentException(Messages.SequenceShouldNotBeEmpty);
+
+			T min = enumerator.Current;
 
             while (enumerator.MoveNext())
                 if (comparer.Compare(enumerator.Current, min) < 0)
@@ -119,6 +118,18 @@ namespace whiteMath.General
 
             return min;
         }
+
+		public struct MinMaxPair<T>
+		{
+			public T Minimum { get; private set; }
+			public T Maximum { get; private set; }
+
+			public MinMaxPair(T minimum, T maximum)
+			{
+				this.Minimum = minimum;
+				this.Maximum = maximum;
+			}
+		}
 
         /// <summary>
         /// Finds the smallest and the largest elements in a sequence.
@@ -134,10 +145,10 @@ namespace whiteMath.General
         /// </param>
         /// <returns>
         /// A logical point whose X value is equal to the minimum, and Y value is equal to the maximum.</returns>
-        public static Point<T> MinMax<T>(this IEnumerable<T> sequence, IComparer<T> comparer = null)
+		public static MinMaxPair<T> MinMax<T>(this IEnumerable<T> sequence, IComparer<T> comparer = null)
         {
 			Condition.ValidateNotNull(sequence, nameof(sequence));
-			Condition.ValidateNotEmpty(sequence, Messages.SequenceShouldContainAtLeastOneElement);
+			Condition.ValidateNotEmpty(sequence, Messages.SequenceShouldNotBeEmpty);
 
             if (comparer == null)
             {
@@ -164,7 +175,7 @@ namespace whiteMath.General
 				}
             }
 
-            return new Point<T>(min, max);
+			return new MinMaxPair<T>(min, max);
         }
 
 		/// <summary>

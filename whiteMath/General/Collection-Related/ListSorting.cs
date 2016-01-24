@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using whiteStructs.Collections;
+
 namespace whiteMath.General
 {
     public static class ListSorting

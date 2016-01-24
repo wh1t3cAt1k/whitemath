@@ -223,7 +223,6 @@
     <Compile Include="General\Collection-Related\2D-Arrays\TwoDimensionalArrayExtensions.cs" />
     <Compile Include="General\Collection-Related\2D-Arrays\TwoDimensionalArrayRow.cs" />
     <Compile Include="General\Collection-Related\Multidimensional Arrays\MultiDimensionalArrayExtensions.cs" />
-    <Compile Include="General\Enumerable-Related\EnumerableExtensions.cs" />
     <Compile Include="General\Function-Related\HitTester.cs" />
     <Compile Include="General\GeneralExceptions.cs" />
     <Compile Include="General\Collection-Related\LinkedListSorting.cs" />
@@ -423,5 +422,8 @@
       <Project>{84D6674A-B7A0-49CC-8ECD-0AE03FA63383}</Project>
       <Name>whiteStructs</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="General\Enumerable-Related\" />
   </ItemGroup>
 </Project>

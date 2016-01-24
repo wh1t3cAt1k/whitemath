@@ -4,10 +4,10 @@ using System.Linq;
 using System.Drawing;
 
 using whiteMath;
-using whiteMath.General;
 using whiteMath.Calculators;
 
 using whiteStructs.Conditions;
+using whiteStructs.Collections;
 
 namespace whiteStructs.Drawing
 {

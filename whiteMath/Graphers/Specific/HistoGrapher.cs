@@ -47,8 +47,11 @@ namespace whiteMath.Graphers
         {
 			Condition.ValidateNotNull(points, nameof(points));
 			Condition.ValidateNotNull(values, nameof(values));
-			Condition.Validate(points.Count == values.Count).OrArgumentException(General.Messages.SequenceLengthsAreNotEqual);
-			Condition.ValidateNotEmpty(points, General.Messages.SequenceShouldContainAtLeastOneElement);
+			Condition
+				.Validate(points.Count == values.Count)
+				.OrArgumentException(whiteStructs.Collections.Messages.SequenceLengthsAreNotEqual);
+			Condition
+				.ValidateNotEmpty(points, whiteStructs.Collections.Messages.SequenceShouldNotBeEmpty);
 
             _initialize(points.Select((point, pointIndex) => new KeyValuePair<string, double>(point, values[pointIndex])));
         }
@@ -60,7 +63,9 @@ namespace whiteMath.Graphers
         public HistoGrapher(IEnumerable<KeyValuePair<string, double>> pointValuePairs)
         {
 			Condition.ValidateNotNull(pointValuePairs, nameof(pointValuePairs));
-			Condition.ValidateNotEmpty(pointValuePairs, General.Messages.SequenceShouldContainAtLeastOneElement);
+			Condition.ValidateNotEmpty(
+					pointValuePairs, 
+					whiteStructs.Collections.Messages.SequenceShouldNotBeEmpty);
 
             _initialize(pointValuePairs);
         }

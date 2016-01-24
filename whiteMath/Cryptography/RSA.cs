@@ -9,6 +9,7 @@ using whiteMath.General;
 using whiteMath.Randoms;
 
 using whiteStructs.Conditions;
+using whiteStructs.Collections;
 
 namespace whiteMath.Cryptography
 {

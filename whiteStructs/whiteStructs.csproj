@@ -181,6 +181,8 @@
     <Compile Include="Conditions\Condition.cs" />
     <Compile Include="Time\NanoStopwatch.cs" />
     <Compile Include="Time\NativeMethods.cs" />
+    <Compile Include="Collections\EnumerableExtensions.cs" />
+    <Compile Include="Collections\Messages.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -199,5 +201,6 @@
   <ItemGroup>
     <Folder Include="Conditions\" />
     <Folder Include="Time\" />
+    <Folder Include="Collections\" />
   </ItemGroup>
 </Project>
