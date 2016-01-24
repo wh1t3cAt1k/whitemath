@@ -82,9 +82,7 @@ namespace whiteMath.General
             heapify();
         }
 
-        // ----------------------------------------
-        // ---------- реализация интерфейса -------
-        // ----------------------------------------
+        // --- Interface implementation
 
         /// <summary>
         /// Returns the total element count in the heap.
@@ -143,16 +141,11 @@ namespace whiteMath.General
         /// <param name="value">The value to be inserted.</param>
         public void Insert(T value)
         {
-            tree.Add(value);            // добавляем в массив
-
-            heapifyUp(tree.Count - 1);    // элемент с этим индексом надо кучифицировать
+            tree.Add(value);
+            heapifyUp(tree.Count - 1);
         }
-
-
-        // -----------------------------------------
-        // --------- операции ----------------------
-        // -----------------------------------------
-
+			
+        // --- Operations
         
         /// <summary>
         /// Кучифицирует все дерево за логарифмическое время.
@@ -226,13 +219,11 @@ namespace whiteMath.General
 
             return;
         }
-
-        // -----------------------------
-        // ------- service methods -----
-        // -----------------------------
+			
+        // --- service methods
 
         /// <summary>
-        /// Есть ли в куче элемент с таким индексом.
+        /// Tests whether there is an element with such index.
         /// </summary>
         private bool isInHeap(int i)
         {
@@ -240,7 +231,7 @@ namespace whiteMath.General
         }
 
         /// <summary>
-        /// Индекс родителя i-го элемента.
+        /// Returns the index of i-th element's parent.
         /// </summary>
         private static int parent(int i)
         {
@@ -248,7 +239,7 @@ namespace whiteMath.General
         }
 
         /// <summary>
-        /// Индекс левого ребенка i-го элемента. 
+        /// Returns the index of the left child of i-th element. 
         /// </summary>
         private static int leftChild(int i)
         {
@@ -256,16 +247,14 @@ namespace whiteMath.General
         }
 
         /// <summary>
-        /// Индекс правого ребенка i-го элемента.
+        /// Returns the index of the right child of i-th element.
         /// </summary>
         private static int rightChild(int i)
         {
             return 2 * i + 2;
         }
 
-        // ----------------------------------------------
-        // -------- Поддержка древовидной структуры -----
-        // ----------------------------------------------
+        // --- Support the tree-like structure
 
         private class BinaryHeapNode : ITreeNode<T>
         {
@@ -278,14 +267,10 @@ namespace whiteMath.General
                 this.i = i;
             }
 
-            // ---------- implementation ----------
-
             public override string ToString()
             {
                 return Value.ToString();
             }
-
-            // ---------- implementation ----------
 
             public bool HasParent { get { return heap.isInHeap(parent(i)); } }
 

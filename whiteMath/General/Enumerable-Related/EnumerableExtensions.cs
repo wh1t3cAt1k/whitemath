@@ -121,7 +121,7 @@ namespace whiteMath.General
         }
 
         /// <summary>
-        /// Finds the minimum and the maximum elements in a sequence.
+        /// Finds the smallest and the largest elements in a sequence.
         /// </summary>
         /// <typeparam name="T">
         /// The type of elements in the sequence.
@@ -188,10 +188,6 @@ namespace whiteMath.General
 				action(element);
 			}
 		}
-
-        // ------------------------------------
-        // ------- TO 2D ARRAY ---------------
-        // ------------------------------------
 
         /// <summary>
         /// Creates a single-column two-dimensional array from an enumerable.
