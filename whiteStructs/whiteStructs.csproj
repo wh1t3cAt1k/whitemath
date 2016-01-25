@@ -16,7 +16,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\out\DebugVersion\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;INCLUDE_UNIT_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\out\DebugVersion\whiteStructs.XML</DocumentationFile>
@@ -147,7 +147,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugNonWindows|AnyCPU' ">
     <Optimize>false</Optimize>
     <OutputPath>..\out\DebugNonWindows</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NON_WINDOWS_ENVIRONMENT</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NON_WINDOWS_ENVIRONMENT;INCLUDE_UNIT_TESTS</DefineConstants>
     <WarningLevel>4</WarningLevel>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
@@ -164,6 +164,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\external\nunit.framework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Forms\FormExtensions.cs" />
@@ -183,6 +187,7 @@
     <Compile Include="Time\NativeMethods.cs" />
     <Compile Include="Collections\EnumerableExtensions.cs" />
     <Compile Include="Collections\Messages.cs" />
+    <Compile Include="Collections\UnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

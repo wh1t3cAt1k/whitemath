@@ -1,4 +1,5 @@
-﻿#if (DEBUG)
+﻿#if (INCLUDE_UNIT_TESTS)
+
 using NUnit.Framework;
 
 using IntRational = whiteMath.RationalNumbers.Rational<int, whiteMath.Calculators.CalcInt>;
@@ -12,13 +13,13 @@ namespace whiteMath.RationalNumbers
 		private static readonly IntRationalCalculator calculator = new IntRationalCalculator();
 
 		[Test]
-		public void TestNegationWorksProperly(
-			[Random(-10, 10, 50)] int numerator,
-			[Random(-10, 10, 50)] int denominator
+		public void TestNumberPlusItsNegationIsZero(
+			[Random(-10, 10, 5)] int numerator,
+			[Random(-10, 10, 5)] int denominator
 		)
 		{
-			var number = new IntRational(numerator, denominator);
-			var negatedNumber = -number;
+			IntRational number = new IntRational(numerator, denominator);
+			IntRational negatedNumber = -number;
 
 			if (denominator == 0)
 			{
@@ -31,6 +32,14 @@ namespace whiteMath.RationalNumbers
 					Is.EqualTo(calculator.zero));
 			}
 		}
+
+		[Test]
+		public void TestZeroDenominatorNumberIsNotNormal()
+		{
+			IntRational zeroDenominatorNumber = new IntRational(50, 0);
+			Assert.That(!zeroDenominatorNumber.IsNormalNumber);
+		}
 	}
 }
+
 #endif

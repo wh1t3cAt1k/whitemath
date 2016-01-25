@@ -43,7 +43,7 @@ namespace whiteStructs.Collections
         {
 			Condition.ValidateNotNull(sequence, nameof(sequence));
 
-            return !sequence.GetEnumerator().MoveNext();
+			return !sequence.Any();
         }
 
 		/// <summary>
@@ -150,10 +150,7 @@ namespace whiteStructs.Collections
 			Condition.ValidateNotNull(sequence, nameof(sequence));
 			Condition.ValidateNotEmpty(sequence, Messages.SequenceShouldNotBeEmpty);
 
-            if (comparer == null)
-            {
-                comparer = Comparer<T>.Default;
-            }
+			comparer = comparer ?? Comparer<T>.Default;
 
             T min;
             T max;

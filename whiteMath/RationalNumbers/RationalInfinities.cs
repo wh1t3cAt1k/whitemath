@@ -4,7 +4,7 @@ using whiteMath.Calculators;
 
 namespace whiteMath.RationalNumbers
 {
-    public partial class Rational<T,C>: ICloneable where C: ICalc<T>, new()
+    public partial class Rational<T, C> where C: ICalc<T>, new()
     {
         public static readonly Rational<T, C> PositiveInfinity = new Positive_Infinity();
         public static readonly Rational<T, C> NegativeInfinity = new Negative_Infinity();
@@ -16,7 +16,7 @@ namespace whiteMath.RationalNumbers
 		/// Gets a value indicating whether this instance is not an infinity or a NaN.
 		/// </summary>
 		/// <value><c>true</c> if this instance is a normal number; otherwise, <c>false</c>.</value>
-		public bool IsNormalNumber 
+		public bool IsNormalNumber
 		{ 
 			get
 			{
@@ -24,7 +24,9 @@ namespace whiteMath.RationalNumbers
 			} 
 		}
 
-        private class SpecialRational : Rational<T, C> { }
+        private class SpecialRational : Rational<T, C> 
+		{
+		}
 
         private class Positive_Infinity: SpecialRational
         {
