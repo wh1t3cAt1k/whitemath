@@ -337,7 +337,6 @@
     <Compile Include="Randoms\RandomNormalBoxMuller.cs" />
     <Compile Include="Randoms\RandomStandard.cs" />
     <Compile Include="RationalNumbers\Rational.cs" />
-    <Compile Include="RationalNumbers\RationalInfinities.cs" />
     <Compile Include="General\Container-Related\ContainerExtensions.cs" />
     <Compile Include="Debugging\DebugMethods.cs" />
     <Compile Include="General\Excel-Related\ExcelReader.cs" />

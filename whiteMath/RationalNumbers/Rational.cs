@@ -18,7 +18,7 @@ namespace whiteMath.RationalNumbers
     {
 		private static C calc = Numeric<T, C>.Calculator;
 
-		private enum SpecialNumberType
+		public enum SpecialNumberType
 		{
 			None = 0,
 			NaN = 1,
@@ -26,7 +26,7 @@ namespace whiteMath.RationalNumbers
 			NegativeInfinity = 3
 		}
 
-		private SpecialNumberType specialNumberType = SpecialNumberType.None;
+		private SpecialNumberType _specialNumberType = SpecialNumberType.None;
 
 		public T Numerator
 		{
@@ -40,6 +40,16 @@ namespace whiteMath.RationalNumbers
 			internal set;
 		}
 
+		public bool IsNegative
+		{
+			get
+			{
+				return 
+					calc.isNegative(this.Numerator) !=
+					calc.isNegative(this.Denominator);
+			}
+		}
+
 		/// <summary>
 		/// Gets a value indicating whether this instance is not a number.
 		/// </summary>
@@ -48,7 +58,7 @@ namespace whiteMath.RationalNumbers
 		{
 			get
 			{
-				return this.specialNumberType == SpecialNumberType.NaN;
+				return this._specialNumberType == SpecialNumberType.NaN;
 			}
 		}
 
@@ -60,7 +70,7 @@ namespace whiteMath.RationalNumbers
 		{
 			get
 			{
-				return this.specialNumberType == SpecialNumberType.PositiveInfinity;
+				return this._specialNumberType == SpecialNumberType.PositiveInfinity;
 			}
 		}
 
@@ -72,7 +82,7 @@ namespace whiteMath.RationalNumbers
 		{
 			get
 			{
-				return this.specialNumberType == SpecialNumberType.NegativeInfinity;
+				return this._specialNumberType == SpecialNumberType.NegativeInfinity;
 			}
 		}
 
@@ -101,82 +111,109 @@ namespace whiteMath.RationalNumbers
 			}
 		}
 
-		/// <summary>
-		/// Parameterless constructor for inner purposes.
-		/// TODO: delete after the deletion of the SpecialRational subclass.
-		/// </summary>
-		private Rational()
-		{
-		}
-
         /// <summary>
-        /// The standard constructor for generic Rational numbers.
-        /// User should explicitly specify both the numerator and the denumerator.
+		/// Initializes a new instance of the <see cref="Rational{T, C}"/> class
+		/// using explicitly provided numerator and denominator values.
         /// </summary>
         public Rational(T numerator, T denominator)
         {
 			this.Numerator = calc.getCopy(numerator);
             this.Denominator = calc.getCopy(denominator);
 
+			this.CheckSpecial();
             this.Normalize();
         }
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="whiteMath.RationalNumbers.Rational{T, C}"/> class
+		/// using a special number type provided.
+		/// </summary>
+		/// <param name="specialNumberType">Special number type.</param>
+		public Rational(SpecialNumberType specialNumberType)
+		{
+			if (specialNumberType == SpecialNumberType.None)
+			{
+				throw new ArgumentException("This constructor is intended only for constructing NaN or infinities.");
+			}
+
+			this._specialNumberType = specialNumberType;
+			this.Numerator = calc.zero;
+			this.Denominator = calc.zero;
+		}
+
         /// <summary>
-		/// Normalizes the number, divides both the numerator
-		/// and denominator by their GCD, forces the denominator
-		/// to be positive.
+		/// Normalizes the number:
+		/// <list type="bullet">
+		/// <item>If the number is NaN or infinity, does nothing;</item>
+		/// <item>Else, if the number's numerator is zero, forces the denominator into 1.</item>
+		/// <item>Else, divides both the numerator and denominator by their GCD, forces the 
+		/// denominator to be positive.</item>
+		/// </list>
         /// </summary>
         private void Normalize()
         {
-			if (!this.IsNormalNumber) return;
+			if (!this.IsNormalNumber) 
+				return;
 
-			T greatestCommonDivisor = WhiteMath<T, C>.GreatestCommonDivisor(
-				WhiteMath<T, C>.Abs(this.Numerator), 
-				WhiteMath<T, C>.Abs(this.Denominator));
+			if (calc.eqv(this.Numerator, calc.zero))
+			{
+				// We only want to have a single representation ]
+				// for zero.
+				// -
+				this.Denominator = calc.fromInt(1);
+			}
+			else
+			{
+				T greatestCommonDivisor = WhiteMath<T, C>.GreatestCommonDivisor(
+					                         WhiteMath<T, C>.Abs(this.Numerator), 
+					                         WhiteMath<T, C>.Abs(this.Denominator));
 
-            this.Numerator = calc.div(this.Numerator, greatestCommonDivisor);
-            this.Denominator = calc.div(this.Denominator, greatestCommonDivisor);
+				this.Numerator = calc.div(this.Numerator, greatestCommonDivisor);
+				this.Denominator = calc.div(this.Denominator, greatestCommonDivisor);
 
-            // Negate the denominator if it's negative
-			// -
-            if (calc.mor(calc.zero, this.Denominator))
-            {
-                this.Numerator = calc.negate(this.Numerator);
-                this.Denominator = calc.negate(this.Denominator);
-            }
+				// Negate the denominator if it's negative
+				// -
+				if (calc.mor(calc.zero, this.Denominator))
+				{
+					this.Numerator = calc.negate(this.Numerator);
+					this.Denominator = calc.negate(this.Denominator);
+				}
+			}
         }
 
         /// <summary>
 		/// If the number's denominator is zero, changes the number
 		/// into a negative/positive infinity or a NaN (when the 
 		/// numerator is also zero).
+		/// For non-zero denominator, but zero numerator,
+		/// changes the denominator to one.
         /// </summary>
 		/// <returns>
 		/// <c>true</c>, if the number kept its normal status,
 		/// <c>false</c> if it became an infinity or a NaN.
 		/// </returns>
-        private static bool CheckForInfinity(ref Rational<T, C> number)
+        private bool CheckSpecial()
         {
-            if (calc.eqv(number.Denominator, calc.zero))
-            {
-				if (calc.eqv(number.Numerator, calc.zero))
+			if (calc.eqv(this.Denominator, calc.zero))
+			{
+				if (calc.eqv(this.Numerator, calc.zero))
 				{
-					number = NaN;
+					this._specialNumberType = SpecialNumberType.NaN;
 				}
-				else if (calc.mor(calc.zero, number.Numerator))
+				else if (calc.mor(calc.zero, this.Numerator))
 				{
-					number = NegativeInfinity;
+					this._specialNumberType = SpecialNumberType.NegativeInfinity;
 				}
 				else
 				{
-					number = PositiveInfinity;
+					this._specialNumberType = SpecialNumberType.PositiveInfinity;
 				}
 
-				number.Numerator = calc.zero;
-				number.Denominator = calc.zero;
+				this.Numerator = calc.zero;
+				this.Denominator = calc.zero;
 
-                return false;
-            }
+				return false;
+			}
 
             return true;
         }
@@ -185,245 +222,208 @@ namespace whiteMath.RationalNumbers
         ///----ARITHMETIC OPERATORS-----------
         ///-----------------------------------
 
-        public static Rational<T, C> operator +(Rational<T, C> one, Rational<T, C> two)
+        public static Rational<T, C> operator +(Rational<T, C> first, Rational<T, C> second)
         {
-            if (one is SpecialRational)
-            {
-                if (two is SpecialRational)
-                {
-                    if (one.GetType().Equals(two.GetType())) return one;
-                    else return NaN;
-                }
-
-                return one;
-            }
-            else if (two is SpecialRational) return two + one;
-
-			T resultDenominator = WhiteMath<T, C>.LowestCommonMultiple(
-				one.Denominator, 
-				two.Denominator, 
-				WhiteMath<T, C>.GreatestCommonDivisor(one.Denominator, two.Denominator));
-			
-			T resultNumerator = calc.sum(
-				calc.mul(one.Numerator, calc.div(resultDenominator, one.Denominator)), 
-				calc.mul(two.Numerator, calc.div(resultDenominator, two.Denominator)));
-
-			Rational<T, C> result = new Rational<T, C>(resultNumerator, resultDenominator);
-
-			if (CheckForInfinity(ref result))
+			if (first.IsNormalNumber && second.IsNormalNumber)
 			{
-				result.Normalize();
+				T resultDenominator = WhiteMath<T, C>.LowestCommonMultiple(
+					                      first.Denominator, 
+					                      second.Denominator, 
+					                      WhiteMath<T, C>.GreatestCommonDivisor(first.Denominator, second.Denominator));
+
+				T resultNumerator = calc.sum(
+					                    calc.mul(first.Numerator, calc.div(resultDenominator, first.Denominator)), 
+					                    calc.mul(second.Numerator, calc.div(resultDenominator, second.Denominator)));
+
+				Rational<T, C> result = new Rational<T, C>(resultNumerator, resultDenominator);
+
+				return result;
 			}
-
-            return result;
-        }
-
-        public static Rational<T, C> operator -(Rational<T, C> one, Rational<T, C> two) 
-        {
-            if (one is SpecialRational || two is SpecialRational)
-            {
-				if (one is NotANumber || two is NotANumber)
-				{
-					return NaN;
-				}
-                else if (one is Positive_Infinity)
-                {
-                    if (two is SpecialRational)
-                    {
-						if (two is Negative_Infinity)
-						{
-							return one;
-						}
-						else
-						{
-							return NaN;
-						}
-                    }
-
-                    return one;
-                }
-                else if (two is Positive_Infinity)
-                {
-                    if (one is SpecialRational)
-                    {
-						if (one is Negative_Infinity)
-						{
-							return one;
-						}
-						else
-						{
-							return NaN;
-						}
-                    }
-
-                    return NegativeInfinity;
-                }
-                else if (one is Negative_Infinity)
-                {
-                    if (two is SpecialRational)
-                    {
-						if (two is Positive_Infinity)
-						{
-							return one;
-						}
-						else
-						{
-							return NaN;
-						}
-                    }
-
-                    return one;
-                }
-                else if (two is Negative_Infinity)
-                {
-                    if (one is SpecialRational)
-                    {
-						if (one is Positive_Infinity)
-						{
-							return one;
-						}
-						else
-						{
-							return NaN;
-						}
-                    }
-
-                    return PositiveInfinity;
-                }
-            }
-
-
-            T resultDenominator = WhiteMath<T, C>.LowestCommonMultiple(
-				one.Denominator, 
-				two.Denominator, 
-				WhiteMath<T, C>.GreatestCommonDivisor(one.Denominator, two.Denominator));
-            
-			T resultNumerator = calc.dif(
-				calc.mul(one.Numerator, calc.div(resultDenominator, one.Denominator)), 
-				calc.mul(two.Numerator, calc.div(resultDenominator, two.Denominator)));
-
-			Rational<T, C> result = new Rational<T, C>(resultNumerator, resultDenominator);
-
-			if (CheckForInfinity(ref result))
+			else if (!first.IsNormalNumber && !second.IsNormalNumber)
 			{
-				result.Normalize();
-			}
-
-            return result;
-        }
-
-        public static Rational<T, C> operator *(Rational<T, C> one, Rational<T, C> two)
-        {
-			if (one is SpecialRational)
-			{
-				if (two is SpecialRational || calc.eqv(calc.zero, two.Numerator))
+				if (first._specialNumberType == second._specialNumberType)
 				{
-					return NaN;
-				}
-				else if (calc.mor(calc.zero, two.Numerator))
-				{
-					if (one is Positive_Infinity)
-					{
-						return NegativeInfinity;
-					}
-					else if (one is Negative_Infinity)
-					{
-						return PositiveInfinity;
-					}
-				}
-				return one;
-			}
-			else if (two is SpecialRational)
-			{
-				return two * one;
-			}
-
-            return new Rational<T, C>(
-				calc.mul(one.Numerator, two.Numerator), 
-				calc.mul(one.Denominator, two.Denominator));
-        }
-
-        public static Rational<T, C> operator /(Rational<T, C> one, Rational<T, C> two)
-        {
-            if (one is SpecialRational)
-            {
-				if (two is SpecialRational || calc.eqv(two.Numerator, calc.zero))
-				{
-					return NaN;
-				}
-                else if (calc.mor(calc.zero, two.Numerator))
-                {
-					if (one is Positive_Infinity)
-					{
-						return NegativeInfinity;
-					}
-					else if (one is Negative_Infinity)
-					{
-						return PositiveInfinity;
-					}
-                }
-
-                return one;
-            }
-            else if (two is SpecialRational)
-            {
-                if (one is SpecialRational || two is NotANumber) return NaN;
-
-				// We get zero when dividing by an infinity.
-				// -
-                return new Rational<T, C>(calc.zero, calc.fromInt(1));
-            }
-
-            if (calc.eqv(two.Numerator, calc.zero)) 
-			{
-				// TODO: this is madness. Refactor.
-				// -
-				Rational<T, C> tmp = new Rational<T, C>(one.Numerator, calc.zero); 
-				CheckForInfinity(ref tmp); 
-				return tmp; 
-			}
-
-            return new Rational<T, C>(
-				calc.mul(one.Numerator, two.Denominator), 
-				calc.mul(one.Denominator, two.Numerator));
-        }
-
-        public static Rational<T,C> operator -(Rational<T,C> one)
-        {
-            if (one is SpecialRational)
-            {
-				if (one is Positive_Infinity)
-				{
-					return NegativeInfinity;
-				}
-				else if (one is Negative_Infinity)
-				{
-					return PositiveInfinity;
+					return new Rational<T, C>(first._specialNumberType);
 				}
 				else
 				{
-					return one;
+					return new Rational<T, C>(SpecialNumberType.NaN);
 				}
-            }
-
-            return new Rational<T, C>(calc.negate(one.Numerator), one.Denominator);
+			}
+			else if (!first.IsNormalNumber && second.IsNormalNumber)
+			{
+				return new Rational<T, C>(first._specialNumberType);
+			}
+			else
+			{
+				return second + first;
+			}
         }
 
-        public static bool operator ==(Rational<T, C> one, Rational<T, C> two)
+        public static Rational<T, C> operator -(Rational<T, C> first, Rational<T, C> second) 
         {
-            return one.Equals(two);
+			if (first.IsNormalNumber && second.IsNormalNumber)
+			{
+				T resultDenominator = WhiteMath<T, C>.LowestCommonMultiple(
+					                      first.Denominator, 
+					                      second.Denominator, 
+					                      WhiteMath<T, C>.GreatestCommonDivisor(first.Denominator, second.Denominator));
+
+				T resultNumerator = calc.dif(
+					                    calc.mul(first.Numerator, calc.div(resultDenominator, first.Denominator)), 
+					                    calc.mul(second.Numerator, calc.div(resultDenominator, second.Denominator)));
+
+				Rational<T, C> result = new Rational<T, C>(resultNumerator, resultDenominator);
+
+				result.CheckSpecial();
+				result.Normalize();
+
+				return result;
+			}
+			else if (
+				first.IsNaN ||
+				second.IsNaN ||
+				first._specialNumberType == second._specialNumberType)
+			{
+				return new Rational<T, C>(SpecialNumberType.NaN);
+			}
+			else if (first.IsPositiveInfinity)
+			{
+				return new Rational<T, C>(SpecialNumberType.PositiveInfinity);
+			}
+			else
+			{
+				return new Rational<T, C>(SpecialNumberType.NegativeInfinity);
+			}
         }
 
-        public static bool operator !=(Rational<T, C> one, Rational<T, C> two)
+        public static Rational<T, C> operator *(Rational<T, C> first, Rational<T, C> second)
         {
-            return !(one == two);
+			if (first.IsNormalNumber && second.IsNormalNumber)
+			{
+				return new Rational<T, C>(
+					calc.mul(first.Numerator, second.Numerator), 
+					calc.mul(first.Denominator, second.Denominator));
+			}
+			else if (
+				first.IsNaN ||
+				!first.IsNormalNumber && !second.IsNormalNumber)
+			{
+				return new Rational<T, C>(SpecialNumberType.NaN);
+			}
+			else if (first.IsInfinity && second.IsNormalNumber)
+			{
+				if (second.IsNegative)
+				{
+					return (first.IsPositiveInfinity ? 
+						new Rational<T, C>(SpecialNumberType.NegativeInfinity) :
+						new Rational<T, C>(SpecialNumberType.PositiveInfinity));
+				}
+				else
+				{
+					return new Rational<T, C>(first._specialNumberType);
+				}
+			}
+			else
+			{
+				return second * first;
+			}
+        }
+
+        public static Rational<T, C> operator /(Rational<T, C> first, Rational<T, C> second)
+        {
+			if (first.IsNormalNumber && second.IsNormalNumber)
+			{
+				return new Rational<T, C>(
+					calc.mul(first.Numerator, second.Denominator), 
+					calc.mul(first.Denominator, second.Numerator));
+			}
+			else if (
+				first.IsNaN ||
+				second.IsNaN ||
+				first.IsInfinity && second.IsInfinity)
+			{
+				return new Rational<T, C>(SpecialNumberType.NaN);
+			}
+			else if (first.IsInfinity && second.IsNormalNumber)
+			{
+				if (second.IsNegative)
+				{
+					return first.IsPositiveInfinity ?
+						new Rational<T, C>(SpecialNumberType.NegativeInfinity) :
+						new Rational<T, C>(SpecialNumberType.PositiveInfinity);
+				}
+				else
+				{
+					return new Rational<T, C>(first._specialNumberType);
+				}
+			}
+			else if (first.IsNormalNumber && second.IsInfinity)
+			{
+				return new Rational<T, C>(calc.zero, calc.fromInt(1));
+			}
+			else
+			{
+				throw new InvalidProgramException();
+			}
+        }
+
+        public static Rational<T,C> operator -(Rational<T,C> number)
+        {
+			if (number.IsNormalNumber)
+			{
+				return new Rational<T, C>(calc.negate(number.Numerator), number.Denominator);
+			}
+			else if (number.IsInfinity)
+			{
+				return (number.IsPositiveInfinity ?
+					new Rational<T, C>(SpecialNumberType.NegativeInfinity) :
+					new Rational<T, C>(SpecialNumberType.PositiveInfinity));
+			}
+			else if (number.IsNaN)
+			{
+				return new Rational<T, C>(SpecialNumberType.NaN);
+			}
+			else
+			{
+				throw new InvalidProgramException();
+			}
+        }
+
+        public static bool operator ==(Rational<T, C> first, Rational<T, C> second)
+        {
+			if (!first.IsNormalNumber && !second.IsNormalNumber && !first.IsNaN)
+			{
+				return first._specialNumberType == second._specialNumberType;
+			}
+			else if (first.IsNaN || first.IsNormalNumber != second.IsNormalNumber)
+			{
+				return false;
+			}
+			else if (first.IsNormalNumber && second.IsNormalNumber)
+			{
+				return 
+					calc.eqv(first.Numerator, second.Numerator) && 
+					calc.eqv(first.Denominator, second.Denominator);
+			}
+			else
+			{
+				throw new InvalidProgramException();
+			}
+        }
+			
+        public static bool operator !=(Rational<T, C> first, Rational<T, C> second)
+        {
+            return !(first == second);
         }
 
         public static bool operator >(Rational<T, C> one, Rational<T, C> two)
         {
+			/*
             if (one is NotANumber || two is NotANumber) return false;
             else if (one is Positive_Infinity || two is Negative_Infinity) return true;
             else if (two is Positive_Infinity || one is Negative_Infinity) return false;
+			*/
 
             T denomLcm = WhiteMath<T, C>.LowestCommonMultiple(one.Denominator, two.Denominator, WhiteMath<T, C>.GreatestCommonDivisor(one.Denominator, two.Denominator));
             return calc.mor(calc.mul(one.Numerator, calc.div(denomLcm, one.Denominator)), calc.mul(two.Numerator, calc.div(denomLcm, two.Denominator)));
@@ -431,9 +431,11 @@ namespace whiteMath.RationalNumbers
 
         public static bool operator <(Rational<T, C> one, Rational<T, C> two)
         {
+			/*
             if (one is NotANumber || two is NotANumber) return false;
             else if (one is Positive_Infinity || two is Negative_Infinity) return false;
             else if (two is Positive_Infinity || one is Negative_Infinity) return true;
+			*/
 
             return two > one;
         }
@@ -567,18 +569,13 @@ namespace whiteMath.RationalNumbers
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (!(obj is Rational<T, C>)) return false;
-            else if (this is SpecialRational || obj is SpecialRational)
-            {
-                if (this is Positive_Infinity && obj is Positive_Infinity ||
-                    this is Negative_Infinity && obj is Negative_Infinity)
-                    return true;
-                
-                return false;
-            }
-            else
+			if (!(obj is Rational<T, C>))
 			{
-                return (obj as Rational<T, C>).Numerator.Equals(this.Numerator) && (obj as Rational<T, C>).Denominator.Equals(this.Denominator);
+				return false;
+			}
+			else
+			{
+				return (this == (obj as Rational<T, C>));
 			}
 		}
         // -------------------------------------- String representation

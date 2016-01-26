@@ -28,17 +28,17 @@ namespace whiteMath.Calculators
 
         public bool isNegInf(Rational<T, C> num)
         {
-            return Rational<T,C>.ReferenceEquals(num, Rational<T,C>.NegativeInfinity);
+			return num.IsNegativeInfinity;
         }
 
         public bool isPosInf(Rational<T, C> num)
         {
-            return Rational<T,C>.ReferenceEquals(num, Rational<T,C>.PositiveInfinity);
+			return num.IsPositiveInfinity;
         }
 
         public bool isNaN(Rational<T, C> num)
         {
-            return Rational<T,C>.ReferenceEquals(num, Rational<T,C>.NaN);
+			return num.IsNaN;
         }
 
         // ----------------------------
