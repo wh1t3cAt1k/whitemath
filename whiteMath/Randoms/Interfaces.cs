@@ -85,13 +85,23 @@ namespace whiteMath.Randoms
     public static class RandomBounded
     {
         /// <summary>
-        /// Forms a random string of the desired length containing characters from a <c>char</c> list.
-        /// There are no guarantees for each character to appear in the string.
+        /// Generates a pseudo-random string of the desired length containing 
+		/// characters from a <see cref="char"/> list. There are no guarantees for 
+		/// every character to appear in the string.
         /// </summary>
-        /// <param name="gen">An integer generator which will be used to randomly traverse the character list.</param>
-        /// <param name="characters">A list of characters. Duplicates will increase the chance of appearing in the result string.</param>
+        /// <param name="gen">
+		/// An integer generator which will be used to provide 
+		/// random indices for the character list.
+		/// </param>
+        /// <param name="characters">
+		/// A list of characters. The presence of duplicates will increase the character's 
+		/// chance of appearing in the result string.
+		/// </param>
         /// <param name="length">A non-negative desired length of the string.</param>
-        /// <returns>A random string of the desired length containing characters from a <c>char</c> list.</returns>
+		/// <returns>
+		/// A random string of the desired <paramref name="length"/> that consists of
+		/// characters from a <see cref="char"/> list.
+		/// </returns>
         public static string NextString(this IRandomBounded<int> gen, IList<char> characters, int length)
         {
 			Condition.ValidateNotNull(gen, nameof(gen));

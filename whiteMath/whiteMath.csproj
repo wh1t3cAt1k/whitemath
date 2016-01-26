@@ -373,6 +373,7 @@
     <Compile Include="Algorithms\WhiteMathInteger.cs" />
     <Compile Include="Algorithms\WhiteMathMinMax.cs" />
     <Compile Include="Algorithms\Messages.cs" />
+    <Compile Include="Randoms\UnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Graphers\Components\GraphicDrawer.resx">

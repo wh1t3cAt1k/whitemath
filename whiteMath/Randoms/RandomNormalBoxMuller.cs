@@ -7,13 +7,15 @@ namespace whiteMath.Randoms
     /// <summary>
     /// This class is a wrapper around a uniformly distributed
     /// fractional random numbers generator and is dedicated to
-    /// generating normal random numbers with specified expectation
-    /// and standard deviation.
+    /// generating normal random numbers with specified expected 
+	/// value and standard deviation.
     /// </summary>
     /// <typeparam name="T">The type of random numbers generated. Is expected to be a fractional number type.</typeparam>
     /// <typeparam name="C">A calculator for the <typeparamref name="T"/> numeric type.</typeparam>
     public class RandomNormalBoxMuller<T, C>: IRandomUnbounded<T> where C: ICalc<T>, new()
     {
+		private static readonly ICalc<T> calc = Numeric<T, C>.Calculator;
+
         private IRandomFloatingPoint<T> generator;
         
         private Numeric<T,C>    mean;
@@ -27,22 +29,29 @@ namespace whiteMath.Randoms
 
         public bool IsIntegerGenerator { get { return false; } }
 
-        public RandomNormalBoxMuller(IRandomFloatingPoint<T> uniformGenerator, T mean, T standardDeviation, Func<T, T> naturalLogarithmFunction, Func<T, T> squareRootFunction)
+        public RandomNormalBoxMuller(
+			IRandomFloatingPoint<T> uniformGenerator, 
+			T mean, 
+			T standardDeviation, 
+			Func<T, T> naturalLogarithmFunction, 
+			Func<T, T> squareRootFunction)
         {
             this.generator          = uniformGenerator;
 
             this.mean               = mean;
             this.standardDeviation  = standardDeviation;
 
-            this.naturalLogarithmFunction   = naturalLogarithmFunction;
-            this.squareRootFunction         = squareRootFunction;
+            this.naturalLogarithmFunction = naturalLogarithmFunction;
+            this.squareRootFunction = squareRootFunction;
 
             this.nextAvailable      = false;
             this.next               = default(T);
 
             this.transformFunction = delegate(T value, T squareSum) 
             {
-                return (Numeric<T,C>)value * squareRootFunction(-Numeric<T,C>._2 * naturalLogarithmFunction(squareSum) / squareSum);
+				return calc.mul(
+					value,
+					squareRootFunction(- Numeric<T,C>._2 * naturalLogarithmFunction(squareSum) / squareSum));
             };
         }
 
@@ -61,13 +70,16 @@ namespace whiteMath.Randoms
 
         // -------------- RNG methods ------
 
-        private Numeric<T, C> ___nextFromMinusOneToPlusOne()
+        private Numeric<T, C> NextFromMinusOneToPlusOne()
         {
-            // Берем число в [0; 1)
-            // и вычитаем число из [0; 1)
-            // Получаем число от -1 до +1 :)
-
-            return Numeric<T,C>.Calculator.dif(generator.Next_SingleInterval(), generator.Next_SingleInterval());
+			// We take number in [0; 1),
+			// Double it, get a number [0; 2),
+			// Subtract a number in [0; 1),
+			// Resulting value is in [-1; +1).
+			// -
+            return calc.dif(
+				calc.mul(Numeric<T, C>._2, generator.Next_SingleInterval()), 
+				generator.Next_SingleInterval());
         }
 
         public T Next()
@@ -77,9 +89,7 @@ namespace whiteMath.Randoms
                 nextAvailable = false;
                 return this.mean + next * this.standardDeviation;
             }
-
-            ICalc<T> calc = Numeric<T,C>.Calculator;
-
+				
             T minusOne      = -(Numeric<T,C>._1);
             T plusOne       = Numeric<T,C>._1;
 
@@ -87,8 +97,8 @@ namespace whiteMath.Randoms
             
             while(true)
             {
-                Numeric<T,C> randomFirst    = ___nextFromMinusOneToPlusOne();
-                Numeric<T,C> randomSecond   = ___nextFromMinusOneToPlusOne();
+                Numeric<T,C> randomFirst    = NextFromMinusOneToPlusOne();
+                Numeric<T,C> randomSecond   = NextFromMinusOneToPlusOne();
 
                 Numeric<T, C> squareSum     = randomFirst * randomFirst + randomSecond * randomSecond;
 
