@@ -1,40 +1,38 @@
-﻿using System.Numerics;
-
-namespace whiteMath.Calculators
+﻿namespace whiteMath.Calculators
 {
     /// <summary>
     /// Standard calculator for integers.
     /// </summary>
-    public class CalcBigInteger : ICalc<BigInteger>
+    public class CalcInt : ICalc<int>
     {
-        public bool isIntegerCalculator     { get { return true; } }
+        public bool IsIntegerCalculator     { get { return true; } }
 
-        public BigInteger sum(BigInteger one, BigInteger two)    { return one + two; }
-        public BigInteger dif(BigInteger one, BigInteger two)    { return one - two; }
-        public BigInteger mul(BigInteger one, BigInteger two)    { return one * two; }
-        public BigInteger div(BigInteger one, BigInteger two)    { return one / two; }
-        public BigInteger rem(BigInteger one, BigInteger two)    { return one % two; }
-        public BigInteger negate(BigInteger one)          { return -one; }
+        public int Add(int one, int two)    { return one + two; }
+        public int Subtract(int one, int two)    { return one - two; }
+        public int Multiply(int one, int two)    { return one * two; }
+        public int Divide(int one, int two)    { return one / two; }
+        public int Modulo(int one, int two)    { return one % two; }
+        public int Negate(int one)          { return -one; }
 
-        public BigInteger increment(BigInteger one)       { return ++one; }
-        public BigInteger decrement(BigInteger one)       { return --one; }
+        public int Increment(int one)       { return ++one; }
+        public int Decrement(int one)       { return --one; }
 
-        public bool mor(BigInteger one, BigInteger two)   { return one > two; }
-        public bool eqv(BigInteger one, BigInteger two)   { return one == two; }
+        public bool GreaterThan(int one, int two)   { return one > two; }
+        public bool Equal(int one, int two)   { return one == two; }
 
-        public BigInteger intPart(BigInteger one)                 { return one; }
+        public int IntegerPart(int one)                 { return one; }
 
-        public bool isEven(BigInteger one)                 { return one % 2 == 0; }
-        public bool isNaN(BigInteger one)                  { return false; }
-        public bool isPosInf(BigInteger one)               { return false; }
-        public bool isNegInf(BigInteger one)               { return false; }
+        public bool IsEven(int one)                 { return one % 2 == 0; }
+        public bool IsNaN(int one)                  { return false; }
+        public bool IsPositiveInfinity(int one)               { return false; }
+        public bool IsNegativeInfinity(int one)               { return false; }
 
-        public BigInteger getCopy(BigInteger val)                 { return val; }
-        public BigInteger zero                             { get { return 0; } }
+        public int GetCopy(int val)                 { return val; }
+        public int Zero                             { get { return 0; } }
 
-        public BigInteger fromInt(long equivalent)         { return (BigInteger)equivalent; }
-        public BigInteger fromDouble(double equivalent)    { throw new NonFractionalTypeException("BigInteger"); }
+        public int FromInteger(long equivalent)         { return (int)equivalent; }
+        public int FromDouble(double equivalent)    { throw new NonFractionalTypeException("int"); }
 
-        public BigInteger parse(string value) { return BigInteger.Parse(value); }
+        public int Parse(string value) { return int.Parse(value); }
     }
 }

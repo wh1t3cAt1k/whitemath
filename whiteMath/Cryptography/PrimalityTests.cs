@@ -40,7 +40,7 @@ namespace whiteMath.Cryptography
         {
 			Condition.ValidateNotNull(num, nameof(num));
 			Condition
-				.Validate(LongInt<B>.BASE_is_power_of_two)
+				.Validate(LongInt<B>.IsBasePowerOfTwo)
 			    .OrArgumentException("The digit base of the number should be a strict power of two.");
 			Condition
 				.Validate(num > 1)

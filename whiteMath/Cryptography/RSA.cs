@@ -98,7 +98,7 @@ namespace whiteMath.Cryptography
 
             if (typeof(B) != typeof(Bases.B_256))
             {
-                LongInt<Bases.B_256> converted = number.baseConvert<Bases.B_256>();
+                LongInt<Bases.B_256> converted = number.BaseConvert<Bases.B_256>();
 
                 result = new byte[converted.Length];
 

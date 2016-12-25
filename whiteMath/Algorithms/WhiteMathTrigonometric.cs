@@ -21,19 +21,19 @@ namespace whiteMath.Algorithms
             // отбросить целую часть
             // Умножить на 2pi
 
-            T sum = calc.zero;
+            T sum = calc.Zero;
 
             for (int i = taylorMemberCount-1; i >=0; --i)
             {
-                T tmp = calc.div( 
+                T tmp = calc.Divide( 
                             PowerInteger(argument, 2*i + 1), 
-                            Factorial(calc.fromInt(2*i + 1)) 
+                            Factorial(calc.FromInteger(2*i + 1)) 
                             );
 
                 if ((i % 2) == 0)
-                    sum = calc.sum(sum, tmp);
+                    sum = calc.Add(sum, tmp);
                 else
-                    sum = calc.dif(sum, tmp);
+                    sum = calc.Subtract(sum, tmp);
             }
 
             return sum;
@@ -48,19 +48,19 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T cosine(T argument, int taylorMemberCount = 100)
         {
-            T sum = calc.zero;
+            T sum = calc.Zero;
 
             for (int i = taylorMemberCount - 1; i >= 0; --i)
             {
-                T tmp = calc.div(
+                T tmp = calc.Divide(
                             PowerInteger(argument, 2 * i),
-                            Factorial(calc.fromInt(2 * i))
+                            Factorial(calc.FromInteger(2 * i))
                             );
 
                 if ((i & 2) == 0)
-                    sum = calc.sum(sum, tmp);
+                    sum = calc.Add(sum, tmp);
                 else
-                    sum = calc.dif(sum, tmp);
+                    sum = calc.Subtract(sum, tmp);
             }
             
             return sum;
@@ -74,7 +74,7 @@ namespace whiteMath.Algorithms
         /// <returns>The result of tangent computation.</returns>
         public static T Tangent(T argument, int taylorMemberCount = 100)
         {
-            return calc.div(sine(argument, taylorMemberCount), cosine(argument, taylorMemberCount));
+            return calc.Divide(sine(argument, taylorMemberCount), cosine(argument, taylorMemberCount));
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace whiteMath.Algorithms
         /// <returns>The result of cotangent computation.</returns>
         public static T cotangent(T argument, int taylorMemberCount = 100)
         {
-            return calc.div(cosine(argument, taylorMemberCount), sine(argument, taylorMemberCount));
+            return calc.Divide(cosine(argument, taylorMemberCount), sine(argument, taylorMemberCount));
         }
 
         // ------------------------------------- Sine normalization --------------------------------------
@@ -106,16 +106,16 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T sineCosineDivideNormalize(T argument, T pi)
         {
-            T tmp = calc.getCopy(argument);
-            T piByTwo = calc.mul(calc.fromInt(2), pi);
+            T tmp = calc.GetCopy(argument);
+            T piByTwo = calc.Multiply(calc.FromInteger(2), pi);
 
-            if (calc.mor(tmp, piByTwo) || calc.mor(calc.negate(piByTwo), tmp))
-                tmp = calc.dif(tmp, calc.mul(piByTwo, calc.intPart(calc.div(tmp, piByTwo))));
+            if (calc.GreaterThan(tmp, piByTwo) || calc.GreaterThan(calc.Negate(piByTwo), tmp))
+                tmp = calc.Subtract(tmp, calc.Multiply(piByTwo, calc.IntegerPart(calc.Divide(tmp, piByTwo))));
             
-            if (calc.mor(tmp, pi))
-                tmp = calc.dif(tmp, piByTwo);
-            else if(calc.mor(calc.negate(pi), tmp))
-                tmp = calc.sum(tmp, piByTwo);
+            if (calc.GreaterThan(tmp, pi))
+                tmp = calc.Subtract(tmp, piByTwo);
+            else if(calc.GreaterThan(calc.Negate(pi), tmp))
+                tmp = calc.Add(tmp, piByTwo);
 
             return tmp;
         }
@@ -135,14 +135,14 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T sineCosineSubstractNormalize(T argument, T pi)
         {
-            T tmp = calc.getCopy(argument);
-            T piByTwo = calc.mul(calc.fromInt(2), pi);
+            T tmp = calc.GetCopy(argument);
+            T piByTwo = calc.Multiply(calc.FromInteger(2), pi);
 
-            while(calc.mor(tmp, pi))
-                tmp = calc.dif(tmp, piByTwo);
+            while(calc.GreaterThan(tmp, pi))
+                tmp = calc.Subtract(tmp, piByTwo);
             
-            while(calc.mor(calc.negate(pi), tmp))
-                tmp = calc.sum(tmp, piByTwo);
+            while(calc.GreaterThan(calc.Negate(pi), tmp))
+                tmp = calc.Add(tmp, piByTwo);
 
             return tmp;
         }
@@ -162,17 +162,17 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T tangentCotangentDivideNormalize(T argument, T pi)
         {
-            T tmp = calc.getCopy(argument);
+            T tmp = calc.GetCopy(argument);
             
-            if (calc.mor(tmp, pi) || calc.mor(calc.negate(pi), tmp))
+            if (calc.GreaterThan(tmp, pi) || calc.GreaterThan(calc.Negate(pi), tmp))
             {
-                tmp = calc.div(tmp, pi);
-                tmp = calc.dif(tmp, calc.intPart(tmp));
-                tmp = calc.mul(tmp, pi);
+                tmp = calc.Divide(tmp, pi);
+                tmp = calc.Subtract(tmp, calc.IntegerPart(tmp));
+                tmp = calc.Multiply(tmp, pi);
             }
 
-            if (calc.mor(calc.zero, tmp))
-                tmp = calc.sum(tmp, pi);
+            if (calc.GreaterThan(calc.Zero, tmp))
+                tmp = calc.Add(tmp, pi);
 
             return tmp;
         }
@@ -192,13 +192,13 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T tangentCotangentSubstractNormalize(T argument, T pi)
         {
-            T tmp = calc.getCopy(argument);
+            T tmp = calc.GetCopy(argument);
 
-            while (calc.mor(tmp, pi))
-                tmp = calc.dif(tmp, pi);
+            while (calc.GreaterThan(tmp, pi))
+                tmp = calc.Subtract(tmp, pi);
 
-            while (calc.mor(calc.zero, tmp))
-                tmp = calc.sum(tmp, pi);
+            while (calc.GreaterThan(calc.Zero, tmp))
+                tmp = calc.Add(tmp, pi);
 
             return tmp;
         }

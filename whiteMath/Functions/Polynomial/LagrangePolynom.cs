@@ -90,7 +90,7 @@ namespace whiteMath.Functions
                     difMatrix[i, i] = Numeric<T, C>.Zero;
 
                     for (int j = 0; j < i; j++)
-                        difMatrix[i, j] = calc.dif(this.points[i].X, this.points[j].X);
+                        difMatrix[i, j] = calc.Subtract(this.points[i].X, this.points[j].X);
                 }
 
                 // Теперь заполняем то, что выше главной диагонали, противоположными значениями.
@@ -167,7 +167,7 @@ namespace whiteMath.Functions
 
                 for (int j = 0; j < points.Length && mul != Numeric<T,C>.Zero; j++)
                     if (i != j)
-                        mul *= calc.dif(x, points[j].X) / difMatrix[i, j];
+                        mul *= calc.Subtract(x, points[j].X) / difMatrix[i, j];
 
                 result += mul*points[i].Y;
             }
@@ -198,7 +198,7 @@ namespace whiteMath.Functions
                 if (poly.points.Length == this.points.Length)
                 {
                     for (int i = 0; i < poly.points.Length; i++)
-                        if (!calc.eqv(this.points[i].X, poly.points[i].X) || !calc.eqv(this.points[i].Y, poly.points[i].Y))
+                        if (!calc.Equal(this.points[i].X, poly.points[i].X) || !calc.Equal(this.points[i].Y, poly.points[i].Y))
                             return false;
 
                     return true;

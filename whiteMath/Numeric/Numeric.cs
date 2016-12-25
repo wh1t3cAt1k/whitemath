@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using whiteMath.Calculators;
@@ -9,15 +9,14 @@ namespace whiteMath
     public struct Numeric<T, C> : IComparable<Numeric<T, C>>, IEquatable<Numeric<T, C>> 
 		where C : ICalc<T>, new()
     {
-        private T value;                     // the value within the number
-        private static C calc = new C();     // the calculator used with numbers
+        private T value;
 
-        /// <summary>
-        /// Returns the calculator for the instantiated numeric class.
-        /// </summary>
-        public static C Calculator { get { return calc; } }
+		/// <summary>
+		/// Returns the Calculator for the instantiated numeric class.
+		/// </summary>
+		public static C Calculator { get; private set; } = new C();
 
-        private Numeric(T value)
+		private Numeric(T value)
         {
             this.value = value;
         }
@@ -29,19 +28,19 @@ namespace whiteMath
         /// <summary>
         /// Returns the integer part for the current Numeric object.
         /// </summary>
-        /// <see cref="ICalc&lt;T&gt;.intPart"/>
+        /// <see cref="ICalc&lt;T&gt;.IntegerPart"/>
         public Numeric<T, C> IntegerPart
         {
-            get { return calc.intPart(this); }
+            get { return Calculator.IntegerPart(this); }
         }
 
         /// <summary>
         /// Returns the fractional part for the current Numeric object.
         /// </summary>
-        /// <see cref="ICalcExtensionMethods.fracPart&lt;T&gt;"/>
+        /// <see cref="ICalcExtensionMethods.FractionalPart&lt;T&gt;"/>
         public Numeric<T, C> FractionalPart
         {
-            get { return calc.fracPart(this); }
+            get { return Calculator.FractionalPart(this); }
         }
 
         // --------------------------------------
@@ -51,12 +50,12 @@ namespace whiteMath
         /// <summary>
         /// Gets a deep copy of current number.
         /// </summary>
-        public Numeric<T, C> Copy { get { return calc.getCopy(this); } }
+        public Numeric<T, C> Copy { get { return Calculator.GetCopy(this); } }
 
         /// <summary>
         /// Gets a zero number for T type.
         /// </summary>
-        public static Numeric<T, C> Zero { get { return calc.zero; } }
+        public static Numeric<T, C> Zero { get { return Calculator.Zero; } }
 
         // --------------------------------------
         // ---------BOOLEAN TESTS ---------------
@@ -69,8 +68,7 @@ namespace whiteMath
         /// This exception will be thrown if <typeparamref name="T"/> is 
         /// non-integer type.
         /// </exception>
-        public bool Even { get { return calc.isEven(this.value); } }
-
+        public bool IsEven { get { return Calculator.IsEven(this.value); } }
 
         // --------------------------------------
         // ---------CONVERSION OPERATORS---------
@@ -92,66 +90,66 @@ namespace whiteMath
 
         public static Numeric<T, C> operator +(Numeric<T, C> one, Numeric<T, C> two)
         {
-            return calc.sum(one, two);
+            return Calculator.Add(one, two);
         }
 
         public static Numeric<T, C> operator -(Numeric<T, C> one, Numeric<T, C> two)
         {
-            return calc.dif(one, two);
+            return Calculator.Subtract(one, two);
         }
 
         public static Numeric<T, C> operator *(Numeric<T, C> one, Numeric<T, C> two)
         {
-            return calc.mul(one, two);
+            return Calculator.Multiply(one, two);
         }
 
         public static Numeric<T, C> operator /(Numeric<T, C> one, Numeric<T, C> two)
         {
-            return calc.div(one, two);
+            return Calculator.Divide(one, two);
         }
 
         public static Numeric<T, C> operator %(Numeric<T, C> one, Numeric<T, C> two)
         {
-            return calc.rem(one, two);
+            return Calculator.Modulo(one, two);
         }
 
         public static Numeric<T, C> operator -(Numeric<T, C> one)
         {
-            return calc.negate(one);
+            return Calculator.Negate(one);
         }
 
         public static Numeric<T, C> operator ++(Numeric<T, C> one)
         {
-            return calc.increment(one);
+            return Calculator.Increment(one);
         }
 
         public static Numeric<T, C> operator --(Numeric<T, C> one)
         {
-            return calc.decrement(one);
+            return Calculator.Decrement(one);
         }
 
         // --------------------------------------
         // ---------------- NaN and Infinities checking
         // --------------------------------------
 
-        public static bool isNaN(Numeric<T, C> one)
+        public static bool IsNaN(Numeric<T, C> one)
         {
-            return calc.isNaN(one);
+            return Calculator.IsNaN(one);
         }
 
-        public static bool isPositiveInfinity(Numeric<T, C> one)
+		public static bool IsPositiveInfinity(Numeric<T, C> one)
         {
-            return calc.isPosInf(one);
+            return Calculator.IsPositiveInfinity(one);
         }
 
-        public static bool isNegativeInfinity(Numeric<T, C> one)
+		public static bool IsNegativeInfinity(Numeric<T, C> one)
         {
-            return calc.isNegInf(one);
+            return Calculator.IsNegativeInfinity(one);
         }
 
-        public static bool isInfinity(Numeric<T, C> one)
+        public static bool IsInfinity(Numeric<T, C> one)
         {
-            return calc.isPosInf(one) || calc.isNegInf(one);
+			return Calculator.IsInfinity(one);
         }
 
         // --------------------------------------
@@ -160,12 +158,12 @@ namespace whiteMath
 
         public static explicit operator Numeric<T, C>(long num)
         {
-            return calc.fromInt(num);
+            return Calculator.FromInteger(num);
         }
 
         public static explicit operator Numeric<T, C>(double num)
         {
-            return calc.fromDoubleSafe(num);
+            return Calculator.FromDoubleSafe(num);
         }
 
         // --------------------------------------
@@ -174,41 +172,33 @@ namespace whiteMath
 
         public static bool operator >(Numeric<T, C> one, Numeric<T, C> two)
         {
-            return calc.mor(one, two);
-            // directly
+            return Calculator.GreaterThan(one, two);
         }
 
         public static bool operator <(Numeric<T, C> one, Numeric<T, C> two)
         {
-            return calc.mor(two, one);
-            // a<b <==> b>a
+            return Calculator.GreaterThan(two, one);
         }
 
         public static bool operator ==(Numeric<T, C> one, Numeric<T, C> two)
         {
-            return calc.eqv(one, two);
-            // directly
+            return Calculator.Equal(one, two);
         }
 
         public static bool operator !=(Numeric<T, C> one, Numeric<T, C> two)
         {
-            return !calc.eqv(one, two);
-            // a!=b  <==> !(a==b)
+            return !Calculator.Equal(one, two);
         }
 
         public static bool operator >=(Numeric<T, C> one, Numeric<T, C> two)
         {
-            return !calc.mor(two, one);
-            // a>=b  <==> !(b>a)
+            return !Calculator.GreaterThan(two, one);
         }
 
         public static bool operator <=(Numeric<T, C> one, Numeric<T, C> two)
         {
-            return !calc.mor(one, two);
-            // a<=b  <==> !(a>b)
+            return !Calculator.GreaterThan(one, two);
         }
-
-        // Equals, hashcode and toString
 
         /// <summary>
         /// Checks whether the value of the current <c>Numeric&lt;<typeparamref name="T"/>,<typeparamref name="C"/>&gt;</c> 
@@ -219,11 +209,10 @@ namespace whiteMath
         /// <returns>True if values are equal, false otherwise.</returns>
         public override bool Equals(object obj)
         {
-            if (obj is T)
-                return calc.eqv(this.value, (T)obj);
-            
-            else if (obj is Numeric<T,C>)
-                return calc.eqv(this.value, ((Numeric<T,C>)obj).value);
+			if (obj is T) {
+				return Calculator.Equal (this.value, (T)obj);
+			} else if (obj is Numeric<T,C>)
+                return Calculator.Equal(this.value, ((Numeric<T,C>)obj).value);
             
             return false;
         }
@@ -236,7 +225,7 @@ namespace whiteMath
         /// <returns>True if values are equal, false otherwise.</returns>
         public bool Equals(Numeric<T, C> obj)
         {
-            return calc.eqv(this.value, obj.value);
+            return Calculator.Equal(this.value, obj.value);
         }
 
         /// <summary>
@@ -262,8 +251,8 @@ namespace whiteMath
         // ----------------------------------
 
         private static readonly Numeric<T, C> __CONST_1     = (Numeric<T,C>)1;
-        private static readonly Numeric<T, C> ___2     = __CONST_1 + __CONST_1;
-        private static readonly Numeric<T, C> __CONST_3     = ___2 + __CONST_1;
+		private static readonly Numeric<T, C> __CONST_2     = __CONST_1 + __CONST_1;
+        private static readonly Numeric<T, C> __CONST_3     = __CONST_2 + __CONST_1;
         private static readonly Numeric<T, C> __CONST_4     = __CONST_3 + __CONST_1;
         private static readonly Numeric<T, C> __CONST_5     = __CONST_4 + __CONST_1;
         private static readonly Numeric<T, C> __CONST_6     = __CONST_5 + __CONST_1;
@@ -271,9 +260,9 @@ namespace whiteMath
         private static readonly Numeric<T, C> __CONST_8     = __CONST_7 + __CONST_1;
         private static readonly Numeric<T, C> __CONST_9     = __CONST_8 + __CONST_1;
 
-        public static Numeric<T, C> _0 { get { return calc.zero; } }
+        public static Numeric<T, C> _0 { get { return Calculator.Zero; } }
         public static Numeric<T, C> _1 { get { return __CONST_1.Copy; } }
-        public static Numeric<T, C> _2 { get { return ___2.Copy; } }
+        public static Numeric<T, C> _2 { get { return __CONST_2.Copy; } }
         public static Numeric<T, C> _3 { get { return __CONST_3.Copy; } }
         public static Numeric<T, C> _4 { get { return __CONST_4.Copy; } }
         public static Numeric<T, C> _5 { get { return __CONST_5.Copy; } }
@@ -298,78 +287,63 @@ namespace whiteMath
         /// </returns>
         public int CompareTo(Numeric<T, C> another)
         {
-            return _compinstnc.Invoke(this, another);
+            return _comparison(this, another);
         }
 
         // Members
 
-        private static Comparison<Numeric<T, C>> _compinstnc = 
-            delegate(Numeric<T, C> one, Numeric<T, C> two)
-                {
-                    if (one < two)
-                        return -1;
-                    else if (one == two)
-                        return 0;
-                    else return 1;
-                };
+		private static Comparison<Numeric<T, C>> _comparison = (one, two) =>
+		{
+        	if (one < two) return -1;
+			if (one == two) return 0;
+            
+			return 1;
+        };
 
-        private static IComparer<Numeric<T, C>> _comparerinstnc = _compinstnc.CreateComparer();
+		private static IComparer<Numeric<T, C>> _comparer = _comparison.CreateComparer();
 
         // ------------ для T -------------------------
 
-        private static Comparison<T> _tcompinstnc =
+		private static Comparison<T> _rawComparison =
             delegate(T one, T two)
             {
-                if (calc.mor(one, two))
+                if (Calculator.GreaterThan(one, two))
                     return 1;
-                else if (calc.eqv(one, two))
+                else if (Calculator.Equal(one, two))
                     return 0;
                 else
                     return -1;
             };
 
-        private static IComparer<T> _tcomparerinstnc = _tcompinstnc.CreateComparer();
+		private static IComparer<T> _rawComparer = _rawComparison.CreateComparer();
 
-        // -----------
-        // Getters
-        // -----------
+		// -----------
+		// Getters
+		// -----------
 
-        /// <summary>
-        /// Gets the comparison delegate for this numeric class
-        /// implicitly using calculator's methods mor() and eqv().
-        /// </summary>
-        public static Comparison<Numeric<T, C>> NumericComparison
-        {
-            get { return _compinstnc; }
-        }
+		/// <summary>
+		/// Gets the comparison delegate for this numeric class
+		/// implicitly using Calculator's methods mor() and eqv().
+		/// </summary>
+		public static Comparison<Numeric<T, C>> NumericComparison => _comparison;
 
-        /// <summary>
-        /// Gets the comparison delegate for the underlying (hidden)
-        /// T type using its calculator's methods mor() and eqv().
-        /// </summary>
-        public static Comparison<T> TComparison
-        {
-            get { return _tcompinstnc; }
-        }
+		/// <summary>
+		/// Gets the comparison delegate for the underlying (hidden)
+		/// T type using its Calculator's methods mor() and eqv().
+		/// </summary>
+		public static Comparison<T> TComparison => _rawComparison;
 
-        /// <summary>
-        /// Gets the comparer for this numeric class.
-        /// implicitly using calculator's methods mor() and eqv().
-        /// </summary>
-        public static IComparer<Numeric<T, C>> NumericComparer
-        {
-            get { return _comparerinstnc; }
-        }
+		/// <summary>
+		/// Gets the comparer for this numeric class.
+		/// implicitly using Calculator's methods mor() and eqv().
+		/// </summary>
+		public static IComparer<Numeric<T, C>> NumericComparer => _comparer;
 
-        /// <summary>
-        /// Gets the comparer for the underlying (hidden)
-        /// T type using its calculator's methods mor() and eqv().
-        /// </summary>
-        public static IComparer<T> TComparer
-        {
-            get { return _tcomparerinstnc; }
-        }
-
+		/// <summary>
+		/// Gets the comparer for the underlying (hidden)
+		/// T type using its Calculator's methods mor() and eqv().
+		/// </summary>
+		public static IComparer<T> TComparer => _rawComparer;
     }
 
     /// <summary>
@@ -381,7 +355,7 @@ namespace whiteMath
         /// Converts a list of T to the array of Numeric objects.
         /// </summary>
         /// <typeparam name="T">The type of numbers in Numeric objects.</typeparam>
-        /// <typeparam name="C">The calculator for the number type.</typeparam>
+        /// <typeparam name="C">The Calculator for the number type.</typeparam>
         /// <param name="list">The list object containint T elements.</param>
         /// <returns>An array of Numeric objects.</returns>
         public static Numeric<T, C>[] ConvertToNumericArray<T, C>(this IList<T> list) where C: ICalc<T>, new()
@@ -398,7 +372,7 @@ namespace whiteMath
         /// Converts a list of Numeric objects to the equivalent array of unboxed T objects.
         /// </summary>
         /// <typeparam name="T">The type of numbers in array.</typeparam>
-        /// <typeparam name="C">The calculator for the number type.</typeparam>
+        /// <typeparam name="C">The Calculator for the number type.</typeparam>
         /// <param name="list">The list object containing Numeric elements.</param>
         /// <returns>An array of T objects.</returns>
         public static T[] ConvertToUnboxedArray<T, C>(this IList<Numeric<T, C>> list) where C : ICalc<T>, new()

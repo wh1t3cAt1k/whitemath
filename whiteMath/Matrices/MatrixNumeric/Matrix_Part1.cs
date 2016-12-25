@@ -279,7 +279,7 @@ namespace whiteMath.Matrices
 
             for (int k = 0; k < subMatrix.RowCount; k++)
                 for (int m = 0; m < subMatrix.ColumnCount; m++)
-                    this.setItemAt(i + k, j + m, calc.getCopy(subMatrix.getItemAt(k, m)));
+                    this.setItemAt(i + k, j + m, calc.GetCopy(subMatrix.getItemAt(k, m)));
         }
         
         /// <summary>
@@ -299,7 +299,7 @@ namespace whiteMath.Matrices
             
             for (int k = i; k < i + rows; k++)
                 for (int m = j; m < j + rows; m++)
-                    ma[k * rows + m] = calc.getCopy(this.getItemAt(k, m));
+                    ma[k * rows + m] = calc.GetCopy(this.getItemAt(k, m));
 
             Matrix_SDA<T,C> temp = new Matrix_SDA<T,C>();
                 

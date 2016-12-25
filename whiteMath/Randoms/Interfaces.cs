@@ -58,7 +58,7 @@ namespace whiteMath.Randoms
         /// [0; 1) interval.
         /// </summary>
         /// <returns>A value in the [0; 1) interval.</returns>
-        T Next_SingleInterval();
+        T NextInUnitInterval();
     }
 
     /// <summary>
@@ -76,9 +76,6 @@ namespace whiteMath.Randoms
         void NextBytes(byte[] buffer);
     }
 
-    // ------------------------------------------------------
-    // ------------------------------------------------------
-
     /// <summary>
     /// This class contains extension methods for <see cref="IRandomBounded&lt;T&gt;"/>.
     /// </summary>
@@ -86,10 +83,10 @@ namespace whiteMath.Randoms
     {
         /// <summary>
         /// Generates a pseudo-random string of the desired length containing 
-		/// characters from a <see cref="char"/> list. There are no guarantees for 
+		/// characters from a <see cref="char"/> list. There is no guarantee for 
 		/// every character to appear in the string.
         /// </summary>
-        /// <param name="gen">
+        /// <param name="generator">
 		/// An integer generator which will be used to provide 
 		/// random indices for the character list.
 		/// </param>
@@ -102,9 +99,9 @@ namespace whiteMath.Randoms
 		/// A random string of the desired <paramref name="length"/> that consists of
 		/// characters from a <see cref="char"/> list.
 		/// </returns>
-        public static string NextString(this IRandomBounded<int> gen, IList<char> characters, int length)
+		public static string NextString(this IRandomBounded<int> generator, IList<char> characters, int length)
         {
-			Condition.ValidateNotNull(gen, nameof(gen));
+			Condition.ValidateNotNull(generator, nameof(generator));
 			Condition.ValidateNotNull(characters, nameof(characters));
 			Condition
 				.Validate(length >= 0)
@@ -112,8 +109,10 @@ namespace whiteMath.Randoms
 
             StringBuilder builder = new StringBuilder(length);
 
-            for (int i = 0; i < length; i++)
-                builder.Append(characters[gen.Next(0, characters.Count)]);
+			for (int i = 0; i < length; ++i) 
+			{
+				builder.Append (characters [generator.Next (0, characters.Count)]);
+			}
 
             return builder.ToString();
         }

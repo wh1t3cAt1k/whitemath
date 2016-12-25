@@ -168,7 +168,7 @@ namespace whiteMath
         /// <returns>The result of sequential summation of the sequence starting with index <paramref name="startIndex"/> and ending with index <paramref name="endIndex"/>, both inclusive.</returns>
         public T Sum_ByIncreasingMetric(Func<int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
         {
-            IComparer<KeyValuePair<int, T>> comparer = Comparer<int>.Default.createKVPComparerOnKey<int, T>();
+            IComparer<KeyValuePair<int, T>> comparer = Comparer<int>.Default.GetreateKVPComparerOnKey<int, T>();
             IPriorityQueue<KeyValuePair<int, T>> queue = new BinaryHeap<KeyValuePair<int, T>>(comparer);
 
             if (startIndex >= endIndex)
@@ -211,7 +211,7 @@ namespace whiteMath
         /// <returns>The result of sequential summation of the sequence starting with index <paramref name="startIndex"/> and ending with index <paramref name="endIndex"/>, both inclusive.</returns>
         public T Sum_ByIncreasingMetric(T argument, Func<T, int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
         {
-            IComparer<KeyValuePair<int, T>>         comparer = Comparer<int>.Default.createKVPComparerOnKey<int, T>();
+            IComparer<KeyValuePair<int, T>>         comparer = Comparer<int>.Default.GetreateKVPComparerOnKey<int, T>();
             IPriorityQueue<KeyValuePair<int, T>>    queue = new BinaryHeap<KeyValuePair<int, T>>(comparer);
             
             if (startIndex >= endIndex)
@@ -244,7 +244,7 @@ namespace whiteMath
 
         public T Sum_ByMinimumMetricSum(Func<int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
         {
-            return default(T);
+			throw new NotImplementedException();
         }
 
         // ---------- abs comparer ---------------
@@ -272,13 +272,11 @@ namespace whiteMath
 
         public T Sum_MinCurrentMetricSum(T argument, Func<T, int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
         {
-            // Все храним в LinkedList.
+            LinkedList<KeyValuePair<int, T>> listPositive = new LinkedList<KeyValuePair<int, T>>();  
+            LinkedList<KeyValuePair<int, T>> listNegative = new LinkedList<KeyValuePair<int, T>>();
+            LinkedList<KeyValuePair<int, T>> listZero = new LinkedList<KeyValuePair<int, T>>();
 
-            LinkedList<KeyValuePair<int, T>>    listPositive    = new LinkedList<KeyValuePair<int, T>>();       // с положительными метриками  
-            LinkedList<KeyValuePair<int, T>>    listNegative    = new LinkedList<KeyValuePair<int, T>>();       // с отрицательными метриками
-            LinkedList<KeyValuePair<int, T>>    listZero        = new LinkedList<KeyValuePair<int, T>>();       // с нулевыми метриками
-
-            IComparer<KeyValuePair<int, T>>     comparer        = new _ABS_INT_COMPARER().createKVPComparerOnKey<int, T>();
+            IComparer<KeyValuePair<int, T>> comparer = new _ABS_INT_COMPARER().GetreateKVPComparerOnKey<int, T>();
 
             // ---- добавляем в список -----
 
@@ -584,33 +582,4 @@ namespace whiteMath
         }
 
     }
-
-    // -----------------------------------
-    // ------------ extended -------------
-    // -----------------------------------
-
-    /*
-    public class CalculatorSummator<T> : Summator<T>
-    {
-        /// <summary>
-        /// Gets the comparer for <typeparamref name="T"/> objects used in smaller-to-bigger summation.
-        /// </summary>
-        public IComparer<T> Comparer { get; private set; }
-
-        /// <summary>
-        /// Gets the metric provider for <typeparamref name="T"/> objects used in metric-based summation.
-        /// </summary>
-        public IMetricProvider<T> MetricProvider { get; private set; }
-
-        /// <summary>
-        /// Enum containing constants characterizing the default summation method 
-        /// used by Summator when calling Sum_Default method.
-        /// </summary>
-        public enum DefaultSummationMethod
-        {
-            Sequential, LowerToBigger, ByIncreasingMetric
-        }
-
-        public DefaultSummationMethod DefaultMethod { get; private set; }
-    }*/
 }

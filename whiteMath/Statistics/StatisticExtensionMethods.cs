@@ -112,20 +112,20 @@ namespace whiteMath.Statistics
 
             // Find the first value not equal to the median.
             // -
-            while (calc.eqv(enumerator.Current, sampleMedian))
+            while (calc.Equal(enumerator.Current, sampleMedian))
                 if (enumerator.MoveNext() == false)
                     return 0;
 
-            bool isPlus = calc.mor(enumerator.Current, sampleMedian);
+            bool isPlus = calc.GreaterThan(enumerator.Current, sampleMedian);
 
             while (enumerator.MoveNext())
             {
-                if (!isPlus && calc.mor(enumerator.Current, sampleMedian))
+                if (!isPlus && calc.GreaterThan(enumerator.Current, sampleMedian))
                 {
                     signChanges++;
                     isPlus = true;
                 }
-                else if (isPlus && calc.mor(sampleMedian, enumerator.Current))
+                else if (isPlus && calc.GreaterThan(sampleMedian, enumerator.Current))
                 {
                     signChanges++;
                     isPlus = false;
@@ -166,7 +166,7 @@ namespace whiteMath.Statistics
             ICalc<T> calc = Numeric<T, C>.Calculator;
 
             foreach (T value in values)
-                sum += WhiteMath<T, C>.PowerInteger(calc.dif(value, sampleAverage), 2);
+                sum += WhiteMath<T, C>.PowerInteger(calc.Subtract(value, sampleAverage), 2);
 
             return sum / (Numeric<T, C>)(values.Count()-1);
         }

@@ -261,7 +261,7 @@ namespace whiteMath.Randoms
             return this.NextULong(min, max);
         }
 
-        double IRandomFloatingPoint<double>.Next_SingleInterval()
+        double IRandomFloatingPoint<double>.NextInUnitInterval()
         {
             return this.NextDouble_SingleInterval();
         }

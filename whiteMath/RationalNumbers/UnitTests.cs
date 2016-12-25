@@ -41,7 +41,7 @@ namespace whiteMath.RationalNumbers
 			{
 				Assert.That(
 					number + negatedNumber, 
-					Is.EqualTo(calculator.zero));
+					Is.EqualTo(calculator.Zero));
 			}
 		}
 

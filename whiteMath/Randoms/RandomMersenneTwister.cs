@@ -44,20 +44,25 @@ namespace whiteMath.Randoms
                 long x = -1;
 
                 // if (NativeMethods.QueryPerformanceCounter(ref x) <= 0)
-                    seed = (uint)DateTime.Now.Ticks;
+				unchecked
+				{
+					seed = (uint)(DateTime.Now.Ticks);
+				}
                 // else
                 //    seed = (uint)x;
             }
 
-            /* setting initial seeds to mt[N] using         */
-            /* the generator Line 25 of Table 1 in          */
-            /* [KNUTH 1981, The Art of Computer Programming */
-            /*    Vol. 2 (2nd Ed.), pp102]                  */
-            mt[0] = seed & 0xffffffffU;
+			unchecked 
+			{
+				/* setting initial seeds to mt[N] using         */
+				/* the generator Line 25 of Table 1 in          */
+				/* [KNUTH 1981, The Art of Computer Programming */
+				/*    Vol. 2 (2nd Ed.), pp102]                  */
+				mt[0] = seed & 0xffffffffU;
          
-            for (mti = 1; mti < N; ++mti)
-                mt[mti] = (69069 * mt[mti - 1]) & 0xffffffffU;
-            
+				for (mti = 1; mti < N; ++mti)
+					mt[mti] = (69069 * mt[mti - 1]) & 0xffffffffU;
+			}
         }
 
         /// <summary>
@@ -149,7 +154,7 @@ namespace whiteMath.Randoms
         // ---------- explicit interface ------
         // ---------- implementations ---------
 
-        double IRandomFloatingPoint<double>.Next_SingleInterval()
+        double IRandomFloatingPoint<double>.NextInUnitInterval()
         {
             return this.NextDouble();
         }

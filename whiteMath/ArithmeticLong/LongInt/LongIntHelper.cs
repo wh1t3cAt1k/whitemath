@@ -114,7 +114,7 @@ namespace whiteMath.ArithmeticLong
 
                 // ----- big bada-boom!
 
-                IList<int> remDigits = LongIntegerMethods.Div(LongInt<B>.BASE, res.Digits, one.Digits, two.Digits);
+                IList<int> remDigits = LongIntegerMethods.Divide(LongInt<B>.BASE, res.Digits, one.Digits, two.Digits);
                 
                 // --------------------
 

@@ -5,34 +5,34 @@
     /// </summary>
     public class CalcLong : ICalc<long>
     {
-        public bool isIntegerCalculator     { get { return true; } }
+        public bool IsIntegerCalculator     { get { return true; } }
 
-        public long sum(long one, long two)    { return one + two; }
-        public long dif(long one, long two)    { return one - two; }
-        public long mul(long one, long two)    { return one * two; }
-        public long div(long one, long two)    { return one / two; }
-        public long rem(long one, long two)    { return one % two; }
-        public long negate(long one)          { return -one; }
+        public long Add(long one, long two)    { return one + two; }
+        public long Subtract(long one, long two)    { return one - two; }
+        public long Multiply(long one, long two)    { return one * two; }
+        public long Divide(long one, long two)    { return one / two; }
+        public long Modulo(long one, long two)    { return one % two; }
+        public long Negate(long one)          { return -one; }
 
-        public long increment(long one)       { return ++one; }
-        public long decrement(long one)       { return --one; }
+        public long Increment(long one)       { return ++one; }
+        public long Decrement(long one)       { return --one; }
 
-        public bool mor(long one, long two)   { return one > two; }
-        public bool eqv(long one, long two)   { return one == two; }
+        public bool GreaterThan(long one, long two)   { return one > two; }
+        public bool Equal(long one, long two)   { return one == two; }
 
-        public long intPart(long one)                 { return one; }
+        public long IntegerPart(long one)                 { return one; }
 
-        public bool isEven(long one)                 { return one % 2 == 0; }
-        public bool isNaN(long one)                  { return false; }
-        public bool isPosInf(long one)               { return false; }
-        public bool isNegInf(long one)               { return false; }
+        public bool IsEven(long one)                 { return one % 2 == 0; }
+        public bool IsNaN(long one)                  { return false; }
+        public bool IsPositiveInfinity(long one)               { return false; }
+        public bool IsNegativeInfinity(long one)               { return false; }
 
-        public long getCopy(long val)                 { return val; }
-        public long zero                             { get { return 0; } }
+        public long GetCopy(long val)                 { return val; }
+        public long Zero                             { get { return 0; } }
 
-        public long fromInt(long equivalent)         { return (int)equivalent; }
-        public long fromDouble(double equivalent)    { throw new NonFractionalTypeException("int"); }
+        public long FromInteger(long equivalent)         { return (int)equivalent; }
+        public long FromDouble(double equivalent)    { throw new NonFractionalTypeException("int"); }
 
-        public long parse(string value) { return int.Parse(value); }
+        public long Parse(string value) { return int.Parse(value); }
     }
 }

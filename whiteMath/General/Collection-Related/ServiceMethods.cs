@@ -78,9 +78,9 @@ namespace whiteMath.General
             List<KeyValuePair<N, T>> pairList = new List<KeyValuePair<N, T>>(list.Count);
 
             foreach (T element in list)
-                pairList.Add(new KeyValuePair<N, T>(generator.Next_SingleInterval(), element));
+                pairList.Add(new KeyValuePair<N, T>(generator.NextInUnitInterval(), element));
 
-            IComparer<KeyValuePair<N, T>> pairComparer = numericComparer.createKVPComparerOnKey<N, T>();
+            IComparer<KeyValuePair<N, T>> pairComparer = numericComparer.GetreateKVPComparerOnKey<N, T>();
 
             pairList.Sort(pairComparer);
 
@@ -674,7 +674,7 @@ namespace whiteMath.General
 
             for(int step=1; step<list.Count; step++)
                 for (int i=step; i<list.Count; i++)
-                    if(calc.mor(list[i-step], list[i]))
+                    if(calc.GreaterThan(list[i-step], list[i]))
                         k++;
 
             return k;

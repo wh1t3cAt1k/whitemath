@@ -21,7 +21,7 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T Min(T one, T two)
         {
-            return (calc.mor(one, two) ? two : one);
+            return (calc.GreaterThan(one, two) ? two : one);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T MinCopy(T one, T two)
         {
-            return calc.getCopy(Min(one, two));
+            return calc.GetCopy(Min(one, two));
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T Max(T one, T two)
         {
-            return (calc.mor(one, two) ? one : two);
+            return (calc.GreaterThan(one, two) ? one : two);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T MaxCopy(T one, T two)
         {
-            return calc.getCopy(Max(one, two));
+            return calc.GetCopy(Max(one, two));
         }
 
         /// ABSOLUTE VALUE
@@ -81,8 +81,8 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T Abs(T number)
         {
-            if (calc.mor(calc.zero, number)) return calc.negate(number);
-            return calc.getCopy(number);
+            if (calc.GreaterThan(calc.Zero, number)) return calc.Negate(number);
+            return calc.GetCopy(number);
         }
     }
 }

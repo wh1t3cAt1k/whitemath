@@ -199,12 +199,12 @@
     <Compile Include="ArithmeticLong\LongInt\LongIntHelperMultiplyKaratsuba.cs" />
     <Compile Include="Calculators\CalcComplex.cs" />
     <Compile Include="Calculators\CalcDouble.cs" />
-    <Compile Include="Calculators\CalcInt.cs" />
+    <Compile Include="Calculators\CalcBigInteger.cs" />
     <Compile Include="Calculators\CalcLongInt.cs" />
     <Compile Include="Calculators\CalcRational.cs" />
     <Compile Include="Calculators\CalcLong.cs" />
     <Compile Include="Calculators\CalcULong.cs" />
-    <Compile Include="Calculators\CalcBigInteger.cs" />
+    <Compile Include="Calculators\CalcInt.cs" />
     <Compile Include="Combinatorics\Permutators.cs" />
     <Compile Include="Cryptography\OneTimePadBreaker.cs" />
     <Compile Include="Cryptography\PrimalityTests.cs" />
@@ -374,6 +374,7 @@
     <Compile Include="Algorithms\WhiteMathMinMax.cs" />
     <Compile Include="Algorithms\Messages.cs" />
     <Compile Include="Randoms\UnitTests.cs" />
+    <Compile Include="Calculators\ICalcExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Graphers\Components\GraphicDrawer.resx">

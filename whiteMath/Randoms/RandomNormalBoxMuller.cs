@@ -14,58 +14,72 @@ namespace whiteMath.Randoms
     /// <typeparam name="C">A calculator for the <typeparamref name="T"/> numeric type.</typeparam>
     public class RandomNormalBoxMuller<T, C>: IRandomUnbounded<T> where C: ICalc<T>, new()
     {
-		private static readonly ICalc<T> calc = Numeric<T, C>.Calculator;
+		private static readonly ICalc<T> Calculator = Numeric<T, C>.Calculator;
 
-        private IRandomFloatingPoint<T> generator;
+		private IRandomFloatingPoint<T> _generator;
         
-        private Numeric<T,C>    mean;
-        private Numeric<T,C>    standardDeviation;
-        private Func<T, T>      naturalLogarithmFunction;
-        private Func<T, T>      squareRootFunction;
-        private Func<T, T, T>   transformFunction;
+		private Numeric<T,C> _mean;
+		private Numeric<T,C> _standardDeviation;
+		private Func<T, T> _naturalLogarithm;
+		private Func<T, T> _squareRoot;
+		private Func<T, T, T> _transformFunction;
 
-        private T           next;
-        private bool        nextAvailable;
+		private T _next;
+		private bool _isNextAvailable;
 
-        public bool IsIntegerGenerator { get { return false; } }
+		public bool IsIntegerGenerator => false;
 
         public RandomNormalBoxMuller(
 			IRandomFloatingPoint<T> uniformGenerator, 
 			T mean, 
 			T standardDeviation, 
-			Func<T, T> naturalLogarithmFunction, 
-			Func<T, T> squareRootFunction)
+			Func<T, T> naturalLogarithm, 
+			Func<T, T> squareRoot)
         {
-            this.generator          = uniformGenerator;
+            _generator = uniformGenerator;
 
-            this.mean               = mean;
-            this.standardDeviation  = standardDeviation;
+            _mean = mean;
+            _standardDeviation = standardDeviation;
 
-            this.naturalLogarithmFunction = naturalLogarithmFunction;
-            this.squareRootFunction = squareRootFunction;
+			_naturalLogarithm = naturalLogarithm;
+			_squareRoot = squareRoot;
 
-            this.nextAvailable      = false;
-            this.next               = default(T);
+            _isNextAvailable = false;
+           	_next = default(T);
 
-            this.transformFunction = delegate(T value, T squareSum) 
-            {
-				return calc.mul(
+            this._transformFunction = (value, squareSum) => 
+            	Calculator.Multiply(
 					value,
-					squareRootFunction(- Numeric<T,C>._2 * naturalLogarithmFunction(squareSum) / squareSum));
-            };
+					squareRoot(-Numeric<T,C>._2 * _naturalLogarithm(squareSum) / squareSum));
         }
 
-        public RandomNormalBoxMuller(IRandomFloatingPoint<T> uniformGenerator, Func<T, T> naturalLogarithmFunction, Func<T, T> squareRootFunction)
-            : this(uniformGenerator, Numeric<T,C>.Zero, Numeric<T,C>._1, naturalLogarithmFunction, squareRootFunction)
+        public RandomNormalBoxMuller(
+			IRandomFloatingPoint<T> uniformGenerator, 
+			Func<T, T> naturalLogarithmFunction, 
+			Func<T, T> squareRootFunction)
+            : this(
+				uniformGenerator, 
+				Numeric<T,C>.Zero, 
+				Numeric<T,C>._1, 
+				naturalLogarithmFunction, 
+				squareRootFunction)
         { }
 
         // ---------------------------------
         // ----- concrete implementations --
         // ---------------------------------
 
-        public static RandomNormalBoxMuller<double, CalcDouble> DoubleGenerator(double mean = 0, double standardDeviation = 1, uint seed = 0)
+		public static RandomNormalBoxMuller<double, CalcDouble> CreateGeneratorDouble(
+			double mean = 0, 
+			double standardDeviation = 1, 
+			uint seed = 0)
         {
-            return new RandomNormalBoxMuller<double, CalcDouble>(new RandomMersenneTwister(seed), mean, standardDeviation, Math.Log, Math.Sqrt); 
+            return new RandomNormalBoxMuller<double, CalcDouble>(
+				new RandomMersenneTwister(seed), 
+				mean, 
+				standardDeviation, 
+				Math.Log, 
+				Math.Sqrt); 
         }
 
         // -------------- RNG methods ------
@@ -73,47 +87,47 @@ namespace whiteMath.Randoms
         private Numeric<T, C> NextFromMinusOneToPlusOne()
         {
 			// We take number in [0; 1),
-			// Double it, get a number [0; 2),
+			// Double it, get a number in [0; 2),
 			// Subtract a number in [0; 1),
 			// Resulting value is in [-1; +1).
 			// -
-            return calc.dif(
-				calc.mul(Numeric<T, C>._2, generator.Next_SingleInterval()), 
-				generator.Next_SingleInterval());
+            return Calculator.Subtract(
+				Calculator.Multiply(
+					Numeric<T, C>._2, 
+					_generator.NextInUnitInterval()), 
+				_generator.NextInUnitInterval());
         }
 
         public T Next()
         {
-            if (nextAvailable)
+            if (_isNextAvailable)
             {
-                nextAvailable = false;
-                return this.mean + next * this.standardDeviation;
+                _isNextAvailable = false;
+                return this._mean + _next * this._standardDeviation;
             }
-				
-            T minusOne      = -(Numeric<T,C>._1);
-            T plusOne       = Numeric<T,C>._1;
 
             T current;
             
-            while(true)
+            while (true)
             {
-                Numeric<T,C> randomFirst    = NextFromMinusOneToPlusOne();
-                Numeric<T,C> randomSecond   = NextFromMinusOneToPlusOne();
+				Numeric<T,C> firstRandom = NextFromMinusOneToPlusOne();
+				Numeric<T,C> secondRandom = NextFromMinusOneToPlusOne();
 
-                Numeric<T, C> squareSum     = randomFirst * randomFirst + randomSecond * randomSecond;
+				Numeric<T, C> sumOfSquares = firstRandom * firstRandom + secondRandom * secondRandom;
 
-                if (squareSum > Numeric<T, C>._1 || squareSum == Numeric<T, C>.Zero)
-                    continue;
+				if (sumOfSquares > Numeric<T, C>._1 || sumOfSquares == Numeric<T, C>.Zero)
+				{
+					continue;
+				}
                 else
                 {
-                    current = this.transformFunction(randomFirst, squareSum);
-                    next    = this.transformFunction(randomSecond, squareSum);
-
+                    current = this._transformFunction(firstRandom, sumOfSquares);
+                    _next = this._transformFunction(secondRandom, sumOfSquares);
                     break;
                 }
             }
 
-            return this.mean + current * this.standardDeviation;
+            return this._mean + current * this._standardDeviation;
         }
 
         public T Next(T minValue, T maxValue)

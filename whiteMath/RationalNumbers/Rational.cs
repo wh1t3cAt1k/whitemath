@@ -45,8 +45,8 @@ namespace whiteMath.RationalNumbers
 			get
 			{
 				return 
-					calc.isNegative(this.Numerator) !=
-					calc.isNegative(this.Denominator);
+					calc.IsNegative(this.Numerator) !=
+					calc.IsNegative(this.Denominator);
 			}
 		}
 
@@ -117,8 +117,8 @@ namespace whiteMath.RationalNumbers
         /// </summary>
         public Rational(T numerator, T denominator)
         {
-			this.Numerator = calc.getCopy(numerator);
-            this.Denominator = calc.getCopy(denominator);
+			this.Numerator = calc.GetCopy(numerator);
+            this.Denominator = calc.GetCopy(denominator);
 
 			this.CheckSpecial();
             this.Normalize();
@@ -137,8 +137,8 @@ namespace whiteMath.RationalNumbers
 			}
 
 			this._specialNumberType = specialNumberType;
-			this.Numerator = calc.zero;
-			this.Denominator = calc.zero;
+			this.Numerator = calc.Zero;
+			this.Denominator = calc.Zero;
 		}
 
         /// <summary>
@@ -155,12 +155,12 @@ namespace whiteMath.RationalNumbers
 			if (!this.IsNormalNumber) 
 				return;
 
-			if (calc.eqv(this.Numerator, calc.zero))
+			if (calc.Equal(this.Numerator, calc.Zero))
 			{
 				// We only want to have a single representation ]
 				// for zero.
 				// -
-				this.Denominator = calc.fromInt(1);
+				this.Denominator = calc.FromInteger(1);
 			}
 			else
 			{
@@ -168,15 +168,15 @@ namespace whiteMath.RationalNumbers
 					                         WhiteMath<T, C>.Abs(this.Numerator), 
 					                         WhiteMath<T, C>.Abs(this.Denominator));
 
-				this.Numerator = calc.div(this.Numerator, greatestCommonDivisor);
-				this.Denominator = calc.div(this.Denominator, greatestCommonDivisor);
+				this.Numerator = calc.Divide(this.Numerator, greatestCommonDivisor);
+				this.Denominator = calc.Divide(this.Denominator, greatestCommonDivisor);
 
 				// Negate the denominator if it's negative
 				// -
-				if (calc.mor(calc.zero, this.Denominator))
+				if (calc.GreaterThan(calc.Zero, this.Denominator))
 				{
-					this.Numerator = calc.negate(this.Numerator);
-					this.Denominator = calc.negate(this.Denominator);
+					this.Numerator = calc.Negate(this.Numerator);
+					this.Denominator = calc.Negate(this.Denominator);
 				}
 			}
         }
@@ -194,13 +194,13 @@ namespace whiteMath.RationalNumbers
 		/// </returns>
         private bool CheckSpecial()
         {
-			if (calc.eqv(this.Denominator, calc.zero))
+			if (calc.Equal(this.Denominator, calc.Zero))
 			{
-				if (calc.eqv(this.Numerator, calc.zero))
+				if (calc.Equal(this.Numerator, calc.Zero))
 				{
 					this._specialNumberType = SpecialNumberType.NaN;
 				}
-				else if (calc.mor(calc.zero, this.Numerator))
+				else if (calc.GreaterThan(calc.Zero, this.Numerator))
 				{
 					this._specialNumberType = SpecialNumberType.NegativeInfinity;
 				}
@@ -209,8 +209,8 @@ namespace whiteMath.RationalNumbers
 					this._specialNumberType = SpecialNumberType.PositiveInfinity;
 				}
 
-				this.Numerator = calc.zero;
-				this.Denominator = calc.zero;
+				this.Numerator = calc.Zero;
+				this.Denominator = calc.Zero;
 
 				return false;
 			}
@@ -231,9 +231,9 @@ namespace whiteMath.RationalNumbers
 					                      second.Denominator, 
 					                      WhiteMath<T, C>.GreatestCommonDivisor(first.Denominator, second.Denominator));
 
-				T resultNumerator = calc.sum(
-					                    calc.mul(first.Numerator, calc.div(resultDenominator, first.Denominator)), 
-					                    calc.mul(second.Numerator, calc.div(resultDenominator, second.Denominator)));
+				T resultNumerator = calc.Add(
+					                    calc.Multiply(first.Numerator, calc.Divide(resultDenominator, first.Denominator)), 
+					                    calc.Multiply(second.Numerator, calc.Divide(resultDenominator, second.Denominator)));
 
 				Rational<T, C> result = new Rational<T, C>(resultNumerator, resultDenominator);
 
@@ -269,9 +269,9 @@ namespace whiteMath.RationalNumbers
 					                      second.Denominator, 
 					                      WhiteMath<T, C>.GreatestCommonDivisor(first.Denominator, second.Denominator));
 
-				T resultNumerator = calc.dif(
-					                    calc.mul(first.Numerator, calc.div(resultDenominator, first.Denominator)), 
-					                    calc.mul(second.Numerator, calc.div(resultDenominator, second.Denominator)));
+				T resultNumerator = calc.Subtract(
+					                    calc.Multiply(first.Numerator, calc.Divide(resultDenominator, first.Denominator)), 
+					                    calc.Multiply(second.Numerator, calc.Divide(resultDenominator, second.Denominator)));
 
 				Rational<T, C> result = new Rational<T, C>(resultNumerator, resultDenominator);
 
@@ -302,8 +302,8 @@ namespace whiteMath.RationalNumbers
 			if (first.IsNormalNumber && second.IsNormalNumber)
 			{
 				return new Rational<T, C>(
-					calc.mul(first.Numerator, second.Numerator), 
-					calc.mul(first.Denominator, second.Denominator));
+					calc.Multiply(first.Numerator, second.Numerator), 
+					calc.Multiply(first.Denominator, second.Denominator));
 			}
 			else if (
 				first.IsNaN ||
@@ -335,8 +335,8 @@ namespace whiteMath.RationalNumbers
 			if (first.IsNormalNumber && second.IsNormalNumber)
 			{
 				return new Rational<T, C>(
-					calc.mul(first.Numerator, second.Denominator), 
-					calc.mul(first.Denominator, second.Numerator));
+					calc.Multiply(first.Numerator, second.Denominator), 
+					calc.Multiply(first.Denominator, second.Numerator));
 			}
 			else if (
 				first.IsNaN ||
@@ -360,7 +360,7 @@ namespace whiteMath.RationalNumbers
 			}
 			else if (first.IsNormalNumber && second.IsInfinity)
 			{
-				return new Rational<T, C>(calc.zero, calc.fromInt(1));
+				return new Rational<T, C>(calc.Zero, calc.FromInteger(1));
 			}
 			else
 			{
@@ -372,7 +372,7 @@ namespace whiteMath.RationalNumbers
         {
 			if (number.IsNormalNumber)
 			{
-				return new Rational<T, C>(calc.negate(number.Numerator), number.Denominator);
+				return new Rational<T, C>(calc.Negate(number.Numerator), number.Denominator);
 			}
 			else if (number.IsInfinity)
 			{
@@ -403,8 +403,8 @@ namespace whiteMath.RationalNumbers
 			else if (first.IsNormalNumber && second.IsNormalNumber)
 			{
 				return 
-					calc.eqv(first.Numerator, second.Numerator) && 
-					calc.eqv(first.Denominator, second.Denominator);
+					calc.Equal(first.Numerator, second.Numerator) && 
+					calc.Equal(first.Denominator, second.Denominator);
 			}
 			else
 			{
@@ -426,7 +426,7 @@ namespace whiteMath.RationalNumbers
 			*/
 
             T denomLcm = WhiteMath<T, C>.LowestCommonMultiple(one.Denominator, two.Denominator, WhiteMath<T, C>.GreatestCommonDivisor(one.Denominator, two.Denominator));
-            return calc.mor(calc.mul(one.Numerator, calc.div(denomLcm, one.Denominator)), calc.mul(two.Numerator, calc.div(denomLcm, two.Denominator)));
+            return calc.GreaterThan(calc.Multiply(one.Numerator, calc.Divide(denomLcm, one.Denominator)), calc.Multiply(two.Numerator, calc.Divide(denomLcm, two.Denominator)));
         }
 
         public static bool operator <(Rational<T, C> one, Rational<T, C> two)
@@ -456,7 +456,7 @@ namespace whiteMath.RationalNumbers
 
         public static implicit operator Rational<T, C>(T num)
         {
-            return new Rational<T, C>(num, calc.fromInt(1));
+            return new Rational<T, C>(num, calc.FromInteger(1));
         }
 
         public static explicit operator Rational<T, C>(double num)
@@ -468,14 +468,14 @@ namespace whiteMath.RationalNumbers
 			if (numberString.First().Equals('-'))
 			{
 				numberString = numberString.Substring(1);
-				numeratorMultiplier = calc.fromInt(-1);
+				numeratorMultiplier = calc.FromInteger(-1);
 			}
 			else
 			{
-				numeratorMultiplier = calc.fromInt(1);
+				numeratorMultiplier = calc.FromInteger(1);
 			}
 
-            T denominator = calc.fromInt(1);
+            T denominator = calc.FromInteger(1);
 
             int exponentSymbolIndex = numberString.IndexOf("e", StringComparison.OrdinalIgnoreCase);
 
@@ -485,11 +485,11 @@ namespace whiteMath.RationalNumbers
 
 				if (exponent >= 0)
 				{
-					numeratorMultiplier = WhiteMath<T, C>.PowerInteger(calc.fromInt(10), exponent);
+					numeratorMultiplier = WhiteMath<T, C>.PowerInteger(calc.FromInteger(10), exponent);
 				}
 				else
 				{
-					denominator = WhiteMath<T, C>.PowerInteger(calc.fromInt(10), -exponent);
+					denominator = WhiteMath<T, C>.PowerInteger(calc.FromInteger(10), -exponent);
 				}
 
                 numberString = numberString.Substring(0, exponentSymbolIndex);
@@ -508,16 +508,16 @@ namespace whiteMath.RationalNumbers
             {
                 int numberOfCharactersAfterSeparator = numberString.Length - separatorIndex - 1;
 
-				denominator = calc.mul(
+				denominator = calc.Multiply(
 					denominator, 
-					WhiteMath<T, C>.PowerInteger(calc.fromInt(10), numberOfCharactersAfterSeparator));
+					WhiteMath<T, C>.PowerInteger(calc.FromInteger(10), numberOfCharactersAfterSeparator));
 
 				numberString = numberString.Replace(
 					System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, 
 					"");
             }
 
-            T numerator = calc.mul(calc.parse(numberString), numeratorMultiplier);
+            T numerator = calc.Multiply(calc.Parse(numberString), numeratorMultiplier);
 
             return new Rational<T,C>(numerator, denominator);
         }
@@ -540,7 +540,7 @@ namespace whiteMath.RationalNumbers
         /// </returns>
         public static explicit operator T(Rational<T, C> obj)
         {
-            return calc.div(obj.Numerator, obj.Denominator);
+            return calc.Divide(obj.Numerator, obj.Denominator);
         }
 
         /// <summary>
@@ -548,7 +548,7 @@ namespace whiteMath.RationalNumbers
         /// </summary>
         public object Clone()
         {
-            return new Rational<T, C>(calc.getCopy(this.Numerator), calc.getCopy(this.Denominator));
+            return new Rational<T, C>(calc.GetCopy(this.Numerator), calc.GetCopy(this.Denominator));
         }
 
         /// <summary>
@@ -660,8 +660,8 @@ namespace whiteMath.RationalNumbers
                 split = value.Split('/');
 
             Rational<T, C> result = new Rational<T, C>(
-				calc.parse(split[0]), 
-				calc.parse(split[1]));
+				calc.Parse(split[0]), 
+				calc.Parse(split[1]));
 
 			if (outerNegationSign)
 			{

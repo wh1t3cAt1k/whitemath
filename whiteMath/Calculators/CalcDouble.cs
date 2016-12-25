@@ -4,34 +4,34 @@ namespace whiteMath.Calculators
 {
     public class CalcDouble : ICalc<double>
     {
-        public bool isIntegerCalculator { get { return false; } }
+        public bool IsIntegerCalculator { get { return false; } }
 
-        public double sum(double one, double two) { return one + two; }
-        public double dif(double one, double two) { return one - two; }
-        public double mul(double one, double two) { return one * two; }
-        public double div(double one, double two) { return one / two; }
-        public double rem(double one, double two) { throw new NonIntegerTypeException("double"); }
+        public double Add(double one, double two) { return one + two; }
+        public double Subtract(double one, double two) { return one - two; }
+        public double Multiply(double one, double two) { return one * two; }
+        public double Divide(double one, double two) { return one / two; }
+        public double Modulo(double one, double two) { throw new NonIntegerTypeException("double"); }
 
-        public double increment(double one) { return ++one; }
-        public double decrement(double one) { return --one; }
+        public double Increment(double one) { return ++one; }
+        public double Decrement(double one) { return --one; }
 
-        public bool mor(double one, double two) { return one > two; }
-        public bool eqv(double one, double two) { return one == two; }
+        public bool GreaterThan(double one, double two) { return one > two; }
+        public bool Equal(double one, double two) { return one == two; }
 
-        public double negate(double one)    { return -one; }
-        public double intPart(double one)   { return Math.Truncate(one); }
-        public bool isEven(double one)      { throw new NonIntegerTypeException("double"); }
+        public double Negate(double one)    { return -one; }
+        public double IntegerPart(double one)   { return Math.Truncate(one); }
+		public bool IsEven(double one)      { throw new NonIntegerTypeException("double"); }
 
-        public bool isNaN(double one) { return double.IsNaN(one); }
-        public bool isPosInf(double one) { return double.IsPositiveInfinity(one); }
-        public bool isNegInf(double one) { return double.IsNegativeInfinity(one); }
+        public bool IsNaN(double one) { return double.IsNaN(one); }
+        public bool IsPositiveInfinity(double one) { return double.IsPositiveInfinity(one); }
+        public bool IsNegativeInfinity(double one) { return double.IsNegativeInfinity(one); }
 
-        public double getCopy(double val) { return val; }
-        public double zero { get { return 0.0; } }
+        public double GetCopy(double val) { return val; }
+        public double Zero { get { return 0.0; } }
 
-        public double fromInt(long equivalent) { return equivalent; }
-        public double fromDouble(double equivalent) { return equivalent; }
+        public double FromInteger(long equivalent) { return equivalent; }
+        public double FromDouble(double equivalent) { return equivalent; }
 
-        public double parse(string value) { return double.Parse(value); }
+        public double Parse(string value) { return double.Parse(value); }
     }
 }

@@ -13,11 +13,10 @@ namespace whiteMath.Randoms
     /// <typeparam name="B">The type specifying the digit base for the <c>LongInt&lt;B&gt;</c> type.</typeparam>
     public class RandomLongIntModular<B> : IRandomBounded<LongInt<B>> where B : IBase, new()
     {
-        private IRandomBounded<int>                         intGenerator;           // integer generator
-        private Func<LongInt<B>, LongInt<B>, LongInt<B>>    multiplication;         // multiplication function
+		private IRandomBounded<int> integerGenerator;
 
-        // ----- caching area.
-
+		// Used for caching.
+		// -
         private LongInt<B> lastMaxExclusive;
         private LongInt<B> lastBound;
 
@@ -56,13 +55,16 @@ namespace whiteMath.Randoms
         public RandomLongIntModular(IRandomBounded<int> intGenerator = null, Func<LongInt<B>, LongInt<B>, LongInt<B>> multiplication = null)
         {
             if (intGenerator == null)
+			{
                 intGenerator = new RandomStandard();
+			}
 
             if (multiplication == null)
+			{
                 multiplication = LongInt<B>.Helper.MultiplySimple;
+			}
 
-            this.intGenerator = intGenerator;
-            this.multiplication = multiplication;
+            this.integerGenerator = intGenerator;
         }
 
         /// <summary>
@@ -113,7 +115,7 @@ namespace whiteMath.Randoms
             result.Digits.Clear();
 
             for (int i = 0; i < maxExclusive.Length; i++)
-                result.Digits.Add(intGenerator.Next(0, LongInt<B>.BASE));
+                result.Digits.Add(integerGenerator.Next(0, LongInt<B>.BASE));
 
             result.DealWithZeroes();
 
@@ -176,20 +178,24 @@ namespace whiteMath.Randoms
 				.Validate(leftInclusive <= rightInclusive)
 				.OrArgumentException();
 
-            LongInt<B> lb = leftInclusive;
-            LongInt<B> rb = rightInclusive;
+			LongInt<B> leftInclusiveBoundary = leftInclusive;
+			LongInt<B> rightInclusiveBoundary = rightInclusive;
 
-            while (!(lb > rb))
+            while (!(leftInclusiveBoundary > rightInclusiveBoundary))
             {
-                LongInt<B> mid = (lb + rb) / 2;
+				LongInt<B> midpoint = (leftInclusiveBoundary + rightInclusiveBoundary) / 2;
 
-                if (predicate(mid))
-                    lb = mid + 1;
+                if (predicate(midpoint))
+				{
+                    leftInclusiveBoundary = midpoint + 1;
+				}
                 else
-                    rb = mid - 1;
+				{
+                    rightInclusiveBoundary = midpoint - 1;
+				}
             }
 
-            return lb - 1;
+            return leftInclusiveBoundary - 1;
         }
     }
 }

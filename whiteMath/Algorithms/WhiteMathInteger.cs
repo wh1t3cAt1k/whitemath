@@ -21,10 +21,10 @@ namespace whiteMath.Algorithms
         public static int JacobiSymbol(T numerator, T denominator)
         {
 			Condition
-				.Validate(calc.isIntegerCalculator)
+				.Validate(calc.IsIntegerCalculator)
 				.OrException(new NonIntegerTypeException(typeof(T).Name));
 			Condition
-				.Validate(denominator > Numeric<T, C>.Zero && !Numeric<T,C>.Calculator.isEven(denominator))
+				.Validate(denominator > Numeric<T, C>.Zero && !Numeric<T,C>.Calculator.IsEven(denominator))
 				.OrArgumentException("The denominator of the Jacobi symbol should be odd and positive.");
 
             bool minus = false;
@@ -43,7 +43,7 @@ namespace whiteMath.Algorithms
                 // Надо домножить на (-1)^((y-1)/2)
                 // Эта величина равна -1 тогда и только тогда, когда floor(y/2) - четное число.
 
-                if ((y / Numeric<T, C>._2).Even)
+                if ((y / Numeric<T, C>._2).IsEven)
                     minus ^= true;
 
                 x = -x;
@@ -64,7 +64,7 @@ namespace whiteMath.Algorithms
 
                 int t = 0;
 
-                while(x.Even)
+                while(x.IsEven)
                 {
                     // Надо домножить на (-1)^((y^2 - 1)/8)
                     // Эта величина равна -1 тогда и только тогда, когда y имеет остатки 3 или 5 при делении на 8
@@ -118,7 +118,7 @@ namespace whiteMath.Algorithms
         public static T ExtendedEuclideanAlgorithm(T one, T two, out T x, out T y)
         {
 			Condition
-				.Validate(calc.isIntegerCalculator)
+				.Validate(calc.IsIntegerCalculator)
 				.OrException(new NonIntegerTypeException(typeof(T).Name));
 			Condition
 				.Validate(one != Numeric<T,C>.Zero && two != Numeric<T,C>.Zero)
@@ -134,34 +134,34 @@ namespace whiteMath.Algorithms
             // because int often overflows here.
             // Contract.Ensures((Numeric<T, C>)one * Contract.ValueAtReturn<T>(out x) + (Numeric<T, C>)two * Contract.ValueAtReturn<T>(out y) == Contract.Result<T>());
 
-            if (calc.mor(two, one))
+            if (calc.GreaterThan(two, one))
                 return ExtendedEuclideanAlgorithm(two, one, out y, out x);
 
-            bool oneLessThanZero = calc.mor(calc.zero, one);
-            bool twoLessThanZero = calc.mor(calc.zero, two);
+            bool oneLessThanZero = calc.GreaterThan(calc.Zero, one);
+            bool twoLessThanZero = calc.GreaterThan(calc.Zero, two);
 
             if (oneLessThanZero || twoLessThanZero)
             {
                 if (oneLessThanZero && twoLessThanZero)
                 {
-                    T res = ExtendedEuclideanAlgorithm(calc.negate(one), calc.negate(two), out x, out y);
+                    T res = ExtendedEuclideanAlgorithm(calc.Negate(one), calc.Negate(two), out x, out y);
                     
-                    x = calc.negate(x);
-                    y = calc.negate(y);
+                    x = calc.Negate(x);
+                    y = calc.Negate(y);
 
                     return res;
                 }
                 else if (oneLessThanZero)
                 {
-                    T res = ExtendedEuclideanAlgorithm(calc.negate(one), two, out x, out y);
-                    x = calc.negate(x);
+                    T res = ExtendedEuclideanAlgorithm(calc.Negate(one), two, out x, out y);
+                    x = calc.Negate(x);
 
                     return res;
                 }
                 else
                 {
-                    T res = ExtendedEuclideanAlgorithm(one, calc.negate(two), out x, out y);
-                    y = calc.negate(y);
+                    T res = ExtendedEuclideanAlgorithm(one, calc.Negate(two), out x, out y);
+                    y = calc.Negate(y);
 
                     return res;
                 }
@@ -238,9 +238,9 @@ namespace whiteMath.Algorithms
             // Since the result might be negative,
             // add modulus until it is positive.
 
-			while (calc.mor(calc.zero, x))
+			while (calc.GreaterThan(calc.Zero, x))
 			{
-				x = calc.sum(x, modulus);
+				x = calc.Add(x, modulus);
 			}
 
             return x;
@@ -279,41 +279,41 @@ namespace whiteMath.Algorithms
             T oneTmp;
             T twoTmp;
 
-            if (calc.mor(calc.zero, one))
-                oneTmp = calc.negate(one);
+            if (calc.GreaterThan(calc.Zero, one))
+                oneTmp = calc.Negate(one);
             else
-                oneTmp = calc.getCopy(one);
+                oneTmp = calc.GetCopy(one);
 
-            if (calc.mor(calc.zero, two))
-                twoTmp = calc.negate(two);
+            if (calc.GreaterThan(calc.Zero, two))
+                twoTmp = calc.Negate(two);
             else
-                twoTmp = calc.getCopy(two);
+                twoTmp = calc.GetCopy(two);
 
             try
             {
-                while (!calc.eqv(oneTmp, calc.zero) && !calc.eqv(twoTmp, calc.zero))
+                while (!calc.Equal(oneTmp, calc.Zero) && !calc.Equal(twoTmp, calc.Zero))
                 {
-                    if (calc.mor(oneTmp, twoTmp))
-                        oneTmp = calc.rem(oneTmp, twoTmp);
+                    if (calc.GreaterThan(oneTmp, twoTmp))
+                        oneTmp = calc.Modulo(oneTmp, twoTmp);
                     else
-                        twoTmp = calc.rem(twoTmp, oneTmp);
+                        twoTmp = calc.Modulo(twoTmp, oneTmp);
                 }
             }
             catch   // calculator throws exception - working with fp's.
             {
-                oneTmp = calc.intPart(oneTmp);
-                twoTmp = calc.intPart(twoTmp);
+                oneTmp = calc.IntegerPart(oneTmp);
+                twoTmp = calc.IntegerPart(twoTmp);
 
-                while (!calc.eqv(oneTmp, calc.zero) && !calc.eqv(twoTmp, calc.zero))
+                while (!calc.Equal(oneTmp, calc.Zero) && !calc.Equal(twoTmp, calc.Zero))
                 {
-                    if (calc.mor(oneTmp, twoTmp))
+                    if (calc.GreaterThan(oneTmp, twoTmp))
                         oneTmp = WhiteMath<T,C>.Round(WhiteMath<T,C>.Modulus(oneTmp, twoTmp));
                     else
                         twoTmp = WhiteMath<T,C>.Round(WhiteMath<T,C>.Modulus(twoTmp, oneTmp));
                 }
             }
 
-            return calc.sum(oneTmp, twoTmp);
+            return calc.Add(oneTmp, twoTmp);
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T LowestCommonMultiple(T one, T two, T greatestCommonDivisor)
         {
-            return calc.div(calc.mul(one, two), greatestCommonDivisor);
+            return calc.Divide(calc.Multiply(one, two), greatestCommonDivisor);
         }
 
         /// <summary>
@@ -350,13 +350,13 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T Factorial(T integer)
         {
-            if (calc.mor(calc.zero, integer))
+            if (calc.GreaterThan(calc.Zero, integer))
                 throw new ArgumentException("The argument for the factorial function should be a positive integer.");
 
-            T tmp = calc.fromInt(1);
+            T tmp = calc.FromInteger(1);
 
-            for (T counter = calc.fromInt(2); !calc.mor(counter, integer); counter = calc.increment(counter))
-                tmp = calc.mul(tmp, counter);
+            for (T counter = calc.FromInteger(2); !calc.GreaterThan(counter, integer); counter = calc.Increment(counter))
+                tmp = calc.Multiply(tmp, counter);
 
             return tmp;
         }
@@ -419,7 +419,7 @@ namespace whiteMath.Algorithms
         public static T PowerIntegerModular(T number, ulong power, T modulus)
         {
 			Condition
-				.Validate(calc.isIntegerCalculator)
+				.Validate(calc.IsIntegerCalculator)
 				.OrException(new NonIntegerTypeException(typeof(T).Name));
             
             Numeric<T, C> result = Numeric<T, C>._1;
@@ -454,7 +454,7 @@ namespace whiteMath.Algorithms
         public static T SquareRootIntegerSimple(T number)
         {
 			Condition
-				.Validate(calc.isIntegerCalculator)
+				.Validate(calc.IsIntegerCalculator)
 				.OrException(new NonIntegerTypeException(typeof(T).Name));
             Condition
 				.Validate((Numeric<T,C>)number >= Numeric<T,C>.Zero)
@@ -494,7 +494,7 @@ namespace whiteMath.Algorithms
         public static T SquareRootInteger(T number, T firstEstimate)
         {
 			Condition
-				.Validate(calc.isIntegerCalculator)
+				.Validate(calc.IsIntegerCalculator)
 				.OrException(new NonIntegerTypeException(typeof(T).Name));
 			Condition
 				.Validate((Numeric<T,C>)number >= Numeric<T,C>.Zero)

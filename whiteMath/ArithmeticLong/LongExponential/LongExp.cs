@@ -10,10 +10,10 @@ namespace whiteMath.ArithmeticLong
     {
         private static P precision = new P();
         
-        private static readonly int MAXDIGITS = precision.getPrecision();
-        private static readonly int BASE = precision.getBase();
+		private static readonly int MAXDIGITS = precision.Precision;
+		private static readonly int BASE = precision.Base;
 
-        private static readonly string digitFormatter = getDigitFormatter();
+		private static readonly string digitFormatter = getDigitFormatter();
         private static readonly int fieldLength = (int)Math.Log10(BASE);
 
         /// <summary>
@@ -93,23 +93,26 @@ namespace whiteMath.ArithmeticLong
         /// <summary>
         /// Creates an independent dependent copy of the number to provide another precision.
         /// The precision class should be specified as the type argument for the method.
-        /// 
         /// REQUIREMENTS: will NOT convert to another numeric base. Only to another precision.
         /// </summary>
-        /// <typeparam name="T">The precision class.</typeparam>
-        /// <returns></returns>
-        public LongExp<T> precisionConvert<T>() where T : IPrecision, new()
+		/// <typeparam name="TPrecision">The precision class.</typeparam>
+		public LongExp<TPrecision> PrecisionConvert<TPrecision>() 
+			where TPrecision : IPrecision, new()
         {
-            LongExp<T> obj = new LongExp<T>();
+            LongExp<TPrecision> obj = new LongExp<TPrecision>();
 
             obj.Mantiss = new List<int>();
 
-            int newBase = new T().getBase();
+			int newBase = new TPrecision().Base;
 
-            if (newBase == LongExp<T>.BASE)
-                obj.Mantiss.AddRange(this.Mantiss.ToArray());
-            else
-                throw new ArgumentException("Cannot convert a long exponential number from one digits base to another. Precisions may vary, but the base should stay the same.");
+			if (newBase == LongExp<TPrecision>.BASE)
+			{
+				obj.Mantiss.AddRange(this.Mantiss.ToArray());
+			}
+			else
+			{
+				throw new ArgumentException("Cannot convert a long exponential number from one digits base to another. Precisions may vary, but the base should stay the same.");
+			}
 
             obj.Negative = this.Negative;
             obj.Exponent = this.Exponent;

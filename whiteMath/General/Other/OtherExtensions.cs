@@ -109,7 +109,7 @@ namespace whiteMath.General
         /// <typeparam name="TVal">The type of value objects.</typeparam>
         /// <param name="keyComparer">The comparer for the key type.</param>
         /// <returns>An IComparer for key-value pairs on the basis of provided key comparer object.</returns>
-        public static IComparer<KeyValuePair<TKey, TVal>> createKVPComparerOnKey<TKey, TVal>(this IComparer<TKey> keyComparer)
+        public static IComparer<KeyValuePair<TKey, TVal>> GetreateKVPComparerOnKey<TKey, TVal>(this IComparer<TKey> keyComparer)
         {
             return new _KVPComparerKey<TKey, TVal>(keyComparer);
         }
@@ -121,7 +121,7 @@ namespace whiteMath.General
         /// <typeparam name="TVal">The type of value objects.</typeparam>
         /// <param name="valueComparer">The comparer for the value type.</param>
         /// <returns>An IComparer for key-value pairs on the basis of provided value comparer object.</returns>
-        public static IComparer<KeyValuePair<TKey, TVal>> createKVPComparerOnValue<TKey, TVal>(this IComparer<TVal> valueComparer)
+		public static IComparer<KeyValuePair<TKey, TVal>> GetKVPComparerOnValue<TKey, TVal>(this IComparer<TVal> valueComparer)
         {
             return new _KVPComparerValue<TKey, TVal>(valueComparer);
         }
@@ -237,7 +237,7 @@ namespace whiteMath.General
         /// functor object taking two elements of <typeparamref name="T"/>
         /// type (it should return <c>true</c> if they are equal and <c>false</c> otherwise). 
         /// 
-        /// Please not that a default implementation of <see cref="GetHashCode"/>
+        /// Please note that a default implementation of <see cref="GetHashCode"/>
         /// will be used.
         /// </summary>
         /// <typeparam name="T">The type of compared elements.</typeparam>

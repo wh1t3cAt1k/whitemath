@@ -42,7 +42,7 @@ namespace whiteMath
     /// <typeparam name="C">The calculator for the number type.</typeparam>
     public struct BoundedInterval<T, C> where C: ICalc<T>, new()
     {
-        private static ICalc<T> calc = Numeric<T, C>.Calculator;
+		private static ICalc<T> Calculator = Numeric<T, C>.Calculator;
         
         /// <summary>
         /// Gets the leftmost bound of the interval.
@@ -67,37 +67,30 @@ namespace whiteMath
         /// <summary>
         /// Tests whether the interval has zero length.
         /// </summary>
-        public bool IsZeroLength { get { return calc.eqv(this.Length, calc.zero); } }
+        public bool HasZeroLength { get { return Calculator.Equal(this.Length, Calculator.Zero); } }
 
         /// <summary>
         /// Tests whether the interval contains exactly 0 real-value points.
         /// </summary>
-        public bool IsEmptyReal { get { return IsZeroLength && !IsLeftInclusive && !IsRightInclusive; } }
+		public bool HasNoRealPoints { get { return HasZeroLength && !IsLeftInclusive && !IsRightInclusive; } }
 
         /// <summary>
         /// Tests whether the interval contains exactly 0 integer points.
         /// </summary>
-        public bool IsEmptyInteger
-        {
-            get
-            {
-                return
-                    !
-                    (WhiteMath<T, C>.Floor(this.LeftBound) + Numeric<T, C>._1 < this.RightBound ||
-                    this.IsRightInclusive && this.RightBound.FractionalPart == Numeric<T, C>.Zero ||
-                    this.IsLeftInclusive && this.LeftBound.FractionalPart == Numeric<T, C>.Zero);
-            }
-        }
+		public bool HasNoIntegerPoints => !(
+			WhiteMath<T, C>.Floor(this.LeftBound) + Numeric<T, C>._1 < this.RightBound
+			|| this.IsRightInclusive && this.RightBound.FractionalPart == Numeric<T, C>.Zero
+			|| this.IsLeftInclusive && this.LeftBound.FractionalPart == Numeric<T, C>.Zero);
 
         /// <summary>
         /// Returns the length of the interval.
         /// </summary>
-        public Numeric<T, C> Length { get { return RightBound - LeftBound; } }
+        public Numeric<T, C> Length => RightBound - LeftBound;
 
         /// <summary>
         /// Returns the arithmetic middle of the interval.
         /// </summary>
-        public Numeric<T, C> Middle { get { return (RightBound + LeftBound) / calc.fromInt(2); } }
+        public Numeric<T, C> Middle { get { return (RightBound + LeftBound) / Calculator.FromInteger(2); } }
 
         /// <summary>
         /// Returns the amount of points in the interval.
@@ -108,7 +101,7 @@ namespace whiteMath
             get
             {
 				Condition
-					.Validate(Numeric<T, C>.Calculator.isIntegerCalculator)
+					.Validate(Numeric<T, C>.Calculator.IsIntegerCalculator)
 					.OrException(new NonIntegerTypeException(typeof(T).Name));
 
                 Numeric<T, C> leftInclusive = (this.IsLeftInclusive ? this.LeftBound : (this.LeftBound + Numeric<T,C>._1));
@@ -138,8 +131,8 @@ namespace whiteMath
         /// <param name="rightInclusive">The flag determining whether the rightmost bound is included into the interval.</param>
         public BoundedInterval(T left, T right, bool leftInclusive = false, bool rightInclusive = false): this()
         {
-            if (!calc.mor(right, left))
-                if (calc.mor(left, right))
+            if (!Calculator.GreaterThan(right, left))
+                if (Calculator.GreaterThan(left, right))
                     throw new ArgumentException("The lower interval bound exceeds the upper interval bound.");
                 else if (leftInclusive != rightInclusive)
                     throw new ArgumentException("The interval contains at most one point, but the bounds' inclusiveness is inconsistent. Please check.");
@@ -163,9 +156,9 @@ namespace whiteMath
         public bool Contains(T x)
         {
             return
-                (calc.mor(x, LeftBound) && calc.mor(RightBound, x)) ||
-                (IsLeftInclusive && calc.eqv(LeftBound, x)) ||
-                (IsRightInclusive && calc.eqv(RightBound, x));
+                (Calculator.GreaterThan(x, LeftBound) && Calculator.GreaterThan(RightBound, x)) ||
+                (IsLeftInclusive && Calculator.Equal(LeftBound, x)) ||
+                (IsRightInclusive && Calculator.Equal(RightBound, x));
         }
 
         /// <summary>
@@ -189,7 +182,7 @@ namespace whiteMath
         public BoundedInterval<T, C> ToInclusiveIntegerInterval()
         {
 			Condition
-				.Validate(Numeric<T, C>.Calculator.isIntegerCalculator)
+				.Validate(Numeric<T, C>.Calculator.IsIntegerCalculator)
 				.OrException(new NonIntegerTypeException(typeof(T).Name));
 			
             Numeric<T, C> leftInclusive = this.IsLeftInclusive ? this.LeftBound : (this.LeftBound + Numeric<T, C>._1);
@@ -218,7 +211,7 @@ namespace whiteMath
         public BoundedInterval<T, C> ToExclusiveIntegerInterval()
         {
 			Condition
-				.Validate(Numeric<T, C>.Calculator.isIntegerCalculator)
+				.Validate(Numeric<T, C>.Calculator.IsIntegerCalculator)
 				.OrException(new NonIntegerTypeException(typeof(T).Name));
             
             Numeric<T, C> leftExclusive = this.IsLeftInclusive ? (this.LeftBound - Numeric<T, C>._1) : this.LeftBound;
@@ -249,7 +242,7 @@ namespace whiteMath
 				.Validate(parts > 0)
 				.OrArgumentOutOfRangeException("The number of parts should be positive.");
 			Condition
-				.Validate(this.Length / (Numeric<T,C>)parts != Numeric<T,C>.Zero)
+				.Validate(this.Length / (Numeric<T, C>)parts != Numeric<T,C>.Zero)
 				.OrArgumentException("The specified amount of parts will result in zero-length intervals due to numeric precision.");
 
 			/*
@@ -372,9 +365,9 @@ namespace whiteMath
                 {
                     return delegate(BoundedInterval<T, C> one, BoundedInterval<T, C> two)
                     {
-                        if (calc.mor(one.LeftBound, two.LeftBound))
+                        if (Calculator.GreaterThan(one.LeftBound, two.LeftBound))
                             return 1;
-                        else if (calc.eqv(one.LeftBound, two.LeftBound))
+                        else if (Calculator.Equal(one.LeftBound, two.LeftBound))
                             return 0;
                         else
                             return -1;
@@ -392,9 +385,9 @@ namespace whiteMath
                 {
                     return delegate(BoundedInterval<T, C> one, BoundedInterval<T, C> two)
                     {
-                        if (calc.mor(one.LeftBound, two.LeftBound))
+                        if (Calculator.GreaterThan(one.LeftBound, two.LeftBound))
                             return 2;
-                        else if (calc.eqv(one.LeftBound, two.LeftBound))
+                        else if (Calculator.Equal(one.LeftBound, two.LeftBound))
                         {
                             if (one.IsLeftInclusive && !two.IsLeftInclusive)
                                 return 1;
@@ -419,9 +412,9 @@ namespace whiteMath
                 {
                     return delegate(BoundedInterval<T, C> one, BoundedInterval<T, C> two)
                     {
-                        if (calc.mor(one.RightBound, two.RightBound))
+                        if (Calculator.GreaterThan(one.RightBound, two.RightBound))
                             return 1;
-                        else if (calc.eqv(one.RightBound, two.RightBound))
+                        else if (Calculator.Equal(one.RightBound, two.RightBound))
                             return 0;
                         else
                             return -1;
@@ -439,9 +432,9 @@ namespace whiteMath
                 {
                     return delegate(BoundedInterval<T, C> one, BoundedInterval<T, C> two)
                     {
-                        if (calc.mor(one.RightBound, two.RightBound))
+                        if (Calculator.GreaterThan(one.RightBound, two.RightBound))
                             return 2;
-                        else if (calc.eqv(one.RightBound, two.RightBound))
+                        else if (Calculator.Equal(one.RightBound, two.RightBound))
                         {
                             if (one.IsRightInclusive && !two.IsRightInclusive)
                                 return 1;
@@ -466,9 +459,9 @@ namespace whiteMath
                 {
                     return delegate(BoundedInterval<T, C> one, BoundedInterval<T, C> two)
                     {
-                        if (calc.mor(two.Length, one.Length))
+                        if (Calculator.GreaterThan(two.Length, one.Length))
                             return 1;
-                        else if (calc.eqv(two.Length, one.Length))
+                        else if (Calculator.Equal(two.Length, one.Length))
                             return 0;
                         else
                             return -1;
@@ -505,8 +498,8 @@ namespace whiteMath
             return
                 this.IsLeftInclusive == interval.IsLeftInclusive &&
                 this.IsRightInclusive == interval.IsRightInclusive &&
-                calc.eqv(this.RightBound, interval.RightBound) &&
-                calc.eqv(this.LeftBound, interval.LeftBound);
+                Calculator.Equal(this.RightBound, interval.RightBound) &&
+                Calculator.Equal(this.LeftBound, interval.LeftBound);
         }
     }
 
@@ -548,10 +541,10 @@ namespace whiteMath
             where C: ICalc<T>, new()
         {
 			Condition
-				.Validate(Numeric<T, C>.Calculator.isIntegerCalculator)
+				.Validate(Numeric<T, C>.Calculator.IsIntegerCalculator)
 				.OrException(new NonIntegerTypeException(typeof(T).Name));
 			Condition
-				.Validate(!interval.IsEmptyInteger)
+				.Validate(!interval.HasNoIntegerPoints)
 				.OrArgumentException("The interval should contain at least one integer point.");
 			Condition.ValidateNotNull(predicate, nameof(predicate));
 
@@ -603,10 +596,10 @@ namespace whiteMath
             where C: ICalc<T>, new()
         {			
 			Condition
-				.Validate(Numeric<T, C>.Calculator.isIntegerCalculator)
+				.Validate(Numeric<T, C>.Calculator.IsIntegerCalculator)
 				.OrException(new NonIntegerTypeException(typeof(T).Name));
 			Condition
-				.Validate(!interval.IsEmptyInteger)
+				.Validate(!interval.HasNoIntegerPoints)
 			    .OrArgumentException("The interval should contain at least one integer point.");
 			Condition.ValidateNotNull(predicate, nameof(predicate));
 

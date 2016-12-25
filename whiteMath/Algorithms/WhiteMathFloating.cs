@@ -33,12 +33,12 @@ namespace whiteMath.Algorithms
             Numeric<T,C> zero = Numeric<T,C>.Zero;
 
             if (dividend == zero)
-                return calc.zero;
+                return calc.Zero;
             
             else if (divisor == zero)
                 throw new DivideByZeroException("Cannot divide by zero.");
 
-            Numeric<T,C> value = absdividend - calc.intPart((absdividend/absdivisor)) * absdivisor;
+            Numeric<T,C> value = absdividend - calc.IntegerPart((absdividend/absdivisor)) * absdivisor;
 
             return (dividend < zero ? -value : value);
         }
@@ -50,7 +50,7 @@ namespace whiteMath.Algorithms
         /// <returns>The nearest integer number.</returns>
         public static T Round(T number)
         {
-            return calc.intPart(calc.sum(number, calc.fromDouble(0.5)));
+            return calc.IntegerPart(calc.Add(number, calc.FromDouble(0.5)));
         }
 
         /// <summary>
@@ -68,13 +68,13 @@ namespace whiteMath.Algorithms
             // Если число отрицательно и содержит дробную часть, напр. -4.5,
             // то необходимо вернуть МЕНЬШЕЕ. Т.е. (-4-1) = -5.
 
-            if (calc.mor(calc.zero, number) && calc.mor(calc.fracPart(number), calc.zero))
-                return calc.dif(calc.intPart(number), calc.fromInt(1));
+            if (calc.GreaterThan(calc.Zero, number) && calc.GreaterThan(calc.FractionalPart(number), calc.Zero))
+                return calc.Subtract(calc.IntegerPart(number), calc.FromInteger(1));
 
             // Во всех остальных случаях можно забить и возвращать просто целую часть.
 
             else
-                return calc.intPart(number);
+                return calc.IntegerPart(number);
         }
 
         /// <summary>
@@ -91,18 +91,18 @@ namespace whiteMath.Algorithms
 
             // Если дробной части нет, то надо вернуть само число.
 
-            if(calc.eqv(calc.fracPart(number), calc.zero))
-                return calc.getCopy(number);
+            if(calc.Equal(calc.FractionalPart(number), calc.Zero))
+                return calc.GetCopy(number);
 
             // Если число отрицательно и содержит дробную часть, например -4.5,
             // то можно просто отбросить эту дробную часть и будет нормально :)
 
-            else if (calc.mor(calc.zero, number))
-                return calc.intPart(number);
+            else if (calc.GreaterThan(calc.Zero, number))
+                return calc.IntegerPart(number);
             
             // Для положительных чисел и нуля с чем-то - надо вернуть целую часть +1.
 
-            return calc.sum(calc.intPart(number), calc.fromInt(1));
+            return calc.Add(calc.IntegerPart(number), calc.FromInteger(1));
         }
 
 
@@ -119,15 +119,15 @@ namespace whiteMath.Algorithms
             // Если степень имеет целую часть, то считаем по формуле:
             // a^(b+c) = a^b * a^c
 
-            T intPart = calc.intPart(power);
-            T fracPart = calc.dif(power, intPart);
+            T intPart = calc.IntegerPart(power);
+            T fracPart = calc.Subtract(power, intPart);
 
             if (intPart != Numeric<T, C>.Zero)
             {
                 // Дробная часть показателя не равна нулю
 
                 if (fracPart != Numeric<T, C>.Zero)
-                    return calc.mul(
+                    return calc.Multiply(
                         PowerInteger_Generic(number, intPart),  // целая часть
                         Power(number, fracPart)                 // дробная часть
                     );
@@ -160,20 +160,20 @@ namespace whiteMath.Algorithms
                 if (pow < Numeric<T,C>.Zero)
                     throw new ArgumentException("A zero number cannot be raised to a negative power.");
                 else if (pow == Numeric<T,C>.Zero)
-                    return calc.fromInt(1);
+                    return calc.FromInteger(1);
 
-                return calc.fromInt(0);
+                return calc.FromInteger(0);
             }
             
             // Если все ОК.
 
             else if (pow < Numeric<T,C>.Zero)
-                return calc.div(calc.fromInt(1), Power(number, calc.negate(power), taylorMemberCount));
+                return calc.Divide(calc.FromInteger(1), Power(number, calc.Negate(power), taylorMemberCount));
             
             else if (pow == Numeric<T,C>.Zero)
-                return calc.fromInt(1);
+                return calc.FromInteger(1);
 
-            return Exponent(calc.mul(power, LogarithmNatural(number, taylorMemberCount)), taylorMemberCount);
+            return Exponent(calc.Multiply(power, LogarithmNatural(number, taylorMemberCount)), taylorMemberCount);
         }
 
         /// <summary>
@@ -185,12 +185,12 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T Exponent(T number, int taylorMemberCount = 100)
         {
-            T sum = calc.fromInt(1);
+            T sum = calc.FromInteger(1);
 
             for (int i = taylorMemberCount - 1; i > 0; i--)
             {
-                T memberNumber = calc.fromInt(i);
-                sum = calc.sum(sum, calc.div(PowerInteger(number, i), Factorial(memberNumber)));
+                T memberNumber = calc.FromInteger(i);
+                sum = calc.Add(sum, calc.Divide(PowerInteger(number, i), Factorial(memberNumber)));
             }
 
             return sum;
@@ -205,49 +205,49 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T LogarithmNatural(T number, int taylorMemberCount = 60)
         {
-            if (calc.eqv(calc.fromInt(1), number))
-                return calc.zero;
+            if (calc.Equal(calc.FromInteger(1), number))
+                return calc.Zero;
             else if
-                (!calc.mor(number, calc.zero))
+                (!calc.GreaterThan(number, calc.Zero))
                 throw new ArgumentException("The argument passed must be positive.");
 
             // Если операнд больше двойки, раскладываем в 2^n + остаток
             // Затем складываем полученные логарифмы
 
-            else if (calc.mor(number, calc.fromInt(2)))
+            else if (calc.GreaterThan(number, calc.FromInteger(2)))
             {
-                T tmp = calc.fromInt(2);
+                T tmp = calc.FromInteger(2);
                 int z = 0;
 
-                while (calc.mor(number, tmp))
+                while (calc.GreaterThan(number, tmp))
                 {
-                    tmp = calc.mul(tmp, calc.fromInt(2));
+                    tmp = calc.Multiply(tmp, calc.FromInteger(2));
                     z++;
                 }
 
-                tmp = calc.fromInt(2);
-                return calc.sum(calc.mul(calc.fromInt(z), LogarithmNatural(tmp, taylorMemberCount)), LogarithmNatural(calc.div(number, PowerInteger(tmp, z)), taylorMemberCount));
+                tmp = calc.FromInteger(2);
+                return calc.Add(calc.Multiply(calc.FromInteger(z), LogarithmNatural(tmp, taylorMemberCount)), LogarithmNatural(calc.Divide(number, PowerInteger(tmp, z)), taylorMemberCount));
             }
 
             // если операнд - двойка, факторизуем и складываем логарифмы.
             // ln2 = ln(1.25 * 1.6) = ln(1.25) + ln(1.6).
 
-            else if (calc.eqv(calc.fromInt(2), number))
-                return calc.sum(LogarithmNatural(calc.fromDouble(1.25), taylorMemberCount), LogarithmNatural(calc.fromDouble(1.6), taylorMemberCount));
+            else if (calc.Equal(calc.FromInteger(2), number))
+                return calc.Add(LogarithmNatural(calc.FromDouble(1.25), taylorMemberCount), LogarithmNatural(calc.FromDouble(1.6), taylorMemberCount));
 
             // если операнд от 1 до 2 не включая, можно применять разложение в ряд Тейлора
 
-            T sum = calc.zero;
-            T newNum = calc.dif(number, calc.fromInt(1));
+            T sum = calc.Zero;
+            T newNum = calc.Subtract(number, calc.FromInteger(1));
 
             for (int i = taylorMemberCount; i >= 1; i--)
             { 
-                T tmp = calc.div(PowerInteger(newNum, i), calc.fromInt(i));
+                T tmp = calc.Divide(PowerInteger(newNum, i), calc.FromInteger(i));
 
                 if (i % 2 != 0)
-                    sum = calc.sum(sum, tmp);
+                    sum = calc.Add(sum, tmp);
                 else
-                    sum = calc.dif(sum, tmp);
+                    sum = calc.Subtract(sum, tmp);
             }
 
             return sum;

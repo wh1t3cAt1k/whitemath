@@ -36,10 +36,10 @@ namespace whiteMath.Algorithms
         ///</returns>
         public static int Sign(T number)
         {
-            if (calc.mor(number, calc.zero))
+            if (calc.GreaterThan(number, calc.Zero))
                 return 1;
 
-            else if (calc.mor(calc.zero, number))
+            else if (calc.GreaterThan(calc.Zero, number))
                 return -1;
             
             else
@@ -75,12 +75,12 @@ namespace whiteMath.Algorithms
         /// <returns>The result of square root computation.</returns>
         public static T SquareRootHeron(T number, T epsilon)
         {
-			Condition.Validate(!calc.mor(calc.zero, number)).OrArgumentException();
+			Condition.Validate(!calc.GreaterThan(calc.Zero, number)).OrArgumentException();
 
-            if (calc.mor(calc.zero, number))
+            if (calc.GreaterThan(calc.Zero, number))
 				throw new ArgumentException(Messages.ArgumentShouldBeNonNegative);
 
-            Numeric<T,C> twoEquivalent = calc.fromInt(2);
+            Numeric<T,C> twoEquivalent = calc.FromInteger(2);
 
             Numeric<T,C> xOld;
             Numeric<T,C> xNew;
@@ -90,7 +90,7 @@ namespace whiteMath.Algorithms
             while(true)
             {
                 xNew = (xOld + number / xOld) / twoEquivalent;
-                if (xNew == xOld || calc.mor(epsilon, Abs(xNew - xOld))) break;
+                if (xNew == xOld || calc.GreaterThan(epsilon, Abs(xNew - xOld))) break;
                 xOld = xNew;
             }
 
@@ -108,21 +108,21 @@ namespace whiteMath.Algorithms
         {
 			if (power == 0)
 			{
-				return calc.fromInt(1);
+				return calc.FromInteger(1);
 			}
             else if (power < 0)
             {
-				Condition.Validate(calc.mor(number, calc.zero)).OrArgumentException(Messages.CannotRaiseNonPositiveArgumentToNegativePower);
-                return calc.div(calc.fromInt(1), PowerInteger(number, -power));
+				Condition.Validate(calc.GreaterThan(number, calc.Zero)).OrArgumentException(Messages.CannotRaiseNonPositiveArgumentToNegativePower);
+                return calc.Divide(calc.FromInteger(1), PowerInteger(number, -power));
             }
 
-			if (calc.eqv(number, calc.zero))
+			if (calc.Equal(number, calc.Zero))
 			{
-				return calc.zero;
+				return calc.Zero;
 			}
 
             Numeric<T,C> result = Numeric<T,C>._1;
-            Numeric<T,C> numberCopy = calc.getCopy(number);
+            Numeric<T,C> numberCopy = calc.GetCopy(number);
 
             while (power > 0)
             {
@@ -152,39 +152,39 @@ namespace whiteMath.Algorithms
         /// <returns>The number raised to the integer power.</returns>
         public static T PowerInteger_Generic(T number, T power)
         {
-			T powerCopy = calc.getCopy(power);
-			powerCopy = calc.intPart(powerCopy);
+			T powerCopy = calc.GetCopy(power);
+			powerCopy = calc.IntegerPart(powerCopy);
 
-			if (calc.eqv(powerCopy, calc.zero))
+			if (calc.Equal(powerCopy, calc.Zero))
 			{
-				return calc.fromInt(1);
+				return calc.FromInteger(1);
 			}
-			else if (calc.mor(calc.zero, powerCopy))
+			else if (calc.GreaterThan(calc.Zero, powerCopy))
             {
-				Condition.Validate(calc.mor(number, calc.zero)).OrArgumentException(Messages.CannotRaiseNonPositiveArgumentToNegativePower);
-				return calc.div(calc.fromInt(1), PowerInteger_Generic(number, calc.negate(power)));
+				Condition.Validate(calc.GreaterThan(number, calc.Zero)).OrArgumentException(Messages.CannotRaiseNonPositiveArgumentToNegativePower);
+				return calc.Divide(calc.FromInteger(1), PowerInteger_Generic(number, calc.Negate(power)));
             }
 
-			if (calc.eqv(number, calc.zero))
+			if (calc.Equal(number, calc.Zero))
 			{
-				return calc.zero;
+				return calc.Zero;
 			}
 
 			Numeric<T, C> result = Numeric<T, C>._1;
-            Numeric<T, C> numberCopy = calc.getCopy(number);
+            Numeric<T, C> numberCopy = calc.GetCopy(number);
 
 			T two = Numeric<T, C>._2;
 			T one = Numeric<T, C>._1;
 
 			while (powerCopy > Numeric<T,C>.Zero)
             {
-				if (calc.eqv(WhiteMath<T,C>.Modulus(powerCopy, two), one))
+				if (calc.Equal(WhiteMath<T,C>.Modulus(powerCopy, two), one))
 				{
 					result *= numberCopy;
 				}
 
                 numberCopy *= numberCopy;
-				powerCopy = calc.intPart(calc.div(powerCopy, two));
+				powerCopy = calc.IntegerPart(calc.Divide(powerCopy, two));
             }
 
             return result;

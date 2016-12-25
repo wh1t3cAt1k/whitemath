@@ -19,7 +19,7 @@ namespace whiteMath.Matrices
 
                 for (int i = 0; i < matrix.GetLength(0); i++)
                     for (int j = 0; j < matrix.GetLength(1); j++)
-                        parent[i, j] = calc.getCopy(matrix[i, j]);
+                        parent[i, j] = calc.GetCopy(matrix[i, j]);
             }
 
             public T[,] convertToArray()
@@ -28,7 +28,7 @@ namespace whiteMath.Matrices
 
                 for (int i = 0; i < parent.RowCount; i++)
                     for (int j = 0; j < parent.ColumnCount; j++)
-                        newMatrix[i, j] = calc.getCopy(parent[i, j]);
+                        newMatrix[i, j] = calc.GetCopy(parent[i, j]);
 
                 return newMatrix;
             }

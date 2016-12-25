@@ -35,11 +35,11 @@ namespace whiteMath.Functions
         /// <param name="secondPoint"></param>
         public LinearFunction(Point<T> firstPoint, Point<T> secondPoint)
         {
-            if (calc.eqv(firstPoint.X, secondPoint.X))
+            if (calc.Equal(firstPoint.X, secondPoint.X))
                 throw new ArgumentException("The X coordinates of the two points must differ.");
 
-            this.k = calc.div(calc.dif(firstPoint.Y, secondPoint.Y), calc.dif(firstPoint.X, secondPoint.X));
-            this.b = calc.dif(firstPoint.Y, calc.mul(firstPoint.X, k));
+            this.k = calc.Divide(calc.Subtract(firstPoint.Y, secondPoint.Y), calc.Subtract(firstPoint.X, secondPoint.X));
+            this.b = calc.Subtract(firstPoint.Y, calc.Multiply(firstPoint.X, k));
         }
 
         // ----------------------- functionality

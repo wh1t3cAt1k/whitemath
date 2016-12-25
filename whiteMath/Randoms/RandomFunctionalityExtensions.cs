@@ -134,13 +134,13 @@ namespace whiteMath.Randoms
             public T Next(T min, T max)
             {
 				Condition
-					.Validate(Numeric<T, C>.Calculator.mor(max, min))
+					.Validate(Numeric<T, C>.Calculator.GreaterThan(max, min))
 					.OrArgumentOutOfRangeException("The lower boundary should be less than the upper boundary.");
                 
                 Numeric<T, C> minValue = min;
                 Numeric<T, C> maxValue = max;
 
-                return minValue + Generator.Next_SingleInterval() * (maxValue - minValue);
+                return minValue + Generator.NextInUnitInterval() * (maxValue - minValue);
             }
 
             /// <summary>
@@ -195,7 +195,7 @@ namespace whiteMath.Randoms
             /// </remarks>
             public T Next()
             {
-                return Minimum + Generator.Next_SingleInterval() * (Maximum - Minimum);
+                return Minimum + Generator.NextInUnitInterval() * (Maximum - Minimum);
             }
 
             /// <summary>
@@ -209,7 +209,7 @@ namespace whiteMath.Randoms
             {
 				Condition.ValidateNotNull(generator, nameof(generator));
 				Condition
-					.Validate(Numeric<T, C>.Calculator.mor(maximum, minimum))
+					.Validate(Numeric<T, C>.Calculator.GreaterThan(maximum, minimum))
 					.OrArgumentOutOfRangeException("The lower boundary should be less than the upper boundary.");
 				
                 this.Generator = generator;

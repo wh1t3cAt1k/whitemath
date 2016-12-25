@@ -83,11 +83,11 @@ namespace whiteMath.Statistics
         /// <returns></returns>
         public static Numeric<T,C> LeastSquares_RSS<T, C>(IList<T> estimatedY, IList<T> realY) where C: ICalc<T>, new()
         {
-            Summator<T> summator = new Summator<T>(Numeric<T, C>.Zero, Numeric<T, C>.Calculator.sum);
+            Summator<T> summator = new Summator<T>(Numeric<T, C>.Zero, Numeric<T, C>.Calculator.Add);
 
             Func<int, T> memberFormula = delegate (int i)
             {
-                Numeric<T,C> simpleDif = Numeric<T,C>.Calculator.dif(estimatedY[i], realY[i]);
+                Numeric<T,C> simpleDif = Numeric<T,C>.Calculator.Subtract(estimatedY[i], realY[i]);
                 return simpleDif * simpleDif;
             };
 
@@ -104,11 +104,11 @@ namespace whiteMath.Statistics
         /// <returns></returns>
         public static Numeric<T, C> LeastSquares_ESS<T, C>(IList<T> estimatedY, T averageY) where C: ICalc<T>, new()
         {
-            Summator<T> summator = new Summator<T>(Numeric<T, C>.Zero, Numeric<T, C>.Calculator.sum);
+            Summator<T> summator = new Summator<T>(Numeric<T, C>.Zero, Numeric<T, C>.Calculator.Add);
 
             Func<int, T> memberFormula = delegate(int i)
             {
-                Numeric<T, C> simpleDif = Numeric<T, C>.Calculator.dif(estimatedY[i], averageY);
+                Numeric<T, C> simpleDif = Numeric<T, C>.Calculator.Subtract(estimatedY[i], averageY);
                 return simpleDif * simpleDif;
             };
 
@@ -128,11 +128,11 @@ namespace whiteMath.Statistics
             if (averageY == null)
                 averageY = realY.SampleAverage<T, C>();
 
-            Summator<T> summator = new Summator<T>(Numeric<T, C>.Zero, Numeric<T, C>.Calculator.sum);
+            Summator<T> summator = new Summator<T>(Numeric<T, C>.Zero, Numeric<T, C>.Calculator.Add);
 
             Func<int, T> memberFormula = delegate(int i)
             {
-                Numeric<T, C> simpleDif = Numeric<T, C>.Calculator.dif(realY[i], averageY);
+                Numeric<T, C> simpleDif = Numeric<T, C>.Calculator.Subtract(realY[i], averageY);
                 return simpleDif * simpleDif;
             };
 

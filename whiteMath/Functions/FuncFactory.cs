@@ -12,7 +12,7 @@ namespace whiteMath.Functions
             return delegate(T x)
             {
                 ICalc<T>    calc = Numeric<T, C>.Calculator;
-                T           temp = WhiteMath<T, C>.Exponent(calc.mul(exponentDelta, x), taylorMemberCount);
+                T           temp = WhiteMath<T, C>.Exponent(calc.Multiply(exponentDelta, x), taylorMemberCount);
 
                 return Numeric<T, C>._1 / (Numeric<T, C>._1 + temp);
             };

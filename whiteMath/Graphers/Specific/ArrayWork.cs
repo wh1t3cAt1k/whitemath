@@ -16,8 +16,8 @@ namespace whiteMath.Graphers.Services
 
         public override int Compare(Point<T> a, Point<T> b)
         {
-            if (calc.mor(a[0], b[0])) return 1;
-            else if (calc.mor(b[0], a[0])) return -1;
+            if (calc.GreaterThan(a[0], b[0])) return 1;
+            else if (calc.GreaterThan(b[0], a[0])) return -1;
             else return 0;
         }
     }

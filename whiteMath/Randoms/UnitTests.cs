@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
+using whiteMath;
 using whiteMath.Calculators;
 using whiteMath.Statistics;
 using whiteMath.Randoms;
@@ -24,14 +24,19 @@ namespace Randoms
 		{
 			RandomNormalBoxMuller<double, CalcDouble> generator 
 				= new RandomNormalBoxMuller<double, CalcDouble>(
-				   new RandomMersenneTwister(),
-				   Math.Log,
-				   Math.Sqrt);
+					new RandomStandard(),
+					Math.Log,
+					Math.Sqrt);
 
 			IEnumerable<double> sequence = Enumerable.Range(1, 1000).Select(x => generator.Next());
 
-			Assert.That(Math.Abs(Math.Sqrt(sequence.SampleUnbiasedVariance) - standardDeviation) < standardDeviation / 100);
-			Assert.That(Math.Abs(sequence.SampleAverage - mean) < mean / 100);
+			Assert.LessOrEqual(
+				Math.Abs(Math.Sqrt(sequence.SampleUnbiasedVariance<double, CalcDouble>(sequence.SampleAverage<double, CalcDouble>())) - standardDeviation),
+				standardDeviation / 100);
+			
+			Assert.LessOrEqual(
+				Math.Abs(sequence.SampleAverage<double, CalcDouble>() - mean),
+				mean / 100);
 		}
 	}
 }

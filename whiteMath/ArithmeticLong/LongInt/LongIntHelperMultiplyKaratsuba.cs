@@ -97,7 +97,7 @@ namespace whiteMath.ArithmeticLong
                 
                 int[] difference = new int[b.Count + d.Count + 2];
                 
-                if (LongIntegerMethods.Dif(BASE, difference, abcd, acpbd))
+                if (LongIntegerMethods.Subtract(BASE, difference, abcd, acpbd))
                     Console.WriteLine("Lower-level difference error.");
 
                 SumPrivate(BASE, result, ac, 0, difference, half);

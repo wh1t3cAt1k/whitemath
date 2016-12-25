@@ -55,13 +55,13 @@ namespace whiteMath.Functions
         /// <param name="secondDerivative">The value of the second derivative in the first point.</param>
         public CubicFunction(Point<T> firstPoint, Point<T> secondPoint, T firstDerivative, T secondDerivative)
         {
-            T xaPow2 = calc.mul(firstPoint.X, firstPoint.X);
-            T xbPow2 = calc.mul(secondPoint.X, secondPoint.X);
+            T xaPow2 = calc.Multiply(firstPoint.X, firstPoint.X);
+            T xbPow2 = calc.Multiply(secondPoint.X, secondPoint.X);
 
-            T xaPow3 = calc.mul(firstPoint.X, xaPow2);
-            T xbPow3 = calc.mul(secondPoint.X, xbPow2);
+            T xaPow3 = calc.Multiply(firstPoint.X, xaPow2);
+            T xbPow3 = calc.Multiply(secondPoint.X, xbPow2);
 
-            T one = calc.fromInt(1);
+            T one = calc.FromInteger(1);
 
             Matrix_SDA<T, C> matrix = new Matrix_SDA<T, C>(4, 4);
  
@@ -69,8 +69,8 @@ namespace whiteMath.Functions
             {
                 { xaPow3, xaPow2, firstPoint.X, one },
                 { xbPow3, xbPow2, secondPoint.X, one },
-                { calc.mul(calc.fromInt(3), xaPow2), calc.mul(calc.fromInt(2), firstPoint.X), one, calc.zero },
-                { calc.mul(calc.fromInt(6), firstPoint.X), calc.fromInt(2), calc.zero, calc.zero },
+                { calc.Multiply(calc.FromInteger(3), xaPow2), calc.Multiply(calc.FromInteger(2), firstPoint.X), one, calc.Zero },
+                { calc.Multiply(calc.FromInteger(6), firstPoint.X), calc.FromInteger(2), calc.Zero, calc.Zero },
             });
 
             Vector<T,C> result;
@@ -83,7 +83,7 @@ namespace whiteMath.Functions
             this.c = result[2];
             this.d = result[3];
 
-            this.x0 = calc.zero;
+            this.x0 = calc.Zero;
         }
 
         // -----------------------

@@ -176,7 +176,7 @@ namespace whiteMath.Functions
             ICalc<T> calc = Numeric<T, C>.Calculator;
 
             for (int i = 0; i < points.Count; i++)
-                if (!calc.mor(epsilon, abs(calc.dif(obj.Value(points[i]), another.Value(points[i])))))
+                if (!calc.GreaterThan(epsilon, abs(calc.Subtract(obj.Value(points[i]), another.Value(points[i])))))
                     return false;
 
             return true;
@@ -279,7 +279,7 @@ namespace whiteMath.Functions
             Numeric<T, C> funcValLT, funcValRT;
 
             ICalc<T> calc = Numeric<T,C>.Calculator;
-            Func<T, T, bool> test = (what == SearchFor.Maximum ? (Func<T, T, bool>)delegate(T a, T b) { return calc.mor(b, a); } : calc.mor);
+            Func<T, T, bool> test = (what == SearchFor.Maximum ? (Func<T, T, bool>)delegate(T a, T b) { return calc.GreaterThan(b, a); } : calc.GreaterThan);
 
             while (true)
             {
@@ -328,7 +328,7 @@ namespace whiteMath.Functions
             ICalc<T> calc = Numeric<T,C>.Calculator;
             
             Numeric<T,C> zero = Numeric<T,C>.Zero;
-            Numeric<T,C> two = calc.fromInt(2);
+            Numeric<T,C> two = calc.FromInteger(2);
 
             Numeric<T,C> left= interval.LeftBound;
             Numeric<T,C> right = interval.RightBound;
@@ -422,23 +422,23 @@ namespace whiteMath.Functions
         {
             ICalc<T> calc = Numeric<T, C>.Calculator;
 
-            T hits = calc.zero;     // overall hits.
+            T hits = calc.Zero;     // overall hits.
             Point<T> randomPoint;   // random point.
 
-            if(!calc.mor(throwsCount, calc.zero))
+            if(!calc.GreaterThan(throwsCount, calc.Zero))
                 throw new ArgumentException("The amount of point throws count should be a positive integer value.");
 
-            for (T i = calc.zero; calc.mor(throwsCount, i); i = calc.increment(i))
+            for (T i = calc.Zero; calc.GreaterThan(throwsCount, i); i = calc.Increment(i))
             {
-                randomPoint = new Point<T>(generator.Next(interval.LeftBound, interval.RightBound), generator.Next(calc.zero, rectangleHeight));
+                randomPoint = new Point<T>(generator.Next(interval.LeftBound, interval.RightBound), generator.Next(calc.Zero, rectangleHeight));
 
                 // Если попали под функцию - увеличиваем количество хитов.
 
-                if (!calc.mor(randomPoint.Y, obj.Value(randomPoint.X)))
-                    hits = calc.increment(hits);
+                if (!calc.GreaterThan(randomPoint.Y, obj.Value(randomPoint.X)))
+                    hits = calc.Increment(hits);
             }
 
-            T result = calc.div(calc.mul(calc.mul(interval.Length, rectangleHeight), hits), throwsCount);
+            T result = calc.Divide(calc.Multiply(calc.Multiply(interval.Length, rectangleHeight), hits), throwsCount);
 
             return result;
         }
@@ -458,12 +458,12 @@ namespace whiteMath.Functions
 
             // Если интервал нулевой, то ваще забей.
 
-            if (interval.IsZeroLength)
-                return calc.zero;
+            if (interval.HasZeroLength)
+                return calc.Zero;
 
             // Если нет, то ваще не забей.
             
-            Numeric<T,C> step = calc.div(interval.Length, calc.fromInt(pointCount));
+            Numeric<T,C> step = calc.Divide(interval.Length, calc.FromInteger(pointCount));
 
             Numeric<T, C> two = (Numeric<T, C>)2;
 
@@ -482,7 +482,7 @@ namespace whiteMath.Functions
 
             // Теперь будем суммировать по порядку, начиная с самых маленьких.
 
-            Numeric<T, C> sum = calc.zero;
+            Numeric<T, C> sum = calc.Zero;
 
             foreach (Numeric<T, C> element in sorted)
                 sum += element;
@@ -506,17 +506,17 @@ namespace whiteMath.Functions
 
             // Если интервал нулевой длины, то ваще забей.
 
-            if (interval.IsZeroLength)
-                return new BoundedInterval<T, C>(calc.zero, calc.zero, true, true);
+            if (interval.HasZeroLength)
+                return new BoundedInterval<T, C>(calc.Zero, calc.Zero, true, true);
 
             // Если нет, то ваще не забей.
 
             Point<T>[] table = obj.GetFunctionTable<T, C>(interval, pointCount+1);
 
-            Numeric<T, C> step = calc.dif(table[2].X, table[0].X);
+            Numeric<T, C> step = calc.Subtract(table[2].X, table[0].X);
             
-            Numeric<T, C> sumOne = calc.zero;
-            Numeric<T, C> sumTwo = calc.zero;
+            Numeric<T, C> sumOne = calc.Zero;
+            Numeric<T, C> sumTwo = calc.Zero;
 
             for (int i = 0; i < pointCount; i++)
             {
@@ -560,7 +560,7 @@ namespace whiteMath.Functions
                 sum2 += table[i + 1].Y;
             }
 
-            Numeric<T, C> result = (Numeric<T,C>.Calculator.sum(table[0].Y, table[table.Length - 1].Y) + (Numeric<T,C>)2 * sum2 + (Numeric<T,C>)4 * sum1) * (interval.RightBound - interval.LeftBound) / (Numeric<T,C>)(3 * pointCount);
+            Numeric<T, C> result = (Numeric<T,C>.Calculator.Add(table[0].Y, table[table.Length - 1].Y) + (Numeric<T,C>)2 * sum2 + (Numeric<T,C>)4 * sum1) * (interval.RightBound - interval.LeftBound) / (Numeric<T,C>)(3 * pointCount);
 
             return result;
         }

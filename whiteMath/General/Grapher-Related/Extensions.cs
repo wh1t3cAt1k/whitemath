@@ -16,10 +16,12 @@ namespace whiteMath.General
         /// This trick allows the grapher to behave more smoothly during scaling,
         /// no points usually are 'lost'.
         /// </summary>
-        /// <returns></returns>
         public static FunctionGrapher CreateSmoothPieceLinearGrapher(this StandardGrapher obj)
         {
-            IFunction<double, double> function = Interpolation<double, CalcDouble>.CreatePieceLinearFunction(obj.GetPointsArray(), double.NaN);
+            IFunction<double, double> function = Interpolation<double, CalcDouble>.CreatePieceLinearFunction(
+				obj.GetPointsArray(), 
+				double.NaN);
+			
             return new FunctionGrapher(function);
         }
     }

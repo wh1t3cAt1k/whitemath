@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !NON_WINDOWS_ENVIRONMENT
+
+using System;
 
 using XS = Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
@@ -208,3 +210,5 @@ namespace whiteMath.General
         }
     }
 }
+
+#endif

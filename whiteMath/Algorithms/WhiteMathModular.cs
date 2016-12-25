@@ -26,7 +26,7 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static Dictionary<T, List<T>> RootsOfUnity(T modulus, IEnumerable<T> rootDegrees, BoundedInterval<T, C>? searchInterval = null)
         {
-			Condition.Validate(calc.isIntegerCalculator).OrException(new NonIntegerTypeException(typeof(T).Name));
+			Condition.Validate(calc.IsIntegerCalculator).OrException(new NonIntegerTypeException(typeof(T).Name));
 			Condition.ValidateNotNull(modulus);
 			Condition.Validate(modulus > Numeric<T, C>._1).OrArgumentOutOfRangeException("The module should be more than 1.");
 			Condition
@@ -62,13 +62,13 @@ namespace whiteMath.Algorithms
 
             // -----------------------------
 
-            bool evenModule = calc.isEven(modulus);
+            bool evenModule = calc.IsEven(modulus);
 
 			// If the lower bound is even, and the modulus is even – definitely not coprime.
 			// Which means that the number is a zero divisor and cannot be a root of unity.
 			// Thus, increment.
 			// -
-			if (calc.isEven(lowerBound) && evenModule)
+			if (calc.IsEven(lowerBound) && evenModule)
 			{
 				lowerBound++;
 			}

@@ -123,7 +123,7 @@ namespace whiteMath.ArithmeticLong
         /// <param name="two">The second long integer digits array.</param>
         /// <param name="equals">The out argument showing if the second number is actually equal to the first one.</param>
         /// <returns></returns>
-        public static bool More(IList<int> one, IList<int> two, out bool equals)
+        public static bool GreaterThan(IList<int> one, IList<int> two, out bool equals)
         {
 			Condition.ValidateNotNull(one, nameof(one));
 			Condition.ValidateNotNull(two, nameof(two));
@@ -341,10 +341,8 @@ namespace whiteMath.ArithmeticLong
         /// Calculates the difference between two natural long integer numbers.
         /// WARNING: if the length of the bigger number is N, then the result
         /// digits array should be able to store N digits as well.
-        /// 
         /// No checking is performed, thus an <c>IndexOutOfBoundsException</c> can be thrown.
-        /// 
-        /// We assume that number 'one' is more than number 'two'.
+        /// We assume that number 'one' is greater than number 'two'.
         /// If, nevertheless, <paramref name="two"/> is bigger than <paramref name="one"/>, the function would return <c>true</c>
         /// and the result would be equal to (<c>BASE^result.Length - trueResultValue</c>);
         /// </summary>
@@ -352,7 +350,7 @@ namespace whiteMath.ArithmeticLong
         /// <param name="two"></param>
         /// <param name="result"></param>
         /// <param name="BASE"></param>
-        public static bool Dif(int BASE, IList<int> result, IList<int> one, IList<int> two)
+        public static bool Subtract(int BASE, IList<int> result, IList<int> one, IList<int> two)
         {
 			Condition.ValidateNotNull(one, nameof(one));
 			Condition.ValidateNotNull(two, nameof(two));
@@ -401,7 +399,7 @@ namespace whiteMath.ArithmeticLong
         /// <param name="two">The divisor.</param>
         /// <param name="remainder">The reference to store the remainder.</param>
         /// <returns>The quotient containing only significant digits (no trailing zeroes).</returns>
-        public static IList<int> Div(int BASE, IList<int> one, IList<int> two, out IList<int> remainder)
+		public static IList<int> Divide(int BASE, IList<int> one, IList<int> two, out IList<int> remainder)
         {
 			Condition.ValidateNotNull(one, nameof(one));
 			Condition.ValidateNotNull(two, nameof(two));
@@ -417,7 +415,7 @@ namespace whiteMath.ArithmeticLong
 
             int[] result = new int[one.CountSignificant() - two.CountSignificant() + 1];
 
-            remainder = Div(BASE, result, one, two).Cut();
+            remainder = Divide(BASE, result, one, two).Cut();
 
             return result.Cut();
         }
@@ -431,7 +429,7 @@ namespace whiteMath.ArithmeticLong
         /// <param name="result">The digits array to store the result. WARNING! Should be able to store AT LEAST one.Count - two.Count + 1 digits.</param>
         /// <param name="one">The digits array containing the first operand.</param>
         /// <param name="two">The digits array containing the second operand.</param>
-        public static IList<int> Div(int BASE, IList<int> result, IList<int> one, IList<int> two)
+        public static IList<int> Divide(int BASE, IList<int> result, IList<int> one, IList<int> two)
         {
 			Condition.ValidateNotNull(one, nameof(one));
 			Condition.ValidateNotNull(two, nameof(two));
@@ -678,10 +676,6 @@ namespace whiteMath.ArithmeticLong
         /// Multiplies one natural long integer by another.
         /// The result digits array must be safe to contain one.Count + two.Count elements.
         /// </summary>
-        /// <param name="BASE"></param>
-        /// <param name="result"></param>
-        /// <param name="one"></param>
-        /// <param name="two"></param>
         public static void MultiplySimple(int BASE, IList<int> result, IList<int> one, IList<int> two)
         {
 			Condition.ValidateNotNull(result, nameof(result));

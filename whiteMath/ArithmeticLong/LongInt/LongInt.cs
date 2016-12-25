@@ -16,20 +16,18 @@ namespace whiteMath.ArithmeticLong
     [Serializable]
     public partial class LongInt<B>: ICloneable where B: IBase, new()
     {
-        public static readonly int BASE = new B().getBase();
+        public static readonly int BASE = new B().Base;
 
-        public static bool BASE_is_power_of_ten { get; private set; }
-        public static bool BASE_is_power_of_two { get; private set; }
+        public static bool IsBasePowerOfTen { get; private set; }
+        public static bool IsBasePowerOfTwo { get; private set; }
 
-        private static readonly string digitFormatter = getDigitFormatter();
+        private static readonly string digitFormatter = GetDigitFormatter();
 
         // значение степени десятки или двойки для получения основания. -1 значит, что основание - ни десятка, ни двойка. 
         // также отражает длину одной цифры в десятичных или бинарных знаках.
         private static readonly int fieldLength = -1;
 
-        // --------------------------------------------------------
-        #region Стандартные исключения
-        // --------------------------------------------------------
+        #region Standard exceptions
 
         private static NotSupportedException NOT_SUPPORTED_DECIMAL_EXCEPTION =
             new NotSupportedException("The digits base for this number is not an integer power of ten. The operation is not supported.");
@@ -37,24 +35,20 @@ namespace whiteMath.ArithmeticLong
         private static NotSupportedException NOT_SUPPORTED_BINARY_EXCEPTION =
             new NotSupportedException("The digits base for this number is not an integer power of two. The operation is not supported.");
 
-        // --------------------------------------------------------
         #endregion
-        // --------------------------------------------------------
-
-        // --------------------------------------------------------
-        #region Узнать длину цифры в десятичных или двоичных знаках
-        // --------------------------------------------------------
 
         /// <summary>
         /// Returns the length of the current number in decimal digits.
-        /// Works ONLY for numbers whose digits base is an integer power of ten.
+        /// Works only for numbers whose digits base is an integer power of ten.
         /// </summary>
         public long LengthInDecimalPlaces
         {
             get
             {
-                if (!BASE_is_power_of_ten)
-                    throw NOT_SUPPORTED_DECIMAL_EXCEPTION;
+				if (!IsBasePowerOfTen)
+				{
+					throw NOT_SUPPORTED_DECIMAL_EXCEPTION;
+				}
 
                 return LongInt<B>.fieldLength * (this.Length - 1) + (int)Math.Ceiling(Math.Log10(this[this.Length - 1]));
             }
@@ -68,7 +62,7 @@ namespace whiteMath.ArithmeticLong
         {
             get
             {
-                if (!BASE_is_power_of_two)
+                if (!IsBasePowerOfTwo)
                     throw NOT_SUPPORTED_BINARY_EXCEPTION;
 
                 return LongInt<B>.fieldLength * (this.Length - 1) + (int)Math.Ceiling(Math.Log(this[this.Length - 1], 2));
@@ -84,7 +78,7 @@ namespace whiteMath.ArithmeticLong
         {
             get
             {
-                if (!BASE_is_power_of_ten)
+                if (!IsBasePowerOfTen)
                     throw NOT_SUPPORTED_DECIMAL_EXCEPTION;
 
                 return fieldLength;
@@ -100,16 +94,12 @@ namespace whiteMath.ArithmeticLong
         {
             get
             {
-                if (!BASE_is_power_of_two)
+                if (!IsBasePowerOfTwo)
                     throw NOT_SUPPORTED_BINARY_EXCEPTION;
 
                 return fieldLength;
             }
         }
-
-        // --------------------------------------------------------
-        #endregion
-        // --------------------------------------------------------
 
         //-----------------------------------
         //---------INVARIANTS ---------------
@@ -179,12 +169,12 @@ namespace whiteMath.ArithmeticLong
 
             if (WhiteMath<int, CalcInt>.IsNaturalIntegerPowerOf(BASE, 10, out isPower))
             {
-                LongInt<B>.BASE_is_power_of_ten = true;
+                LongInt<B>.IsBasePowerOfTen = true;
                 LongInt<B>.fieldLength = isPower.Value;
             }
             else if (WhiteMath<int, CalcInt>.IsNaturalIntegerPowerOf(BASE, 2, out isPower))
             {
-                LongInt<B>.BASE_is_power_of_two = true;
+                LongInt<B>.IsBasePowerOfTwo = true;
                 LongInt<B>.fieldLength = isPower.Value;
             }
         }
@@ -256,7 +246,7 @@ namespace whiteMath.ArithmeticLong
         /// <returns>A pseudo-random LongInt number with the desired amount of decimal digits.</returns>
         public static LongInt<B> CreateRandom_Decimal(int decimalDigitCount, IRandomBounded<int> generator, bool allowNegative)
         {
-            if (!BASE_is_power_of_ten)
+            if (!IsBasePowerOfTen)
                 throw NOT_SUPPORTED_DECIMAL_EXCEPTION;
 
             int best = decimalDigitCount / fieldLength;         // how many BASE-based digits are there
@@ -298,7 +288,7 @@ namespace whiteMath.ArithmeticLong
         /// <returns>A pseudo-random LongInt number with the desired amount of binary digits (bits).</returns>
         public static LongInt<B> CreateRandom_Binary(int binaryDigitCount, IRandomBounded<int> generator, bool allowNegative)
         {
-            if (!BASE_is_power_of_two)
+            if (!IsBasePowerOfTwo)
                 throw NOT_SUPPORTED_BINARY_EXCEPTION;
 
             int best = binaryDigitCount / fieldLength;         // how many BASE-based digits are there
@@ -347,27 +337,28 @@ namespace whiteMath.ArithmeticLong
 
         /// <summary>
         /// Initializes the LongInt number with a user-specified digit list.
-        /// If the BASE of digits in <paramref name="digitsArray"/> is other than LongInt.BASE,
+        /// If the BASE of digits in <paramref name="digits"/> is other than LongInt.BASE,
         /// the conversion may take longer time.
         /// </summary>
-        /// <param name="BASE">The base of digits in the digit list.</param>
-        /// <param name="digitsArray">A list of digits with increasing significance (the leftmost digit corresponds to BASE^0).</param>
+        /// <param name="digitsBase">The base of digits in the digit list.</param>
+        /// <param name="digits">A list of digits with increasing significance (the leftmost digit corresponds to BASE^0).</param>
         /// <param name="negative">A parameter which signalizes if the number should be treated as negative.</param>
-        public LongInt(int BASE, IList<int> digitsArray, bool negative = false)
+		public LongInt(int digitsBase, IList<int> digits, bool negative = false)
         {
-            if (BASE == LongInt<B>.BASE)
-                this.Digits = new List<int>(digitsArray);
-            else
-                this.Digits = new List<int>(BaseConversion.baseConvert(digitsArray, BASE, LongInt<B>.BASE));
+			Condition.Validate(digitsBase > 1);
 
-            this.Negative = negative;   // устанавливаем отрицательность
-            this.DealWithZeroes();      // разбираемся с нулями
+            if (digitsBase == LongInt<B>.BASE)
+                this.Digits = new List<int>(digits);
+            else
+                this.Digits = new List<int>(BaseConversion.BaseConvert(digits, digitsBase, LongInt<B>.BASE));
+
+            this.Negative = negative;
+            this.DealWithZeroes();
         }
 
         /// <summary>
         /// Private constructor made for quick-trick.
         /// </summary>
-        /// <param name="initialSize"></param>
         private LongInt(int initialSize)
         {
             Negative = false;                   // is positive
@@ -378,20 +369,22 @@ namespace whiteMath.ArithmeticLong
         /// <summary>
         /// Makes a LongInt from the standard long.
         /// </summary>
-        /// <param name="num">The long number to convert into LongInt.</param>
-        public LongInt(long num)
+        /// <param name="number">
+		/// The long number to convert into LongInt.
+		/// </param>
+		public LongInt(long number)
         {
-            Negative = (num < 0);               // set the negative flag
-            num = (num > 0 ? num : -num);       // make num positive
+            Negative = (number < 0);
+            number = (number > 0 ? number : -number);
 
             Digits = new List<int>();
 
-            do                                  // fill in the digits list
+            do
             {
-                Digits.Add((int)(num % BASE));
-                num /= BASE;
-            } 
-            while (num > 0);
+                Digits.Add((int)(number % BASE));
+                number /= BASE;
+            }
+            while (number > 0);
         }
 
         //-----------------------------------
@@ -485,34 +478,39 @@ namespace whiteMath.ArithmeticLong
                 return tmp;
             }
 
-            LongInt<B> bigger, smaller;
-            bool aMoreB = AbsMore(one, two, out bigger, out smaller);
+			LongInt<B> larger, smaller;
 
-            // -------- here comes the substracting
+			bool firstBiggerThanSecondAbsolute 
+				= CompareAbsolute(one, two, out larger, out smaller);
 
-            LongInt<B> res = new LongInt<B>(bigger.Length);
-            res.Digits.AddRange(new int[bigger.Length]);
+            // Here comes the subtracting.
+			// -
+			LongInt<B> result = new LongInt<B>(larger.Length);
+            result.Digits.AddRange(new int[larger.Length]);
 
-            if (LongIntegerMethods.Dif(LongInt<B>.BASE, res.Digits, bigger.Digits, smaller.Digits))
-                throw new Exception("Something really terrible happened. Consider it Apocalypse.");
+			if (LongIntegerMethods.Subtract(
+				BASE, 
+				result.Digits, 
+				larger.Digits, 
+				smaller.Digits)) 
+			{
+				throw new Exception("Something really terrible happened. Consider it Apocalypse.");
+			}
 
-            // ---- deal with negative flag
+			// Deal with the negative flag.
+			// -
+			result.Negative =
+				firstBiggerThanSecondAbsolute && !one.Negative && !two.Negative
+				|| !firstBiggerThanSecondAbsolute && one.Negative && two.Negative;
 
-            if (aMoreB && !one.Negative && !two.Negative || !aMoreB && one.Negative && two.Negative)
-                res.Negative = false;
-            else
-                res.Negative = true;
-
-            res.DealWithZeroes();
-            return res;
+            result.DealWithZeroes();
+            return result;
         }
 
         /// <summary>
-        /// Multiplies one LongInt number by another.
+		/// Multiplies one <see cref="LongInt{B}"/> number by another
+		/// and returns a number representing their product.
         /// </summary>
-        /// <param name="one"></param>
-        /// <param name="two"></param>
-        /// <returns></returns>
         public static LongInt<B> operator *(LongInt<B> one, LongInt<B> two)
         {
             return Helper.MultiplySimple(one, two);
@@ -550,7 +548,7 @@ namespace whiteMath.ArithmeticLong
             return remainder;
         }
 
-        public static LongInt<B> operator % (LongInt<B> one, LongInt<B> two)
+        public static LongInt<B> operator %(LongInt<B> one, LongInt<B> two)
         {
             LongInt<B> remainder;
             LongInt<B>.Helper.Div(one, two, out remainder);
@@ -561,59 +559,65 @@ namespace whiteMath.ArithmeticLong
         /// <summary>
         /// Unary minus operator. Negates the number.
         /// </summary>
-        /// <param name="num"></param>
-        /// <returns></returns>
         public static LongInt<B> operator -(LongInt<B> num)
         {
-            LongInt<B> tmp = num.Clone() as LongInt<B>;
-            tmp.Negative ^= true;
+			LongInt<B> result = num.Clone() as LongInt<B>;
+            result.Negative ^= true;
 
-            return tmp;
+            return result;
         }
 
         /// <summary>
-        /// Increments the current number by one.
+        /// Increments the number by one.
         /// </summary>
-        /// <param name="num"></param>
-        public static LongInt<B> operator ++(LongInt<B> num)
+		public static LongInt<B> operator ++(LongInt<B> number)
         {
             int currentDigitIndex = 0;
 
-            // Если отрицательное, на самом деле надо уменьшать.
-            if (num.Negative)
+			// Special treating of negative numbers. 
+			// -
+            if (number.Negative)
             {
-                num.Negative = false;
-                num--;
-                if(num<0) num.Negative = true;
+                number.Negative = false;
+                number--;
+                
+				if (number < 0) number.Negative = true;
 
-                return num;
+                return number;
             }
+
+			// Increment the current digit.
+			// If it overflows, we switch to the next one and increment it.
+			// We repeat this process until some digit will not overflow
+			// or we run out of digits.
 
             // Увеличиваем цифру числа на единицу.
-            // Если происходит переполнение цифры, переходим к следующей и увеличиваем ее на единицу...
+            // Если происходит переполнение цифры, переходим к следующей и увеличиваем ее на единицу.
             // Так до тех пор, пока все-таки не прибавим - или у нас не кончатся цифры
             // -
-            while (currentDigitIndex < num.Length)
+            while (currentDigitIndex < number.Length)
             {
-                num[currentDigitIndex]++;
+                number[currentDigitIndex]++;
 
-                if (num[currentDigitIndex] == BASE)
+                if (number[currentDigitIndex] == BASE)
                 {
-                    num[currentDigitIndex] = 0;
+                    number[currentDigitIndex] = 0;
                     currentDigitIndex++;
                 }
-                else return num;
+                else return number;
             }
 
-            // Крайний случай - кончились цифры.
-            // Заводим новую, остальные обнуляем
+            // Edge case - we have run out of digits.
+			// Adding new, zeroing out all others.
             // -
-            num.Digits.Add(1);
+            number.Digits.Add(1);
 
-            for (int i = 0; i < num.Length - 1; i++)
-                num[i] = 0;
+			for (int digitIndex = 0; digitIndex < number.Length - 1; ++digitIndex)
+			{
+				number[digitIndex] = 0;
+			}
 
-            return num;
+            return number;
         }
 
         /// <summary>
@@ -829,8 +833,10 @@ namespace whiteMath.ArithmeticLong
         /// <returns>The current number multiplied by X * BASE ^ <paramref name="basePower"/></returns>
         public LongInt<B> BaseMultiply(int basePower)
         {
-            if (basePower < 0)
-                return BaseDivide(-basePower);
+			if (basePower < 0)
+			{
+				return BaseDivide(-basePower);
+			}
 
             LongInt<B> tmp = this.Clone() as LongInt<B>;
 
@@ -885,7 +891,7 @@ namespace whiteMath.ArithmeticLong
 
             // Если основание - не степень десятки, придется просто умножать.
 
-            else if (!LongInt<B>.BASE_is_power_of_ten)
+            else if (!LongInt<B>.IsBasePowerOfTen)
             {
                 LongInt<B> poweredInteger = WhiteMath<LongInt<B>, CalcLongInt<B>>.PowerInteger(10, tenPower);
                 return this * poweredInteger;
@@ -911,7 +917,7 @@ namespace whiteMath.ArithmeticLong
             if (tenPower < 0)
                 return this.DecimalMultiply(-tenPower);
 
-            else if (!LongInt<B>.BASE_is_power_of_ten)
+            else if (!LongInt<B>.IsBasePowerOfTen)
             {
                 LongInt<B> powered = WhiteMath<LongInt<B>, CalcLongInt<B>>.PowerInteger(10, tenPower);
                 return this / powered;
@@ -935,7 +941,7 @@ namespace whiteMath.ArithmeticLong
         {
             if (howMuch < 0) return one >> (-howMuch);
 
-            else if (LongInt<B>.BASE_is_power_of_two)
+            else if (LongInt<B>.IsBasePowerOfTwo)
                 return one.BaseRootMultiply(2, fieldLength, howMuch);
 
             // Unquick part.
@@ -960,7 +966,7 @@ namespace whiteMath.ArithmeticLong
         {
             if (howMuch < 0) return one << (-howMuch);
 
-            else if (LongInt<B>.BASE_is_power_of_two)
+            else if (LongInt<B>.IsBasePowerOfTwo)
                 return one.BaseRootDivide(2, fieldLength, howMuch);
 
             // Unquick part.
@@ -980,7 +986,7 @@ namespace whiteMath.ArithmeticLong
         /// Gets the digit formatter for ToString() output.
         /// </summary>
         /// <returns></returns>
-        private static string getDigitFormatter()
+		private static string GetDigitFormatter()
         {
             long fieldLength = (long)Math.Log10(BASE);
             return "{0:d" + fieldLength.ToString() + "}";
@@ -1003,7 +1009,9 @@ namespace whiteMath.ArithmeticLong
                 return true;
             }
             else
+			{
                 return false;
+			}
         }
 
         /// <summary>
@@ -1013,7 +1021,7 @@ namespace whiteMath.ArithmeticLong
         /// <param name="two"></param>
         /// <param name="bigger"></param>
         /// <param name="smaller"></param>
-        private static bool AbsMore(LongInt<B> one, LongInt<B> two, out LongInt<B> bigger, out LongInt<B> smaller)
+        private static bool CompareAbsolute(LongInt<B> one, LongInt<B> two, out LongInt<B> bigger, out LongInt<B> smaller)
         {
             bool neg1 = one.Negative;
             bool neg2 = two.Negative;
@@ -1073,7 +1081,7 @@ namespace whiteMath.ArithmeticLong
 
             bool junk;
 
-            return LongIntegerMethods.More(one.Digits, two.Digits, out junk);
+			return LongIntegerMethods.GreaterThan(one.Digits, two.Digits, out junk);
         }
 
         public static bool operator <(LongInt<B> one, LongInt<B> two)
@@ -1175,9 +1183,9 @@ namespace whiteMath.ArithmeticLong
         /// </summary>
         /// <typeparam name="B2">The IBase interface specifying the type of outcoming LongInt(<typeparamref name="B2"/>)</typeparam>
         /// <returns>A LongInt(<typeparamref name="B2"/>) number with digits of base specified by <typeparamref name="B2"/>'s getBase() value.</returns>
-        public LongInt<B2> baseConvert<B2>() where B2: IBase, new()
+        public LongInt<B2> BaseConvert<B2>() where B2: IBase, new()
         {
-            int[] convertedArray = BaseConversion.baseConvert(this.Digits, BASE, LongInt<B2>.BASE);
+            int[] convertedArray = BaseConversion.BaseConvert(this.Digits, BASE, LongInt<B2>.BASE);
 
             LongInt<B2> result = new LongInt<B2>(LongInt<B2>.BASE, convertedArray, this.Negative);
 
@@ -1196,20 +1204,21 @@ namespace whiteMath.ArithmeticLong
         /// <returns>The string representation of the current LongInt number.</returns>
         public override string ToString()
         {
-            // Если основание не десятичное, то конвертанем.
-
-            if (!LongInt<B>.BASE_is_power_of_ten)
-                return this.baseConvert<Bases.B_10k>().ToString();
-
-            // Если десятичное - радуемся жизни и выводим на экран.
+			if (!LongInt<B>.IsBasePowerOfTen)
+			{
+				return this.BaseConvert<Bases.B_10k>().ToString();
+			}
 
             string result = (Negative ? "-" : "");
 
-            // cut the leading zeroes from the elder digit
-            result += this.Digits[this.Length - 1];
+            // Cut the leading zeroes from the elder digit
+            // -
+			result += this.Digits[this.Length - 1];
 
-            for (int i = this.Length - 2; i >= 0; i--)
-                result += String.Format(digitFormatter, this.Digits[i]);
+			for (int i = this.Length - 2; i >= 0; i--)
+			{
+				result += String.Format(digitFormatter, this.Digits[i]);
+			}
 
             return result;
         }
@@ -1243,18 +1252,16 @@ namespace whiteMath.ArithmeticLong
         {
 			Condition.ValidateNotNull(value, nameof(value));
 
-            // Работает только для десятичных чисел.
-            // Если нет, то придется сначала преобразовывать в десятичное, а потом
-            // из десятичного в число по требуемому основанию.
+			// Работает только для десятичных чисел.
+			// Если нет, то придется сначала преобразовывать в десятичное, а потом
+			// из десятичного в число по требуемому основанию.
 
-            if (!LongInt<B>.BASE_is_power_of_ten)
-                return LongInt<Bases.B_10k>.Parse(value).baseConvert<B>();
-
-            // Declare a resulting number
+			if (!LongInt<B>.IsBasePowerOfTen)
+			{
+				return LongInt<Bases.B_10k>.Parse(value).BaseConvert<B>();
+			}
 
             LongInt<B> res = new LongInt<B>(value.Length / fieldLength + 1);
-
-            // Set the negative flag
 
             try
             {

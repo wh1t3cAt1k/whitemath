@@ -58,14 +58,14 @@ namespace whiteMath.General
         {
             ICalc<T> calc = Numeric<T,C>.Calculator;
             
-            T index = calc.zero;
+            T index = calc.Zero;
 
             List<Point<T>> result = new List<Point<T>>(sequence.Count());
 
             foreach(T value in sequence)
             {
                 result.Add(new Point<T>(index, value));
-                index = calc.increment(index);
+                index = calc.Increment(index);
             }
 
             return result;

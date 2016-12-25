@@ -360,7 +360,7 @@ namespace whiteMath.Matrices
                     {
                         C.setItemAt(j, i, C.getItemAt(j, i) / C.getItemAt(i, i));
 
-                        if (Numeric<T, C>.isInfinity(C.getItemAt(j, i)) || Numeric<T, C>.isNaN(C.getItemAt(j, i)))
+                        if (Numeric<T, C>.IsInfinity(C.getItemAt(j, i)) || Numeric<T, C>.IsNaN(C.getItemAt(j, i)))
                             throw new DivideByZeroException();
 
                         for (int k = i + 1; k < n; k++)

@@ -1,4 +1,5 @@
 ﻿using whiteMath.Calculators;
+using System.Linq;
 
 namespace whiteMath.Numeric
 {

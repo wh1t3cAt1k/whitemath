@@ -7,45 +7,45 @@ namespace whiteMath.Calculators
     /// </summary>
     public class CalcULong : ICalc<ulong>
     {
-        public bool isIntegerCalculator     { get { return true; } }
+        public bool IsIntegerCalculator     { get { return true; } }
 
-        public ulong sum(ulong one, ulong two)    { return one + two; }
-        public ulong dif(ulong one, ulong two)    { return one - two; }
-        public ulong mul(ulong one, ulong two)    { return one * two; }
-        public ulong div(ulong one, ulong two)    { return one / two; }
-        public ulong rem(ulong one, ulong two)    { return one % two; }
+        public ulong Add(ulong one, ulong two)    { return one + two; }
+        public ulong Subtract(ulong one, ulong two)    { return one - two; }
+        public ulong Multiply(ulong one, ulong two)    { return one * two; }
+        public ulong Divide(ulong one, ulong two)    { return one / two; }
+        public ulong Modulo(ulong one, ulong two)    { return one % two; }
         
-        public ulong negate(ulong one)          { throw new NonNegativeTypeException("ulong"); }
+        public ulong Negate(ulong one)          { throw new NonNegativeTypeException("ulong"); }
 
-        public ulong increment(ulong one)       { return ++one; }
-        public ulong decrement(ulong one)       { return --one; }
+        public ulong Increment(ulong one)       { return ++one; }
+        public ulong Decrement(ulong one)       { return --one; }
 
-        public bool mor(ulong one, ulong two)   { return one > two; }
-        public bool eqv(ulong one, ulong two)   { return one == two; }
+        public bool GreaterThan(ulong one, ulong two)   { return one > two; }
+        public bool Equal(ulong one, ulong two)   { return one == two; }
 
-        public ulong intPart(ulong one)                 { return one; }
+        public ulong IntegerPart(ulong one)                 { return one; }
 
-        public bool isEven(ulong one)                 { return one % 2 == 0; }
-        public bool isNaN(ulong one)                  { return false; }
-        public bool isPosInf(ulong one)               { return false; }
-        public bool isNegInf(ulong one)               { return false; }
+        public bool IsEven(ulong one)                 { return one % 2 == 0; }
+        public bool IsNaN(ulong one)                  { return false; }
+        public bool IsPositiveInfinity(ulong one)               { return false; }
+        public bool IsNegativeInfinity(ulong one)               { return false; }
 
-        public ulong getCopy(ulong val)                 { return val; }
-        public ulong zero                             { get { return 0; } }
+        public ulong GetCopy(ulong val)                 { return val; }
+        public ulong Zero                             { get { return 0; } }
 
-        public ulong fromInt(long equivalent)         
+        public ulong FromInteger(long equivalent)         
         {
-			Condition.ValidateNonNegative(equivalent, Calculators.Messages.CannotConvertNegativeValueToUnsignedType);
+			Condition.ValidateNonNegative(equivalent, Messages.CannotConvertNegativeValueToUnsignedType);
 
 			return (ulong)equivalent; 
         }
         
-        public ulong fromDouble(double equivalent) 
+        public ulong FromDouble(double equivalent) 
 		{ 
-			throw new NonFractionalTypeException("ulong"); 
+			throw new NonFractionalTypeException(typeof(ulong).Name); 
 		}
 
-        public ulong parse(string value) 
+        public ulong Parse(string value) 
 		{
 			return ulong.Parse(value); 
 		}

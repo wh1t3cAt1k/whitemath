@@ -100,7 +100,7 @@ namespace whiteMath.Functions
                 coefficients[i] = this.coefficients[i + derivativeDegree];
 
                 for (int j = 0; j < derivativeDegree; j++)
-                    coefficients[i] *= calc.fromInt(i + derivativeDegree - j);
+                    coefficients[i] *= calc.FromInteger(i + derivativeDegree - j);
             }
 
             return new Polynom<T, C>(coefficients);
@@ -167,7 +167,7 @@ namespace whiteMath.Functions
         public Polynom<T, C> Integral(Point<T> point)
         {
             Polynom<T, C> newPolynom = this.Integral(Numeric<T, C>.Zero);
-            newPolynom.coefficients[0] = calc.dif(point.Y, newPolynom.Value(point.X));
+            newPolynom.coefficients[0] = calc.Subtract(point.Y, newPolynom.Value(point.X));
 
             return newPolynom;
         }
@@ -178,7 +178,7 @@ namespace whiteMath.Functions
 
         public T Value(T x)
         {
-            Numeric<T, C> sum = calc.zero;
+            Numeric<T, C> sum = calc.Zero;
 
             for (int i = coefficients.Length - 1; i >= 0; --i)
             {
@@ -241,7 +241,7 @@ namespace whiteMath.Functions
             Matrices.Matrix_SDA<T, C> matrix = new Matrices.Matrix_SDA<T, C>(n, n);
 
             Numeric<T, C>[] argument = new Numeric<T, C>[n];
-			argument.FillByAssign((Numeric<T, C>)calc.fromInt(1));
+			argument.FillByAssign((Numeric<T, C>)calc.FromInteger(1));
 
             for (int i = 0; i < n; i++)
                 for (int j = 0; j < n; j++)
@@ -494,11 +494,11 @@ namespace whiteMath.Functions
             {
                 string functionString = "f(x) = ";
 
-                Numeric<T, C> one = calc.fromInt(1);
+                Numeric<T, C> one = calc.FromInteger(1);
 
                 for (int i = coefficients.Length - 1; i > 0; i--)
                     if (coefficients[i] != Numeric<T, C>.Zero)
-                        functionString += string.Format("{0}{1}x{2}", (coefficients[i] >= calc.zero ? (i<coefficients.Length-1?" + ":"") : (i<coefficients.Length-1?" - ":"-")), (coefficients[i] != one ? WhiteMath<T, C>.Abs(coefficients[i]).ToString() : ""), (i == 1 ? "" : "^" + i.ToString()));
+                        functionString += string.Format("{0}{1}x{2}", (coefficients[i] >= calc.Zero ? (i<coefficients.Length-1?" + ":"") : (i<coefficients.Length-1?" - ":"-")), (coefficients[i] != one ? WhiteMath<T, C>.Abs(coefficients[i]).ToString() : ""), (i == 1 ? "" : "^" + i.ToString()));
 
                 if(coefficients[0] != Numeric<T,C>.Zero)
                     functionString += string.Format(" {0} {1} ", (coefficients[0] > Numeric<T,C>.Zero ? "+" : "-"), WhiteMath<T, C>.Abs(coefficients[0]));
@@ -619,19 +619,19 @@ namespace whiteMath.Functions
             get
             {
                 T nCoef = WhiteMath<T, C>.Abs(coefficients[coefficients.Length - 1]);
-                T max = calc.zero;
+                T max = calc.Zero;
 
                 for (int i = 0; i < coefficients.Length; i++)
                 {
                     T cur = WhiteMath<T, C>.Abs(coefficients[i]);
 
-                    if (calc.mor(cur, max))
+                    if (calc.GreaterThan(cur, max))
                         max = WhiteMath<T, C>.Abs(cur);
                 }
 
-                T upper = calc.sum(calc.fromInt(1), calc.div(max, nCoef));
+                T upper = calc.Add(calc.FromInteger(1), calc.Divide(max, nCoef));
 
-                return new BoundedInterval<T, C>(calc.negate(upper), upper);
+                return new BoundedInterval<T, C>(calc.Negate(upper), upper);
             }
         }
 
@@ -652,9 +652,9 @@ namespace whiteMath.Functions
                 T two = _PositiveLagrangeBound(coefficients, func);
 
                 if (one == Numeric<T, C>.Zero)
-                    return new BoundedInterval<T, C>(calc.zero, calc.zero);
+                    return new BoundedInterval<T, C>(calc.Zero, calc.Zero);
 
-                return new BoundedInterval<T, C>(calc.div(calc.fromInt(1), one), two);
+                return new BoundedInterval<T, C>(calc.Divide(calc.FromInteger(1), one), two);
             }
         }
 
@@ -696,9 +696,9 @@ namespace whiteMath.Functions
                 T two = _PositiveLagrangeBound(new ReverseList<Numeric<T, C>>(coefficients), func2);
 
                 if (two == Numeric<T, C>.Zero)
-                    return new BoundedInterval<T, C>(calc.zero, calc.zero);
+                    return new BoundedInterval<T, C>(calc.Zero, calc.Zero);
 
-                return new BoundedInterval<T, C>(calc.negate(one), calc.negate(calc.div(calc.fromInt(1), two)));
+                return new BoundedInterval<T, C>(calc.Negate(one), calc.Negate(calc.Divide(calc.FromInteger(1), two)));
             }
         }
 
@@ -736,8 +736,8 @@ namespace whiteMath.Functions
 
             T cur;
 
-            T one = calc.fromInt(1);
-            T max = calc.zero;
+            T one = calc.FromInteger(1);
+            T max = calc.Zero;
 
             int index = -1;         // индекс первого отрицательного коэффициента
             bool found = false;     // найдены ли отрицательные коэффициенты!
@@ -746,7 +746,7 @@ namespace whiteMath.Functions
             {
                 cur = selector(i, coefficients[i]);
 
-                if (!found && calc.mor(calc.zero, cur))
+                if (!found && calc.GreaterThan(calc.Zero, cur))
                 {
                     found = true;
                     index = coefficients.Count - i - minus;
@@ -757,14 +757,14 @@ namespace whiteMath.Functions
 
                 cur = WhiteMath<T, C>.Abs(cur);
 
-                if (calc.mor(cur, max))
+                if (calc.GreaterThan(cur, max))
                     max = cur;
             }
 
             if (!found)
-                return calc.zero;
+                return calc.Zero;
 
-            return calc.sum(one, WhiteMath<T, C>.Power(calc.div(max, WhiteMath<T, C>.Abs(nCoef)), calc.div(one, calc.fromInt(index))));
+            return calc.Add(one, WhiteMath<T, C>.Power(calc.Divide(max, WhiteMath<T, C>.Abs(nCoef)), calc.Divide(one, calc.FromInteger(index))));
         }
 
         // ----------- still roots here
@@ -818,7 +818,7 @@ namespace whiteMath.Functions
                         // квадратный трехчлен. надо проверять дискриминант.
                         if (sequence[i - 1].Degree == 2)
                         {
-                            Numeric<T, C> discriminant = sequence[i - 1][1] * sequence[i - 1][1] - calc.fromInt(4) * sequence[i - 1][0] * sequence[i - 1][2];
+                            Numeric<T, C> discriminant = sequence[i - 1][1] * sequence[i - 1][1] - calc.FromInteger(4) * sequence[i - 1][0] * sequence[i - 1][2];
 
                             if (discriminant < Numeric<T, C>.Zero)
                                 return sequence.ToArray();

@@ -11,10 +11,10 @@ namespace whiteMath
     public static class DebugMethods
     {
         // -----------------------------------
-        // -------- ToStrings the list -------
+        // -------- For lists ----------------
         // -----------------------------------
 
-        public static IList<string> _DB_StringMe<T>(this IList<T> list)
+		public static IList<string> ElementwiseToString<T>(this IList<T> list)
         {
             string[] arr = new string[list.Count];
 
@@ -28,19 +28,19 @@ namespace whiteMath
         // ------------- prints the list ----------
         // ----------------------------------------
 
-        public static void _DB_PrintMe<T>(this IList<T> list)
+		public static void PrintElements<T>(this IList<T> list)
         {
-            _DB_PrintMe(list, Console.Out);
+            PrintElements(list, Console.Out);
         }
 
-        public static void _DB_PrintMe<T>(this IList<T> list, TextWriter tw)
+		public static void PrintElements<T>(this IList<T> list, TextWriter tw)
         {
-            _DB_PrintMe(list, tw, "{0} ");
+            PrintElements(list, tw, "{0} ");
         }
 
-        public static void _DB_PrintMe<T>(this IList<T> list, TextWriter tw, string formatter)
+		public static void PrintElements<T>(this IList<T> list, TextWriter tw, string formatter)
         {
-            IList<string> strings = list._DB_StringMe();
+            IList<string> strings = list.ElementwiseToString();
 
             foreach (string obj in strings)
                 tw.Write(formatter, obj);
@@ -53,9 +53,7 @@ namespace whiteMath
         // ------------- for matrices --------
         // -----------------------------------
 
-        // ------- string me -----------------
-
-        public static string[,] _DB_StringMe(this IMatrix matrix)
+		public static string[,] Describe(this IMatrix matrix)
         {
             string[,] matString = new string[matrix.RowCount, matrix.ColumnCount];
 
@@ -66,37 +64,48 @@ namespace whiteMath
             return matString;
         }
 
-        // ------- print me ------------------
-
-        public static void _DB_PrintMe(this IMatrix matrix)
+		public static void PrintElements(this IMatrix matrix)
         {
-            _DB_PrintMe(matrix, Console.Out);
+            PrintElements(matrix, Console.Out);
         }
 
-        public static void _DB_PrintMe(this IMatrix matrix, TextWriter tw)
+		public static void PrintElements(
+			this IMatrix matrix, 
+			TextWriter textWriter)
         {
-            _DB_PrintMe(matrix, tw, "{0} ");
+            PrintElements(matrix, textWriter, "{0} ");
         }
 
-        public static void _DB_PrintMe(this IMatrix matrix, TextWriter tw, string formatter)
+		public static void PrintElements(
+			this IMatrix matrix, 
+			TextWriter textWriter, 
+			string formatter)
         {
-            _DB_PrintMe(matrix, tw, formatter, "\n");
+            PrintElements(matrix, textWriter, formatter, "\n");
         }
 
-        public static void _DB_PrintMe(this IMatrix matrix, TextWriter tw, string formatter, string rowEndString)
+		public static void PrintElements(
+			this IMatrix matrix, 
+			TextWriter textWriter, 
+			string formatter, 
+			string rowEndString)
         {
-            string[,] arr = matrix._DB_StringMe();
+			string[,] elementDescriptions = matrix.Describe();
 
-            for (int i = 0; i < matrix.RowCount; i++)
+			for (int rowIndex = 0; rowIndex < matrix.RowCount; rowIndex++)
             {
-                for (int j = 0; j < matrix.ColumnCount; j++)
-                    tw.Write(formatter, arr[i, j]);
+				for (int columnIndex = 0; columnIndex < matrix.ColumnCount; columnIndex++)
+				{
+                    textWriter.Write(formatter, elementDescriptions[rowIndex, columnIndex]);
+				}
 
-                tw.Write(rowEndString);
+                textWriter.Write(rowEndString);
             }
 
             if (rowEndString[rowEndString.Length - 1] != '\n')
-                tw.WriteLine();
+			{
+                textWriter.WriteLine();
+			}
 
             return;
         }

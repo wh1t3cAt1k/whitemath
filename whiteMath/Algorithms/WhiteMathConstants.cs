@@ -135,13 +135,13 @@ namespace whiteMath.Algorithms
         /// <returns></returns>
         public static T PI_Leibnitz(long members)
         {
-            T sum = calc.zero;
+            T sum = calc.Zero;
 
             for (long i = members - 1; i >= 0; i--)
             {
-                T tmp = calc.div(calc.fromInt(4), calc.fromInt(i * 2 + 1));
-                if ((i % 2) == 0) sum = calc.sum(sum, tmp);
-                else sum = calc.dif(sum, tmp);
+                T tmp = calc.Divide(calc.FromInteger(4), calc.FromInteger(i * 2 + 1));
+                if ((i % 2) == 0) sum = calc.Add(sum, tmp);
+                else sum = calc.Subtract(sum, tmp);
             }
 
             return sum;

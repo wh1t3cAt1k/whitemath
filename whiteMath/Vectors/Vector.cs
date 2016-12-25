@@ -50,7 +50,7 @@ namespace whiteMath
             array = new T[copy.Length];
 
             for (int i = 0; i < copy.Length; i++)
-                this[i] = calc.getCopy(copy[i]);
+                this[i] = calc.GetCopy(copy[i]);
 
             return;
         }
@@ -60,7 +60,7 @@ namespace whiteMath
         /// </summary>
         /// <param name="dimension"></param>
         public Vector(int dimension)
-            : this(dimension, calc.zero)
+            : this(dimension, calc.Zero)
         { }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace whiteMath
             this.array = new T[dimension];
 
             for (int i = 0; i < dimension; i++)
-                array[i] = calc.getCopy(value);
+                array[i] = calc.GetCopy(value);
         }
 
         /// <summary>

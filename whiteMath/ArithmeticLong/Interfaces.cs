@@ -11,10 +11,9 @@
     public interface IBase
     {
         /// <summary>
-        /// Returns the value of the digits numeric base.
+        /// Returns the value of the digits' numeric base.
         /// </summary>
-        /// <returns></returns>
-        int getBase();
+		int Base { get; }
     }
     
     /// <summary>
@@ -31,8 +30,7 @@
         /// <summary>
         /// Returns the precision, in decimal signs, for the LongExp mantiss.
         /// </summary>
-        /// <returns></returns>
-        int getPrecision();
+		int Precision { get; }
     }
 
     // ---------------------------------------------------------------------------

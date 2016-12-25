@@ -2,40 +2,40 @@
 {
     public class CalcComplex: ICalc<Complex>
     {
-        public bool isIntegerCalculator { get { return false; } }
+        public bool IsIntegerCalculator { get { return false; } }
 
-        public Complex parse(string value)
+        public Complex Parse(string value)
         { 
             return Complex.Parse(value); 
         }
 
-        public Complex zero { get { return new Complex(0, 0); } }
+        public Complex Zero { get { return new Complex(0, 0); } }
         
-        public Complex fromDouble(double num) { return new Complex(num, 0); }
-        public Complex fromInt(long num) { return new Complex(num, 0); }
+        public Complex FromDouble(double num) { return new Complex(num, 0); }
+        public Complex FromInteger(long num) { return new Complex(num, 0); }
 
-        public bool isEven(Complex num)     { throw new NonIntegerTypeException("Complex"); }
-        public bool isNegInf(Complex num)   { return false; }
-        public bool isPosInf(Complex num)   { return false; }
-        public bool isNaN(Complex num)      { return false; }
+        public bool IsEven(Complex num)     { throw new NonIntegerTypeException("Complex"); }
+        public bool IsNegativeInfinity(Complex num)   { return false; }
+        public bool IsPositiveInfinity(Complex num)   { return false; }
+        public bool IsNaN(Complex num)      { return false; }
 
-        public Complex getCopy(Complex num) { return num; }
+       	public Complex GetCopy(Complex num) { return num; }
 
-        public bool eqv(Complex one, Complex two) { return one == two; }
-        public bool mor(Complex one, Complex two) { return one.Module > two.Module; }       // сравниваем модули чисел
+        public bool Equal(Complex one, Complex two) { return one == two; }
+        public bool GreaterThan(Complex one, Complex two) { return one.Module > two.Module; }
 
-        public Complex intPart(Complex num) { return new Complex((long)num.RealCounterPart, (long)num.ImaginaryCounterPart); }
+        public Complex IntegerPart(Complex num) { return new Complex((long)num.RealCounterPart, (long)num.ImaginaryCounterPart); }
 
-        public Complex increment(Complex num) { num.RealCounterPart++; return num; }        // увеличиваем реальную часть
-        public Complex decrement(Complex num) { num.ImaginaryCounterPart--; return num; }   // уменьшаем реальную часть
+        public Complex Increment(Complex num) { num.RealCounterPart++; return num; }        // увеличиваем реальную часть
+        public Complex Decrement(Complex num) { num.ImaginaryCounterPart--; return num; }   // уменьшаем реальную часть
 
-        public Complex negate(Complex num) { return -num; }
-        public Complex rem(Complex one, Complex two) { throw new NonIntegerTypeException("Complex"); }
+        public Complex Negate(Complex num) { return -num; }
+        public Complex Modulo(Complex one, Complex two) { throw new NonIntegerTypeException("Complex"); }
 
-        public Complex mul(Complex one, Complex two) { return one * two; }
-        public Complex div(Complex one, Complex two) { return one / two; }
-        public Complex dif(Complex one, Complex two) { return one - two; }
-        public Complex sum(Complex one, Complex two) { return one + two; }
+        public Complex Multiply(Complex one, Complex two) { return one * two; }
+        public Complex Divide(Complex one, Complex two) { return one / two; }
+        public Complex Subtract(Complex one, Complex two) { return one - two; }
+        public Complex Add(Complex one, Complex two) { return one + two; }
 
     }
 }

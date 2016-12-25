@@ -98,7 +98,7 @@ namespace whiteMath.Randoms
             this.max = Math.Max(a, b);
 
             for (int i = 0; i < max; i++)
-                list.AddLast(firstGenerator.Next_SingleInterval());
+                list.AddLast(firstGenerator.NextInUnitInterval());
 
             xkmaNode = list.First;
             xkmbNode = list.First;
@@ -118,7 +118,7 @@ namespace whiteMath.Randoms
         /// Returns the next pseudo-random double number laying in the interval [0; 1).
         /// </summary>
         /// <returns>The next pseudo-random double number in the interval [0; 1).</returns>
-        public double Next_SingleInterval()
+        public double NextInUnitInterval()
         {
             double xkma = xkmaNode.Value;
             double xkmb = xkmbNode.Value;

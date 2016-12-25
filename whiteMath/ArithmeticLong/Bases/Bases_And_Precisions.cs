@@ -7,125 +7,44 @@ namespace whiteMath.ArithmeticLong
 {
     public static class Bases
     {
-        /// <summary>
-        /// This class presents an IBase interface for arbitrary numeric base.
-        /// It allows you to set the base only once for consistency. 
-        /// </summary>
-        public class B_Var : IBase
-        {
-            private static int m_static_base = -1;
-
-            /// <summary>
-            /// Returns true if the class is usable, i.e. the base has been set.
-            /// </summary>
-            public static bool HasBase
-            {
-                get
-                {
-                    return m_static_base > 1;
-                }
-            }
-
-            /// <summary>
-            /// Gets or sets the numeric base returned by the variable base class.
-            /// The getter can only be used after the setter, and the setter can
-            /// only be used once.
-            /// </summary>
-            public static int Base
-            {
-                get
-                {
-                    if (m_static_base < 0)
-                    {
-                        throw new InvalidOperationException("The base for the variable base class has not yet been set. Consider calling the setBase() method.");
-                    }
-
-                    return m_static_base;
-                }
-                set
-                {
-                    if (m_static_base > 0)
-                    {
-                        throw new InvalidOperationException("The base for the variable base class can be set only once during the runtime.");
-                    }
-
-                    if (value < 2)
-                    {
-                        throw new ArgumentOutOfRangeException("The base should be at least 2");
-                    }
-
-                    m_static_base = value;
-                }
-            }
-
-            public int getBase()
-            {
-                return B_Var.Base;
-            }
-        }
-
         public class B_100k : IBase
         {
-            public int getBase()
-            {
-                return 100000;
-            }
+            public int Base => 100000;
         }
 
         public class B_10k : IBase
         {
-            public int getBase()
-            {
-                return 10000;
-            }
+			public int Base => 10000;
         }
 
         public class B_1000 : IBase
         {
-            public int getBase()
-            {
-                return 1000;
-            }
+			public int Base => 1000;
         }
 
         public class B_100 : IBase
         {
-            public int getBase()
-            {
-                return 100;
-            }
+			public int Base => 100;
         }
 
         public class B_10 : IBase
         {
-            public int getBase()
-            {
-                return 10;
-            }
+			public int Base => 10;
         }
 
         public class B_256 : IBase
         {
-            public int getBase()
-            {
-                return 256;
-            }
+			public int Base => 256;
         }
 
         public class B_32768 : IBase
         {
-            public int getBase()
-            {
-                return 32768;
-            }
+			public int Base => 32768;
         }
 
         public class B_65536 : IBase
         {
-            public int getBase()
-            {
-                return 65536;
-            }
+			public int Base => 65536;
         }
     }
 
@@ -139,10 +58,7 @@ namespace whiteMath.ArithmeticLong
         /// </summary>
         public class P_20k_10k: Bases.B_10k
         {
-            public int getPrecision()
-            {
-                return 20000;
-            }
+			public int Precision => 20000;
         }
 
         /// <summary>
@@ -150,10 +66,7 @@ namespace whiteMath.ArithmeticLong
         /// </summary>
         public class P_50k_10k: Bases.B_10k
         {
-            public int getPrecision()
-            {
-                return 50000;
-            }
+			public int Precision => 50000;
         }
 
         /// <summary>
@@ -161,10 +74,7 @@ namespace whiteMath.ArithmeticLong
         /// </summary>
         public class P_100k_10k: Bases.B_10k
         {
-            public int getPrecision()
-            {
-                return 100000;
-            }
+			public int Precision => 100000;
         }
 
         /// <summary>
@@ -172,10 +82,7 @@ namespace whiteMath.ArithmeticLong
         /// </summary>
         public class P_1000k_10k: Bases.B_10k
         {
-            public int getPrecision()
-            {
-                return 1000000;
-            }
+			public int Precision => 1000000;
         }
 
     }
