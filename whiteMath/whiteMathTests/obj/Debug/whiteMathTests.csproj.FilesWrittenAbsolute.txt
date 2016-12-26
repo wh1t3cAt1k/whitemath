@@ -1,0 +1,9 @@
+/Users/pkabir/Projects/Visual Studio/whiteMath/whiteMath/whiteMathTests/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/pkabir/Projects/Visual Studio/whiteMath/whiteMath/whiteMathTests/bin/Debug/whiteMathTests.dll.mdb
+/Users/pkabir/Projects/Visual Studio/whiteMath/whiteMath/whiteMathTests/bin/Debug/whiteMathTests.dll
+/Users/pkabir/Projects/Visual Studio/whiteMath/whiteMath/whiteMathTests/obj/Debug/whiteMathTests.dll
+/Users/pkabir/Projects/Visual Studio/whiteMath/whiteMath/whiteMathTests/obj/Debug/whiteMathTests.dll.mdb
+/Users/pkabir/Projects/Visual Studio/whiteMath/whiteMath/whiteMathTests/bin/Debug/nunit.framework.dll
+/Users/pkabir/Projects/Visual Studio/whiteMath/whiteMath/whiteMathTests/bin/Debug/whiteMath.dll
+/Users/pkabir/Projects/Visual Studio/whiteMath/whiteMath/whiteMathTests/bin/Debug/whiteMath.dll.mdb
+/Users/pkabir/Projects/Visual Studio/whiteMath/whiteMath/whiteMathTests/bin/Debug/whiteStructs.dll
