@@ -188,204 +188,206 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArithmeticLong\Bases\BaseConversion.cs" />
-    <Compile Include="ArithmeticLong\Interfaces.cs" />
-    <Compile Include="ArithmeticLong\LongArithmeticMethods.cs" />
-    <Compile Include="ArithmeticLong\LongExponential\LongExp.cs" />
-    <Compile Include="ArithmeticLong\Bases\Bases_And_Precisions.cs" />
-    <Compile Include="ArithmeticLong\LongInt\LongIntHelperMultiplyNTT_2.cs" />
-    <Compile Include="ArithmeticLong\LongInt\LongIntHelperMultiplyNTT_1.cs" />
-    <Compile Include="ArithmeticLong\LongInt\LongIntHelperMultiplyFFT.cs" />
-    <Compile Include="ArithmeticLong\LongInt\LongIntHelperMultiplyKaratsuba.cs" />
-    <Compile Include="Calculators\CalcComplex.cs" />
-    <Compile Include="Calculators\CalcDouble.cs" />
-    <Compile Include="Calculators\CalcBigInteger.cs" />
-    <Compile Include="Calculators\CalcLongInt.cs" />
-    <Compile Include="Calculators\CalcRational.cs" />
-    <Compile Include="Calculators\CalcLong.cs" />
-    <Compile Include="Calculators\CalcULong.cs" />
-    <Compile Include="Calculators\CalcInt.cs" />
-    <Compile Include="Combinatorics\Permutators.cs" />
-    <Compile Include="Cryptography\OneTimePadBreaker.cs" />
-    <Compile Include="Cryptography\PrimalityTests.cs" />
-    <Compile Include="Cryptography\PrimeGeneration.cs" />
-    <Compile Include="Cryptography\RSA.cs" />
-    <Compile Include="Debugging\Assertions.cs" />
-    <Compile Include="Debugging\LinkedListTests.cs" />
-    <Compile Include="Debugging\Tests.cs" />
-    <Compile Include="Functions\FuncFactory.cs" />
-    <Compile Include="Functions\Polynomial\ChebyshevPolynomGenerator.cs" />
-    <Compile Include="Functions\Polynomial\LagrangePolynom.cs" />
-    <Compile Include="General\Collection-Related\2D-Arrays\JaggedArrayExtensions.cs" />
-    <Compile Include="General\Collection-Related\2D-Arrays\ZeroBasedMatrixWrapper.cs" />
-    <Compile Include="General\Collection-Related\ByteSequenceToString.cs" />
-    <Compile Include="General\Collection-Related\CollectionFilling.cs" />
-    <Compile Include="General\Collection-Related\2D-Arrays\TwoDimensionalArrayExtensions.cs" />
-    <Compile Include="General\Collection-Related\2D-Arrays\TwoDimensionalArrayRow.cs" />
-    <Compile Include="General\Collection-Related\Multidimensional Arrays\MultiDimensionalArrayExtensions.cs" />
-    <Compile Include="General\Function-Related\HitTester.cs" />
-    <Compile Include="General\GeneralExceptions.cs" />
-    <Compile Include="General\Collection-Related\LinkedListSorting.cs" />
-    <Compile Include="General\Collection-Related\ListFilling.cs" />
-    <Compile Include="General\Collection-Related\ListSorting.cs" />
-    <Compile Include="General\Collection-Related\LTDefaultList.cs" />
-    <Compile Include="General\Collection-Related\SequenceExtensions.cs" />
-    <Compile Include="General\NaNForceEqualityComparer.cs" />
-    <Compile Include="General\Other\DoubleInfoExtraction.cs" />
-    <Compile Include="General\Structures\BinaryHeap.cs" />
-    <Compile Include="General\Structures\BinomialHeap.cs" />
-    <Compile Include="General\Structures\IPriorityQueue.cs" />
-    <Compile Include="General\Structures\ITreeNode.cs" />
-    <Compile Include="General\Structures\PointExtensions.cs" />
-    <Compile Include="General\Structures\PotentialResult.cs" />
-    <Compile Include="General\Structures\TreeNode.cs" />
-    <Compile Include="Geometry\AffineTransform.cs" />
-    <Compile Include="Geometry\Figures.cs" />
-    <Compile Include="Geometry\PointD.cs" />
-    <Compile Include="Geometry\VectorD.cs" />
-    <Compile Include="Graphers\Services\CoordinateTransformer.cs" />
-    <Compile Include="Graphers\Services\DimensionTransformer.cs" />
-    <Compile Include="Graphers\Specific\HistoGrapher.cs" />
-    <Compile Include="Graphers\Specific\HistoGrapherBrushFactory.cs" />
-    <Compile Include="Matrices\Exceptions\MatrixExceptions.cs" />
-    <Compile Include="Matrices\MatrixNumeric\MinorMatrix.cs" />
-    <Compile Include="Matrices\MatrixNumeric\MatrixDI.cs" />
-    <Compile Include="NeuralNetworks\Neuron.cs" />
-    <Compile Include="Numeric\IConvertible.cs" />
-    <Compile Include="Numeric\IMetricsProvider.cs" />
-    <Compile Include="Numeric\StreamMonotonicityChecker.cs" />
-    <Compile Include="Numeric\Summator.cs" />
-    <Compile Include="Randoms\RandomCryptographic.cs" />
-    <Compile Include="Randoms\RandomLongIntModular.cs" />
-    <Compile Include="Randoms\RandomLongIntRejection.cs" />
-    <Compile Include="Randoms\Interfaces.cs" />
-    <Compile Include="Numeric\Numeric.cs" />
-    <Compile Include="ArithmeticLong\LongInt\LongInt.cs" />
-    <Compile Include="ArithmeticLong\LongInt\LongIntHelper.cs" />
-    <Compile Include="ComplexNumbers\Complex.cs" />
-    <Compile Include="ComplexNumbers\ComplexHelper.cs" />
-    <Compile Include="Functions\AnalyticFunction\AnalyticFunction.cs" />
-    <Compile Include="Functions\AnalyticFunction\AnalyticFunctionDerivative.cs" />
-    <Compile Include="Functions\AnalyticFunction\AnalyticFunctionHelper.cs" />
-    <Compile Include="Functions\AnalyticFunction\StringExtensions.cs" />
-    <Compile Include="Functions\IFunction.cs" />
-    <Compile Include="Functions\Polynomial\CubicFunction.cs" />
-    <Compile Include="Functions\Interpolation.cs" />
-    <Compile Include="Functions\PieceFunctions\PieceFunction.cs" />
-    <Compile Include="Functions\Polynomial\Polynom.cs" />
-    <Compile Include="Functions\Precompiled\FunctionAction.cs" />
-    <Compile Include="Functions\FunctionExceptions.cs" />
-    <Compile Include="Functions\Function.cs" />
-    <Compile Include="Functions\Polynomial\LinearFunction.cs" />
-    <Compile Include="Functions\Precompiled\PrecompiledFunction.cs" />
-    <Compile Include="Functions\SyntaxAnalyzer.cs" />
-    <Compile Include="Graphers\Components\EventsAndHandlers.cs" />
-    <Compile Include="Graphers\Components\GraphicDrawer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Graphers\Components\GraphicDrawer.Designer.cs">
-      <DependentUpon>GraphicDrawer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Graphers\Components\MultiGrapherPens.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Graphers\Components\MultiGrapherPens.Designer.cs">
-      <DependentUpon>MultiGrapherPens.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Graphers\Generic\General.cs" />
-    <Compile Include="Graphers\Generic\MainInterfaces.cs" />
-    <Compile Include="Graphers\Services\AddMultiplyConverter.cs" />
-    <Compile Include="Graphers\Services\Helper.cs" />
-    <Compile Include="Graphers\Specific\AbstractGrapher.cs" />
-    <Compile Include="Graphers\Specific\ArrayGrapher.cs" />
-    <Compile Include="Graphers\Specific\ArrayWork.cs" />
-    <Compile Include="Graphers\Specific\ExcelGrapher.cs" />
-    <Compile Include="Graphers\Specific\Exceptions.cs" />
-    <Compile Include="Graphers\Specific\FunctionGrapher.cs" />
-    <Compile Include="Graphers\Specific\MultiGrapher.cs" />
-    <Compile Include="Graphers\Specific\StandardGrapher.cs" />
-    <Compile Include="Graphers\Specific\TextGrapher.cs" />
-    <Compile Include="Calculators\ICalc.cs" />
-    <Compile Include="Imaging\Decal.cs" />
-    <Compile Include="Imaging\Extensions.cs" />
-    <Compile Include="Matrices\Helper\NumericHelper.cs" />
-    <Compile Include="Matrices\IMatrix.cs" />
-    <Compile Include="Matrices\IndexPair.cs" />
-    <Compile Include="Matrices\MatrixNumeric\MatrixElementCopyAdapter.cs" />
-    <Compile Include="Matrices\MatrixNumeric\Matrix_Part1.cs" />
-    <Compile Include="Matrices\MatrixNumeric\Submatrix.cs" />
-    <Compile Include="Matrices\MatrixNumeric\Matrix_Part2.cs" />
-    <Compile Include="Matrices\MatrixNumeric\MatrixSDA.cs" />
-    <Compile Include="Matrices\SLAE\Solver.cs" />
-    <Compile Include="Matrices\Winders\01_RowByRowWinder.cs" />
-    <Compile Include="Matrices\Winders\03_SpiralWinder.cs" />
-    <Compile Include="Matrices\Winders\04_ChaoticWinder.cs" />
-    <Compile Include="Matrices\Winders\Winder.cs" />
-    <Compile Include="Matrices\Winders\Winders.cs" />
-    <Compile Include="Matrices\Winders\02_ZigZagWinder.cs" />
-    <Compile Include="Randoms\RandomFunctionalityExtensions.cs" />
-    <Compile Include="Randoms\RandomLaggedFibonacci.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Randoms\RandomLongIntModularUnoptimized.cs" />
-    <Compile Include="Randoms\RandomLongIntQuick.cs" />
-    <Compile Include="Randoms\RandomMersenneTwister.cs" />
-    <Compile Include="Randoms\RandomNormalBoxMuller.cs" />
-    <Compile Include="Randoms\RandomStandard.cs" />
-    <Compile Include="RationalNumbers\Rational.cs" />
-    <Compile Include="General\Container-Related\ContainerExtensions.cs" />
-    <Compile Include="Debugging\DebugMethods.cs" />
-    <Compile Include="General\Excel-Related\ExcelReader.cs" />
-    <Compile Include="Numeric\Interval.cs" />
-    <Compile Include="General\Grapher-Related\Extensions.cs" />
-    <Compile Include="General\Structures\Point.cs" />
-    <Compile Include="General\Collection-Related\ClassicEnumerator.cs" />
-    <Compile Include="General\Collection-Related\DefaultList.cs" />
-    <Compile Include="General\Collection-Related\ListFragment.cs" />
-    <Compile Include="General\Collection-Related\ListSegment.cs" />
-    <Compile Include="General\Collection-Related\OddEvenListWrappers.cs" />
-    <Compile Include="General\Collection-Related\ReverseList.cs" />
-    <Compile Include="General\Collection-Related\ServiceMethods.cs" />
-    <Compile Include="General\Other\OtherExtensions.cs" />
-    <Compile Include="Statistics\Modeling\SequenceExtensions.cs" />
-    <Compile Include="Statistics\PairRegression.cs" />
-    <Compile Include="Statistics\StatisticExtensionMethods.cs" />
-    <Compile Include="Vectors\Vector.cs" />
-    <Compile Include="Graphers\Messages.cs" />
-    <Compile Include="Combinatorics\Messages.cs" />
-    <Compile Include="General\Messages.cs" />
-    <Compile Include="RationalNumbers\UnitTests.cs" />
-    <Compile Include="Drawing\ColorPath.cs" />
-    <Compile Include="Functions\Messages.cs" />
-    <Compile Include="ArithmeticLong\Messages.cs" />
-    <Compile Include="Calculators\Messages.cs" />
-    <Compile Include="Algorithms\WhiteMathCombinatoric.cs" />
-    <Compile Include="Algorithms\WhiteMathComplex.cs" />
-    <Compile Include="Algorithms\WhiteMathConstants.cs" />
-    <Compile Include="Algorithms\WhiteMathModular.cs" />
-    <Compile Include="Algorithms\WhiteMathTrigonometric.cs" />
-    <Compile Include="Algorithms\WhiteMathFloating.cs" />
-    <Compile Include="Algorithms\WhiteMath.cs" />
-    <Compile Include="Algorithms\WhiteMathInteger.cs" />
-    <Compile Include="Algorithms\WhiteMathMinMax.cs" />
-    <Compile Include="Algorithms\Messages.cs" />
-    <Compile Include="Randoms\UnitTests.cs" />
-    <Compile Include="Calculators\ICalcExtensions.cs" />
+    <Compile Include="WhiteMath\Vectors\Vector.cs" />
+    <Compile Include="WhiteMath\Statistics\Modeling\SequenceExtensions.cs" />
+    <Compile Include="WhiteMath\Statistics\PairRegression.cs" />
+    <Compile Include="WhiteMath\Statistics\StatisticExtensionMethods.cs" />
+    <Compile Include="WhiteMath\Algorithms\Mathematics.cs" />
+    <Compile Include="WhiteMath\Algorithms\MathematicsCombinatoric.cs" />
+    <Compile Include="WhiteMath\Algorithms\MathematicsComplex.cs" />
+    <Compile Include="WhiteMath\Algorithms\MathematicsConstants.cs" />
+    <Compile Include="WhiteMath\Algorithms\MathematicsFloating.cs" />
+    <Compile Include="WhiteMath\Algorithms\MathematicsInteger.cs" />
+    <Compile Include="WhiteMath\Algorithms\MathematicsMinMax.cs" />
+    <Compile Include="WhiteMath\Algorithms\MathematicsModular.cs" />
+    <Compile Include="WhiteMath\Algorithms\MathematicsTrigonometric.cs" />
+    <Compile Include="WhiteMath\Algorithms\Messages.cs" />
+    <Compile Include="WhiteMath\RationalNumbers\Rational.cs" />
+    <Compile Include="WhiteMath\RationalNumbers\UnitTests.cs" />
+    <Compile Include="WhiteMath\Randoms\Interfaces.cs" />
+    <Compile Include="WhiteMath\Randoms\RandomCryptographic.cs" />
+    <Compile Include="WhiteMath\Randoms\RandomFunctionalityExtensions.cs" />
+    <Compile Include="WhiteMath\Randoms\RandomLaggedFibonacci.cs" />
+    <Compile Include="WhiteMath\Randoms\RandomLongIntModular.cs" />
+    <Compile Include="WhiteMath\Randoms\RandomLongIntModularUnoptimized.cs" />
+    <Compile Include="WhiteMath\Randoms\RandomLongIntQuick.cs" />
+    <Compile Include="WhiteMath\Randoms\RandomLongIntRejection.cs" />
+    <Compile Include="WhiteMath\Randoms\RandomMersenneTwister.cs" />
+    <Compile Include="WhiteMath\Randoms\RandomNormalBoxMuller.cs" />
+    <Compile Include="WhiteMath\Randoms\RandomStandard.cs" />
+    <Compile Include="WhiteMath\Randoms\UnitTests.cs" />
+    <Compile Include="WhiteMath\Numeric\IConvertible.cs" />
+    <Compile Include="WhiteMath\Numeric\IMetricsProvider.cs" />
+    <Compile Include="WhiteMath\Numeric\Interval.cs" />
+    <Compile Include="WhiteMath\Numeric\Numeric.cs" />
+    <Compile Include="WhiteMath\Numeric\StreamMonotonicityChecker.cs" />
+    <Compile Include="WhiteMath\Numeric\Summator.cs" />
+    <Compile Include="WhiteMath\NeuralNetworks\Neuron.cs" />
+    <Compile Include="WhiteMath\Matrices\Exceptions\MatrixExceptions.cs" />
+    <Compile Include="WhiteMath\Matrices\Helper\NumericHelper.cs" />
+    <Compile Include="WhiteMath\Matrices\IMatrix.cs" />
+    <Compile Include="WhiteMath\Matrices\IndexPair.cs" />
+    <Compile Include="WhiteMath\Matrices\MatrixNumeric\Matrix_Part1.cs" />
+    <Compile Include="WhiteMath\Matrices\MatrixNumeric\Matrix_Part2.cs" />
+    <Compile Include="WhiteMath\Matrices\MatrixNumeric\MatrixDI.cs" />
+    <Compile Include="WhiteMath\Matrices\MatrixNumeric\MatrixElementCopyAdapter.cs" />
+    <Compile Include="WhiteMath\Matrices\MatrixNumeric\MatrixSDA.cs" />
+    <Compile Include="WhiteMath\Matrices\MatrixNumeric\MinorMatrix.cs" />
+    <Compile Include="WhiteMath\Matrices\MatrixNumeric\Submatrix.cs" />
+    <Compile Include="WhiteMath\Matrices\SLAE\Solver.cs" />
+    <Compile Include="WhiteMath\Matrices\Winders\01_RowByRowWinder.cs" />
+    <Compile Include="WhiteMath\Matrices\Winders\02_ZigZagWinder.cs" />
+    <Compile Include="WhiteMath\Matrices\Winders\03_SpiralWinder.cs" />
+    <Compile Include="WhiteMath\Matrices\Winders\04_ChaoticWinder.cs" />
+    <Compile Include="WhiteMath\Matrices\Winders\Winder.cs" />
+    <Compile Include="WhiteMath\Matrices\Winders\Winders.cs" />
+    <Compile Include="WhiteMath\Imaging\Decal.cs" />
+    <Compile Include="WhiteMath\Imaging\Extensions.cs" />
+    <Compile Include="WhiteMath\Graphers\Components\EventsAndHandlers.cs" />
+    <Compile Include="WhiteMath\Graphers\Components\GraphicDrawer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WhiteMath\Graphers\Components\GraphicDrawer.Designer.cs">
+      <DependentUpon>..\..\..\Graphers\Components\GraphicDrawer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WhiteMath\Graphers\Components\MultiGrapherPens.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WhiteMath\Graphers\Components\MultiGrapherPens.Designer.cs">
+      <DependentUpon>..\..\..\Graphers\Components\MultiGrapherPens.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WhiteMath\Graphers\Generic\General.cs" />
+    <Compile Include="WhiteMath\Graphers\Generic\MainInterfaces.cs" />
+    <Compile Include="WhiteMath\Graphers\Messages.cs" />
+    <Compile Include="WhiteMath\Graphers\Services\AddMultiplyConverter.cs" />
+    <Compile Include="WhiteMath\Graphers\Services\CoordinateTransformer.cs" />
+    <Compile Include="WhiteMath\Graphers\Services\DimensionTransformer.cs" />
+    <Compile Include="WhiteMath\Graphers\Services\Helper.cs" />
+    <Compile Include="WhiteMath\Graphers\Specific\AbstractGrapher.cs" />
+    <Compile Include="WhiteMath\Graphers\Specific\ArrayGrapher.cs" />
+    <Compile Include="WhiteMath\Graphers\Specific\ArrayWork.cs" />
+    <Compile Include="WhiteMath\Graphers\Specific\ExcelGrapher.cs" />
+    <Compile Include="WhiteMath\Graphers\Specific\Exceptions.cs" />
+    <Compile Include="WhiteMath\Graphers\Specific\FunctionGrapher.cs" />
+    <Compile Include="WhiteMath\Graphers\Specific\HistoGrapher.cs" />
+    <Compile Include="WhiteMath\Graphers\Specific\HistoGrapherBrushFactory.cs" />
+    <Compile Include="WhiteMath\Graphers\Specific\MultiGrapher.cs" />
+    <Compile Include="WhiteMath\Graphers\Specific\StandardGrapher.cs" />
+    <Compile Include="WhiteMath\Graphers\Specific\TextGrapher.cs" />
+    <Compile Include="WhiteMath\Geometry\AffineTransform.cs" />
+    <Compile Include="WhiteMath\Geometry\Figures.cs" />
+    <Compile Include="WhiteMath\Geometry\PointD.cs" />
+    <Compile Include="WhiteMath\Geometry\VectorD.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\2D-Arrays\JaggedArrayExtensions.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\2D-Arrays\TwoDimensionalArrayExtensions.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\2D-Arrays\TwoDimensionalArrayRow.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\2D-Arrays\ZeroBasedMatrixWrapper.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\ByteSequenceToString.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\ClassicEnumerator.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\CollectionFilling.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\DefaultList.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\LinkedListSorting.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\ListFilling.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\ListFragment.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\ListSegment.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\ListSorting.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\LTDefaultList.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\Multidimensional Arrays\MultiDimensionalArrayExtensions.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\OddEvenListWrappers.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\ReverseList.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\SequenceExtensions.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\ServiceMethods.cs" />
+    <Compile Include="WhiteMath\General\Container-Related\ContainerExtensions.cs" />
+    <Compile Include="WhiteMath\General\Excel-Related\ExcelReader.cs" />
+    <Compile Include="WhiteMath\General\Function-Related\HitTester.cs" />
+    <Compile Include="WhiteMath\General\GeneralExceptions.cs" />
+    <Compile Include="WhiteMath\General\Grapher-Related\Extensions.cs" />
+    <Compile Include="WhiteMath\General\Messages.cs" />
+    <Compile Include="WhiteMath\General\ForceNaNEqualityComparer.cs" />
+    <Compile Include="WhiteMath\General\Other\DoubleInfoExtraction.cs" />
+    <Compile Include="WhiteMath\General\Other\OtherExtensions.cs" />
+    <Compile Include="WhiteMath\General\Structures\BinaryHeap.cs" />
+    <Compile Include="WhiteMath\General\Structures\BinomialHeap.cs" />
+    <Compile Include="WhiteMath\General\Structures\IPriorityQueue.cs" />
+    <Compile Include="WhiteMath\General\Structures\ITreeNode.cs" />
+    <Compile Include="WhiteMath\General\Structures\Point.cs" />
+    <Compile Include="WhiteMath\General\Structures\PointExtensions.cs" />
+    <Compile Include="WhiteMath\General\Structures\PotentialResult.cs" />
+    <Compile Include="WhiteMath\General\Structures\TreeNode.cs" />
+    <Compile Include="WhiteMath\Functions\AnalyticFunction\AnalyticFunction.cs" />
+    <Compile Include="WhiteMath\Functions\AnalyticFunction\AnalyticFunctionDerivative.cs" />
+    <Compile Include="WhiteMath\Functions\AnalyticFunction\AnalyticFunctionHelper.cs" />
+    <Compile Include="WhiteMath\Functions\AnalyticFunction\StringExtensions.cs" />
+    <Compile Include="WhiteMath\Functions\FuncFactory.cs" />
+    <Compile Include="WhiteMath\Functions\Function.cs" />
+    <Compile Include="WhiteMath\Functions\FunctionExceptions.cs" />
+    <Compile Include="WhiteMath\Functions\IFunction.cs" />
+    <Compile Include="WhiteMath\Functions\Interpolation.cs" />
+    <Compile Include="WhiteMath\Functions\Messages.cs" />
+    <Compile Include="WhiteMath\Functions\PieceFunctions\PieceFunction.cs" />
+    <Compile Include="WhiteMath\Functions\Polynomial\ChebyshevPolynomGenerator.cs" />
+    <Compile Include="WhiteMath\Functions\Polynomial\CubicFunction.cs" />
+    <Compile Include="WhiteMath\Functions\Polynomial\LagrangePolynom.cs" />
+    <Compile Include="WhiteMath\Functions\Polynomial\LinearFunction.cs" />
+    <Compile Include="WhiteMath\Functions\Polynomial\Polynom.cs" />
+    <Compile Include="WhiteMath\Functions\Precompiled\FunctionAction.cs" />
+    <Compile Include="WhiteMath\Functions\Precompiled\PrecompiledFunction.cs" />
+    <Compile Include="WhiteMath\Functions\SyntaxAnalyzer.cs" />
+    <Compile Include="WhiteMath\Drawing\ColorPath.cs" />
+    <Compile Include="WhiteMath\Debugging\Assertions.cs" />
+    <Compile Include="WhiteMath\Debugging\DebugMethods.cs" />
+    <Compile Include="WhiteMath\Debugging\LinkedListTests.cs" />
+    <Compile Include="WhiteMath\Debugging\Tests.cs" />
+    <Compile Include="WhiteMath\Cryptography\OneTimePadBreaker.cs" />
+    <Compile Include="WhiteMath\Cryptography\PrimalityTests.cs" />
+    <Compile Include="WhiteMath\Cryptography\PrimeGeneration.cs" />
+    <Compile Include="WhiteMath\Cryptography\RSA.cs" />
+    <Compile Include="WhiteMath\ComplexNumbers\Complex.cs" />
+    <Compile Include="WhiteMath\ComplexNumbers\ComplexHelper.cs" />
+    <Compile Include="WhiteMath\Combinatorics\Messages.cs" />
+    <Compile Include="WhiteMath\Combinatorics\Permutators.cs" />
+    <Compile Include="WhiteMath\Calculators\CalcBigInteger.cs" />
+    <Compile Include="WhiteMath\Calculators\CalcComplex.cs" />
+    <Compile Include="WhiteMath\Calculators\CalcDouble.cs" />
+    <Compile Include="WhiteMath\Calculators\CalcInt.cs" />
+    <Compile Include="WhiteMath\Calculators\CalcLong.cs" />
+    <Compile Include="WhiteMath\Calculators\CalcLongInt.cs" />
+    <Compile Include="WhiteMath\Calculators\CalcRational.cs" />
+    <Compile Include="WhiteMath\Calculators\CalcULong.cs" />
+    <Compile Include="WhiteMath\Calculators\ICalc.cs" />
+    <Compile Include="WhiteMath\Calculators\ICalcExtensions.cs" />
+    <Compile Include="WhiteMath\Calculators\Messages.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\IBase.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\Infrastructure\BaseConversion.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\Infrastructure\Bases.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\Infrastructure\Precisions.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\IPrecision.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\LongArithmeticMethods.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\LongExponential\LongExp.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\LongInt\LongInt.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\LongInt\LongIntHelper.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\LongInt\LongIntHelperMultiplyFFT.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\LongInt\LongIntHelperMultiplyKaratsuba.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\LongInt\LongIntHelperMultiplyNTT_1.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\LongInt\LongIntHelperMultiplyNTT_2.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\Messages.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Graphers\Components\GraphicDrawer.resx">
-      <DependentUpon>GraphicDrawer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Graphers\Components\MultiGrapherPens.resx">
-      <DependentUpon>MultiGrapherPens.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WhiteMath\Graphers\Components\GraphicDrawer.resx">
+      <DependentUpon>GraphicDrawer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WhiteMath\Graphers\Components\MultiGrapherPens.resx">
+      <DependentUpon>MultiGrapherPens.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -425,6 +427,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="General\Enumerable-Related\" />
+    <Folder Include="WhiteMath\" />
+    <Folder Include="WhiteMath\Vectors\" />
+    <Folder Include="WhiteMath\Statistics\" />
+    <Folder Include="WhiteMath\Algorithms\" />
+    <Folder Include="WhiteMath\RationalNumbers\" />
+    <Folder Include="WhiteMath\Randoms\" />
+    <Folder Include="WhiteMath\Numeric\" />
+    <Folder Include="WhiteMath\NeuralNetworks\" />
+    <Folder Include="WhiteMath\Matrices\" />
+    <Folder Include="WhiteMath\Imaging\" />
+    <Folder Include="WhiteMath\Graphers\" />
+    <Folder Include="WhiteMath\Geometry\" />
+    <Folder Include="WhiteMath\General\" />
+    <Folder Include="WhiteMath\Functions\" />
+    <Folder Include="WhiteMath\Drawing\" />
+    <Folder Include="WhiteMath\Debugging\" />
+    <Folder Include="WhiteMath\Cryptography\" />
+    <Folder Include="WhiteMath\ComplexNumbers\" />
+    <Folder Include="WhiteMath\Combinatorics\" />
+    <Folder Include="WhiteMath\Calculators\" />
+    <Folder Include="WhiteMath\ArithmeticLong\" />
   </ItemGroup>
 </Project>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace whiteMath.Properties {
+namespace WhiteMath.Properties {
     using System;
     
     
