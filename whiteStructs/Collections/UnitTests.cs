@@ -12,14 +12,14 @@ namespace whiteStructs.Collections
 		public void TestSingletonCollectionIsSingleton()
 		{
 			int[] singletonCollection = { 1 }; 
-			Assert.That(singletonCollection.IsSingleton());
+			Assert.That(singletonCollection.IsSingleElement());
 		}
 
 		[Test]
 		public void TestNonSingletonCollectionIsNotSingleton()
 		{
 			int[] nonSingletonCollection = { 1, 2 };
-			Assert.That(!nonSingletonCollection.IsSingleton());
+			Assert.That(!nonSingletonCollection.IsSingleElement());
 		}
 
 		[Test]
@@ -28,7 +28,7 @@ namespace whiteStructs.Collections
 			int[] nullCollection = null;
 
 			Assert.Throws(typeof(ArgumentNullException), delegate {
-				nullCollection.IsSingleton();
+				nullCollection.IsSingleElement();
 			});
 		}
 

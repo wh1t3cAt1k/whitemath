@@ -51,14 +51,20 @@ namespace whiteStructs.Collections
 		/// </summary>
 		/// <returns><c>true</c> if is the specified sequence has exactly one element; otherwise, <c>false</c>.</returns>
 		/// <param name="sequence">The calling sequence object.</param>
-		public static bool IsSingleton<T>(this IEnumerable<T> sequence)
+		public static bool IsSingleElement<T>(this IEnumerable<T> sequence)
 		{
 			Condition.ValidateNotNull(sequence, nameof(sequence));
 
 			IEnumerator<T> enumerator = sequence.GetEnumerator();
 
-			return
-				enumerator.MoveNext() && !enumerator.MoveNext();
+			return enumerator.MoveNext() && !enumerator.MoveNext();
+		}
+
+		public static bool HasAtLeastTwoElements<T>(this IEnumerable<T> sequence)
+		{
+			Condition.ValidateNotNull(sequence, nameof(sequence));
+
+			return sequence.Any() && !sequence.IsSingleElement();
 		}
 
         /// <summary>
