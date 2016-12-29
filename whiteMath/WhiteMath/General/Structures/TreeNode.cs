@@ -24,10 +24,6 @@ namespace WhiteMath.General
         /// </summary>
         public TreeNode<T> Parent { get; private set; }
 
-        // --------------------------
-        // ------ child adding ------
-        // --------------------------
-
         public void AddChild(TreeNode<T> child)
         {
             children.Add(child);
@@ -39,10 +35,6 @@ namespace WhiteMath.General
             children.Insert(index, child);
             children[index].Parent = this;
         }
-
-        // --------------------------
-        // ------ child getting -----
-        // --------------------------
 
         ITreeNode<T> ITreeNode<T>.GetChildAt(int index)
         {

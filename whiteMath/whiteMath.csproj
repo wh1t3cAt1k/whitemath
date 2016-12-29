@@ -384,6 +384,7 @@
     <Compile Include="WhiteMath\ArithmeticLong\Bases\B256.cs" />
     <Compile Include="WhiteMath\ArithmeticLong\Bases\B32768.cs" />
     <Compile Include="WhiteMath\ArithmeticLong\Bases\B65536.cs" />
+    <Compile Include="WhiteMath\General\Structures\TreeNodeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

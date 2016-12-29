@@ -14,10 +14,6 @@ namespace WhiteMath.General
     [Serializable]
     public struct Point<T>
     {
-        // ----------------------------
-        // ----------- Construction ---
-        // ----------------------------
-
         /// <summary>
         /// Constructs the point object using two separate objects.
         /// </summary>
@@ -55,8 +51,6 @@ namespace WhiteMath.General
         /// The Y coordinate of the point.
         /// </summary>
         public T Y { get; private set; }
-
-        // ----------------------------------------------
 
         /// <summary>
         /// Provides an alternative way of accessing the point elements.

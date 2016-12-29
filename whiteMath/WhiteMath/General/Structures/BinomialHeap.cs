@@ -20,29 +20,25 @@ namespace WhiteMath.General
 
         private List<TreeNode<T>> roots;
 
-        // ----------------------------------
-
-        private bool less(T one, T two)
+		private bool IsLessThan(T one, T two)
         {
             return Comparer.Compare(one, two) < 0;
         }
 
-        // ----------------------------------
-
         /// <summary>
         /// Сливает два биномиальных дерева и возвращает ссылку на нового родителя.
         /// </summary>
-        private TreeNode<T> mergeSubtrees(TreeNode<T> p, TreeNode<T> q)
+		private TreeNode<T> MergeSubtrees(TreeNode<T> firstSubtree, TreeNode<T> secondSubtree)
         {
-            if (less(p.Value, q.Value))
+            if (IsLessThan(firstSubtree.Value, secondSubtree.Value))
             {
-                q.AddChild(p);
-                return q;
+                secondSubtree.AddChild(firstSubtree);
+                return secondSubtree;
             }
             else
             {
-                p.AddChild(q);
-                return p;
+                firstSubtree.AddChild(secondSubtree);
+                return firstSubtree;
             }
         }
         
@@ -58,10 +54,10 @@ namespace WhiteMath.General
     public class TreeNodeSmart<T>: ITreeNode<T>
     {
         public int Height { get; private set; }
-        public int ChildrenCount { get { return this.children.Count; } }
+        public int ChildrenCount { get { return this._children.Count; } }
 
         public bool HasParent { get { return this.Parent != null; } }
-        public bool HasChildren { get { return this.children.Count > 0; } }
+        public bool HasChildren { get { return this._children.Count > 0; } }
 
         /// <summary>
         /// Gets the amount of total descendants of the current root, excluding the current.
@@ -80,26 +76,26 @@ namespace WhiteMath.General
         /// <summary>
         /// Event that is called upon the parent when a descendant is added.
         /// </summary>
-        private void descendantAdded()
+		private void DescendantAdded()
         {
-            ++this.DescendantsCount;
+            ++DescendantsCount;
 
 			if (Parent != null)
 			{
-				Parent.descendantAdded();
+				Parent.DescendantAdded();
 			}
         }
 
         /// <summary>
         /// Event that is called upon the parent when a descendant is deleted.
         /// </summary>
-        private void descendantRemoved()
+		private void DescendantRemoved()
         {
             --this.DescendantsCount;
 
 			if (Parent != null)
 			{
-				Parent.descendantRemoved();
+				Parent.DescendantRemoved();
 			}
         }
 
@@ -109,7 +105,7 @@ namespace WhiteMath.General
         /// </summary>
         /// <param name="oldOrder">Old descendant order.</param>
         /// <param name="newOrder">New descendant order.</param>
-        private void childOrderChanged(int oldOrder, int newOrder)
+		private void ChildOrderChanged(int oldOrder, int newOrder)
         {
 			// If the old order + 1 is equal to the current order,
 			// perhaps there is no such order anymore and we need
@@ -123,61 +119,70 @@ namespace WhiteMath.General
 
 				if (Parent != null)
 				{
-					Parent.childOrderChanged(thisOldHeight, this.Height);
+					Parent.ChildOrderChanged(thisOldHeight, this.Height);
 				}
             }
             else if (oldOrder + 1 == this.Height)
             {
                 int thisOldHeight = this.Height;
 
-				this.Height = children.Max(treeNode => treeNode.Height) + 1;
+				this.Height = _children.Max(treeNode => treeNode.Height) + 1;
 
 				if (thisOldHeight < this.Height && Parent != null)
 				{
-					Parent.childOrderChanged(thisOldHeight, this.Height);
+					Parent.ChildOrderChanged(thisOldHeight, this.Height);
 				}
             }
         }
 
-        private List<TreeNodeSmart<T>> children = null;
+		private List<TreeNodeSmart<T>> _children = null;
 
         /// <summary>
         /// Gets the parent node for the current node.
-        /// If no parent node is present, null value is returned.
+        /// If no parent node is present, a <c>null</c> value is returned.
         /// </summary>
-        public TreeNodeSmart<T> Parent          { get; private set; }
-               ITreeNode<T> ITreeNode<T>.Parent { get { return this.Parent; } }
+        public TreeNodeSmart<T> Parent 
+		{ 
+			get; 
+			private set; 
+		}
+
+		ITreeNode<T> ITreeNode<T>.Parent => this.Parent;
         
         /// <summary>
         /// Gets the value stored in the node.
         /// </summary>
-        public T Value { get; private set; }
+        public T Value 
+		{
+			get; 
+			private set; 
+		}
 
         public void AddChild(TreeNodeSmart<T> child)
         {
-            AddChild(child, children.Count);
+            AddChild(child, _children.Count);
         }
 
         public void AddChild(TreeNodeSmart<T> child, int index)
         {
-            this.DescendantsCount++;
+            ++DescendantsCount;
 
-            children.Insert(index, child);
+            _children.Insert(index, child);
             child.Parent = this;
 
-            // Height
-			// -
             if (child.Height + 1 > this.Height)
             {
                 int old = this.Height;
                 this.Height = child.Height + 1;
 
                 if (this.Parent != null)
-                    Parent.childOrderChanged(old, this.Height);
+                    Parent.ChildOrderChanged(old, this.Height);
             }
 
-            if (this.Parent != null)
-                Parent.descendantAdded();
+			if (this.Parent != null)
+			{
+				Parent.DescendantAdded();
+			}
         }
 
         ITreeNode<T> ITreeNode<T>.GetChildAt(int index)
@@ -187,155 +192,136 @@ namespace WhiteMath.General
 
         public TreeNodeSmart<T> GetChildAt(int index)
         {
-            return children[index];
+            return _children[index];
         }
 
         public virtual void RemoveChildAt(int index)
         {
-            TreeNodeSmart<T> child = children[index];
+            TreeNodeSmart<T> child = _children[index];
 
-            this.DescendantsCount--;
+            --DescendantsCount;
 
-            children.RemoveAt(index);
+            _children.RemoveAt(index);
 
-            // Height
-			// -
-            if (child.Height + 1 == this.Height)
+            if (child.Height + 1 == Height)
             {
-                int oldOrder = this.Height;
+                int oldOrder = Height;
 
-                if (children.Count > 0)
-                    this.Height = children.Max(delegate(TreeNodeSmart<T> obj) { return obj.Height; }) + 1;
-                else
-                    this.Height = 0;
+				if (_children.Count > 0)
+				{
+					Height = _children.Max(node => node.Height) + 1;
+				}
+				else
+				{
+					Height = 0;
+				}
 
-                if (oldOrder != this.Height && Parent != null)
-                    Parent.childOrderChanged(oldOrder, this.Height);
+				if (oldOrder != Height && Parent != null)
+				{
+					Parent.ChildOrderChanged(oldOrder, Height);
+				}
             }
 
-            if (Parent != null)
-                Parent.descendantRemoved();
+			if (Parent != null)
+			{
+				Parent.DescendantRemoved();
+			}
         }
 
         public TreeNodeSmart(T value)
         {
-            this.Value = value;
-            this.Height = 0;
+            Value = value;
+            Height = 0;
 
-            this.children = new List<TreeNodeSmart<T>>();
+            _children = new List<TreeNodeSmart<T>>();
         }
 
-        // ----------- root finding ----------
+		// ----------- root finding ----------
 
-        /// <summary>
-        /// Returns the value determining if the current node is a root node for 
-        /// some tree. It is true if the node does not have a parent.
-        /// </summary>
-        public bool IsRoot
-        {
-            get { return this.Parent == null; }
-        }
+		/// <summary>
+		/// Returns the value determining if the current node is a root node for 
+		/// some tree. It is true if the node does not have a parent.
+		/// </summary>
+		public bool IsRoot => Parent == null;
 
-        /// <summary>
-        /// Gets the tree root for the current node, i.e. the farthest
+		/// <summary>
+		/// Gets the tree root for the current node, i.e. the farthest
 		/// ascendant that has no parent node.
-        /// </summary>
-        public TreeNodeSmart<T> TreeRoot
-        {
-            get
-            {
-				if (this.IsRoot)
-				{
-					return this;
-				}
-				else
-				{
-					return this.Parent.TreeRoot;
-				}
-            }
-        }
+		/// </summary>
+		public TreeNodeSmart<T> TreeRoot 
+			=> IsRoot ? this : Parent.TreeRoot;
 
-        // -----------------------------------
-        // ----------- ToString --------------
-        // -----------------------------------
-
-        public override string ToString()
-        {
-            return Value.ToString();
-        }
-
-        // -----------------------------------
-        // ----------- Conversion ------------
-        // -----------------------------------
+		public override string ToString()
+			=> Value.ToString();
 
         public static implicit operator TreeNodeSmart<T>(T value)
-        {
-            return new TreeNodeSmart<T>(value);
-        }
+			=> new TreeNodeSmart<T>(value);
 
-        // -----------------------------------
-        // ----------- Swapping --------------
-        // -----------------------------------
-
-        /// <summary>
-        /// Swaps the node with its child of index <paramref name="i"/>.
+		/// <summary>
+        /// Swaps the node with its child of index <paramref name="childIndex"/>.
         /// </summary>
-        /// <param name="i">The number of child index to swap with.</param>
-        public void SwapWithChild(int i)
+        /// <param name="childIndex">The number of child index to swap with.</param>
+		public void SwapWithChild(int childIndex)
         {
-            if (i < 0 || i >= this.children.Count)
-                throw new ArgumentException("There is no child with such index.");
+			if (childIndex < 0 || childIndex >= _children.Count)
+			{
+				throw new ArgumentException("There is no child with such index.");
+			}
 
-            TreeNodeSmart<T> child = this.children[i];
+            TreeNodeSmart<T> child = _children[childIndex];
 
-            // Tell each of this child's children that we are their new parent.
+			// Tell each of this child's children that we are their new parent.
 			// 
-            foreach (TreeNodeSmart<T> childChild in child.children)
-                childChild.Parent = this;
+			foreach (TreeNodeSmart<T> childChild in child._children)
+			{
+				childChild.Parent = this;
+			}
 
-            // Tell each of our own children that this child is your new parent.
+			// Tell each of our own children that this child is your new parent.
 			//
-            for (int j = 0; j < children.Count; j++)
-                if (i != j)
-                    this.children[j].Parent = child;
+			for (int j = 0; j < _children.Count; ++j)
+			{
+				if (childIndex != j)
+				{
+					_children[j].Parent = child;
+				}
+			}
 
             // Make ourselves our child.
 			// -
-            this.children[i] = this;
+            this._children[childIndex] = this;
 
-            // Exchange children
+            // Exchange children.
 			// -
-            List<TreeNodeSmart<T>> childChildren = child.children;
+            List<TreeNodeSmart<T>> childChildren = child._children;
 
-            child.children = this.children;
-            this.children = childChildren;
+            child._children = _children;
+            _children = childChildren;
 
-            // Exchange parents
+            // Exchange parents.
 			// -
-            if (this.Parent != null)
+            if (Parent != null)
             {
-                this.Parent.children.Remove(this);
-                this.Parent.children.Add(child);
+                this.Parent._children.Remove(this);
+                this.Parent._children.Add(child);
             }
 
             child.Parent = this.Parent;
             this.Parent = child;
 
-            // Exchange heights
+            // Exchange heights.
 			// -
-            int tmp = child.Height;
+			int tempHeight = child.Height;
             
             child.Height = this.Height;
-            this.Height = tmp;
+            this.Height = tempHeight;
 
-            // Exchange descendants counts
+            // Exchange descendants counts.
 			// -
-            tmp = child.DescendantsCount;
+            tempHeight = child.DescendantsCount;
 
             child.DescendantsCount = this.DescendantsCount;
-            this.DescendantsCount = tmp;
-
-            return;
+            this.DescendantsCount = tempHeight;
         }
     }
 }
