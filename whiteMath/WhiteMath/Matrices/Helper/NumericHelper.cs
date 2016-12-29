@@ -24,7 +24,7 @@ namespace WhiteMath.Matrices
 
         public static MatrixType getMatrixType(Matrix<T, C> matrix)
         {
-            if (matrix is Matrix_SDA<T, C>)
+            if (matrix is MatrixSDA<T, C>)
                 return MatrixType.SDA;
             else
                 return MatrixType.DI;
@@ -41,8 +41,8 @@ namespace WhiteMath.Matrices
         {
             switch (mt)
             {
-                case MatrixType.SDA: return new Matrix_SDA<T, C>(rows, columns);
-                default: return new Matrix_SDA<T, C>(rows, columns);
+                case MatrixType.SDA: return new MatrixSDA<T, C>(rows, columns);
+                default: return new MatrixSDA<T, C>(rows, columns);
             }
         }
 
@@ -67,9 +67,9 @@ namespace WhiteMath.Matrices
             int exp = 1;
             do exp *= 2; while (A.ColumnCount > exp || A.RowCount > exp || B.ColumnCount > exp || B.RowCount > exp);
 
-            Matrix_SDA<T,C> Anew = new Matrix_SDA<T,C>(exp, exp);
-            Matrix_SDA<T,C> Bnew = new Matrix_SDA<T,C>(exp, exp);
-            Matrix_SDA<T,C> ResNew = new Matrix_SDA<T,C>(exp, exp);
+            MatrixSDA<T,C> Anew = new MatrixSDA<T,C>(exp, exp);
+            MatrixSDA<T,C> Bnew = new MatrixSDA<T,C>(exp, exp);
+            MatrixSDA<T,C> ResNew = new MatrixSDA<T,C>(exp, exp);
 
             Anew.layMatrixAt(A, 0, 0);
             Bnew.layMatrixAt(B, 0, 0);
@@ -106,16 +106,16 @@ namespace WhiteMath.Matrices
             Matrix<T,C> B21 = B.getSubMatrixAt(size, 0, size, size);
             Matrix<T,C> B22 = B.getSubMatrixAt(size, size, size, size);
 
-            Matrix<T,C> P1 = new Matrix_SDA<T,C>(size, size);
-            Matrix<T,C> P2 = new Matrix_SDA<T,C>(size, size);
-            Matrix<T,C> P3 = new Matrix_SDA<T,C>(size, size);
-            Matrix<T,C> P4 = new Matrix_SDA<T,C>(size, size);
-            Matrix<T,C> P5 = new Matrix_SDA<T,C>(size, size);
-            Matrix<T,C> P6 = new Matrix_SDA<T,C>(size, size);
-            Matrix<T,C> P7 = new Matrix_SDA<T,C>(size, size);
+            Matrix<T,C> P1 = new MatrixSDA<T,C>(size, size);
+            Matrix<T,C> P2 = new MatrixSDA<T,C>(size, size);
+            Matrix<T,C> P3 = new MatrixSDA<T,C>(size, size);
+            Matrix<T,C> P4 = new MatrixSDA<T,C>(size, size);
+            Matrix<T,C> P5 = new MatrixSDA<T,C>(size, size);
+            Matrix<T,C> P6 = new MatrixSDA<T,C>(size, size);
+            Matrix<T,C> P7 = new MatrixSDA<T,C>(size, size);
             
-            Matrix<T,C> temp1 = new Matrix_SDA<T,C>(size, size);
-            Matrix<T,C> temp2 = new Matrix_SDA<T,C>(size, size);
+            Matrix<T,C> temp1 = new MatrixSDA<T,C>(size, size);
+            Matrix<T,C> temp2 = new MatrixSDA<T,C>(size, size);
             
             sum(A11, A22, temp1);
             sum(B11, B22, temp2);

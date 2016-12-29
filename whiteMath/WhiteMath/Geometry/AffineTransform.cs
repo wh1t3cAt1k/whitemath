@@ -25,7 +25,7 @@ namespace WhiteMath.Geometry
         /// <param name="c">The first free term of transformation matrix. Can be set to any value, affects the inverse matrix calculation precision.</param>
         /// <param name="d">THe second free term of transformation matrix. Can be set to any value, affects the inverse matrix calculation precision.</param>
         /// <returns>An affine transform matrix that would convert the <paramref name="firstVector"/> to the <paramref name="secondVector"/>.</returns>
-        public static Matrix_SDA<double, CalcDouble> GetAffineTransformMatrix(
+        public static MatrixSDA<double, CalcDouble> GetAffineTransformMatrix(
             VectorD firstVector, 
             VectorD secondVector, 
             double c = 0, 

@@ -91,7 +91,7 @@ namespace whiteStructs.Drawing
         {
 			Condition.ValidateNotNull(colorSequence, nameof(colorSequence));
 			Condition
-				.Validate(!colorSequence.IsEmpty() && !colorSequence.IsSingleton())
+				.Validate(!colorSequence.IsEmpty() && !colorSequence.IsSingleElement())
 				.OrArgumentException("The color path must consist of at least two colors.");
 
             __init(colorSequence);

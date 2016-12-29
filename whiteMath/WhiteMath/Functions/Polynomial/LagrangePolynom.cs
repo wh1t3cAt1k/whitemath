@@ -29,7 +29,7 @@ namespace WhiteMath.Functions
         private static ICalc<T> calc = Numeric<T, C>.Calculator;
 
         Point<T>[] points;
-        Matrix_SDA<T, C> difMatrix;
+        MatrixSDA<T, C> difMatrix;
 
         /// <summary>
         /// Returns the formal degree of the polynom.
@@ -83,7 +83,7 @@ namespace WhiteMath.Functions
             {
                 int n = this.points.Length;
 
-                difMatrix = new Matrix_SDA<T, C>(n, n);
+                difMatrix = new MatrixSDA<T, C>(n, n);
 
                 for (int i=0; i<n; i++)
                 {

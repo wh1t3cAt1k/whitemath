@@ -131,7 +131,7 @@ namespace WhiteMath.ArithmeticLong
         public List<int> Digits { get; private set; }
 
         /// <summary>
-        /// Returns true if the current number is negative
+        /// Returns <c>true</c> if the current number is negative.
         /// </summary>
         public bool IsNegative { get; private set; }
 
@@ -513,9 +513,9 @@ namespace WhiteMath.ArithmeticLong
 
 			// Deal with the negative flag.
 			// -
-			result.IsNegative =
+			result.IsNegative = !(
 				firstBiggerThanSecondAbsolute && !one.IsNegative && !two.IsNegative
-				|| !firstBiggerThanSecondAbsolute && one.IsNegative && two.IsNegative;
+				|| !firstBiggerThanSecondAbsolute && one.IsNegative && two.IsNegative);
 
             result.DealWithZeroes();
             return result;
@@ -1220,7 +1220,7 @@ namespace WhiteMath.ArithmeticLong
         {
 			if (!LongInt<B>.IsBasePowerOfTen)
 			{
-				return this.BaseConvert<Bases.B_10k>().ToString();
+				return this.BaseConvert<Bases.B10k>().ToString();
 			}
 
             string result = (IsNegative ? "-" : "");
@@ -1272,7 +1272,7 @@ namespace WhiteMath.ArithmeticLong
 
 			if (!LongInt<B>.IsBasePowerOfTen)
 			{
-				return LongInt<Bases.B_10k>.Parse(value).BaseConvert<B>();
+				return LongInt<Bases.B10k>.Parse(value).BaseConvert<B>();
 			}
 
             LongInt<B> res = new LongInt<B>(value.Length / fieldLength + 1);

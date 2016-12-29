@@ -33,7 +33,7 @@ namespace WhiteMath.Cryptography
         /// </typeparam>
         /// <remarks>This test relies upon Riemann's Generalized Hypothesis, which still remains unproven. Use with caution.</remarks>
         /// <param name="number">A number, bigger than 1, to test for primality.</param>
-        /// <returns>True if the number is prime according to the test, false otherwise.</returns>
+        /// <returns><c>true</c>, if the number is prime, <c>false</c> otherwise.</returns>
 		public static bool IsPrimeMiller<B>(this LongInt<B> number)
             where B: IBase, new()
         {
@@ -79,7 +79,7 @@ namespace WhiteMath.Cryptography
         }
 
         /// <summary>
-        /// Performs a Wilson's deterministic prime test of a number.
+        /// Performs a Wilson's deterministic primality test of a number.
         /// Usually takes an enormous amount of time and is never used in practice.
         /// </summary>
 		/// <typeparam name="B">
@@ -106,14 +106,14 @@ namespace WhiteMath.Cryptography
 				.Validate(number > 1)
 				.OrArgumentOutOfRangeException("The tested number should be bigger than 1");
 
-            LongInt<B> res = 1;
+			LongInt<B> result = 1;
 
 			for (LongInt<B> i = 2; i < number - 1; ++i)
 			{
-				res = res * i % number;
+				result = result * i % number;
 			}
 
-			return res == 1;
+			return result == 1;
         }
 
         /// <summary>
@@ -164,9 +164,9 @@ namespace WhiteMath.Cryptography
         /// <returns>
         /// The probability that the <paramref name="number"/> is composite. 
         /// Equals to <c>2^(-<paramref name="countRounds"/>)</c>, which is
-		/// worse than for <see cref="IsPrimeMillerRabin{B}"/>.
+		/// worse than for <see cref="CalculateCompositeProbabilityMillerRabin{B}"/>.
         /// </returns>
-		public static double IsPrimeSolovayStrassen<B>(
+		public static double CalculateCompositeProbabilitySolovayStrassen<B>(
 			this LongInt<B> number, 
 			IRandomBounded<LongInt<B>> generator, 
 			long countRounds)
@@ -183,14 +183,7 @@ namespace WhiteMath.Cryptography
 
 			if (number.IsEven)
 			{
-				if (number == 2)
-				{
-					return 0;
-				}
-				else
-				{
-					return 1;
-				}
+				return (number == 2 ? 0 : 1);
 			}
 			else if (number == 3)
 			{
@@ -228,12 +221,15 @@ namespace WhiteMath.Cryptography
         /// <summary>
         /// Performs a Fermat stochastic primality test of a long integer number.
         /// </summary>
-        /// <typeparam name="B">A class specifying the digit base of <c>LongInt&lt;<typeparamref name="B"/></c> type.</typeparam>
+		/// <typeparam name="B">
+		/// A class specifying the digit base of 
+		/// the <see cref="LongInt{B}"/> type.
+		/// </typeparam>
         /// <param name="number">A number to test for primality. Should be more than 1.</param>
         /// <param name="generator">
-        /// A bounded <c>LongInt&lt;<typeparamref name="B"/></c> random generator. 
-        /// For probability estimations to be correct, this generator should guarantee uniform distribution 
-        /// for any given interval.
+		/// A bounded <see cref="LongInt{B}"/> random generator. For probability 
+		/// estimations to be correct, this generator should guarantee uniform 
+		/// distribution for any given interval.
         /// </param>
         /// <param name="countRounds">A positive number of testing rounds.</param>
         /// <returns>
@@ -255,15 +251,14 @@ namespace WhiteMath.Cryptography
 				.Validate(countRounds > 0)
 				.OrArgumentOutOfRangeException("The number of rounds should be positive");
 
-            if (number.IsEven)
-            {
-                if (number == 2)
-                    return true;
-                else
-                    return false;
-            }
-            else if (number == 3)
-                return true;
+			if (number.IsEven)
+			{
+				return number == 2;
+			}
+			else if (number == 3)
+			{
+				return true;
+			}
 
             LongInt<B> numDecremented = number - 1;
 
@@ -271,8 +266,10 @@ namespace WhiteMath.Cryptography
             {
                 LongInt<B> test = generator.Next(2, number);
 
-                if(LongInt<B>.Helper.PowerIntegerModular(test, numDecremented, number) != 1)
-                    return false;
+				if (LongInt<B>.Helper.PowerIntegerModular(test, numDecremented, number) != 1)
+				{
+					return false;
+				}
             }
 
             return true;
@@ -293,7 +290,7 @@ namespace WhiteMath.Cryptography
         /// A positive number of testing rounds. Recommended to be more than <c>log2(<paramref name="number"/>)</c>.
         /// </param>
         /// <returns>The probability that the <paramref name="number"/> is composite.</returns>
-		public static double IsPrimeMillerRabin<B>(
+		public static double CalculateCompositeProbabilityMillerRabin<B>(
 			this LongInt<B> number, 
 			IRandomBounded<LongInt<B>> generator, 
 			long countRounds) 
@@ -310,14 +307,7 @@ namespace WhiteMath.Cryptography
 
 			if (number.IsEven)
 			{
-				if (number == 2)
-				{
-					return 0;
-				}
-				else
-				{
-					return 1;
-				}
+				return (number == 2 ? 0 : 1);
 			}
 			else if (number == 3)
 			{

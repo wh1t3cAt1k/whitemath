@@ -51,24 +51,27 @@ namespace WhiteMath.Statistics
         /// <typeparam name="C">The calculator for the observations' value type.</typeparam>
         /// <param name="observationRows">The matrix of observations having rows in the following format: X_11 | X_12 | ... | X_1K | Y_1</param>
         /// <returns>The vector of estimated least squares regression coefficients. Its first term is a free term, and all the following terms correspond to X_1, X_2 etc. up to X_k</returns>
-        public static Vector<T, C> EstimateLeastSquaresCoefficients<T, C>(Matrix<T, C> observationRows) where C: ICalc<T>, new()
+        public static Vector<T, C> EstimateLeastSquaresCoefficients<T, C>(Matrix<T, C> observationRows) 
+			where C: ICalc<T>, new()
         {
-            Matrix<T, C> xMatrix = new Matrix_SDA<T, C>(observationRows.RowCount, observationRows.ColumnCount);
-            Matrix<T, C> yVector = observationRows.getSubMatrixAt(0, observationRows.ColumnCount - 1);
+            Matrix<T, C> xMatrix = new MatrixSDA<T, C>(observationRows.RowCount, observationRows.ColumnCount);
+            Matrix<T, C> yVector = observationRows.GetSubMatrixAt(0, observationRows.ColumnCount - 1);
 
-            for (int i = 0; i < xMatrix.RowCount; i++)
+			for (int rowIndex = 0; rowIndex < xMatrix.RowCount; ++rowIndex)
             {
-                xMatrix[i, 0] = Numeric<T, C>._1;
+                xMatrix[rowIndex, 0] = Numeric<T, C>._1;
 
-                for (int j = 1; j < xMatrix.ColumnCount; j++)
-                    xMatrix[i, j] = observationRows[i, j - 1];
+				for (int columnIndex = 1; columnIndex < xMatrix.ColumnCount; ++columnIndex)
+				{
+					xMatrix[rowIndex, columnIndex] = observationRows[rowIndex, columnIndex - 1];
+				}
             }
 
             // TODO: transposition should NOT create a new matrix.
             // write a new matrix class
 
             Matrix<T, C> xTransposed = xMatrix.transposedMatrixCopy();
-            Matrix<T, C> result = (xTransposed * xMatrix).inverseMatrix_LUP_Factorization() * xTransposed * yVector;
+            Matrix<T, C> result = (xTransposed * xMatrix).CalculateInverseMatrixLUPFactorization() * xTransposed * yVector;
             
             IWinder winder = result.GetRowByRowWinder();
             return result.unwindToArray(winder);
@@ -92,7 +95,7 @@ namespace WhiteMath.Statistics
                 return simpleDif * simpleDif;
             };
 
-            return summator.Sum_SmallerToBigger(memberFormula, 0, estimatedY.Count - 1, Numeric<T, C>.TComparer);
+            return summator.SumSmallerToBigger(memberFormula, 0, estimatedY.Count - 1, Numeric<T, C>.TComparer);
         }
 
         /// <summary>
@@ -113,7 +116,7 @@ namespace WhiteMath.Statistics
                 return simpleDif * simpleDif;
             };
 
-            return summator.Sum_SmallerToBigger(memberFormula, 0, estimatedY.Count - 1, Numeric<T, C>.TComparer);
+            return summator.SumSmallerToBigger(memberFormula, 0, estimatedY.Count - 1, Numeric<T, C>.TComparer);
         }
 
         /// <summary>
@@ -137,7 +140,7 @@ namespace WhiteMath.Statistics
                 return simpleDif * simpleDif;
             };
 
-            return summator.Sum_SmallerToBigger(memberFormula, 0, realY.Count - 1, Numeric<T, C>.TComparer);
+            return summator.SumSmallerToBigger(memberFormula, 0, realY.Count - 1, Numeric<T, C>.TComparer);
         }
     }
 }

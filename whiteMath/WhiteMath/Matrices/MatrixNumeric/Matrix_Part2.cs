@@ -126,7 +126,7 @@ namespace WhiteMath.Matrices
         public Numeric<T, C> Determinant_LUP_Factorization()
         {
             int[] P;
-            Matrix_SDA<T,C> C;
+            MatrixSDA<T,C> C;
 
             // -------------------------------------------------------------
             // LUP-factorize the matrix. If cannot, the determinant is zero.
@@ -257,7 +257,7 @@ namespace WhiteMath.Matrices
         /// If these requirements are not met, either a MatrixSizeException 
         /// or a MatrixSingularityException shall be thrown.
         /// </summary>
-        public Matrix<T, C> inverseMatrix_LUP_Factorization()
+        public Matrix<T, C> CalculateInverseMatrixLUPFactorization()
         {
             this.checkSquare();
 
@@ -268,7 +268,7 @@ namespace WhiteMath.Matrices
 
             // to do: make matrix type
 
-            Matrix<T, C> inverse = new Matrix_SDA<T, C>(this.rows, this.columns);
+            Matrix<T, C> inverse = new MatrixSDA<T, C>(this.rows, this.columns);
  
             for(int i = 0; i< rows; i++)
                 for (int j = 0; j < columns; j++)
@@ -306,14 +306,14 @@ namespace WhiteMath.Matrices
         /// </summary>
         /// <param name="C">The matrix C containing L + U - E. It is clear that both L and U can be easily extracted from this matrix.</param>
         /// <param name="P">The identity matrix with a plenty of row inversions in the form of array.</param>
-        public void LUP_Factorization(out int[] P, out Matrix_SDA<T, C> C)
+        public void LUP_Factorization(out int[] P, out MatrixSDA<T, C> C)
         {
             if (this.rows != this.columns)
                 throw new MatrixSizeException("The matrix is not square an thus cannot be factorized.");
 
             int n = this.rows;  // размер матрицы
 
-            C = new Matrix_SDA<T, C>(n, n);
+            C = new MatrixSDA<T, C>(n, n);
 
             for(int i=0; i<n; i++)
                 for(int j=0; j<n; j++)
@@ -397,16 +397,16 @@ namespace WhiteMath.Matrices
         /// <param name="L">The lower-triangular matrix with '1' on the main diagonal.</param>
         /// <param name="U">The upper-triangular matrix.</param>
         /// <param name="P">The identity matrix with a plenty of row inversions in the form of array.</param>
-        public void LUP_Factorization(out int[] P, out Matrix_SDA<T, C> L, out Matrix_SDA<T, C> U)
+        public void LUP_Factorization(out int[] P, out MatrixSDA<T, C> L, out MatrixSDA<T, C> U)
         {
-            Matrix_SDA<T, C> C;
+            MatrixSDA<T, C> C;
 
             this.LUP_Factorization(out P, out C);
 
             int n = this.rows;
 
-            L = new Matrix_SDA<T, C>(n, n);
-            U = new Matrix_SDA<T, C>(n, n);
+            L = new MatrixSDA<T, C>(n, n);
+            U = new MatrixSDA<T, C>(n, n);
 
             Numeric<T, C> one = (Numeric<T, C>)1;
 
@@ -442,7 +442,7 @@ namespace WhiteMath.Matrices
         /// <param name="L">The lower-triangular matrix with '1' on the main diagonal.</param>
         /// <param name="U">The upper-triangular matrix.</param>
         /// <param name="P">The identity matrix with a plenty of row inversions.</param>
-        public void LUP_Factorization(out Matrix_SDA<T, C> P, out Matrix_SDA<T, C> L, out Matrix_SDA<T, C> U)
+        public void LUP_Factorization(out MatrixSDA<T, C> P, out MatrixSDA<T, C> L, out MatrixSDA<T, C> U)
         {
             int[] arr;
             int n = this.rows;
@@ -451,7 +451,7 @@ namespace WhiteMath.Matrices
 
             LUP_Factorization(out arr, out L, out U);
 
-            P = new Matrix_SDA<T, C>(n, n);
+            P = new MatrixSDA<T, C>(n, n);
 
             for (int i = 0; i < n; i++)
                 P.setItemAt(i, arr[i], one);

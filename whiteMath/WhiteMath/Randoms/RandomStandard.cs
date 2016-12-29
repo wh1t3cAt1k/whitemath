@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
+
+using whiteStructs.Conditions;
 
 namespace WhiteMath.Randoms
 {
@@ -16,7 +17,7 @@ namespace WhiteMath.Randoms
         IRandomFloatingPoint<double>,
         IRandomBytes
     {
-        private Random rnd;
+		private Random _libraryGenerator;
 
         /// <summary>
         /// Creates a new instance of RandomStandard class using a clock-dependent
@@ -24,14 +25,8 @@ namespace WhiteMath.Randoms
         /// </summary>
         public RandomStandard()
         {
-            rnd = new Random();
-            ___generator_delegate_init();
-        }
-
-        [ContractInvariantMethod]
-        private void ___invariant()
-        {
-            Contract.Invariant(this.rnd != null);
+            _libraryGenerator = new Random();
+            InitializeGeneratorDelegates();
         }
 
         /// <summary>
@@ -41,8 +36,8 @@ namespace WhiteMath.Randoms
         /// <param name="seed"></param>
         public RandomStandard(int seed)
         {
-            rnd = new Random(seed);
-            ___generator_delegate_init();
+            _libraryGenerator = new Random(seed);
+            InitializeGeneratorDelegates();
         }
 
         /// <summary>
@@ -52,7 +47,7 @@ namespace WhiteMath.Randoms
         /// <param name="buffer">A byte array to store the random sequence.</param>
         public void NextBytes(byte[] buffer)
         {
-            rnd.NextBytes(buffer);
+            _libraryGenerator.NextBytes(buffer);
         }
 
         /// <summary>
@@ -62,7 +57,7 @@ namespace WhiteMath.Randoms
         /// <returns>The next integer value in the [int.MinValue; int.MaxValue] interval.</returns>
         public int NextInt()
         {
-            return rnd.Next(int.MinValue, 0) + rnd.Next(0, int.MaxValue);
+            return _libraryGenerator.Next(int.MinValue, 0) + _libraryGenerator.Next(0, int.MaxValue);
         }
 
         /// <summary>
@@ -74,43 +69,39 @@ namespace WhiteMath.Randoms
         /// <returns>The next integer value in the [min; max) interval.</returns>
         public int NextInt(int minValue, int maxValue)
         {
-            Contract.Requires<ArgumentException>(minValue < maxValue, "The lower inclusive bound should be less than the upper exclusive.");
+			Condition.Validate(minValue < maxValue)
+				.OrArgumentException("The lower inclusive bound should be less than the upper exclusive.");
 
-            return 
-                rnd.Next(minValue, maxValue);
+            return _libraryGenerator.Next(minValue, maxValue);
         }
 
         // ---------------------------------------------------------------------
         // --------------------- functionality extended by IRandomExtensions----
 
-        BoundedGenerator<long>          genLongBounded;
-        UpperBoundedGenerator<long>     genLongUpperBounded;
-        UnboundedGenerator<long>        genLongUnbounded;
+        BoundedGenerator<long> genLongBounded;
+        UpperBoundedGenerator<long> genLongUpperBounded;
+        UnboundedGenerator<long> genLongUnbounded;
 
-        BoundedGenerator<ulong>         genULongBounded;
-        UpperBoundedGenerator<ulong>    genULongUpperBounded;
-        UnboundedGenerator<ulong>       genULongUnbounded;
+        BoundedGenerator<ulong> genULongBounded;
+        UpperBoundedGenerator<ulong> genULongUpperBounded;
+        UnboundedGenerator<ulong> genULongUnbounded;
 
-        private void ___generator_delegate_init()
+		private void InitializeGeneratorDelegates()
         {
-            genLongBounded          = RandomFunctionalityExtensions.CreateNextLongBounded(rnd.NextBytes);
-            genLongUpperBounded     = RandomFunctionalityExtensions.CreateNextLongUpperBounded(rnd.NextBytes);
-            genLongUnbounded        = RandomFunctionalityExtensions.CreateNextLongUnbounded(rnd.NextBytes);
+            genLongBounded = RandomFunctionalityExtensions.CreateNextLongBounded(_libraryGenerator.NextBytes);
+            genLongUpperBounded = RandomFunctionalityExtensions.CreateNextLongUpperBounded(_libraryGenerator.NextBytes);
+            genLongUnbounded = RandomFunctionalityExtensions.CreateNextLongUnbounded(_libraryGenerator.NextBytes);
 
-            genULongBounded         = RandomFunctionalityExtensions.CreateNextULongBounded(rnd.NextBytes); 
-            genULongUpperBounded    = RandomFunctionalityExtensions.CreateNextULongUpperBounded(rnd.NextBytes);
-            genULongUnbounded       = RandomFunctionalityExtensions.CreateNextULongUnbounded(rnd.NextBytes);
+            genULongBounded = RandomFunctionalityExtensions.CreateNextULongBounded(_libraryGenerator.NextBytes); 
+            genULongUpperBounded = RandomFunctionalityExtensions.CreateNextULongUpperBounded(_libraryGenerator.NextBytes);
+            genULongUnbounded = RandomFunctionalityExtensions.CreateNextULongUnbounded(_libraryGenerator.NextBytes);
         }
 
         /// <summary>
         /// Returns the next <c>ulong</c> number.
         /// </summary>
         /// <returns>A random <c>ulong</c> number.</returns>
-        public ulong NextULong()
-        {
-            return 
-                genULongUnbounded();
-        }
+        public ulong NextULong() => genULongUnbounded();
 
         /// <summary>
         /// Returns the next <c>ulong</c> number limited
@@ -120,10 +111,10 @@ namespace WhiteMath.Randoms
         /// <returns>A random <c>ulong</c> number which is smaller than <paramref name="maxValue"/>.</returns>
         public ulong NextULong(ulong maxValue)
         {
-            Contract.Requires<ArgumentException>(maxValue > 0, "The upper exclusive boundary for generated values should not be equal to zero.");
+			Condition.Validate(maxValue > 0)
+				.OrArgumentOutOfRangeException("The upper exclusive boundary for generated values should not be equal to zero.");
 
-            return 
-                genULongUpperBounded(maxValue);
+            return genULongUpperBounded(maxValue);
         }
 
         /// <summary>
@@ -135,22 +126,18 @@ namespace WhiteMath.Randoms
         /// <returns>A random <c>ulong</c> number which is bigger than or equal to <paramref name="minValue"/> and less than <paramref name="maxValue"/>.</returns>
         public ulong NextULong(ulong minValue, ulong maxValue)
         {
-            Contract.Requires<ArgumentException>(maxValue > minValue, "The upper exclusive boundary should be bigger than the lower inclusive.");
+			Condition.Validate(maxValue > minValue)
+				.OrArgumentOutOfRangeException("The upper exclusive boundary should be bigger than the lower inclusive.");
 
-            return 
-                genULongBounded(minValue, maxValue);
+            return genULongBounded(minValue, maxValue);
         }
 
-        /// <summary>
-        /// Returns the next <c>long</c> value in the [long.MinValue; long.MaxValue]
-        /// interval.
-        /// </summary>
-        /// <returns>The next number in the <c>[long.MinValue; long.MaxValue]</c> interval.</returns>
-        public long NextLong()
-        {
-            return
-                genLongUnbounded();
-        }
+		/// <summary>
+		/// Returns the next <c>long</c> value in the [long.MinValue; long.MaxValue]
+		/// interval.
+		/// </summary>
+		/// <returns>The next number in the <c>[long.MinValue; long.MaxValue]</c> interval.</returns>
+		public long NextLong() => genLongUnbounded();
 
         /// <summary>
         /// Returns the next non-negative <c>long</c> value that is less than
@@ -160,7 +147,8 @@ namespace WhiteMath.Randoms
         /// <returns>A non-negative <c>long</c> number that is less than <paramref name="maxValue"/></returns>
         public long NextLong(long maxValue)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(maxValue > 0, "The upper exclusive boundary should be a positive number.");
+			Condition.Validate(maxValue > 0)
+ 				.OrArgumentOutOfRangeException("The upper exclusive boundary should be a positive number.");
 
             return
                 genLongUpperBounded(maxValue);
@@ -175,7 +163,8 @@ namespace WhiteMath.Randoms
         /// <returns>The next <c>long</c> value in the <c>[minValue; maxValue)</c> interval.</returns>
         public long NextLong(long minValue, long maxValue)
         {
-            Contract.Requires<ArgumentException>(maxValue > minValue, "The lower inclusive boundary should be less than the upper exclusive.");
+			Condition.Validate(maxValue > minValue)
+ 				.OrArgumentOutOfRangeException("The lower inclusive boundary should be less than the upper exclusive.");
 
             return
                 genLongBounded(minValue, maxValue);
@@ -192,7 +181,7 @@ namespace WhiteMath.Randoms
         /// <returns>The next double value in the [0; 1) interval.</returns>
         public double NextDouble_SingleInterval()
         {
-            return rnd.NextDouble();
+            return _libraryGenerator.NextDouble();
         }
 
         /// <summary>
@@ -232,7 +221,7 @@ namespace WhiteMath.Randoms
 
         int IRandomBounded<int>.Next(int min, int max)
         {
-            Contract.Requires(min < max);
+			Condition.Validate(min < max).OrArgumentOutOfRangeException();
 
             return this.NextInt(min, max);
         }
@@ -244,7 +233,7 @@ namespace WhiteMath.Randoms
 
         long IRandomBounded<long>.Next(long minValue, long maxValue)
         {
-            Contract.Requires(minValue < maxValue);
+			Condition.Validate(minValue < maxValue).OrArgumentOutOfRangeException();
             
             return this.NextLong(minValue, maxValue);
         }
@@ -256,7 +245,7 @@ namespace WhiteMath.Randoms
 
         ulong IRandomBounded<ulong>.Next(ulong min, ulong max)
         {
-            Contract.Requires(min < max);
+			Condition.Validate(min < max).OrArgumentOutOfRangeException();
 
             return this.NextULong(min, max);
         }

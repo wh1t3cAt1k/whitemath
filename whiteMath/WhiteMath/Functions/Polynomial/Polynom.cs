@@ -240,7 +240,7 @@ namespace WhiteMath.Functions
 				frees[i] = points[i].Y;
 			}
 
-            Matrices.Matrix_SDA<T, C> matrix = new Matrices.Matrix_SDA<T, C>(n, n);
+            Matrices.MatrixSDA<T, C> matrix = new Matrices.MatrixSDA<T, C>(n, n);
 
             Numeric<T, C>[] argument = new Numeric<T, C>[n];
 			argument.FillByAssign((Numeric<T, C>)calc.FromInteger(1));

@@ -7,3 +7,4 @@
 /Users/pkabir/Projects/Visual Studio/whiteMath/whiteMath/whiteMathTests/bin/Debug/whiteMath.dll
 /Users/pkabir/Projects/Visual Studio/whiteMath/whiteMath/whiteMathTests/bin/Debug/whiteMath.dll.mdb
 /Users/pkabir/Projects/Visual Studio/whiteMath/whiteMath/whiteMathTests/bin/Debug/whiteStructs.dll
+/Users/pkabir/Projects/Visual Studio/whiteMath/whiteMath/whiteMathTests/obj/Debug/whiteMathTests.Resources.PrimesUpTo10000.txt

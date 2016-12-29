@@ -64,7 +64,7 @@ namespace WhiteMath.Functions
 
             T one = calc.FromInteger(1);
 
-            Matrix_SDA<T, C> matrix = new Matrix_SDA<T, C>(4, 4);
+            MatrixSDA<T, C> matrix = new MatrixSDA<T, C>(4, 4);
  
             matrix.convertFromArray(new T[,]
             {

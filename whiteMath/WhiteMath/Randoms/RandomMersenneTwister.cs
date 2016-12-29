@@ -42,7 +42,7 @@ namespace WhiteMath.Randoms
             {
                 // Test query performance counter. If it's not available, use less-precision value from the clock.
                 long x = -1;
-
+				
                 // if (NativeMethods.QueryPerformanceCounter(ref x) <= 0)
 				unchecked
 				{

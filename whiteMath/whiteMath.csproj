@@ -365,7 +365,6 @@
     <Compile Include="WhiteMath\Calculators\Messages.cs" />
     <Compile Include="WhiteMath\ArithmeticLong\IBase.cs" />
     <Compile Include="WhiteMath\ArithmeticLong\Infrastructure\BaseConversion.cs" />
-    <Compile Include="WhiteMath\ArithmeticLong\Infrastructure\Bases.cs" />
     <Compile Include="WhiteMath\ArithmeticLong\Infrastructure\Precisions.cs" />
     <Compile Include="WhiteMath\ArithmeticLong\IPrecision.cs" />
     <Compile Include="WhiteMath\ArithmeticLong\LongArithmeticMethods.cs" />
@@ -377,6 +376,14 @@
     <Compile Include="WhiteMath\ArithmeticLong\LongInt\LongIntHelperMultiplyNTT_1.cs" />
     <Compile Include="WhiteMath\ArithmeticLong\LongInt\LongIntHelperMultiplyNTT_2.cs" />
     <Compile Include="WhiteMath\ArithmeticLong\Messages.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\Bases\B100k.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\Bases\B10k.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\Bases\B1k.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\Bases\B100.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\Bases\B10.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\Bases\B256.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\Bases\B32768.cs" />
+    <Compile Include="WhiteMath\ArithmeticLong\Bases\B65536.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -448,5 +455,6 @@
     <Folder Include="WhiteMath\Combinatorics\" />
     <Folder Include="WhiteMath\Calculators\" />
     <Folder Include="WhiteMath\ArithmeticLong\" />
+    <Folder Include="WhiteMath\ArithmeticLong\Bases\" />
   </ItemGroup>
 </Project>

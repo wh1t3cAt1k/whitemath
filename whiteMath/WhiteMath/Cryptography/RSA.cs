@@ -4,7 +4,7 @@ using System.Linq;
 
 using WhiteMath.Mathematics;
 using WhiteMath.ArithmeticLong;
-using WhiteMath.ArithmeticLong.Infrastructure;
+using WhiteMath.ArithmeticLong.Bases;
 using WhiteMath.Calculators;
 using WhiteMath.General;
 using WhiteMath.Randoms;
@@ -27,7 +27,7 @@ namespace WhiteMath.Cryptography
         /// </summary>
         public class PublicExponentCollection
         {
-            private LongInt<Bases.B_65536> [] arr = { 3, 17, 257, 65537 };
+            private LongInt<B65536> [] arr = { 3, 17, 257, 65537 };
             
             /// <summary>
             /// Gets a preset Fermat prime public exponent
@@ -36,7 +36,7 @@ namespace WhiteMath.Cryptography
             /// </summary>
             /// <param name="i">An index of the preset public exponent. Should be non-negative and less than <see cref="PublicExponentCollection.Length"/>.</param>
             /// <returns>The i'th preset Fermat prime public exponent from the list.</returns>
-            public LongInt<Bases.B_65536> this[int i] { get { return arr[i].Clone() as LongInt<Bases.B_65536>; } }
+            public LongInt<B65536> this[int i] { get { return arr[i].Clone() as LongInt<B65536>; } }
             
             /// <summary>
             /// Gets the length of the preset public exponent list.
@@ -97,9 +97,9 @@ namespace WhiteMath.Cryptography
 
             byte[] result;
 
-            if (typeof(B) != typeof(Bases.B_256))
+            if (typeof(B) != typeof(B256))
             {
-                LongInt<Bases.B_256> converted = number.BaseConvert<Bases.B_256>();
+                LongInt<B256> converted = number.BaseConvert<B256>();
 
                 result = new byte[converted.Length];
 
@@ -183,7 +183,7 @@ namespace WhiteMath.Cryptography
                 if (number % prime == 0)
                     return false;
 
-            if (PrimalityTests.IsPrimeMillerRabin(number, lgen, number.LengthInBinaryPlaces) < 1)
+            if (PrimalityTests.CalculateCompositeProbabilityMillerRabin(number, lgen, number.LengthInBinaryPlaces) < 1)
                 return true;
 
             return false;
@@ -323,7 +323,7 @@ namespace WhiteMath.Cryptography
             Contract.Requires(Contract.ForAll(numberSequence, x => !x.Negative), "At least one number in the sequence is negative.");
             */
 
-			if (numberSequence.IsSingleton())
+			if (numberSequence.IsSingleElement())
 			{
 				return Decrypt(numberSequence.First(), publicKey, secretExponent);
 			}

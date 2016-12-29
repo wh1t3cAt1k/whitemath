@@ -213,14 +213,14 @@ namespace WhiteMath.ArithmeticLong
         /// <param name="BASE">The base of digits in numbers (ex.: 10, 100, 1000)</param>
         /// <param name="sumOperands">An array of sum operands.</param>
         /// <returns>The digit array containing the sum and NO trailing zeroes.</returns>
-        public static int[] Sum(int BASE, params IList<int>[] sumOperands)
+		public static int[] Sum(int BASE, IList<int>[] sumOperands)
         {
 			Condition.Validate(BASE > 1).OrArgumentOutOfRangeException(Messages.DigitBaseNeedsToBeBiggerThanOne);
 			Condition.ValidateNotNull(sumOperands, nameof(sumOperands));
-			Condition.Validate(sumOperands.Length > 1).OrArgumentException(Messages.MoreThanOneOperandRequired);
+			Condition.Validate(sumOperands.Count() > 1).OrArgumentException(Messages.MoreThanOneOperandRequired);
 
             int n = sumOperands.Max(delegate(IList<int> operand) { return operand.Count; });
-            int m = sumOperands.Length;
+			int m = sumOperands.Length;
 
             int[] result = new int[n + (int)Math.Ceiling(Math.Log(m, BASE))];
 

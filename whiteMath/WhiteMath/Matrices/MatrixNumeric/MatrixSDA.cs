@@ -9,7 +9,7 @@ namespace WhiteMath.Matrices
     /// Matrix containing the single-dimensional array inside.
     /// Works fast.
     /// </summary>
-    public class Matrix_SDA<T, C>: Matrix<T, C> where C: ICalc<T>, new()
+    public class MatrixSDA<T, C>: Matrix<T, C> where C: ICalc<T>, new()
     {
         internal Numeric<T, C>[] matrixArray;       // Single-dimensional array containing the matrix
         
@@ -20,7 +20,7 @@ namespace WhiteMath.Matrices
         /// </summary>
         /// <param name="rows">Height of the matrix</param>
         /// <param name="columns">Width of the matrix</param>
-        public Matrix_SDA(int rows, int columns)
+        public MatrixSDA(int rows, int columns)
         {
             if (rows <= 0 || columns <= 0) throw new ArgumentException("Witdh and height are both must be non-negative numbers.");
             
@@ -36,7 +36,7 @@ namespace WhiteMath.Matrices
         /// <summary>
         /// Constructor "internal-only" version
         /// </summary>
-        internal Matrix_SDA() { }
+        internal MatrixSDA() { }
 
         // --------------- Overriding properties of abstract matrix
 
@@ -67,7 +67,7 @@ namespace WhiteMath.Matrices
         /// <returns></returns>
         protected override Matrix<T,C> negate()
         {
-            Matrix_SDA<T,C> temp = new Matrix_SDA<T,C>(rows, columns);
+            MatrixSDA<T,C> temp = new MatrixSDA<T,C>(rows, columns);
             temp.matrixArray = (Numeric<T,C>[])this.matrixArray.Clone();
 
             for (int i = 0; i < this.ElementCount; i++)
@@ -81,7 +81,7 @@ namespace WhiteMath.Matrices
             if (this.columns != another.RowCount)
                 throw new ArgumentException("The column count of the first matrix and the row count of the second matrix must match.");
 
-            Matrix_SDA<T,C> temp = new Matrix_SDA<T,C>(this.rows, another.ColumnCount);
+            MatrixSDA<T,C> temp = new MatrixSDA<T,C>(this.rows, another.ColumnCount);
             MatrixNumericHelper<T,C>.multiplySimple(this, another, temp);
 
             return temp;
@@ -95,8 +95,8 @@ namespace WhiteMath.Matrices
             // If the matrix is SDA, we can do it quick'n'lucky.
             if (this.GetType().IsInstanceOfType(another))
             {
-                Matrix_SDA<T,C> temp = (Matrix_SDA<T,C>)another;
-                Matrix_SDA<T,C> newMatrix = new Matrix_SDA<T,C>(this.rows, this.columns);
+                MatrixSDA<T,C> temp = (MatrixSDA<T,C>)another;
+                MatrixSDA<T,C> newMatrix = new MatrixSDA<T,C>(this.rows, this.columns);
 
                 for (int i = 0; i < this.ElementCount; i++)
                     newMatrix.matrixArray[i] = this.matrixArray[i] - temp.matrixArray[i];
@@ -106,7 +106,7 @@ namespace WhiteMath.Matrices
             // Here comes the bad case
             else
             {
-                Matrix_SDA<T,C> newMatrix = new Matrix_SDA<T,C>(this.rows, this.columns);
+                MatrixSDA<T,C> newMatrix = new MatrixSDA<T,C>(this.rows, this.columns);
 
                 for (int i = 0; i < this.ElementCount; i++)
                     newMatrix.matrixArray[i] = this.matrixArray[i] - another.getItemAt(i / columns, i % columns);
@@ -123,8 +123,8 @@ namespace WhiteMath.Matrices
             // If the matrix is SDA, we can do it quick'n'lucky.
             if (this.GetType().IsInstanceOfType(another))
             {
-                Matrix_SDA<T,C> temp = (Matrix_SDA<T,C>)another;
-                Matrix_SDA<T,C> newMatrix = new Matrix_SDA<T,C>(this.rows, this.columns);
+                MatrixSDA<T,C> temp = (MatrixSDA<T,C>)another;
+                MatrixSDA<T,C> newMatrix = new MatrixSDA<T,C>(this.rows, this.columns);
 
                 for (int i = 0; i < this.ElementCount; i++)
                     newMatrix.matrixArray[i] = this.matrixArray[i] + temp.matrixArray[i];
@@ -134,7 +134,7 @@ namespace WhiteMath.Matrices
             // Here comes the bad case
             else
             {
-                Matrix_SDA<T,C> newMatrix = new Matrix_SDA<T,C>(this.rows, this.columns);
+                MatrixSDA<T,C> newMatrix = new MatrixSDA<T,C>(this.rows, this.columns);
 
                 for (int i = 0; i < this.ElementCount; i++)
                     newMatrix.matrixArray[i] = this.matrixArray[i] + another.getItemAt(i / columns, i % columns);
@@ -149,7 +149,7 @@ namespace WhiteMath.Matrices
         /// <returns>The cloned matrix.</returns>
         public override object Clone()
         {
-            Matrix_SDA<T,C> temp = new Matrix_SDA<T,C>();
+            MatrixSDA<T,C> temp = new MatrixSDA<T,C>();
 
             temp.matrixArray = (Numeric<T,C>[])this.matrixArray.Clone();
             temp.rows = this.rows;

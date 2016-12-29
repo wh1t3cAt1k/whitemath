@@ -13,7 +13,8 @@ namespace WhiteMath.Randoms
     /// <typeparam name="B">The type specifying the digit base for the <c>LongInt&lt;B&gt;</c> type.</typeparam>
     public class RandomLongIntModular<B> : IRandomBounded<LongInt<B>> where B : IBase, new()
     {
-		private IRandomBounded<int> integerGenerator;
+		private IRandomBounded<int> _digitGenerator;
+		private Func<LongInt<B>, LongInt<B>, LongInt<B>> _multiply;
 
 		// Used for caching.
 		// -
@@ -40,31 +41,21 @@ namespace WhiteMath.Randoms
         /// Initializes the <c>RandomLongIntModular&lt;<typeparamref name="B"/>&gt;</c> instance
         /// with an integer digit generator and a delegate used to multiply <c>LongInt&lt;<typeparamref name="B"/>&gt;</c> numbers.
         /// </summary>
-        /// <param name="intGenerator">
+        /// <param name="digitGenerator">
         /// A uniform distribution integer generator which will be used 
         /// to produce <c>LongInt&lt;<typeparamref name="B"/>&gt;</c> digits.
         /// If <c>null</c>, a new <c>RandomStandard</c> instance will be used.
         /// </param>
         /// <see cref="RandomStandard"/>
-        /// <param name="multiplication">
-        /// A function taking two <c>LongInt&lt;<typeparamref name="B"/>&gt;</c> numbers 
-        /// and returning their multiplication product.
-        /// If <c>null</c>, the simple, O(n^2) multiplication method will be used.
+        /// <param name="multiply">
+		/// A function taking two <c>LongInt{B}</c> numbers and returning their product.
+		/// If <c>null</c>, the simple, <c>O(n^2)</c> method will be used.
         /// </param>
-        /// <see cref="LongInt&lt;B&gt;.Helper.MultiplySimple"/>
-        public RandomLongIntModular(IRandomBounded<int> intGenerator = null, Func<LongInt<B>, LongInt<B>, LongInt<B>> multiplication = null)
+		/// <seealso cref="LongInt{B}.Helper.MultiplySimple"/>
+		public RandomLongIntModular(IRandomBounded<int> digitGenerator = null, Func<LongInt<B>, LongInt<B>, LongInt<B>> multiply = null)
         {
-            if (intGenerator == null)
-			{
-                intGenerator = new RandomStandard();
-			}
-
-            if (multiplication == null)
-			{
-                multiplication = LongInt<B>.Helper.MultiplySimple;
-			}
-
-            this.integerGenerator = intGenerator;
+			_digitGenerator = digitGenerator ?? new RandomStandard();
+			_multiply = multiply ?? LongInt<B>.Helper.MultiplySimple;
         }
 
         /// <summary>
@@ -98,10 +89,13 @@ namespace WhiteMath.Randoms
                 // Например, если мы генерируем цифирки по основанию 10, и хотим число от [0; 12),
                 // то нам нужно отбрасывать начиная с floor(10^2 / 12) * 12 = 96. 
                 
-                upperBound = Max_BinarySearch((LongInt<B>)1, LongInt<B>.BASE, (res => LongInt<B>.Helper.MultiplyFFTComplex(res, maxExclusive) <= basePowered)) * maxExclusive;
+				upperBound = _multiply(
+					maxExclusive,
+					BinarySearchMax(
+						(LongInt<B>)1, 
+						LongInt<B>.BASE, 
+						(x => _multiply(x, maxExclusive) <= basePowered)));
                 
-                // upperBound = multiplication(basePowered / maxExclusive, maxExclusive);
-
                 this.lastMaxExclusive = maxExclusive;
                 this.lastBound = upperBound;
             }
@@ -110,28 +104,37 @@ namespace WhiteMath.Randoms
 
             LongInt<B> result = new LongInt<B>();
 
-        REPEAT:
+			while (true)
+			{
+				result.Digits.Clear();
 
-            result.Digits.Clear();
+				for (int digitIndex = 0; digitIndex < maxExclusive.Length; ++digitIndex)
+				{
+					result.Digits.Add(_digitGenerator.Next(0, LongInt<B>.BASE));
+				}
 
-            for (int i = 0; i < maxExclusive.Length; i++)
-                result.Digits.Add(integerGenerator.Next(0, LongInt<B>.BASE));
+				result.DealWithZeroes();
 
-            result.DealWithZeroes();
-
-            if (result >= upperBound)
-            {
-                ++TotalRejected;
-                goto REPEAT;
-            }
+				if (result >= upperBound)
+				{
+					++TotalRejected;
+				}
+				else
+				{
+					break;
+				}
+			}
 
             // Возвращаем остаток от деления.
 
             // return result % maxExclusive;
 
-            LongInt<B> divisionResult = Max_BinarySearch((LongInt<B>)0, LongInt<B>.BASE, (res => LongInt<B>.Helper.MultiplyFFTComplex(res, maxExclusive) <= result));
+            LongInt<B> divisionResult = BinarySearchMax(
+				(LongInt<B>)0, 
+				LongInt<B>.BASE, 
+				(x => _multiply(x, maxExclusive) <= result));
             
-            return result - LongInt<B>.Helper.MultiplyFFTComplex(divisionResult, maxExclusive);
+			return result - _multiply(divisionResult, maxExclusive);
         }
 
         /// <summary>
@@ -168,7 +171,10 @@ namespace WhiteMath.Randoms
         /// desired (sought-for) number, and only for these.
         /// </param>
         /// <returns>The maximum number within a given interval for which the <paramref name="predicate"/> holds.</returns>
-        private static LongInt<B> Max_BinarySearch<B>(LongInt<B> leftInclusive, LongInt<B> rightInclusive, Predicate<LongInt<B>> predicate)
+		private static LongInt<B> BinarySearchMax<B>(
+			LongInt<B> leftInclusive, 
+			LongInt<B> rightInclusive, 
+			Predicate<LongInt<B>> predicate)
             where B : IBase, new()
         {
 			Condition.ValidateNotNull(leftInclusive, nameof(leftInclusive));

@@ -26,7 +26,7 @@ namespace WhiteMath
         /// <summary>
         /// Gets the method which calculates the sum of two <typeparamref name="T"/> values.
         /// </summary>
-        public Func<T, T, T>       OperatorPlus { get; private set; }
+        public Func<T, T, T> OperatorPlus { get; private set; }
         
         /// <summary>
         /// Initializes a new instance of Summator(<typeparamref name="T"/>) class
@@ -100,7 +100,7 @@ namespace WhiteMath
         /// <param name="comparer">The comparer to compare values of type <typeparamref name="T"/>. Should return a positive value if the first value is bigger than the second, zero value if they are equal, and a negative value if the first object is less.</param>
         /// <param name="memberFormula">The general term formula dependent on an integer index.</param>
         /// <returns>The result of lower-to-bigger summation of the sequence starting with index <paramref name="startIndex"/> and ending with index <paramref name="endIndex"/>, both inclusive.</returns>
-        public T Sum_SmallerToBigger(Func<int, T> memberFormula, int startIndex, int endIndex, IComparer<T> comparer)
+        public T SumSmallerToBigger(Func<int, T> memberFormula, int startIndex, int endIndex, IComparer<T> comparer)
         {
             IPriorityQueue<T> sequence = new BinaryHeap<T>(comparer.GetReverseComparer());
 

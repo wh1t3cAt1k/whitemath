@@ -22,7 +22,7 @@ namespace WhiteMath.General
         {
             comparer = comparer ?? Comparer<T>.Default;
 
-			if (sequence.IsEmpty() || sequence.IsSingleton())
+			if (sequence.IsEmpty() || sequence.IsSingleElement())
 			{
 				return true;
 			}

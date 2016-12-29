@@ -301,7 +301,7 @@ namespace WhiteMath.Matrices
                 for (int m = j; m < j + rows; m++)
                     ma[k * rows + m] = calc.GetCopy(this.getItemAt(k, m));
 
-            Matrix_SDA<T,C> temp = new Matrix_SDA<T,C>();
+            MatrixSDA<T,C> temp = new MatrixSDA<T,C>();
                 
                 temp.matrixArray = ma;
                 temp.rows = rows;
@@ -342,7 +342,7 @@ namespace WhiteMath.Matrices
         /// <param name="i">Row index of the upper-left corner element</param>
         /// <param name="j">Column index of the upper-left corner element</param>
         /// <returns>A binded submatrix of size [RowCount-i; ColumnCount-j]</returns>
-        public Matrix<T, C> getSubMatrixAt(int i, int j)
+        public Matrix<T, C> GetSubMatrixAt(int i, int j)
             { return this.getSubMatrixAt(i, j, RowCount - i, ColumnCount - j); }
 
         // -------------------------------------------------------------

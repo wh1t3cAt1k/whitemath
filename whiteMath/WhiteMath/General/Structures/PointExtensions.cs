@@ -62,7 +62,7 @@ namespace WhiteMath.General
         {
             list.Assert_NotNull("The list of points should not be null.");
 
-            Matrix_SDA<T, C> matrix = new Matrix_SDA<T, C>(list.Count, 2);
+            MatrixSDA<T, C> matrix = new MatrixSDA<T, C>(list.Count, 2);
 
             for (int i = 0; i < matrix.RowCount; i++)
             {

@@ -75,7 +75,7 @@ namespace WhiteMath.NeuralNetworks
 
         public Numeric<T, C> ProvideValue()
         {
-            return summator.Sum_SmallerToBigger(
+            return summator.SumSmallerToBigger(
                 delegate(int i)
                 {
                     return this.EntrySignals[i].ProvideValue() * this.Weights[i];

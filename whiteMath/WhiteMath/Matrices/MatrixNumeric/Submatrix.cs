@@ -43,7 +43,7 @@ namespace WhiteMath.Matrices
 
         internal Submatrix(Matrix<T,C> matrix, int rowOffset, int columnOffset, int rows, int columns)
         {
-            if (matrix is Matrix_SDA<T, C>) 
+            if (matrix is MatrixSDA<T, C>) 
                 _matrixType = MatrixType.SDA;
             else 
                 _matrixType = MatrixType.DI;

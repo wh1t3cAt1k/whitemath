@@ -25,8 +25,8 @@ namespace WhiteMath.Matrices
 
             int dim = coefficients.RowCount;
 
-            Matrix_SDA<T, C> K = new Matrix_SDA<T, C>(dim, dim);
-            Matrix_SDA<T, C> M = new Matrix_SDA<T, C>(dim, dim);
+            MatrixSDA<T, C> K = new MatrixSDA<T, C>(dim, dim);
+            MatrixSDA<T, C> M = new MatrixSDA<T, C>(dim, dim);
 
             // Заполняем единичную диагональ матрицы K.
             for (int i = 0; i < dim; i++)

@@ -24,16 +24,16 @@ namespace WhiteMath.Statistics
         {
 			Condition.ValidateNotEmpty(values, "Cannot calculate sample average for an empty sequence.");
 
-            Numeric<T, C> sum = Numeric<T, C>.Zero;
-			Numeric<T, C> count = Numeric<T, C>.Zero;
+			Numeric<T, C> sum = Numeric<T, C>.Zero;
+			Numeric<T, C> elementCount = Numeric<T, C>.Zero;
 
 			foreach (T value in values)
 			{
 				sum += value;
-				count++;
+				++elementCount;
 			}
 
-            return sum / count;
+            return sum / elementCount;
         }
 
         /// <summary>
@@ -54,13 +54,6 @@ namespace WhiteMath.Statistics
         public static T SampleMedian<T, C>(this IEnumerable<T> values, IComparer<T> comparer = null) where C : ICalc<T>, new()
         {
 			Condition.ValidateNotNull(values, nameof(values));
-
-			/*
-			Contract.Ensures(
-                values.Where(x => (Numeric<T, C>)x < Contract.Result<T>()).Count() == values.Count() / 2,
-                "The value returned does not satisfy the requirements for the median.");
-			*/
-
 			Condition.ValidateNotEmpty(values, "Cannot calculate the sample median for an empty sequence.");
 
             T[] sortedSequence = values.ToArray();
@@ -73,7 +66,9 @@ namespace WhiteMath.Statistics
                 // we calculate it as an arithmetic average of two adjacent middle elements of the
                 // sequence sorted ascending. 
                 // -
-                return ((Numeric<T, C>)sortedSequence[(sortedSequence.Length - 1) / 2] + sortedSequence[sortedSequence.Length / 2]) / (Numeric<T, C>._2);
+                return 
+					((Numeric<T, C>)sortedSequence[(sortedSequence.Length - 1) / 2] 
+					+ sortedSequence[sortedSequence.Length / 2]) / (Numeric<T, C>._2);
             }
             else
             {
@@ -94,11 +89,12 @@ namespace WhiteMath.Statistics
         {
             int count = values.Count();
 
-			if (count == 0)
+			if (values.IsEmpty())
 			{
 				throw new ArgumentException("Cannot return the series count for an empty sequence.");
 			}
-			else if (count == 1)
+
+			if (values.IsSingleElement())
 			{
 				return 0;
 			}
@@ -106,28 +102,32 @@ namespace WhiteMath.Statistics
             int signChanges = 0;
 
             IEnumerator<T> enumerator = values.GetEnumerator();
-            ICalc<T> calc = Numeric<T,C>.Calculator;
+            ICalc<T> calculator = Numeric<T,C>.Calculator;
 
             enumerator.MoveNext();
 
-            // Find the first value not equal to the median.
-            // -
-            while (calc.Equal(enumerator.Current, sampleMedian))
-                if (enumerator.MoveNext() == false)
-                    return 0;
+			// Find the first value not equal to the median.
+			// -
+			while (calculator.Equal(enumerator.Current, sampleMedian))
+			{
+				if (enumerator.MoveNext() == false)
+				{
+					return 0;
+				}
+			}
 
-            bool isPlus = calc.GreaterThan(enumerator.Current, sampleMedian);
+            bool isPlus = calculator.GreaterThan(enumerator.Current, sampleMedian);
 
             while (enumerator.MoveNext())
             {
-                if (!isPlus && calc.GreaterThan(enumerator.Current, sampleMedian))
+				if (!isPlus && calculator.GreaterThan(enumerator.Current, sampleMedian))
                 {
-                    signChanges++;
+					++signChanges;
                     isPlus = true;
                 }
-                else if (isPlus && calc.GreaterThan(sampleMedian, enumerator.Current))
+                else if (isPlus && calculator.GreaterThan(sampleMedian, enumerator.Current))
                 {
-                    signChanges++;
+                    ++signChanges;
                     isPlus = false;
                 }
             }
@@ -147,28 +147,28 @@ namespace WhiteMath.Statistics
         {
 			Condition.ValidateNotNull(values, nameof(values));
 
-			/*
-            Contract.Ensures(Contract.Result<T>() >= Numeric<T, C>._0, "The variance should not be negative.");
-			*/
-
-            int count = values.Count();
-
-			if (count == 0)
+			if (values.IsEmpty())
 			{
 				throw new ArgumentException("Cannot calculate the sample variance for an empty sequence.");
 			}
-			else if (count == 1)
+
+			if (values.IsSingleElement())
 			{
 				return Numeric<T, C>.Zero;
 			}
 
-            Numeric<T, C> sum = Numeric<T, C>.Zero;
-            ICalc<T> calc = Numeric<T, C>.Calculator;
+			Numeric<T, C> result = Numeric<T, C>.Zero;
+			ICalc<T> calculator = Numeric<T, C>.Calculator;
 
-            foreach (T value in values)
-                sum += Mathematics<T, C>.PowerInteger(calc.Subtract(value, sampleAverage), 2);
+			int valuesCount = 0;
 
-            return sum / (Numeric<T, C>)(values.Count()-1);
+			foreach (T value in values)
+			{
+				result += Mathematics<T, C>.PowerInteger(calculator.Subtract(value, sampleAverage), 2);
+				++valuesCount;
+			}
+
+			return result / (Numeric<T, C>)(valuesCount - 1);
         }
 
         /// <summary>
@@ -183,11 +183,9 @@ namespace WhiteMath.Statistics
         {
 			Condition.ValidateNotNull(values, nameof(values));
 
-			/*
-            Contract.Ensures(Contract.Result<T>() >= Numeric<T, C>._0, "The variance should not be negative.");
-			*/
-
-            return SampleUnbiasedVariance<T, C>(values, sampleAverage) * (Numeric<T,C>)(values.Count() - 1) / (Numeric<T,C>)(values.Count());
+            return SampleUnbiasedVariance<T, C>(values, sampleAverage) 
+				* (Numeric<T,C>)(values.Count() - 1) 
+				/ (Numeric<T,C>)(values.Count());
         }
 
         // - 
@@ -615,7 +613,7 @@ namespace WhiteMath.Statistics
                 windowWidth,
                 windowType,
                 tailValuesHandling,
-                StatisticExtensionMethods.SampleAverage<T, C>);
+                SampleAverage<T, C>);
         }
 
         /// <summary>
