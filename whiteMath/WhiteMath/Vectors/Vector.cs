@@ -203,37 +203,37 @@ namespace WhiteMath.Vectors
                 throw new ArgumentOutOfRangeException("At least one of the indexes was out of range.");
         }
 
-        object IMatrix.GetElementValue(int row, int column)
+        object IMatrix.GetElementAt(int row, int column)
         {
             ___checkMatrixRange(row, column);
             return this[row];
         }
 
-        T IMatrix<T>.GetElementValue(int row, int column)
+        T IMatrix<T>.GetElementAt(int row, int column)
         {
             ___checkMatrixRange(row, column);
             return this[row];
         }
 
-        Numeric<T, C> IMatrix<Numeric<T, C>>.GetElementValue(int row, int column)
+        Numeric<T, C> IMatrix<Numeric<T, C>>.GetElementAt(int row, int column)
         {
             ___checkMatrixRange(row, column);
             return this[row];
         }
 
-        void IMutableMatrix.SetElementValue(int row, int column, object value)
+        void IMutableMatrix.SetElementAt(int row, int column, object value)
         {
             ___checkMatrixRange(row, column);
             this[row] = (T)value;
         }
 
-        void IMutableMatrix<T>.SetElementValue(int row, int column, T value)
+        void IMutableMatrix<T>.SetElementAt(int row, int column, T value)
         {
             ___checkMatrixRange(row, column);
             this[row] = value;
         }
 
-        void IMutableMatrix<Numeric<T, C>>.SetElementValue(int row, int column, Numeric<T, C> value)
+        void IMutableMatrix<Numeric<T, C>>.SetElementAt(int row, int column, Numeric<T, C> value)
         {
             ___checkMatrixRange(row, column);
             this[row] = value;

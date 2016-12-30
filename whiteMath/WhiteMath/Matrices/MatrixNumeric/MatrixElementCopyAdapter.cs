@@ -6,29 +6,35 @@ namespace WhiteMath.Matrices
     {
         public class ElementCopyAdapter
         {
-            private Matrix<T, C> parent;
+			private Matrix<T, C> _parent;
 
             internal ElementCopyAdapter(Matrix<T, C> obj)
             {
-                this.parent = obj;
+                _parent = obj;
             }
 
-            public void convertFromArray(T[,] matrix)
+			public void ConvertFrom2DArray(T[,] matrix)
             {
-                T[,] newMatrix = new T[matrix.GetLength(0), matrix.GetLength(1)];
-
-                for (int i = 0; i < matrix.GetLength(0); i++)
-                    for (int j = 0; j < matrix.GetLength(1); j++)
-                        parent[i, j] = calc.GetCopy(matrix[i, j]);
+				for (int rowIndex = 0; rowIndex < matrix.GetLength(0); ++rowIndex)
+				{
+					for (int columnIndex = 0; columnIndex < matrix.GetLength(1); ++columnIndex)
+					{
+						_parent[rowIndex, columnIndex] = calc.GetCopy(matrix[rowIndex, columnIndex]);
+					}
+				}
             }
 
-            public T[,] convertToArray()
+			public T[,] ConvertTo2DArray()
             {
-                T[,] newMatrix = new T[parent.RowCount, parent.ColumnCount];
+                T[,] newMatrix = new T[_parent.RowCount, _parent.ColumnCount];
 
-                for (int i = 0; i < parent.RowCount; i++)
-                    for (int j = 0; j < parent.ColumnCount; j++)
-                        newMatrix[i, j] = calc.GetCopy(parent[i, j]);
+				for (int rowIndex = 0; rowIndex < _parent.RowCount; rowIndex++)
+				{
+					for (int columnIndex = 0; columnIndex < _parent.ColumnCount; columnIndex++)
+					{
+						newMatrix[rowIndex, columnIndex] = calc.GetCopy(_parent[rowIndex, columnIndex]);
+					}
+				}
 
                 return newMatrix;
             }

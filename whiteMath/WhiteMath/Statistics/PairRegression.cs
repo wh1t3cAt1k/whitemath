@@ -10,9 +10,10 @@ namespace WhiteMath.Statistics
 {
     public static class CLNRM
     {
-        public struct LeastSquares_Result<T, C> where C : ICalc<T>, new()
+        public struct LeastSquares_Result<T, C> 
+			where C : ICalc<T>, new()
         {
-            Vector<T, C> leastSquaresCoefficients;
+			Vector<T, C> LeastSquaresCoefficients;
 
             T RSS;
             T ESS;
@@ -27,9 +28,10 @@ namespace WhiteMath.Statistics
         /// <param name="xValues"></param>
         /// <param name="yValues"></param>
         /// <returns></returns>
-        public static Vector<T, C> EstimateLeastSquaresCoefficients<T, C>(IList<T> xValues, IList<T> yValues) where C: ICalc<T>, new()
+        public static Vector<T, C> EstimateLeastSquaresCoefficients<T, C>(IList<T> xValues, IList<T> yValues) 
+			where C: ICalc<T>, new()
         {
-            return EstimateLeastSquaresCoefficients<T, C>(PointExtensions.convertToListOfPairs(xValues, yValues));
+            return EstimateLeastSquaresCoefficients<T, C>(PointExtensions.ConvertToListOfPairs(xValues, yValues));
         }
 
         /// <summary>
@@ -41,7 +43,7 @@ namespace WhiteMath.Statistics
         /// <returns></returns>
         public static Vector<T, C> EstimateLeastSquaresCoefficients<T, C>(IList<Point<T>> points) where C: ICalc<T>, new()
         {
-            return EstimateLeastSquaresCoefficients(points.convertToMatrixRows<T,C>());
+            return EstimateLeastSquaresCoefficients(points.ConvertToMatrixRows<T,C>());
         }
 
         /// <summary>
@@ -70,11 +72,11 @@ namespace WhiteMath.Statistics
             // TODO: transposition should NOT create a new matrix.
             // write a new matrix class
 
-            Matrix<T, C> xTransposed = xMatrix.transposedMatrixCopy();
-            Matrix<T, C> result = (xTransposed * xMatrix).CalculateInverseMatrixLUPFactorization() * xTransposed * yVector;
+            Matrix<T, C> xTransposed = xMatrix.GetTransposedMatrix();
+            Matrix<T, C> result = (xTransposed * xMatrix).CalculateInverseMatrixLupFactorization() * xTransposed * yVector;
             
             IWinder winder = result.GetRowByRowWinder();
-            return result.unwindToArray(winder);
+            return result.UnwindIntoArray(winder);
         }
 
         /// <summary>

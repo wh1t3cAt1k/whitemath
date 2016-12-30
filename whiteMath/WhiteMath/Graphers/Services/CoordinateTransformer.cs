@@ -179,12 +179,12 @@ namespace WhiteMath.Graphers
 
         public T transformImageXtoFunctionX(double pixelX)
         {
-            return TransformerAxisX.transformImagePointToFunctionPoint(pixelX);
+            return TransformerAxisX.TransformImagePointToFunctionPoint(pixelX);
         }
 
         public T transformImageYToFunctionY(double pixelY)
         {
-            return TransformerAxisY.transformImagePointToFunctionPoint(pixelY);
+            return TransformerAxisY.TransformImagePointToFunctionPoint(pixelY);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace WhiteMath.Graphers
         /// <returns></returns>
         public double transformFunctionXToPixelX(T x)
         {
-            return TransformerAxisX.transformFunctionPointToImagePoint(x);
+            return TransformerAxisX.TransformFunctionPointToImagePoint(x);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace WhiteMath.Graphers
         /// <returns></returns>
         public double transformFunctionYToPixelY(T y)
         {
-            return TransformerAxisY.transformFunctionPointToImagePoint(y);
+            return TransformerAxisY.TransformFunctionPointToImagePoint(y);
         }
 
         // --------------------------------------------------

@@ -21,12 +21,12 @@ namespace WhiteMath.Graphers
     [Serializable]
     public class DimensionTransformer<T,C> where C: ICalc<T>, new()
     {
-        private Numeric<T, C> k;                            // какой интервал икса приходится на один пиксель
-        private Numeric<T, C> functionMin, functionMax;     // интервал функции
+		private Numeric<T, C> _distancePerPixel;
+		private Numeric<T, C> _functionMin, _functionMax;
 
-        private double imageMin, imageMax;                  // интервал картинки   
+        private double imageMin, imageMax;   
         
-        private Func<T, double> toDouble;                   // функция, переводящая тип T в double
+		private Func<T, double> _toDouble;
 
         // ------------------ public properties
 
@@ -41,13 +41,13 @@ namespace WhiteMath.Graphers
         /// Returns the leftmost boundary of function axis
         /// transformation interval.
         /// </summary>
-        public T MinFunctionAxis { get { return functionMin; } }
+        public T MinFunctionAxis { get { return _functionMin; } }
         
         /// <summary>
         /// Returns the rightmost boundary of function axis
         /// transformation interval.
         /// </summary>
-        public T MaxFunctionAxis { get { return functionMax; } }
+        public T MaxFunctionAxis { get { return _functionMax; } }
 
         /// <summary>
         /// Returns the leftmost boundary of image axis
@@ -66,7 +66,7 @@ namespace WhiteMath.Graphers
         /// an interval on the function axis which is equivalent to one-pixel
         /// interval range on the image axis.
         /// </summary>
-        public T ScaleFactor { get { return k; } }
+        public T ScaleFactor { get { return _distancePerPixel; } }
 
         // ------------------------------------
 
@@ -93,26 +93,14 @@ namespace WhiteMath.Graphers
             this.imageMin = imageAxisMin;
             this.imageMax = imageAxisMax;
 
-            this.functionMin = functionAxisMin;
-            this.functionMax = functionAxisMax;
+            this._functionMin = functionAxisMin;
+            this._functionMax = functionAxisMax;
 
-            this.toDouble = toDouble;
+            this._toDouble = toDouble;
             this.ReverseImageAxis = reverseImageAxis;
 
-            this.k = (functionMax - functionMin) / (Numeric<T,C>)(imageMax - imageMin);
+            this._distancePerPixel = (_functionMax - _functionMin) / (Numeric<T, C>)(imageMax - imageMin);
         }
-
-		/*
-        [ContractInvariantMethod]
-        private void ContractInvariant()
-        {
-            Contract.Invariant(this.toDouble != null);
-        }
-        */
-
-        // --------------------------------------------------
-        // --------------------- Point transform ------------
-        // --------------------------------------------------
 
         /// <summary>
         /// Transforms the coordinate on the image axis
@@ -120,12 +108,14 @@ namespace WhiteMath.Graphers
         /// </summary>
         /// <param name="pixelCoordinate">The coordinate of a point on the image axis.</param>
         /// <returns>The coordinate of the point on the function plane axis.</returns>
-        public T transformImagePointToFunctionPoint(double pixelCoordinate)
+        public T TransformImagePointToFunctionPoint(double pixelCoordinate)
         {
-            if (ReverseImageAxis)
-                return functionMax - (Numeric<T, C>)(pixelCoordinate - imageMin) * k;
+			if (ReverseImageAxis)
+			{
+				return _functionMax - (Numeric<T, C>)(pixelCoordinate - imageMin) * _distancePerPixel;
+			}
 
-            return functionMin + (Numeric<T,C>)(pixelCoordinate - imageMin) * k;
+            return _functionMin + (Numeric<T,C>)(pixelCoordinate - imageMin) * _distancePerPixel;
         }
 
         /// <summary>
@@ -134,12 +124,14 @@ namespace WhiteMath.Graphers
         /// </summary>
         /// <param name="functionCoordinate">The coordinate of a point on the function plane axis.</param>
         /// <returns>The coordinate of the point on the function plane axis.</returns>
-        public double transformFunctionPointToImagePoint(T functionCoordinate)
+        public double TransformFunctionPointToImagePoint(T functionCoordinate)
         {
-            if (ReverseImageAxis)
-                return imageMax - toDouble((functionCoordinate - functionMin) / k);
+			if (ReverseImageAxis)
+			{
+				return imageMax - _toDouble((functionCoordinate - _functionMin) / _distancePerPixel);
+			}
 
-            return imageMin + toDouble((functionCoordinate - functionMin) / k);
+            return imageMin + _toDouble((functionCoordinate - _functionMin) / _distancePerPixel);
         }
 
         // --------------------------------------------------
@@ -151,9 +143,9 @@ namespace WhiteMath.Graphers
         /// </summary>
         /// <param name="imageAxisRangeLength">The length of pixel axis range.</param>
         /// <returns>The length of function axis range.</returns>
-        public T transformRangeLengthImageToFunction(double imageAxisRangeLength)
+		public T TransformRangeLengthImageToFunction(double imageAxisRangeLength)
         {
-            return (Numeric<T,C>)imageAxisRangeLength * k;
+            return (Numeric<T,C>)imageAxisRangeLength * _distancePerPixel;
         }
 
         /// <summary>
@@ -162,9 +154,9 @@ namespace WhiteMath.Graphers
         /// </summary>
         /// <param name="functionAxisRangeLength">The length of function plane axis range.</param>
         /// <returns>The length of image axis range.</returns>
-        public double transformRangeLengthFunctionToImage(T functionAxisRangeLength)
+		public double TransformRangeLengthFunctionToImage(T functionAxisRangeLength)
         {
-            return toDouble(functionAxisRangeLength / k);
+            return _toDouble(functionAxisRangeLength / _distancePerPixel);
         }
 
         // --------------------------------------------------
@@ -175,19 +167,21 @@ namespace WhiteMath.Graphers
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
+			if (obj == null)
+			{
+				return false;
+			}
 
-            else if (obj is DimensionTransformer<T,C>)
+			if (obj is DimensionTransformer<T,C>)
             {
                 DimensionTransformer<T,C> dt = obj as DimensionTransformer<T,C>;
 
                 return 
-                    this.imageMin == dt.imageMin            &&
-                    this.imageMax == dt.imageMax            &&
-                    this.functionMin == dt.functionMin      &&
-                    this.functionMax == dt.functionMax      &&
-                    this.toDouble    == dt.toDouble;
+                    this.imageMin == dt.imageMin
+				    && this.imageMax == dt.imageMax
+                    && this._functionMin == dt._functionMin
+                    && this._functionMax == dt._functionMax
+					&& this._toDouble == dt._toDouble;
             }
             
             return false;
@@ -195,7 +189,9 @@ namespace WhiteMath.Graphers
 
         public override string ToString()
         {
-            return String.Format("DimensionTransformer[imageAxisRange = {0}-{1}; functionAxisRange = {2}-{3}]", imageMin, imageMax, functionMin, functionMax);
+            return String.Format(
+				"DimensionTransformer[imageAxisRange = {0}-{1}; functionAxisRange = {2}-{3}]", 
+				imageMin, imageMax, _functionMin, _functionMax);
         }
 
         public override int GetHashCode()
@@ -203,8 +199,8 @@ namespace WhiteMath.Graphers
             unchecked
             {
                 return
-                    functionMin.GetHashCode() + functionMax.GetHashCode() +
-                    imageMin.GetHashCode() + functionMax.GetHashCode();
+                    _functionMin.GetHashCode() + _functionMax.GetHashCode() +
+                    imageMin.GetHashCode() + _functionMax.GetHashCode();
             }
         }
     }

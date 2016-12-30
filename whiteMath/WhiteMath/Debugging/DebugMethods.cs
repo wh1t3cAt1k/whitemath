@@ -59,7 +59,7 @@ namespace WhiteMath
 
             for (int i = 0; i < matrix.RowCount; i++)
                 for (int j = 0; j < matrix.ColumnCount; j++)
-                    matString[i, j] = matrix.GetElementValue(i, j).ToString();
+                    matString[i, j] = matrix.GetElementAt(i, j).ToString();
 
             return matString;
         }

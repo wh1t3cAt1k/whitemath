@@ -10,7 +10,7 @@ namespace WhiteMath.Matrices
     /// </summary>
     public interface IWinder
     {
-        IndexPair getNextIndexPair();
+        IndexPair GetNextIndexPair();
 
         /// <summary>
         /// Resets the winder so the indexing starts from the beginning
@@ -55,7 +55,7 @@ namespace WhiteMath.Matrices
         /// Returns the next index pair for winding/unwinding the matrix with/into a flat array.
         /// </summary>
         /// <returns>The IndexPair object.</returns>
-        public IndexPair getNextIndexPair()
+        public IndexPair GetNextIndexPair()
         {
             if(currentIndex==trace.Length) currentIndex=0;
             return this.trace[currentIndex++];

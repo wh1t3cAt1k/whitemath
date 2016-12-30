@@ -37,7 +37,7 @@ namespace WhiteMath.Matrices
         /// <param name="rows"></param>
         /// <param name="columns"></param>
         /// <returns></returns>
-        public static Matrix<T, C> getMatrixOfSize(MatrixType mt, int rows, int columns)
+        public static Matrix<T, C> GetMatrixOfSize(MatrixType mt, int rows, int columns)
         {
             switch (mt)
             {
@@ -90,7 +90,7 @@ namespace WhiteMath.Matrices
         {
             if (curDim <= 64)
             {
-                multiplySimple(A, B, result);
+                MultiplySimple(A, B, result);
                 return;
             }
 
@@ -179,7 +179,7 @@ namespace WhiteMath.Matrices
         {
             for (int i = 0; i < A.RowCount; i++)
                 for (int j = 0; j < A.ColumnCount; j++)
-                    result.setItemAt(i, j, A.getItemAt(i, j) + B.getItemAt(i, j));
+                    result.SetItemAt(i, j, A.GetElementAt(i, j) + B.GetElementAt(i, j));
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace WhiteMath.Matrices
         {
             for (int i = 0; i < A.RowCount; i++)
                 for (int j = 0; j < A.ColumnCount; j++)
-                    result.setItemAt(i, j, A.getItemAt(i, j) - B.getItemAt(i, j));
+                    result.SetItemAt(i, j, A.GetElementAt(i, j) - B.GetElementAt(i, j));
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace WhiteMath.Matrices
         {
             for(int i=0; i<A.RowCount; i++)
                 for(int j=0; j<A.RowCount; j++)
-                    result.setItemAt(i, j, -A.getItemAt(i,j));
+                    result.SetItemAt(i, j, -A.GetElementAt(i,j));
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace WhiteMath.Matrices
         {
             for (int i = 0; i < A.RowCount; i++)
                 for (int j = 0; j < A.ColumnCount; j++)
-                    result.setItemAt(i, j, A.getItemAt(i, j) + value);
+                    result.SetItemAt(i, j, A.GetElementAt(i, j) + value);
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace WhiteMath.Matrices
         {
             for (int i = 0; i < A.RowCount; i++)
                 for (int j = 0; j < A.ColumnCount; j++)
-                    result.setItemAt(i, j, A.getItemAt(i, j) - value);
+                    result.SetItemAt(i, j, A.GetElementAt(i, j) - value);
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace WhiteMath.Matrices
         {
             for (int i = 0; i < A.RowCount; i++)
                 for (int j = 0; j < A.ColumnCount; j++)
-                    result.setItemAt(i, j, A.getItemAt(i, j) / value);
+                    result.SetItemAt(i, j, A.GetElementAt(i, j) / value);
         }
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace WhiteMath.Matrices
         {
             for (int i = 0; i < A.RowCount; i++)
                 for (int j = 0; j < A.ColumnCount; j++)
-                    result.setItemAt(i, j, A.getItemAt(i, j) * value);
+                    result.SetItemAt(i, j, A.GetElementAt(i, j) * value);
         }
 
         // -----------------
@@ -278,7 +278,7 @@ namespace WhiteMath.Matrices
         {
             for (int i = 0; i < A.RowCount; i++)
                 for (int j = 0; j < A.ColumnCount; j++)
-                    result.setItemAt(i, j, A.getItemAt(i, j) * B.getItemAt(i,j));
+                    result.SetItemAt(i, j, A.GetElementAt(i, j) * B.GetElementAt(i,j));
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace WhiteMath.Matrices
         {
             for (int i = 0; i < A.RowCount; i++)
                 for (int j = 0; j < A.ColumnCount; j++)
-                    result.setItemAt(i, j, A.getItemAt(i, j) / B.getItemAt(i, j));
+                    result.SetItemAt(i, j, A.GetElementAt(i, j) / B.GetElementAt(i, j));
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace WhiteMath.Matrices
         /// <param name="A"></param>
         /// <param name="B"></param>
         /// <param name="result"></param>
-        public static void multiplySimple(Matrix<T,C> A, Matrix<T,C> B, Matrix<T,C> result)
+        public static void MultiplySimple(Matrix<T,C> A, Matrix<T,C> B, Matrix<T,C> result)
         {
             Numeric<T,C> sum;
 

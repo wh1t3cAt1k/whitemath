@@ -14,7 +14,7 @@ namespace WhiteMath.General
         /// <typeparam name="T">The type of point coordinates.</typeparam>
         /// <param name="list">The list object containing points of type <typeparamref name="T"/>.</param>
         /// <returns>The point object whose X coordinate is a list of X's and Y coordinate is a list of Y's.</returns>
-        public static Point<T[]> convertToPairOfLists<T>(this IList<Point<T>> list)
+		public static Point<T[]> ConvertToPairOfLists<T>(this IList<Point<T>> list)
         {
             list.Assert_NotNull("The list of points should not be null.");
 
@@ -36,7 +36,7 @@ namespace WhiteMath.General
         /// <param name="xValues">The array containing X coordinates.</param>
         /// <param name="yValues">The array containing Y coordinates.</param>
         /// <returns>An array of points with X coordinate storing the respective value of <paramref name="xValues"/> and Y coordinate storing the respective value of <paramref name="yValues"/>.</returns>
-        public static Point<T>[] convertToListOfPairs<T>(IList<T> xValues, IList<T> yValues)
+        public static Point<T>[] ConvertToListOfPairs<T>(IList<T> xValues, IList<T> yValues)
         {
             xValues.Assert_NotNull("The X coordinates array should not be null.");
             yValues.Assert_NotNull("The Y coordinates array should not be null.");
@@ -58,7 +58,7 @@ namespace WhiteMath.General
         /// <typeparam name="C">The calculator for the matrix elements type.</typeparam>
         /// <param name="list">The list object containing points of type <typeparamref name="T"/>.</param>
         /// <returns>The matrix of size (Nx2) which rows are exactly the point coordinates.</returns>
-        public static Matrix<T, C> convertToMatrixRows<T, C>(this IList<Point<T>> list) where C : ICalc<T>, new()
+        public static Matrix<T, C> ConvertToMatrixRows<T, C>(this IList<Point<T>> list) where C : ICalc<T>, new()
         {
             list.Assert_NotNull("The list of points should not be null.");
 

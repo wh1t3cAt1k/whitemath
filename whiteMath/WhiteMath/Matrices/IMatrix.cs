@@ -26,10 +26,10 @@ namespace WhiteMath.Matrices
         /// If no such row or column exist in the 
         /// matrix, an ArgumentOutOfRange exception may be thrown.
         /// </exception>
-        /// <param name="row">A zero-based index of a matrix row.</param>
-        /// <param name="column">A zero-based index of a matrix column.</param>
+        /// <param name="rowIndex">A zero-based index of a matrix row.</param>
+        /// <param name="columnIndex">A zero-based index of a matrix column.</param>
         /// <returns>The element at specified matrix position.</returns>
-        object GetElementValue(int row, int column);
+		object GetElementAt(int rowIndex, int columnIndex);
     }
 
     /// <summary>
@@ -49,10 +49,10 @@ namespace WhiteMath.Matrices
         /// If the matrix is strictly typed, the cast operation on the value
         /// passed may fail, thus resulting in an InvalidCastException.
         /// </exception>
-        /// <param name="row">A zero-based index of a matrix row.</param>
-        /// <param name="column">A zero-based index of a matrix column.</param>
+        /// <param name="rowIndex">A zero-based index of a matrix row.</param>
+        /// <param name="columnIndex">A zero-based index of a matrix column.</param>
         /// <param name="value"></param>
-        void SetElementValue(int row, int column, object value);
+		void SetElementAt(int rowIndex, int columnIndex, object value);
     }
 
     /// <summary>
@@ -69,10 +69,10 @@ namespace WhiteMath.Matrices
         /// If no such row or column exist in the 
         /// matrix, an ArgumentOutOfRange exception may be thrown.
         /// </exception>
-        /// <param name="row">A zero-based index of a matrix row.</param>
-        /// <param name="column">A zero-based index of a matrix column.</param>
+        /// <param name="rowIndex">A zero-based index of a matrix row.</param>
+        /// <param name="columnIndex">A zero-based index of a matrix column.</param>
         /// <returns>The element at specified matrix position.</returns>
-        new T GetElementValue(int row, int column);
+		new T GetElementAt(int rowIndex, int columnIndex);
     }
 
     /// <summary>
@@ -88,9 +88,9 @@ namespace WhiteMath.Matrices
         /// If no such row or column exist in the 
         /// matrix, an ArgumentOutOfRange exception may be thrown.
         /// </exception>
-        /// <param name="row">A zero-based index of a matrix row.</param>
-        /// <param name="column">A zero-based index of a matrix column.</param>
+        /// <param name="rowIndex">A zero-based index of a matrix row.</param>
+        /// <param name="columnIndex">A zero-based index of a matrix column.</param>
         /// <param name="value"></param>
-        void SetElementValue(int row, int column, T value);
+		void SetElementAt(int rowIndex, int columnIndex, T value);
     }
 }

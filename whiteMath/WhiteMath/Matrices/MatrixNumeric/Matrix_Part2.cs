@@ -7,29 +7,32 @@ using WhiteMath.Combinatorics;
 
 namespace WhiteMath.Matrices
 {
-    public abstract partial class Matrix<T,C> where C: ICalc<T>, new()
+    public abstract partial class Matrix<T, C> 
+		where C: ICalc<T>, new()
     {
-        // ------------------------
-        // ---boolean properties---
-        // ------------------------
-
         /// <summary>
         /// Tests if current matrix is a symmetric square matrix.
-        /// If the matrix is not square, a MatrixSizeException will be thrown.
+		/// If the matrix is not square, a <see cref="MatrixSiz"/> will be thrown.
         /// </summary>
         public bool IsSymmetric
         {
             get 
             {
-                this.checkSquare();
+                EnsureIsSquare();
 
-                bool flag = true;
+				bool result = true;
 
-                for (int i = 0; i < this.rows; i++)
-                    for (int j = i; j < this.columns; j++)
-                        flag &= (Numeric<T, C>.NumericComparer.Compare(this.getItemAt(i, j), this.getItemAt(j, i)) == 0);
+				for (int rowIndex = 0; rowIndex < this.RowCount; ++rowIndex)
+				{
+					for (int columnIndex = rowIndex; columnIndex < this.ColumnCount; ++columnIndex)
+					{
+						result &= (Numeric<T, C>.NumericComparer.Compare(
+							this.GetElementAt(rowIndex, columnIndex), 
+							this.GetElementAt(columnIndex, rowIndex)) == 0);
+					}
+				}
 
-                return flag;
+                return result;
             }
         }
 
@@ -37,12 +40,12 @@ namespace WhiteMath.Matrices
         // ---- interfaces --------
         // ------------------------
 
-        public static Matrix<T,C> operator +(Matrix<T,C> one, Numeric<T,C> two)
+        public static Matrix<T, C> operator +(Matrix<T,C> one, Numeric<T,C> two)
         {
             return one.addValue(two);
         }
 
-        public static Matrix<T,C> operator -(Matrix<T,C> one, Numeric<T,C> two)
+        public static Matrix<T, C> operator -(Matrix<T,C> one, Numeric<T,C> two)
         {
             return one.addValue(-two);
         }
@@ -105,12 +108,12 @@ namespace WhiteMath.Matrices
         {
             get
             {
-                this.checkSquare();     // check that this is a square matrix.
+                this.EnsureIsSquare();     // check that this is a square matrix.
                 
                 Numeric<T, C> sum = Numeric<T, C>.Zero;
 
-                for (int i = 0; i < this.rows; i++)
-                    sum += this.getItemAt(i, i);
+                for (int i = 0; i < this.RowCount; i++)
+                    sum += this.GetElementAt(i, i);
 
                 return sum;
             }
@@ -123,17 +126,14 @@ namespace WhiteMath.Matrices
         /// of the matrix.
         /// </summary>
         /// <returns></returns>
-        public Numeric<T, C> Determinant_LUP_Factorization()
+		public Numeric<T, C> CalculateDeterminantLupFactorization()
         {
             int[] P;
-            MatrixSDA<T,C> C;
-
-            // -------------------------------------------------------------
-            // LUP-factorize the matrix. If cannot, the determinant is zero.
+            MatrixSDA<T, C> C;
 
             try
             {
-                this.LUP_Factorization(out P, out C);
+				this.LupFactorize(out P, out C);
             }
             catch (MatrixSingularityException)
             {
@@ -142,10 +142,10 @@ namespace WhiteMath.Matrices
 
             int k = P.InversionCount<int, CalcInt>();
 
-            Numeric<T, C> mul = C.getItemAt(0, 0);
+            Numeric<T, C> mul = C.GetElementAt(0, 0);
             
-            for (int i = 1; i < this.rows; i++)
-                mul *= C.getItemAt(i, i);
+            for (int i = 1; i < this.RowCount; i++)
+                mul *= C.GetElementAt(i, i);
             
             return (k % 2 == 0 ? mul : -mul);
         }
@@ -158,62 +158,71 @@ namespace WhiteMath.Matrices
         /// Please do not use for matrices bigger than 7-10.
         /// </summary>
         /// <returns>The value of matrix determinant.</returns>
-        public Numeric<T, C> Determinant_Permutations()
+		public Numeric<T, C> CalculateDeterminantPermutations()
         {
-            if (this.rows != this.columns)
+            if (this.RowCount != this.ColumnCount)
                 throw new MatrixSizeException("Only square matrices can have a determinant.");
 
-            int n = this.rows;
- 
-            if      (n==0)    return Numeric<T,C>.Zero;
-            else if (n==1)    return this.getItemAt(0,0).Copy;
-            
-            int[] indices = new int[n];
+			int rowCount = this.RowCount;
 
-            indices.FillByAssign(delegate(int i) { return i; });
+			if (rowCount == 0)
+			{
+				return Numeric<T, C>.Zero;
+			}
+			else if (rowCount == 1)
+			{
+				return this.GetElementAt(0, 0).Copy;
+			}
+
+            int[] indices = new int[rowCount];
+
+			indices.FillByAssign(index => index);
 
             LexicographicPermutator<int> perm = new LexicographicPermutator<int>(indices);
 
-            Numeric<T, C> sum = Numeric<T, C>.Zero;
-            Numeric<T, C> multiplication;
+			Numeric<T, C> result = Numeric<T, C>.Zero;
+            Numeric<T, C> product;
 
             do
             {
-                int inversions = perm.InversionCount<int, CalcInt>();
+				int inversionsCount = perm.InversionCount<int, CalcInt>();
 
-                multiplication = this.getItemAt(perm[0], 0);
+				product = this.GetElementAt(perm[0], 0);
 
-                for (int i = 1; i < n && multiplication != Numeric<T,C>.Zero; i++)
-                    multiplication *= this.getItemAt(perm[i], i);
+				for (int i = 1; i < rowCount && product != Numeric<T, C>.Zero; i++)
+				{
+					product *= this.GetElementAt(perm[i], i);
+				}
 
-                if (inversions % 2 == 0)
-                    sum += multiplication;
-                else
-                    sum -= multiplication;
+				if (inversionsCount % 2 == 0)
+				{
+					result += product;
+				}
+				else
+				{
+					result -= product;
+				}
+            } 
+			while (perm.CreateNextPermutation());
 
-            } while (perm.CreateNextPermutation());
-
-            return sum;
+            return result;
         }
-
-        // ------------------- MATRIX MINOR -----------------------------
 
         /// <summary>
         /// Returns the dependent minor matrix which is made by hiding
-        /// the row with index <paramref name="rowToRemove"/> and the column with
-        /// index <paramref name="columnToRemove"/>.
-        /// 
+        /// the row with index <paramref name="rowIndexToExclude"/> and the column with
+        /// index <paramref name="columnIndexToExclude"/>.
         /// Any changes made to this minor matrix will be reflected on the current matrix.
         /// </summary>
-        /// <param name="rowToRemove">The row to be removed to form the minor matrix.</param>
-        /// <param name="columnToRemove">The column to be removed to form the minor matrix.</param>
+        /// <param name="rowIndexToExclude">The row to be removed to form the minor matrix.</param>
+        /// <param name="columnIndexToExclude">The column to be removed to form the minor matrix.</param>
         /// <returns>The dependent minor matrix by hiding one row and one column from the current matrix.</returns>
-        public Matrix<T, C> getMinorMatrix(int rowToRemove, int columnToRemove)
+		public Matrix<T, C> GetMinorMatrix(int rowIndexToExclude, int columnIndexToExclude)
         {
-            checkPositive(rowToRemove, columnToRemove);
-            checkBounds(rowToRemove + 1, columnToRemove + 1);
+            CheckArePositive(rowIndexToExclude, columnIndexToExclude);
+            CheckAreWithinBounds(rowIndexToExclude + 1, columnIndexToExclude + 1);
 
-            return new MinorMatrix<T, C>(this, rowToRemove, columnToRemove);
+            return new MinorMatrix<T, C>(this, rowIndexToExclude, columnIndexToExclude);
         }
 
         /// <summary>
@@ -224,29 +233,43 @@ namespace WhiteMath.Matrices
         /// <param name="rowToRemove">The index of the row to remove.</param>
         /// <param name="columnToRemove">The index of the column to remove.</param>
         /// <returns>The minor matrix copy (independent from the current).</returns>
-        public Matrix<T, C> getMinorMatrixCopy(int rowToRemove, int columnToRemove)
+		public Matrix<T, C> GetMinorMatrixCopy(int rowToRemove, int columnToRemove)
         {
-            checkPositive(rowToRemove, columnToRemove);
-            checkBounds(rowToRemove + 1, columnToRemove + 1);
+            CheckArePositive(rowToRemove, columnToRemove);
+            CheckAreWithinBounds(rowToRemove + 1, columnToRemove + 1);
          
-            Matrix<T, C> tmp = MatrixNumericHelper<T,C>.getMatrixOfSize(this.Matrix_Type, this.rows-1, this.columns-1);
-            
-            for(int i=0; i<rows; i++)
-                for (int j = 0; j < columns; j++)
-                {
-                    int positionIndexRow    = (i < rowToRemove ? i : (i > rowToRemove ? i - 1 : -1));
-                    int positionIndexColumn = (j < columnToRemove ? j : (j > columnToRemove ? j - 1 : -1));
+			Matrix<T, C> result = MatrixNumericHelper<T,C>.GetMatrixOfSize(
+				this.Matrix_Type, 
+				this.RowCount - 1, 
+				this.ColumnCount - 1);
 
-                    if (positionIndexColumn >= 0 && positionIndexRow >= 0)
-                        tmp.setItemAt(positionIndexRow, positionIndexColumn, this.getItemAt(i, j));
-                }
+			for (int rowIndex = 0; rowIndex < RowCount; rowIndex++)
+			{
+				for (int columnIndex = 0; columnIndex < ColumnCount; columnIndex++)
+				{
+					int positionIndexRow = rowIndex < rowToRemove 
+						? rowIndex 
+						: rowIndex > rowToRemove 
+						   ? rowIndex - 1 
+						   : -1;
+					
+					int positionIndexColumn = columnIndex < columnToRemove 
+						? columnIndex 
+						: columnIndex > columnToRemove 
+							? columnIndex - 1 
+							: -1;
 
-            return tmp;
+					if (positionIndexColumn >= 0 && positionIndexRow >= 0)
+					{
+						result.SetItemAt(positionIndexRow, positionIndexColumn, this.GetElementAt(rowIndex, columnIndex));
+					}
+				}
+			}
+
+            return result;
         }
 
         // ------------------- INVERSE MATRIX ---------------------------
-
-        // TO DO: make without minor matrix copy, but with minor matrix itself. Economy of the memory.
 
         /// <summary>
         /// Calculates the inverse matrix using the LUP-factorization for calculating matrix determinants 
@@ -257,28 +280,28 @@ namespace WhiteMath.Matrices
         /// If these requirements are not met, either a MatrixSizeException 
         /// or a MatrixSingularityException shall be thrown.
         /// </summary>
-        public Matrix<T, C> CalculateInverseMatrixLUPFactorization()
+        public Matrix<T, C> CalculateInverseMatrixLupFactorization()
         {
-            this.checkSquare();
+            this.EnsureIsSquare();
 
-            Numeric<T, C> determinant = this.Determinant_LUP_Factorization();
+            Numeric<T, C> determinant = this.CalculateDeterminantLupFactorization();
 
             if(determinant == Numeric<T,C>.Zero)
                 throw new MatrixSingularityException("cannot calculate the inverse matrix.");
 
             // to do: make matrix type
 
-            Matrix<T, C> inverse = new MatrixSDA<T, C>(this.rows, this.columns);
+            Matrix<T, C> inverse = new MatrixSDA<T, C>(this.RowCount, this.ColumnCount);
  
-            for(int i = 0; i< rows; i++)
-                for (int j = 0; j < columns; j++)
+            for(int i = 0; i< RowCount; i++)
+                for (int j = 0; j < ColumnCount; j++)
                 {
-                    Numeric<T, C> minor = this.getMinorMatrix(j, i).Determinant_LUP_Factorization();
+                    Numeric<T, C> minor = this.GetMinorMatrix(j, i).CalculateDeterminantLupFactorization();
 
                     if (((i + j) & 1) == 1)
                         minor = -minor;
 
-                    inverse.setItemAt(i, j, minor / determinant);
+                    inverse.SetItemAt(i, j, minor / determinant);
                 }
 
             return inverse;
@@ -306,18 +329,18 @@ namespace WhiteMath.Matrices
         /// </summary>
         /// <param name="C">The matrix C containing L + U - E. It is clear that both L and U can be easily extracted from this matrix.</param>
         /// <param name="P">The identity matrix with a plenty of row inversions in the form of array.</param>
-        public void LUP_Factorization(out int[] P, out MatrixSDA<T, C> C)
+        public void LupFactorize(out int[] P, out MatrixSDA<T, C> C)
         {
-            if (this.rows != this.columns)
+            if (this.RowCount != this.ColumnCount)
                 throw new MatrixSizeException("The matrix is not square an thus cannot be factorized.");
 
-            int n = this.rows;  // размер матрицы
+            int n = this.RowCount;  // размер матрицы
 
             C = new MatrixSDA<T, C>(n, n);
 
             for(int i=0; i<n; i++)
                 for(int j=0; j<n; j++)
-                    C.setItemAt(i, j, this.getItemAt(i, j));
+                    C.SetItemAt(i, j, this.GetElementAt(i, j));
 
             P = new int[n];
             P.FillByAssign(delegate(int i) { return i; });
@@ -336,7 +359,7 @@ namespace WhiteMath.Matrices
 
                 for (int row = i; row < n; row++)
                 {
-                    abs = Mathematics<T, C>.Abs(this.getItemAt(row, i));
+                    abs = Mathematics<T, C>.Abs(this.GetElementAt(row, i));
 
                     if (abs > pivot)
                     {
@@ -358,13 +381,13 @@ namespace WhiteMath.Matrices
                 {
                     for (int j = i + 1; j < n; j++)
                     {
-                        C.setItemAt(j, i, C.getItemAt(j, i) / C.getItemAt(i, i));
+                        C.SetItemAt(j, i, C.GetElementAt(j, i) / C.GetElementAt(i, i));
 
-                        if (Numeric<T, C>.IsInfinity(C.getItemAt(j, i)) || Numeric<T, C>.IsNaN(C.getItemAt(j, i)))
+                        if (Numeric<T, C>.IsInfinity(C.GetElementAt(j, i)) || Numeric<T, C>.IsNaN(C.GetElementAt(j, i)))
                             throw new DivideByZeroException();
 
                         for (int k = i + 1; k < n; k++)
-                            C.setItemAt(j, k, C.getItemAt(j, k) - C.getItemAt(j, i) * C.getItemAt(i, k));
+                            C.SetItemAt(j, k, C.GetElementAt(j, k) - C.GetElementAt(j, i) * C.GetElementAt(i, k));
                     }
                 }
                 catch (DivideByZeroException)
@@ -401,9 +424,9 @@ namespace WhiteMath.Matrices
         {
             MatrixSDA<T, C> C;
 
-            this.LUP_Factorization(out P, out C);
+            this.LupFactorize(out P, out C);
 
-            int n = this.rows;
+            int n = this.RowCount;
 
             L = new MatrixSDA<T, C>(n, n);
             U = new MatrixSDA<T, C>(n, n);
@@ -414,13 +437,13 @@ namespace WhiteMath.Matrices
                 for (int j = 0; j < n; j++)
                 {
                     if (i < j)
-                        U.setItemAt(i, j, C.getItemAt(i, j));
+                        U.SetItemAt(i, j, C.GetElementAt(i, j));
                     else if (i > j)
-                        L.setItemAt(i, j, C.getItemAt(i, j));
+                        L.SetItemAt(i, j, C.GetElementAt(i, j));
                     else
                     {
-                        L.setItemAt(i, j, one);                         // здесь единицы на диагонали
-                        U.setItemAt(i, j, C.getItemAt(i, j));           // E возместить не надо.
+                        L.SetItemAt(i, j, one);                         // здесь единицы на диагонали
+                        U.SetItemAt(i, j, C.GetElementAt(i, j));           // E возместить не надо.
                     }
                 }
 
@@ -445,7 +468,7 @@ namespace WhiteMath.Matrices
         public void LUP_Factorization(out MatrixSDA<T, C> P, out MatrixSDA<T, C> L, out MatrixSDA<T, C> U)
         {
             int[] arr;
-            int n = this.rows;
+            int n = this.RowCount;
 
             Numeric<T,C> one = (Numeric<T,C>) 1;
 
@@ -454,7 +477,7 @@ namespace WhiteMath.Matrices
             P = new MatrixSDA<T, C>(n, n);
 
             for (int i = 0; i < n; i++)
-                P.setItemAt(i, arr[i], one);
+                P.SetItemAt(i, arr[i], one);
 
             return;
         }

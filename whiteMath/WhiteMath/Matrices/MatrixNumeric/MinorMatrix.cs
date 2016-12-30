@@ -11,7 +11,7 @@ namespace WhiteMath.Matrices
     /// reference.
     /// 
     /// An object of this class cannot be instantiated directly.
-    /// Call method minorMatrixAt() for a particular DoubleMatrix object instead.
+    /// Call method minorMatrixAt() for a particular matrix object instead.
     /// </summary>
     public class MinorMatrix<T,C>: Matrix<T,C> where C: ICalc<T>, new()
     {
@@ -32,10 +32,6 @@ namespace WhiteMath.Matrices
         /// </summary>
         public Matrix<T,C> Parent { get; protected set; }
 
-        // ---------------------
-        // ------- ctors -------
-        // ---------------------
-
         internal MinorMatrix(Matrix<T,C> parent, int removedRow, int removedColumn)
         {
             this.Matrix_Type = MatrixNumericHelper<T, C>.getMatrixType(parent);
@@ -43,28 +39,26 @@ namespace WhiteMath.Matrices
             this.RemovedRow     = removedRow;
             this.RemovedColumn  = removedColumn;
 
-            this.rows       = parent.RowCount-1;
-            this.columns    = parent.ColumnCount-1;
+            this.RowCount       = parent.RowCount-1;
+            this.ColumnCount    = parent.ColumnCount-1;
 
             this.Parent     = parent;
         }
 
-        // -----------------------------------------------------------------------------------
-
-        protected internal override Numeric<T,C> getItemAt(int row, int column)
+        protected internal override Numeric<T,C> GetElementAt(int row, int column)
         {
             int parentRow    = (row < RemovedRow ? row : row + 1);
             int parentColumn = (column < RemovedColumn ? column : column + 1);
 
-            return Parent.getItemAt(parentRow, parentColumn);
+            return Parent.GetElementAt(parentRow, parentColumn);
         }
 
-        protected internal override void setItemAt(int row, int column, Numeric<T,C> value)
+        protected internal override void SetItemAt(int row, int column, Numeric<T,C> value)
         {
             int parentRow = (row < RemovedRow ? row : row + 1);
             int parentColumn = (column < RemovedColumn ? column : column + 1);
 
-            Parent.setItemAt(parentRow, parentColumn, value);
+            Parent.SetItemAt(parentRow, parentColumn, value);
         }
 
         // -----------------------------
@@ -78,47 +72,49 @@ namespace WhiteMath.Matrices
         /// <returns></returns>
         public override object Clone()
         {
-            return this.getSubMatrixCopyAt(0, 0, rows, columns);
+            return this.getSubMatrixCopyAt(0, 0, RowCount, ColumnCount);
         }
 
-        protected override Matrix<T,C> multiply(Matrix<T,C> another)
+        protected override Matrix<T,C> Multiply(Matrix<T,C> another)
         {
-            if (this.ColumnCount != another.RowCount)
-                throw new ArgumentException("The column count of the first matrix and the row count of the second matrix must match.");
+			if (this.ColumnCount != another.RowCount)
+			{
+				throw new ArgumentException("The column count of the first matrix and the row count of the second matrix must match.");
+			}
 
-            Matrix<T,C> temp = MatrixNumericHelper<T,C>.getMatrixOfSize(Parent.Matrix_Type, this.rows, another.ColumnCount);
-            MatrixNumericHelper<T,C>.multiplySimple(this, another, temp);
+			Matrix<T,C> result = MatrixNumericHelper<T,C>.GetMatrixOfSize(Parent.Matrix_Type, this.RowCount, another.ColumnCount);
+            MatrixNumericHelper<T,C>.MultiplySimple(this, another, result);
+
+            return result;
+        }
+
+        protected override Matrix<T,C> Negate()
+        {
+            Matrix<T,C> temp = MatrixNumericHelper<T,C>.GetMatrixOfSize(Parent.Matrix_Type, RowCount, ColumnCount);
+
+            for (int i = 0; i < RowCount; i++)
+                for (int j = 0; j < ColumnCount; j++)
+                    temp[i, j] = -this.GetElementAt(i, j);
 
             return temp;
         }
 
-        protected override Matrix<T,C> negate()
+        protected override Matrix<T,C> Add(Matrix<T,C> another)
         {
-            Matrix<T,C> temp = MatrixNumericHelper<T,C>.getMatrixOfSize(Parent.Matrix_Type, rows, columns);
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columns; j++)
-                    temp[i, j] = -this.getItemAt(i, j);
-
-            return temp;
-        }
-
-        protected override Matrix<T,C> sum(Matrix<T,C> another)
-        {
-            if (this.rows != another.RowCount || this.columns != another.ColumnCount)
+            if (this.RowCount != another.RowCount || this.ColumnCount != another.ColumnCount)
                 throw new ArgumentException("Matrices must be of the same size in order to sum.");
 
-            Matrix<T,C> temp = MatrixNumericHelper<T,C>.getMatrixOfSize(Parent.Matrix_Type, rows, columns);
+            Matrix<T,C> temp = MatrixNumericHelper<T,C>.GetMatrixOfSize(Parent.Matrix_Type, RowCount, ColumnCount);
             MatrixNumericHelper<T,C>.sum(this, another, temp);
             return temp;
         }
 
-        protected override Matrix<T,C> substract(Matrix<T,C> another)
+        protected override Matrix<T,C> Subtract(Matrix<T,C> another)
         {
-            if (this.rows != another.RowCount || this.columns != another.ColumnCount)
+            if (this.RowCount != another.RowCount || this.ColumnCount != another.ColumnCount)
                 throw new ArgumentException("Matrices must be of the same size in order to substract.");
 
-            Matrix<T,C> temp = MatrixNumericHelper<T,C>.getMatrixOfSize(Parent.Matrix_Type, rows, columns);
+            Matrix<T,C> temp = MatrixNumericHelper<T,C>.GetMatrixOfSize(Parent.Matrix_Type, RowCount, ColumnCount);
             MatrixNumericHelper<T,C>.dif(this, another, temp);
             return temp;
         }

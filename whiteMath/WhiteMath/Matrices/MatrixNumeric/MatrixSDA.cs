@@ -11,7 +11,7 @@ namespace WhiteMath.Matrices
     /// </summary>
     public class MatrixSDA<T, C>: Matrix<T, C> where C: ICalc<T>, new()
     {
-        internal Numeric<T, C>[] matrixArray;       // Single-dimensional array containing the matrix
+        internal Numeric<T, C>[] _elements;
         
         //--------------- CONSTRUCTORS
 
@@ -22,15 +22,15 @@ namespace WhiteMath.Matrices
         /// <param name="columns">Width of the matrix</param>
         public MatrixSDA(int rows, int columns)
         {
-            if (rows <= 0 || columns <= 0) throw new ArgumentException("Witdh and height are both must be non-negative numbers.");
+            if (rows <= 0 || columns <= 0) throw new ArgumentException("Witdh and height must both be non-negative numbers.");
             
-            this.matrixArray = new Numeric<T,C>[rows * columns];
-            this.matrixArray.FillByAssign(Numeric<T, C>.Zero);              // ОБЯЗАТЕЛЬНО! Иначе будет default(T). Это может быть null!
+            this._elements = new Numeric<T,C>[rows * columns];
+            this._elements.FillByAssign(Numeric<T, C>.Zero);
 
             this.Matrix_Type = MatrixType.SDA;
 
-            this.rows = rows;
-            this.columns = columns;
+            this.RowCount = rows;
+            this.ColumnCount = columns;
         }
 
         /// <summary>
@@ -38,25 +38,23 @@ namespace WhiteMath.Matrices
         /// </summary>
         internal MatrixSDA() { }
 
-        // --------------- Overriding properties of abstract matrix
-
         /// <summary>
         /// Implementing <see>setItemAt()</see>
         /// WARNING! Does not perform any object copying, just reference copying.
         /// For class types, all changes made to the element passed will be reflected on the matrix element as well.
         /// Please explicitly use the number copy method if needed.
         /// </summary>
-        protected internal override void setItemAt(int row, int column, Numeric<T,C> value)
+        protected internal override void SetItemAt(int row, int column, Numeric<T,C> value)
         {
-            matrixArray[row * this.columns + column] = value;
+            _elements[row * this.ColumnCount + column] = value;
         }
 
         /// <summary>
         /// Implementing <see>getItemAt()</see>
         /// </summary>
-        protected internal override Numeric<T, C> getItemAt(int row, int column)
+        protected internal override Numeric<T, C> GetElementAt(int row, int column)
         {
-            return matrixArray[row * this.columns + column];
+            return _elements[row * this.ColumnCount + column];
         }
     
         // ------------------ OPERATORS
@@ -65,95 +63,114 @@ namespace WhiteMath.Matrices
         /// Negates the matrix so that all the elements change their sign to the opposite.
         /// </summary>
         /// <returns></returns>
-        protected override Matrix<T,C> negate()
+        protected override Matrix<T,C> Negate()
         {
-            MatrixSDA<T,C> temp = new MatrixSDA<T,C>(rows, columns);
-            temp.matrixArray = (Numeric<T,C>[])this.matrixArray.Clone();
+			MatrixSDA<T,C> result = new MatrixSDA<T,C>(RowCount, ColumnCount);
 
-            for (int i = 0; i < this.ElementCount; i++)
-                temp.matrixArray[i] = -temp.matrixArray[i];
+            result._elements = (Numeric<T,C>[])this._elements.Clone();
 
-            return temp;
+			for (int elementIndex = 0; elementIndex < this.ElementCount; elementIndex++)
+			{
+				result._elements[elementIndex] = -result._elements[elementIndex];
+			}
+
+            return result;
         }
 
-        protected override Matrix<T,C> multiply(Matrix<T,C> another)
+        protected override Matrix<T,C> Multiply(Matrix<T,C> another)
         {
-            if (this.columns != another.RowCount)
-                throw new ArgumentException("The column count of the first matrix and the row count of the second matrix must match.");
+			if (this.ColumnCount != another.RowCount)
+			{
+				throw new ArgumentException("The column count of the first matrix and the row count of the second matrix must match.");
+			}
 
-            MatrixSDA<T,C> temp = new MatrixSDA<T,C>(this.rows, another.ColumnCount);
-            MatrixNumericHelper<T,C>.multiplySimple(this, another, temp);
+			MatrixSDA<T,C> result = new MatrixSDA<T,C>(this.RowCount, another.ColumnCount);
+            MatrixNumericHelper<T,C>.MultiplySimple(this, another, result);
 
-            return temp;
+            return result;
         }
 
-        protected override Matrix<T,C> substract(Matrix<T,C> another)
+        protected override Matrix<T,C> Subtract(Matrix<T,C> another)
         {
-            if (this.rows!=another.RowCount || this.columns!=another.ColumnCount)
-                throw new ArgumentException("Matrices must be of the same size in order to substract.");
+			if (this.RowCount != another.RowCount || this.ColumnCount != another.ColumnCount)
+			{
+				throw new ArgumentException("Matrices must be of the same size in order to substract.");
+			}
 
-            // If the matrix is SDA, we can do it quick'n'lucky.
+			if (another is MatrixSDA<T, C>)
+            {
+				MatrixSDA<T,C> anotherAsMatrixSDA = another as MatrixSDA<T, C>;
+                MatrixSDA<T,C> newMatrix = new MatrixSDA<T,C>(this.RowCount, this.ColumnCount);
+
+				for (int elementIndex = 0; elementIndex < this.ElementCount; ++elementIndex)
+				{
+					newMatrix._elements[elementIndex] = 
+						this._elements[elementIndex] 
+						- anotherAsMatrixSDA._elements[elementIndex];
+				}
+
+                return newMatrix;
+            }
+            else
+            {
+                MatrixSDA<T,C> newMatrix = new MatrixSDA<T,C>(this.RowCount, this.ColumnCount);
+
+				for (int elementIndex = 0; elementIndex < this.ElementCount; ++elementIndex)
+				{
+					newMatrix._elements[elementIndex] = 
+						this._elements[elementIndex] 
+						- another.GetElementAt(elementIndex / ColumnCount, elementIndex % ColumnCount);
+				}
+
+                return newMatrix;
+            }
+        }
+
+        protected override Matrix<T,C> Add(Matrix<T,C> another)
+        {
+			if (this.RowCount != another.RowCount || this.ColumnCount != another.ColumnCount)
+			{
+				throw new MatrixSizeException("Matrices must be of the same size in order to add together.");
+			}
+
             if (this.GetType().IsInstanceOfType(another))
             {
                 MatrixSDA<T,C> temp = (MatrixSDA<T,C>)another;
-                MatrixSDA<T,C> newMatrix = new MatrixSDA<T,C>(this.rows, this.columns);
+                MatrixSDA<T,C> newMatrix = new MatrixSDA<T,C>(this.RowCount, this.ColumnCount);
 
-                for (int i = 0; i < this.ElementCount; i++)
-                    newMatrix.matrixArray[i] = this.matrixArray[i] - temp.matrixArray[i];
+				for (int elementIndex = 0; elementIndex < this.ElementCount; ++elementIndex)
+				{
+					newMatrix._elements[elementIndex] = this._elements[elementIndex] + temp._elements[elementIndex];
+				}
 
                 return newMatrix;
             }
-            // Here comes the bad case
             else
             {
-                MatrixSDA<T,C> newMatrix = new MatrixSDA<T,C>(this.rows, this.columns);
+                MatrixSDA<T,C> newMatrix = new MatrixSDA<T,C>(this.RowCount, this.ColumnCount);
 
-                for (int i = 0; i < this.ElementCount; i++)
-                    newMatrix.matrixArray[i] = this.matrixArray[i] - another.getItemAt(i / columns, i % columns);
-
-                return newMatrix;
-            }
-        }
-
-        protected override Matrix<T,C> sum(Matrix<T,C> another)
-        {
-            if (this.rows != another.RowCount || this.columns != another.ColumnCount)
-                throw new MatrixSizeException("Matrices must be of the same size in order to sum.");
-
-            // If the matrix is SDA, we can do it quick'n'lucky.
-            if (this.GetType().IsInstanceOfType(another))
-            {
-                MatrixSDA<T,C> temp = (MatrixSDA<T,C>)another;
-                MatrixSDA<T,C> newMatrix = new MatrixSDA<T,C>(this.rows, this.columns);
-
-                for (int i = 0; i < this.ElementCount; i++)
-                    newMatrix.matrixArray[i] = this.matrixArray[i] + temp.matrixArray[i];
-
-                return newMatrix;
-            }
-            // Here comes the bad case
-            else
-            {
-                MatrixSDA<T,C> newMatrix = new MatrixSDA<T,C>(this.rows, this.columns);
-
-                for (int i = 0; i < this.ElementCount; i++)
-                    newMatrix.matrixArray[i] = this.matrixArray[i] + another.getItemAt(i / columns, i % columns);
+				for (int elementIndex = 0; elementIndex < this.ElementCount; ++elementIndex)
+				{
+					newMatrix._elements[elementIndex] = 
+						this._elements[elementIndex] 
+						+ another.GetElementAt(elementIndex / ColumnCount, elementIndex % ColumnCount);
+				}
 
                 return newMatrix;
             }
         }
 
         /// <summary>
-        /// Provides a deep clone of the current matrix.
+        /// Provides a deep copy of the current matrix.
         /// </summary>
         /// <returns>The cloned matrix.</returns>
         public override object Clone()
         {
             MatrixSDA<T,C> temp = new MatrixSDA<T,C>();
 
-            temp.matrixArray = (Numeric<T,C>[])this.matrixArray.Clone();
-            temp.rows = this.rows;
-            temp.columns = this.columns;
+            temp._elements = (Numeric<T,C>[])this._elements.Clone();
+            temp.RowCount = this.RowCount;
+            temp.ColumnCount = this.ColumnCount;
 
             return temp;
         }

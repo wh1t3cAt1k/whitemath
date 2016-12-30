@@ -25,25 +25,15 @@ namespace WhiteMath.Matrices
     {
         public static C calc = new C();
 
-        /// -----------------------------------
-        /// ----- MatrixType-concerned things--
-        /// -----------------------------------
-
         public MatrixType Matrix_Type { get; protected set; }
-
-        /// -------------------------------
-        /// ----- Length-concerned things--
-        /// -------------------------------
-
-        protected int rows;                   // Matrix row count
-        protected int columns;                // Matrix column count
 
         /// <summary>
         /// Returns the column count for current matrix
         /// </summary>
         public int ColumnCount
         {
-            get { return this.columns; }
+			get;
+			protected set;
         }
 
         /// <summary>
@@ -51,13 +41,14 @@ namespace WhiteMath.Matrices
         /// </summary>
         public int RowCount
         {
-            get { return this.rows; }
+			get;
+			protected set;
         }
 
         /// <summary>
         /// Returns the total element count for current matrix
         /// </summary>
-        public long ElementCount { get { return RowCount * ColumnCount; } }
+        public long ElementCount => RowCount * ColumnCount;
 
         /// ----------------------------------
         /// ------------- INDEXERS -----------
@@ -78,17 +69,17 @@ namespace WhiteMath.Matrices
         {
             get
             {
-                checkPositive(row, column);
-                checkBounds(row + 1, column + 1);
+                CheckArePositive(row, column);
+                CheckAreWithinBounds(row + 1, column + 1);
 
-                return this.getItemAt(row, column);
+                return GetElementAt(row, column);
             }
             set
             {
-                checkPositive(row, column);
-                checkBounds(row + 1, column + 1);
+                CheckArePositive(row, column);
+                CheckAreWithinBounds(row + 1, column + 1);
 
-                this.setItemAt(row, column, value);
+                SetItemAt(row, column, value);
             }
         }
 
@@ -125,7 +116,7 @@ namespace WhiteMath.Matrices
         /// <param name="row">The target row of the matrix.</param>
         /// <param name="column">The target column of the matrix.</param>
         /// <returns>Value at the specified index pair.</returns>
-        protected internal abstract Numeric<T,C> getItemAt(int row, int column);
+        protected internal abstract Numeric<T,C> GetElementAt(int row, int column);
 
         /// <summary>
         /// Sets the value at the specified index pair.
@@ -140,43 +131,51 @@ namespace WhiteMath.Matrices
         /// <param name="row">The ROW!</param>
         /// <param name="column">The COLUMN!</param>
         /// <param name="value">The VALUE TO SET!</param>
-        protected internal abstract void setItemAt(int row, int column, Numeric<T,C> value);
+        protected internal abstract void SetItemAt(int row, int column, Numeric<T,C> value);
 
         // ----------------------------------
         // --------TRANSPOSE ----------------
         // ----------------------------------
 
         /// <summary>
-        /// Transposes the current matrix.
-        /// Works only for square matrices, otherwise, a MatrixSizeException will be thrown.
+        /// Transposes the current matrix in-place.
         /// </summary>
-        public void transpose()
+		/// <remarks>
+		/// Works only for square matrices, otherwise, a 
+		/// <see cref="MatrixSizeException"/> will be thrown.
+		/// </remarks>
+		public void TransposeInPlace()
         {
-            if (this.rows != this.columns)
-                throw new MatrixSizeException("The matrix is not square.");
+			if (this.RowCount != this.ColumnCount)
+			{
+				throw new MatrixSizeException("The matrix is not square.");
+			}
 
-            for (int i = 0; i < this.rows; i++)
-                for (int j = i; j < this.columns; j++)
-                {
-                    Numeric<T,C> tmp = this.getItemAt(i, j);
+			for (int i = 0; i < this.RowCount; i++)
+			{
+				for (int j = i; j < this.ColumnCount; j++)
+				{
+					Numeric<T, C> tmp = this.GetElementAt(i, j);
 
-                    this.setItemAt(i, j, this.getItemAt(j, i));
-                    this.setItemAt(j, i, tmp);
-                }
+					this.SetItemAt(i, j, this.GetElementAt(j, i));
+					this.SetItemAt(j, i, tmp);
+				}
+			}
         }
 
         /// <summary>
         /// Returns the matrix that will be equal to the current matrix after the transposition.
-        /// Performs memory allocation for the new matrix, so any changes made to it will not be reflected on the current matrix.
+        /// Performs memory allocation for the new matrix, so any changes made to it will not be 
+		/// reflected on the current matrix.
         /// </summary>
         /// <returns>Returns the matrix that will be equal to the current matrix after the transposition.</returns>
-        public Matrix<T, C> transposedMatrixCopy()
+        public Matrix<T, C> GetTransposedMatrix()
         {
-            Matrix<T, C> transposedMatrix = MatrixNumericHelper<T,C>.getMatrixOfSize(this.Matrix_Type, this.columns, this.rows);
+            Matrix<T, C> transposedMatrix = MatrixNumericHelper<T,C>.GetMatrixOfSize(this.Matrix_Type, this.ColumnCount, this.RowCount);
 
-            for (int i = 0; i < this.rows; i++)
-                for (int j = 0; j < this.columns; j++)
-                    transposedMatrix.setItemAt(j, i, this.getItemAt(i, j));
+            for (int i = 0; i < this.RowCount; i++)
+                for (int j = 0; j < this.ColumnCount; j++)
+                    transposedMatrix.SetItemAt(j, i, this.GetElementAt(i, j));
 
             return transposedMatrix;
         }
@@ -192,17 +191,17 @@ namespace WhiteMath.Matrices
         /// </summary>
         public virtual void swapRows(int rowIndex1, int rowIndex2)
         {
-            checkBounds(rowIndex1, 0);
-            checkBounds(rowIndex2, 0);
+            CheckAreWithinBounds(rowIndex1, 0);
+            CheckAreWithinBounds(rowIndex2, 0);
 
             Numeric<T,C> temp;
 
-            for (int j = 0; j < columns; j++)
+            for (int j = 0; j < ColumnCount; j++)
             {
-                temp = this.getItemAt(rowIndex1, j);
+                temp = this.GetElementAt(rowIndex1, j);
                
-                this.setItemAt(rowIndex1, j, this.getItemAt(rowIndex2, j));
-                this.setItemAt(rowIndex2, j, temp);
+                this.SetItemAt(rowIndex1, j, this.GetElementAt(rowIndex2, j));
+                this.SetItemAt(rowIndex2, j, temp);
             }
         }
 
@@ -213,17 +212,17 @@ namespace WhiteMath.Matrices
         /// <param name="columnIndex2">The zero-based index of the second column to be swapped with the first.</param>
         public virtual void swapColumns(int columnIndex1, int columnIndex2)
         {
-            checkBounds(0, columnIndex1);
-            checkBounds(0, columnIndex2);
+            CheckAreWithinBounds(0, columnIndex1);
+            CheckAreWithinBounds(0, columnIndex2);
 
             Numeric<T, C> temp;
 
-            for (int i = 0; i < rows; i++)
+            for (int i = 0; i < RowCount; i++)
             {
-                temp = this.getItemAt(i, columnIndex1);
+                temp = this.GetElementAt(i, columnIndex1);
 
-                this.setItemAt(i, columnIndex1, this.getItemAt(i, columnIndex2));
-                this.setItemAt(i, columnIndex2, temp);
+                this.SetItemAt(i, columnIndex1, this.GetElementAt(i, columnIndex2));
+                this.SetItemAt(i, columnIndex2, temp);
             }
         }
 
@@ -233,22 +232,22 @@ namespace WhiteMath.Matrices
 
         public static Matrix<T, C> operator *(Matrix<T, C> one, Matrix<T, C> two)
         {
-            return one.multiply(two);
+            return one.Multiply(two);
         }
 
         public static Matrix<T,C> operator +(Matrix<T,C> one, Matrix<T,C> two)
         {
-            return one.sum(two);
+            return one.Add(two);
         }
 
         public static Matrix<T, C> operator -(Matrix<T, C> one, Matrix<T, C> two)
         {
-            return one.sum(two.negate());
+            return one.Add(two.Negate());
         }
 
         public static Matrix<T,C> operator -(Matrix<T,C> one)
         {
-            return one.negate();
+            return one.Negate();
         }
 
         public static bool operator ==(Matrix<T, C> one, Matrix<T, C> two)
@@ -274,12 +273,12 @@ namespace WhiteMath.Matrices
         /// <param name="j">A zero-based column index</param>
         public void layMatrixAt(Matrix<T, C> subMatrix, int i, int j)
         {
-            checkPositive(i, j);
-            checkBounds(i + subMatrix.RowCount, j + subMatrix.ColumnCount);
+            CheckArePositive(i, j);
+            CheckAreWithinBounds(i + subMatrix.RowCount, j + subMatrix.ColumnCount);
 
             for (int k = 0; k < subMatrix.RowCount; k++)
                 for (int m = 0; m < subMatrix.ColumnCount; m++)
-                    this.setItemAt(i + k, j + m, calc.GetCopy(subMatrix.getItemAt(k, m)));
+                    this.SetItemAt(i + k, j + m, calc.GetCopy(subMatrix.GetElementAt(k, m)));
         }
         
         /// <summary>
@@ -292,20 +291,20 @@ namespace WhiteMath.Matrices
         /// <returns>The submatrix of specified size.</returns>
         public virtual Matrix<T,C> getSubMatrixCopyAt(int i, int j, int rows, int columns)
         {
-            checkPositive(rows, columns);
-            checkBounds(i + rows, j + columns);
+            CheckArePositive(rows, columns);
+            CheckAreWithinBounds(i + rows, j + columns);
 
             Numeric<T,C>[] ma = new Numeric<T,C>[rows * columns];
             
             for (int k = i; k < i + rows; k++)
                 for (int m = j; m < j + rows; m++)
-                    ma[k * rows + m] = calc.GetCopy(this.getItemAt(k, m));
+                    ma[k * rows + m] = calc.GetCopy(this.GetElementAt(k, m));
 
             MatrixSDA<T,C> temp = new MatrixSDA<T,C>();
                 
-                temp.matrixArray = ma;
-                temp.rows = rows;
-                temp.columns = columns;
+                temp._elements = ma;
+                temp.RowCount = rows;
+                temp.ColumnCount = columns;
 
             return temp;
         }
@@ -329,8 +328,8 @@ namespace WhiteMath.Matrices
         /// <returns>A binded submatrix of specified size</returns>
         public Matrix<T, C> getSubMatrixAt(int i, int j, int rows, int columns)
         {
-            checkPositive(i, j);
-            checkBounds(i + rows, j + columns);
+            CheckArePositive(i, j);
+            CheckAreWithinBounds(i + rows, j + columns);
 
             return new Submatrix<T, C>(this, i, j, rows, columns);
         }
@@ -349,10 +348,10 @@ namespace WhiteMath.Matrices
         // ----------------------- Matrix arithmetic -------------------
         // -------------------------------------------------------------
 
-        protected abstract Matrix<T,C> multiply(Matrix<T,C> another);
-        protected abstract Matrix<T,C> substract(Matrix<T,C> another);
-        protected abstract Matrix<T,C> sum(Matrix<T,C> another);
-        protected abstract Matrix<T,C> negate();
+        protected abstract Matrix<T,C> Multiply(Matrix<T,C> another);
+        protected abstract Matrix<T,C> Subtract(Matrix<T,C> another);
+        protected abstract Matrix<T,C> Add(Matrix<T,C> another);
+        protected abstract Matrix<T,C> Negate();
 
         /// <summary>
         /// Converts the current matrix to a two-dimensional array.
@@ -366,10 +365,10 @@ namespace WhiteMath.Matrices
         /// <returns></returns>
         public T[,] convertToArray()
         {
-            T[,] array = new T[rows, columns];
+            T[,] array = new T[RowCount, ColumnCount];
 
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columns; j++)
+            for (int i = 0; i < RowCount; i++)
+                for (int j = 0; j < ColumnCount; j++)
                     array[i, j] = this[i, j];
 
             return array;
@@ -393,7 +392,7 @@ namespace WhiteMath.Matrices
 
             for (int i = 0; i < this.RowCount; i++)
                 for (int j = 0; j < this.ColumnCount; j++)
-                    this.setItemAt(i, j, matrix[i, j]);
+                    this.SetItemAt(i, j, matrix[i, j]);
         }
 
         // ----------------------------------------------------------------
@@ -413,103 +412,124 @@ namespace WhiteMath.Matrices
         /// The other matrix may be either the IMatrix object containing
         /// <typeparamref name="T"/> elements or Numeric IMatrix object. (e.g. Matrix(T,C)).
         /// </summary>
-        public override bool Equals(object obj)
+		public override bool Equals(object obj)
         {
-            if (!(obj is IMatrix<Numeric<T, C>>) && !(obj is IMatrix<T>))
-                return false;
+			if (!(obj is IMatrix<Numeric<T, C>>) && !(obj is IMatrix<T>))
+			{
+				return false;
+			}
 
             IMatrix reference = obj as IMatrix;
 
-            if (reference.RowCount != this.RowCount || reference.ColumnCount != this.ColumnCount)
-                return false;
+			if (reference.RowCount != this.RowCount || reference.ColumnCount != this.ColumnCount)
+			{
+				return false;
+			}
 
             if (obj is IMatrix<T>)
             {
-                IMatrix<T> alpha = obj as IMatrix<T>;
+				IMatrix<T> anotherAsMatrix = obj as IMatrix<T>;
 
-                for (int i = 0; i < this.rows; i++)
-                    for (int j = 0; j < this.columns; j++)
-                        if (this.getItemAt(i, j) != alpha.GetElementValue(i,j))
-                            return false;
+				for (int rowIndex = 0; rowIndex < this.RowCount; ++rowIndex)
+				{
+					for (int columnIndex = 0; columnIndex < this.ColumnCount; ++columnIndex)
+					{
+						if (this.GetElementAt(rowIndex, columnIndex) 
+						    != anotherAsMatrix.GetElementAt(rowIndex, columnIndex))
+						{
+							return false;
+						}
+					}
+				}
             }
             else
             {
-                IMatrix<Numeric<T,C>> alpha = obj as IMatrix<Numeric<T,C>>;
+				IMatrix<Numeric<T,C>> anotherAsNumericMatrix = obj as IMatrix<Numeric<T,C>>;
 
-                for (int i = 0; i < this.rows; i++)
-                    for (int j = 0; j < this.columns; j++)
-                        if (this.getItemAt(i, j) != alpha.GetElementValue(i, j))
-                            return false;
+				for (int rowIndex = 0; rowIndex < this.RowCount; ++rowIndex)
+				{
+					for (int columnIndex = 0; columnIndex < this.ColumnCount; ++columnIndex)
+					{
+						if (this.GetElementAt(rowIndex, columnIndex) 
+					    	!= anotherAsNumericMatrix.GetElementAt(rowIndex, columnIndex))
+						{
+							return false;
+						}
+					}
+				}
             }
 
             return true;
         }
-
-        // --------------------------------------
-        // -------- Interface implementations ---
-        // --------------------------------------
-   
-        void IMutableMatrix.SetElementValue(int row, int column, object value)
+		   
+        void IMutableMatrix.SetElementAt(int row, int column, object value)
         {
             this[row, column] = (Numeric<T, C>)value;
         }
 
-        void IMutableMatrix<T>.SetElementValue(int row, int column, T value)
+        void IMutableMatrix<T>.SetElementAt(int row, int column, T value)
         {
             this[row, column] = value;
         }
         
-        void IMutableMatrix<Numeric<T, C>>.SetElementValue(int row, int column, Numeric<T,C> value) 
+        void IMutableMatrix<Numeric<T, C>>.SetElementAt(int row, int column, Numeric<T,C> value) 
         { 
             this[row, column] = value; 
         }
 
-        object IMatrix.GetElementValue(int row, int column) 
+        object IMatrix.GetElementAt(int row, int column) 
         { 
             return this[row, column]; 
         }
 
-        T IMatrix<T>.GetElementValue(int row, int column)
+        T IMatrix<T>.GetElementAt(int row, int column)
         {
             return this[row, column];
         }
 
-        Numeric<T, C> IMatrix<Numeric<T, C>>.GetElementValue(int row, int column)
+        Numeric<T, C> IMatrix<Numeric<T, C>>.GetElementAt(int row, int column)
         {
             return this[row, column];
         }
 
-        // ------------------------------------------------------------------------------
-        // -----------------------------WINDING capabilities-----------------------------
-
-        public T[] unwindToArray(IWinder winder)
+        public T[] UnwindIntoArray(IWinder winder)
         {
-            T[] temp = new T[this.ElementCount];
+			T[] result = new T[this.ElementCount];
 
             winder.reset();
 
-            for (int i = 0; i < this.ElementCount; i++)
-                temp[i] = this[winder.getNextIndexPair()];
+			for (int elementIndex = 0; elementIndex < this.ElementCount; ++elementIndex)
+			{
+				result[elementIndex] = this[winder.GetNextIndexPair()];
+			}
 
-            return temp;
+            return result;
         }
 
         /// <summary>
-        /// Winds a flat array onto current using the IWinder object.
-        /// The IWinder object is automatically reset before winding.
-        /// IWinder object and current matrix should be have the same dimension (i.e. row count and column count).
+        /// Winds a flat array onto the current matrix using the provided 
+		/// <see cref="IWinder"/> object. The <see cref="IWinder"/> object 
+		/// is automatically reset before winding.
+        /// The winder and the current matrix should have the same dimension 
+		/// (i.e. row count and column count).
         /// </summary>
-        /// <param name="winder">An IWinder object. Row and column count should match with current matrix.</param>
+		/// <param name="winder">
+		/// An <see cref="IWinder"/> object. 
+		/// Row and column count should match with current matrix.
+		/// </param>
         /// <param name="flatMatrix">A single-dimension matrix. Element count should match with current matrix.</param>
-        public void windFromArray(IWinder winder, T[] flatMatrix)
+		public void WindFromArray(IWinder winder, T[] flatMatrix)
         {
-            if(flatMatrix.Length!=this.ElementCount)
-                throw new ArgumentException("The element count of the current matrix and the element count of the flat matrix must match.");
+			if (flatMatrix.Length != this.ElementCount)
+			{
+				throw new ArgumentException("The element count of the current matrix and the element count of the flat matrix must match.");
+			}
 
             winder.reset();
-            for (int i = 0; i < this.ElementCount; i++)
+            
+			for (int elementIndex = 0; elementIndex < this.ElementCount; ++elementIndex)
             {
-                this[winder.getNextIndexPair()] = flatMatrix[i];
+                this[winder.GetNextIndexPair()] = flatMatrix[elementIndex];
             }
         }
 
@@ -517,7 +537,7 @@ namespace WhiteMath.Matrices
         // ------------- COPY ADAPTERS --------------
         // ------------------------------------------
 
-        public ElementCopyAdapter getCopyAdapter()
+		public ElementCopyAdapter GetCopyAdapter()
         {
             return new ElementCopyAdapter(this);
         }
@@ -528,10 +548,12 @@ namespace WhiteMath.Matrices
         /// Checks if the matrix is square.
         /// Throws MatrixSizeException if this requirement is not met. 
         /// </summary>
-        protected void checkSquare()
+        protected void EnsureIsSquare()
         {
-            if (this.rows != this.columns)
-                throw new MatrixSizeException("The matrix is not square.");
+			if (this.RowCount != this.ColumnCount)
+			{
+				throw new MatrixSizeException("The matrix is not square.");
+			}
         }
 
         /// <summary>
@@ -540,7 +562,7 @@ namespace WhiteMath.Matrices
         /// </summary>
         /// <param name="exceedsRows">Argument suspicious to exceed the number of rows.</param>
         /// <param name="exceedsColumns">Argument suspicious to exceed the number of columns.</param>
-        protected void checkBounds(int exceedsRows, int exceedsColumns)
+        protected void CheckAreWithinBounds(int exceedsRows, int exceedsColumns)
         {
             if (exceedsRows > this.RowCount) throw new MatrixSizeException("Invalid row count: out of the matrix bounds.");
             if (exceedsColumns > this.ColumnCount) throw new MatrixSizeException("Invalid column count: out of the matrix bounds.");
@@ -549,7 +571,7 @@ namespace WhiteMath.Matrices
         /// <summary>
         /// Checks if the arguments are zero or positive.
         /// </summary>
-        protected void checkPositive(params int[] arguments)
+        protected void CheckArePositive(params int[] arguments)
         {
             foreach (int a in arguments) if (a < 0) throw new ArgumentException("Negative argument specified.");
         }
