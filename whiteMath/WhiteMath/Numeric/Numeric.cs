@@ -9,7 +9,7 @@ namespace WhiteMath
     public struct Numeric<T, C> : IComparable<Numeric<T, C>>, IEquatable<Numeric<T, C>> 
 		where C : ICalc<T>, new()
     {
-        private T value;
+		private readonly T _value;
 
 		/// <summary>
 		/// Returns the Calculator for the instantiated numeric class.
@@ -18,187 +18,121 @@ namespace WhiteMath
 
 		private Numeric(T value)
         {
-            this.value = value;
+            this._value = value;
         }
 
-        // --------------------------------------
-        // --------------------------------------
-        // --------------------------------------
+		// --------------------------------------
+		// --------------------------------------
+		// --------------------------------------
 
-        /// <summary>
-        /// Returns the integer part for the current Numeric object.
-        /// </summary>
-        /// <see cref="ICalc&lt;T&gt;.IntegerPart"/>
-        public Numeric<T, C> IntegerPart
-        {
-            get { return Calculator.IntegerPart(this); }
-        }
+		/// <summary>
+		/// Returns the integer part for the current Numeric object.
+		/// </summary>
+		/// <see cref="ICalc&lt;T&gt;.IntegerPart"/>
+		public Numeric<T, C> IntegerPart => Calculator.IntegerPart(this);
 
-        /// <summary>
-        /// Returns the fractional part for the current Numeric object.
-        /// </summary>
-        /// <see cref="ICalcExtensionMethods.FractionalPart&lt;T&gt;"/>
-        public Numeric<T, C> FractionalPart
-        {
-            get { return Calculator.FractionalPart(this); }
-        }
+		/// <summary>
+		/// Returns the fractional part for the current Numeric object.
+		/// </summary>
+		/// <see cref="ICalcExtensionMethods.FractionalPart&lt;T&gt;"/>
+		public Numeric<T, C> FractionalPart => Calculator.FractionalPart(this);
 
-        // --------------------------------------
-        // --------------------------------------
-        // --------------------------------------
+		// --------------------------------------
+		// --------------------------------------
+		// --------------------------------------
 
-        /// <summary>
-        /// Gets a deep copy of current number.
-        /// </summary>
-        public Numeric<T, C> Copy { get { return Calculator.GetCopy(this); } }
+		/// <summary>
+		/// Gets a deep copy of current number.
+		/// </summary>
+		public Numeric<T, C> Copy => Calculator.GetCopy(this);
 
         /// <summary>
         /// Gets a zero number for T type.
         /// </summary>
-        public static Numeric<T, C> Zero { get { return Calculator.Zero; } }
+        public static Numeric<T, C> Zero => Calculator.Zero;
 
-        // --------------------------------------
-        // ---------BOOLEAN TESTS ---------------
-        // --------------------------------------
+		// --------------------------------------
+		// ---------BOOLEAN TESTS ---------------
+		// --------------------------------------
 
-        /// <summary>
-        /// Tests whether the current number is even.
-        /// </summary>
-        /// <exception cref="NonIntegerTypeException">
-        /// This exception will be thrown if <typeparamref name="T"/> is 
-        /// non-integer type.
-        /// </exception>
-        public bool IsEven { get { return Calculator.IsEven(this.value); } }
+		/// <summary>
+		/// Tests whether the current number is even.
+		/// </summary>
+		/// <exception cref="NonIntegerTypeException">
+		/// This exception will be thrown if <typeparamref name="T"/> is 
+		/// non-integer type.
+		/// </exception>
+		public bool IsEven => Calculator.IsEven(this);
 
-        // --------------------------------------
-        // ---------CONVERSION OPERATORS---------
-        // --------------------------------------
+		// --------------------------------------
+		// ---------CONVERSION OPERATORS---------
+		// --------------------------------------
 
-        public static implicit operator Numeric<T, C>(T val)
-        {
-            return new Numeric<T, C>(val);
-        }
+		public static implicit operator Numeric<T, C>(T value)
+			=> new Numeric<T, C>(value);
 
-        public static implicit operator T(Numeric<T, C> obj)
-        {
-            return obj.value;
-        }
+		public static implicit operator T(Numeric<T, C> number)
+			=> number._value;
 
-        // --------------------------------------
-        // --------------------------------------
-        // --------------------------------------
+		public static Numeric<T, C> operator +(Numeric<T, C> first, Numeric<T, C> second)
+			=> Calculator.Add(first, second);
 
-        public static Numeric<T, C> operator +(Numeric<T, C> one, Numeric<T, C> two)
-        {
-            return Calculator.Add(one, two);
-        }
+		public static Numeric<T, C> operator -(Numeric<T, C> first, Numeric<T, C> second)
+			=> Calculator.Subtract(first, second);
 
-        public static Numeric<T, C> operator -(Numeric<T, C> one, Numeric<T, C> two)
-        {
-            return Calculator.Subtract(one, two);
-        }
+		public static Numeric<T, C> operator *(Numeric<T, C> first, Numeric<T, C> second)
+			=> Calculator.Multiply(first, second);
 
-        public static Numeric<T, C> operator *(Numeric<T, C> one, Numeric<T, C> two)
-        {
-            return Calculator.Multiply(one, two);
-        }
+		public static Numeric<T, C> operator /(Numeric<T, C> first, Numeric<T, C> second)
+			=> Calculator.Divide(first, second);
 
-        public static Numeric<T, C> operator /(Numeric<T, C> one, Numeric<T, C> two)
-        {
-            return Calculator.Divide(one, two);
-        }
+		public static Numeric<T, C> operator %(Numeric<T, C> first, Numeric<T, C> second)
+			=> Calculator.Modulo(first, second);
 
-        public static Numeric<T, C> operator %(Numeric<T, C> one, Numeric<T, C> two)
-        {
-            return Calculator.Modulo(one, two);
-        }
+		public static Numeric<T, C> operator -(Numeric<T, C> number)
+			=> Calculator.Negate(number);
 
-        public static Numeric<T, C> operator -(Numeric<T, C> one)
-        {
-            return Calculator.Negate(one);
-        }
+		public static Numeric<T, C> operator ++(Numeric<T, C> number)
+			=> Calculator.Increment(number);
 
-        public static Numeric<T, C> operator ++(Numeric<T, C> one)
-        {
-            return Calculator.Increment(one);
-        }
+		public static Numeric<T, C> operator --(Numeric<T, C> number)
+			=> Calculator.Decrement(number);
 
-        public static Numeric<T, C> operator --(Numeric<T, C> one)
-        {
-            return Calculator.Decrement(one);
-        }
+		public static bool IsNaN(Numeric<T, C> number)
+			=> Calculator.IsNaN(number);
 
-        // --------------------------------------
-        // ---------------- NaN and Infinities checking
-        // --------------------------------------
+		public static bool IsPositiveInfinity(Numeric<T, C> number)
+			=> Calculator.IsPositiveInfinity(number);
+      
+		public static bool IsNegativeInfinity(Numeric<T, C> number)
+			=> Calculator.IsNegativeInfinity(number);
 
-        public static bool IsNaN(Numeric<T, C> one)
-        {
-            return Calculator.IsNaN(one);
-        }
+		public static bool IsInfinity(Numeric<T, C> number)
+			=> Calculator.IsInfinity(number);
 
-		public static bool IsPositiveInfinity(Numeric<T, C> one)
-        {
-            return Calculator.IsPositiveInfinity(one);
-        }
+		public static explicit operator Numeric<T, C>(long number)
+			=> Calculator.FromInteger(number);
 
-		public static bool IsNegativeInfinity(Numeric<T, C> one)
-        {
-            return Calculator.IsNegativeInfinity(one);
-        }
+		public static explicit operator Numeric<T, C>(double number)
+			=> Calculator.FromDoubleSafe(number);
 
-        public static bool IsInfinity(Numeric<T, C> one)
-        {
-			return Calculator.IsInfinity(one);
-        }
+		public static bool operator >(Numeric<T, C> first, Numeric<T, C> second)
+        	=> Calculator.GreaterThan(first, second);
 
-        // --------------------------------------
-        // ---------------- Conversion operators
-        // --------------------------------------
+		public static bool operator <(Numeric<T, C> first, Numeric<T, C> second)
+			=> Calculator.GreaterThan(second, first);
 
-        public static explicit operator Numeric<T, C>(long num)
-        {
-            return Calculator.FromInteger(num);
-        }
+		public static bool operator ==(Numeric<T, C> first, Numeric<T, C> second)
+			=> Calculator.Equal(first, second);
 
-        public static explicit operator Numeric<T, C>(double num)
-        {
-            return Calculator.FromDoubleSafe(num);
-        }
+		public static bool operator !=(Numeric<T, C> first, Numeric<T, C> second)
+			=> !Calculator.Equal(first, second);
 
-        // --------------------------------------
-        // ---------------- Comparison operators
-        // --------------------------------------
+		public static bool operator >=(Numeric<T, C> first, Numeric<T, C> second)
+			=> !Calculator.GreaterThan(second, first);
 
-        public static bool operator >(Numeric<T, C> one, Numeric<T, C> two)
-        {
-            return Calculator.GreaterThan(one, two);
-        }
-
-        public static bool operator <(Numeric<T, C> one, Numeric<T, C> two)
-        {
-            return Calculator.GreaterThan(two, one);
-        }
-
-        public static bool operator ==(Numeric<T, C> one, Numeric<T, C> two)
-        {
-            return Calculator.Equal(one, two);
-        }
-
-        public static bool operator !=(Numeric<T, C> one, Numeric<T, C> two)
-        {
-            return !Calculator.Equal(one, two);
-        }
-
-        public static bool operator >=(Numeric<T, C> one, Numeric<T, C> two)
-        {
-            return !Calculator.GreaterThan(two, one);
-        }
-
-        public static bool operator <=(Numeric<T, C> one, Numeric<T, C> two)
-        {
-            return !Calculator.GreaterThan(one, two);
-        }
+		public static bool operator <=(Numeric<T, C> first, Numeric<T, C> second)
+			=> !Calculator.GreaterThan(first, second);
 
         /// <summary>
         /// Checks whether the value of the current <c>Numeric&lt;<typeparamref name="T"/>,<typeparamref name="C"/>&gt;</c> 
@@ -209,12 +143,18 @@ namespace WhiteMath
         /// <returns>True if values are equal, false otherwise.</returns>
         public override bool Equals(object obj)
         {
-			if (obj is T) {
-				return Calculator.Equal (this.value, (T)obj);
-			} else if (obj is Numeric<T,C>)
-                return Calculator.Equal(this.value, ((Numeric<T,C>)obj).value);
-            
-            return false;
+			if (obj is T)
+			{
+				return Calculator.Equal(this._value, (T)obj);
+			}
+			else if (obj is Numeric<T, C>)
+			{
+				return Calculator.Equal(this._value, ((Numeric<T, C>)obj)._value);
+			}
+			else
+			{
+				return false;
+			}
         }
 
         /// <summary>
@@ -225,17 +165,14 @@ namespace WhiteMath
         /// <returns>True if values are equal, false otherwise.</returns>
         public bool Equals(Numeric<T, C> obj)
         {
-            return Calculator.Equal(this.value, obj.value);
+            return Calculator.Equal(this._value, obj._value);
         }
 
-        /// <summary>
-        /// Returns the hash code of the value stored.
-        /// </summary>
-        /// <returns>The hash code of the value stored.</returns>
-        public override int GetHashCode()
-        {
-            return value.GetHashCode();
-        }
+		/// <summary>
+		/// Returns the hash code of the value stored.
+		/// </summary>
+		/// <returns>The hash code of the value stored.</returns>
+		public override int GetHashCode() => _value.GetHashCode();
 
         /// <summary>
         /// Returns the standard string representation of the value stored.
@@ -243,7 +180,7 @@ namespace WhiteMath
         /// <returns>The string representation of the value stored.</returns>
         public override string ToString()
         {
-            return value.ToString();
+            return _value.ToString();
         }
 
 		#region Constants
@@ -275,8 +212,6 @@ namespace WhiteMath
         // ---------- COMPARING -------------
         // ----------------------------------
 
-        // IComparable
-
         /// <summary>
         /// Compares the current number to another.
         /// </summary>
@@ -290,8 +225,6 @@ namespace WhiteMath
             return _comparison(this, another);
         }
 
-        // Members
-
 		private static Comparison<Numeric<T, C>> _comparison = (one, two) =>
 		{
         	if (one < two) return -1;
@@ -302,9 +235,7 @@ namespace WhiteMath
 
 		private static IComparer<Numeric<T, C>> _comparer = _comparison.CreateComparer();
 
-        // ------------ для T -------------------------
-
-		private static Comparison<T> _rawComparison =
+		private static Comparison<T> _underlyingTypeComparison =
             delegate(T one, T two)
             {
                 if (Calculator.GreaterThan(one, two))
@@ -315,11 +246,7 @@ namespace WhiteMath
                     return -1;
             };
 
-		private static IComparer<T> _rawComparer = _rawComparison.CreateComparer();
-
-		// -----------
-		// Getters
-		// -----------
+		private static IComparer<T> _underlyingTypeComparer = _underlyingTypeComparison.CreateComparer();
 
 		/// <summary>
 		/// Gets the comparison delegate for this numeric class
@@ -331,7 +258,7 @@ namespace WhiteMath
 		/// Gets the comparison delegate for the underlying (hidden)
 		/// T type using its Calculator's methods mor() and eqv().
 		/// </summary>
-		public static Comparison<T> TComparison => _rawComparison;
+		public static Comparison<T> UnderlyingTypeComparison => _underlyingTypeComparison;
 
 		/// <summary>
 		/// Gets the comparer for this numeric class.
@@ -343,7 +270,7 @@ namespace WhiteMath
 		/// Gets the comparer for the underlying (hidden)
 		/// T type using its Calculator's methods mor() and eqv().
 		/// </summary>
-		public static IComparer<T> TComparer => _rawComparer;
+		public static IComparer<T> UnderlyingTypeComparer => _underlyingTypeComparer;
     }
 
     /// <summary>
@@ -358,14 +285,17 @@ namespace WhiteMath
         /// <typeparam name="C">The Calculator for the number type.</typeparam>
         /// <param name="list">The list object containint T elements.</param>
         /// <returns>An array of Numeric objects.</returns>
-        public static Numeric<T, C>[] ConvertToNumericArray<T, C>(this IList<T> list) where C: ICalc<T>, new()
+        public static Numeric<T, C>[] ConvertToNumericArray<T, C>(this IList<T> list) 
+			where C: ICalc<T>, new()
         {
-            Numeric<T, C>[] arr = new Numeric<T, C>[list.Count];
+			Numeric<T, C>[] result = new Numeric<T, C>[list.Count];
 
-            for (int i = 0; i < list.Count; i++)
-                arr[i] = list[i];
+			for (int elementIndex = 0; elementIndex < list.Count; ++elementIndex)
+			{
+				result[elementIndex] = list[elementIndex];
+			}
 
-            return arr;
+            return result;
         }
 
         /// <summary>
@@ -375,14 +305,17 @@ namespace WhiteMath
         /// <typeparam name="C">The Calculator for the number type.</typeparam>
         /// <param name="list">The list object containing Numeric elements.</param>
         /// <returns>An array of T objects.</returns>
-        public static T[] ConvertToUnboxedArray<T, C>(this IList<Numeric<T, C>> list) where C : ICalc<T>, new()
+		public static T[] ConvertToUnderlyingTypeArray<T, C>(this IList<Numeric<T, C>> list) 
+			where C : ICalc<T>, new()
         {
-            T[] arr = new T[list.Count];
+			T[] result = new T[list.Count];
 
-            for (int i = 0; i < arr.Length; i++)
-                arr[i] = list[i];
+			for (int elementIndex = 0; elementIndex < result.Length; ++elementIndex)
+			{
+				result[elementIndex] = list[elementIndex];
+			}
 
-            return arr;
+            return result;
         }
     }
 }

@@ -111,7 +111,7 @@ namespace WhiteMath.Functions
                 return actionList;
             }
 
-            // If not successfull, finally, search for
+            // If not successful, finally, search for
             // mathematical function signs.
             // -
             if (currentFunctionString[0] == '@')

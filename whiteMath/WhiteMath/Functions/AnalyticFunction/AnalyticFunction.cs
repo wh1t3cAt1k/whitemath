@@ -29,7 +29,7 @@ namespace WhiteMath.Functions
             string beta = functionString;           // временная
             char arg;                               // символ аргумента
 
-            arg = CheckNPrepare(ref beta); 
+            arg = Normalize(ref beta); 
             this.actions = AnalyticFunction.Analyze(beta, arg, 0); 
 
             this.argument = arg;
@@ -41,11 +41,10 @@ namespace WhiteMath.Functions
         // ------------------------------------------------
 
         /// <summary>
-        /// Returns the letter of the argument (e.g. 'x') and prepares everything.
+        /// Returns the letter of the argument (e.g. 'x') and normalizes the string
+		/// for further syntax analysis.
         /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        private static char CheckNPrepare(ref string str)
+		private static char Normalize(ref string str)
         {
             // Kill all whitespace characters.
             // -
@@ -70,7 +69,7 @@ namespace WhiteMath.Functions
 
             // Insert multiplication signs where assumed: 15log(x) == 15*log(x)
             // -
-            str = str.insertMultiplicationSign();
+            str = str.InsertMultiplicationSigns();
 
             // Find elementary functions
             // -

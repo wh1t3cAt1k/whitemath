@@ -38,7 +38,7 @@ namespace WhiteMath.Functions
             string analyzeRemainder = match.Groups["remainder"].Value;
 
             // handle the *'s.
-            analyzeRemainder = analyzeRemainder.insertMultiplicationSign();
+            analyzeRemainder = analyzeRemainder.InsertMultiplicationSigns();
 
             return new AnalyticFunction(match.Groups["firstPart"].Value + FindDerivative(analyzeRemainder, this.argument).ParenthesizeIfNegative());
         }

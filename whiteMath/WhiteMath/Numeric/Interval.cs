@@ -93,7 +93,7 @@ namespace WhiteMath
         public Numeric<T, C> Middle { get { return (RightBound + LeftBound) / Calculator.FromInteger(2); } }
 
         /// <summary>
-        /// Returns the amount of points in the interval.
+        /// Returns the number of points in the interval.
         /// </summary>
         /// <remarks>Works only for integer <typeparamref name="T"/> types!</remarks>
         public T PointCount
@@ -188,8 +188,10 @@ namespace WhiteMath
             Numeric<T, C> leftInclusive = this.IsLeftInclusive ? this.LeftBound : (this.LeftBound + Numeric<T, C>._1);
             Numeric<T, C> rightInclusive = this.IsRightInclusive ? this.RightBound : (this.RightBound - Numeric<T, C>._1);
 
-            if (leftInclusive > rightInclusive)
-                throw new InvalidOperationException("The interval does not contain a single integer point, so it cannot be converted to a bound-inclusive interval.");
+			if (leftInclusive > rightInclusive)
+			{
+				throw new InvalidOperationException("The interval does not contain a single integer point, so it cannot be converted to a bound-inclusive interval.");
+			}
 
             return new BoundedInterval<T, C>(leftInclusive, rightInclusive, true, true);
         }
@@ -274,79 +276,65 @@ namespace WhiteMath
 				.Validate(length <= (Numeric<T,C>)this.Length)
 				.OrArgumentOutOfRangeException("The desired length should not exceed the current interval's length.");
             
-			// Contract.Ensures(Contract.Result<List<BoundedInterval<T, C>>>() != null);
-
-            Numeric<T, C> parts = ((Numeric<T, C>)this.Length / length).IntegerPart;
+			Numeric<T, C> partsCount = ((Numeric<T, C>)this.Length / length).IntegerPart;
 
             List<BoundedInterval<T, C>> result = new List<BoundedInterval<T, C>>();
 
-            if (parts == Numeric<T,C>._1)
+            if (partsCount == Numeric<T,C>._1)
             {
-                // Если с длиной все в порядке
-                // или же опция состоит в расширении последнего интервала, то добавляем текущий и не паримся.
-
-                if ((Numeric<T, C>)this.Length == length || options == BoundedIntervalSplitOptions.BiggerLastInterval)
-                    result.Add(this);
-
-                // Иначе надо добавить кусочек текущего нужной длины + хвостик
-
-                else
-                {
-                    result.Add(new BoundedInterval<T,C>(this.LeftBound, this.LeftBound + length, this.IsLeftInclusive, false));
+				if (this.Length == length || options == BoundedIntervalSplitOptions.BiggerLastInterval)
+				{
+					result.Add(this);
+				}
+				else
+				{
+					result.Add(new BoundedInterval<T,C>(this.LeftBound, this.LeftBound + length, this.IsLeftInclusive, false));
                     result.Add(new BoundedInterval<T,C>(this.LeftBound + length, this.RightBound, true, this.IsRightInclusive));
                 }
 
                 return result;
             }
 
-            // Здесь уже parts >= 2.
-            // Отдельно обрабатываем первый интервал, потому что там
-            // левая граница должна иметь ту же включенность, что и у текущего интервала.
+            // We have parts >= 2 here.
+			// The first interval is treated separately, because its
+			// left boundary should have the same inclusiveness as the
+			// master interval.
+			// -
+			Numeric<T, C> leftBoundary = this.LeftBound;
+			Numeric<T, C> rightBoundary = leftBoundary + length;
 
-            Numeric<T, C> lb = this.LeftBound;
-            Numeric<T, C> rb = lb + length;
-
-            result.Add(new BoundedInterval<T, C>(lb, rb, this.IsLeftInclusive, false));
-
-            // Остальные, кроме последнего - в цикле.
+            result.Add(new BoundedInterval<T, C>(leftBoundary, rightBoundary, this.IsLeftInclusive, false));
 
             Numeric<T, C> i = Numeric<T, C>._1;
 
-            for (; i < parts - Numeric<T,C>._1; i++)
+            for (; i < partsCount - Numeric<T,C>._1; i++)
             {
-                lb = rb;
-                rb = this.LeftBound + (i + Numeric<T,C>._1) * length;
+                leftBoundary = rightBoundary;
+                rightBoundary = this.LeftBound + (i + Numeric<T,C>._1) * length;
 
-                result.Add(new BoundedInterval<T, C>(lb, rb, true, false));
+                result.Add(new BoundedInterval<T, C>(leftBoundary, rightBoundary, true, false));
             }
 
-            // Последний интервал. Тут несколько вариантов.
+			// Handle the last interval.
+			// -
+            leftBoundary = rightBoundary;
+            rightBoundary = this.LeftBound + (i + Numeric<T, C>._1) * length;
 
-            lb = rb;
-            rb = this.LeftBound + (i + Numeric<T, C>._1) * length;
-
-            if (rb == this.RightBound || options == BoundedIntervalSplitOptions.BiggerLastInterval)
+            if (rightBoundary == this.RightBound || options == BoundedIntervalSplitOptions.BiggerLastInterval)
             {
-                // Покрыли все без всяких хвостов.
-                // ИЛИ ЖЕ последний интервал можно сделать немножко больше.
- 
-                result.Add(new BoundedInterval<T, C>(lb, this.RightBound, true, this.IsRightInclusive));
+                result.Add(new BoundedInterval<T, C>(leftBoundary, this.RightBound, true, this.IsRightInclusive));
             }
             else
             {
-                // Остался хвостик. 
-                // Запихнем его в дополнительный интервал.
-
-                result.Add(new BoundedInterval<T, C>(lb, rb, true, false));
-                result.Add(new BoundedInterval<T, C>(rb, this.RightBound, true, this.IsRightInclusive));
+				// There is a tail remaining.
+				// It should be added to an additional interval.
+				// -
+                result.Add(new BoundedInterval<T, C>(leftBoundary, rightBoundary, true, false));
+                result.Add(new BoundedInterval<T, C>(rightBoundary, this.RightBound, true, this.IsRightInclusive));
             }
 
             return result;
         }
-
-        // -----------------------------------
-        // ----- comparers -------------------
-        // -----------------------------------
 
         /// <summary>
         /// This class provides various-logic comparisons
@@ -354,12 +342,11 @@ namespace WhiteMath
         /// </summary>
         public static class IntervalComparisons
         {
-
             /// <summary>
             /// Compares the two intervals basing on their left bounds.
             /// Inclusiveness or exclusiveness of the bound doesn't count.
             /// </summary>
-            public static Comparison<BoundedInterval<T, C>> LeftBoundLazyComparison
+            public static Comparison<BoundedInterval<T, C>> LeftBoundWeakComparison
             {
                 get
                 {
@@ -406,7 +393,7 @@ namespace WhiteMath
             /// Compares the two intervals basing on their right bounds.
             /// Inclusiveness or exclusiveness of the bound doesn't count.
             /// </summary>
-            public static Comparison<BoundedInterval<T, C>> RightBoundLazyComparison
+			public static Comparison<BoundedInterval<T, C>> RightBoundWeakComparison
             {
                 get
                 {
@@ -470,14 +457,12 @@ namespace WhiteMath
             }
         }
 
-        // -----------------------------------
-        // ----- object methods overriding----
-        // -----------------------------------
-
         public override string ToString()
-        {
-            return (IsLeftInclusive?"[":"(")+LeftBound.ToString()+"; "+RightBound.ToString()+(IsRightInclusive?"]":")");
-        }
+			=> (this.IsLeftInclusive ? "[" : "(")
+				+ this.LeftBound 
+				+ "; "
+				+ this.RightBound
+				+ (this.IsRightInclusive ? "]" : ")");
 
         public override int GetHashCode()
         {
@@ -647,7 +632,7 @@ namespace WhiteMath
 			int index = list.WhiteBinarySearch<T, BoundedInterval<T, C>>(
 				(x => x.LeftBound), 
 				point, 
-				Numeric<T, C>.TComparer);
+				Numeric<T, C>.UnderlyingTypeComparer);
 
             // Why 1 is subtracted?
             // Because the left boundary of the "current" interval

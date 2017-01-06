@@ -69,7 +69,7 @@ namespace WhiteMath.Functions
         {
             this.points = points.ToArray();
 
-            IComparer<Point<T>> comparer = Point<T>.GetComparerOnX(Numeric<T, C>.TComparer);
+            IComparer<Point<T>> comparer = Point<T>.GetComparerOnX(Numeric<T, C>.UnderlyingTypeComparer);
 
             // Если списокъ не отсортированъ, 
             // то это нужно сделать сей же часъ.

@@ -36,8 +36,8 @@ namespace WhiteMath.Functions
         {
             string copy = str.Clone() as string;
 
-            while(RemoveOuterParentheses(ref copy))
-                ;
+			while (RemoveOuterParentheses(ref copy))
+			{ }
 
             return copy;
         }
@@ -347,7 +347,7 @@ namespace WhiteMath.Functions
         // --------- INSERT * -----------
         // ------------------------------
 
-        static Regex multiplicationSignInsertionRegex = new Regex(@"(\d)([a-zA-Z@\(])", RegexOptions.Compiled);
+		private static Regex MultiplicationSignInsertionRegex = new Regex(@"(\d)([a-zA-Z@\(])", RegexOptions.Compiled);
         
         /// <summary>
         /// Inserts the multiplication sign where safe, e.g. 25sin(x) => 25*sin(x)
@@ -355,14 +355,14 @@ namespace WhiteMath.Functions
         /// </summary>
         /// <param name="sourceString">The source string object (remains as is).</param>
         /// <returns>The modified string with multiplication signs inserted where safe.</returns>
-        internal static string insertMultiplicationSign(this string sourceString)
+        internal static string InsertMultiplicationSigns(this string sourceString)
         {
-            Match match = multiplicationSignInsertionRegex.Match(sourceString);
+            Match match = MultiplicationSignInsertionRegex.Match(sourceString);
 
             while (match.Success)
             {
                 sourceString = match.Result("$`$1*$2$'");
-                match = multiplicationSignInsertionRegex.Match(sourceString);
+                match = MultiplicationSignInsertionRegex.Match(sourceString);
             }
 
             return sourceString;

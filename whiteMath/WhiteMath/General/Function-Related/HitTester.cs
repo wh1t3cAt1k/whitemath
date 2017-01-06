@@ -31,8 +31,8 @@ namespace WhiteMath.General
 
             this.intervalList = new List<BoundedInterval<T, C>>(intervalSequence);
 
-            if (!this.intervalList.IsSorted(BoundedInterval<T, C>.IntervalComparisons.LeftBoundLazyComparison.CreateComparer()))
-                this.intervalList.Sort(BoundedInterval<T, C>.IntervalComparisons.LeftBoundLazyComparison);
+            if (!this.intervalList.IsSorted(BoundedInterval<T, C>.IntervalComparisons.LeftBoundWeakComparison.CreateComparer()))
+                this.intervalList.Sort(BoundedInterval<T, C>.IntervalComparisons.LeftBoundWeakComparison);
 
             this.intervalHits = new List<int>(this.intervalList.Count);
             this.intervalHits.AddRange(new int[this.intervalList.Count]);

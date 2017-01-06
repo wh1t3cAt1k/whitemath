@@ -48,24 +48,24 @@ namespace WhiteMath.Functions
         /// <typeparam name="TVal"></typeparam>
         /// <param name="func"></param>
         /// <returns></returns>
-        public static IFunction<TArg, TVal> As_IFunction<TArg, TVal>(Func<TArg, TVal> func)
+		public static IFunction<TArg, TVal> AsFunction<TArg, TVal>(Func<TArg, TVal> func)
         {
-            return new _FUNC_FUNCTION<TArg, TVal>(func);
+            return new DelegateFunction<TArg, TVal>(func);
         }
 
-        public static Func<TArg, TVal> As_Func<TArg, TVal>(IFunction<TArg, TVal> function)
+		public static Func<TArg, TVal> AsDelegate<TArg, TVal>(IFunction<TArg, TVal> function)
         {
-            return delegate(TArg argument) { return function.Value(argument); };
+			return argument => function.Value(argument);
         }
 
         /// <summary>
         /// Функция создаваемая на основе делегата Func(T,T).
         /// </summary>
-        private class _FUNC_FUNCTION<TArg, TVal> : IFunction<TArg, TVal>
+        private class DelegateFunction<TArg, TVal> : IFunction<TArg, TVal>
         {
             private Func<TArg, TVal> function;
 
-            public _FUNC_FUNCTION(Func<TArg, TVal> function)
+            public DelegateFunction(Func<TArg, TVal> function)
             {
                 function.Assert_NotNull("The function delegate should not be null.");
 
@@ -83,7 +83,7 @@ namespace WhiteMath.Functions
         // --------------------------------------------
 
         /// <summary>
-        /// Creates the function table basing on the arguments list.
+        /// Creates the function value table basing on the list of argument value.
         /// The function table is represented by the point array.
         /// </summary>
         /// <example>
@@ -94,7 +94,7 @@ namespace WhiteMath.Functions
         /// <param name="obj">The calling function object.</param>
         /// <param name="arguments">The argument parameter list.</param>
         /// <returns>The function table in the format of a point array.</returns>
-        public static Point<T>[] GetFunctionTable<T>(this IFunction<T, T> obj, IList<T> arguments)
+		public static Point<T>[] GetValueTable<T>(this IFunction<T, T> obj, IList<T> arguments)
         {
             Point<T>[] arr = new Point<T>[arguments.Count];
 
@@ -161,30 +161,42 @@ namespace WhiteMath.Functions
 
         /// <summary>
         /// Checks whether the current function is equal to another at least within the
-        /// finite set of points. 
+        /// specified finite set of points. 
         /// </summary>
         /// <typeparam name="T">The type of function argument/value.</typeparam>
         /// <typeparam name="C">The calculator for the function argument.</typeparam>
-        /// <param name="obj">The calling function object.</param>
-        /// <param name="another">The function object to test equality with.</param>
+        /// <param name="currentFunction">The calling function object.</param>
+        /// <param name="anotherFunction">The function object to test equality with.</param>
         /// <param name="epsilon">The upper epsilon bound of 'equality' criteria. If |f(x) - g(x)| &lt; eps, two functions are considered equal.</param>
         /// <param name="points">The points list to test equality on.</param>
         /// <returns>True if the functions are epsilon-equal within the points list passed, false otherwise.</returns>
-        public static bool PointwiseEquals<T,C>(this IFunction<T, T> obj, IFunction<T, T> another, T epsilon, IList<T> points) where C: ICalc<T>, new()
+        public static bool PointwiseEquals<T, C>(
+			this IFunction<T, T> currentFunction, 
+			IFunction<T, T> anotherFunction, 
+			T epsilon, 
+			IList<T> points) where C: ICalc<T>, new()
         {
             Func<T, T> abs = Mathematics<T, C>.Abs;
             ICalc<T> calc = Numeric<T, C>.Calculator;
 
-            for (int i = 0; i < points.Count; i++)
-                if (!calc.GreaterThan(epsilon, abs(calc.Subtract(obj.Value(points[i]), another.Value(points[i])))))
-                    return false;
-
+			for (int i = 0; i < points.Count; i++)
+			{
+				if (!calc.GreaterThan(
+					epsilon, 
+					abs(
+						calc.Subtract(
+							currentFunction.Value(points[i]), 
+							anotherFunction.Value(points[i])))))
+				{
+					return false;
+				}
+			}
             return true;
         }
 
         /// <summary>
         /// Checks whether the current function is equal to another at least within the
-        /// finite set of points. 
+        /// specified finite set of points. 
         /// </summary>
         /// <typeparam name="T">The type of function argument/value.</typeparam>
         /// <typeparam name="C">The calculator for the function argument.</typeparam>
@@ -193,56 +205,60 @@ namespace WhiteMath.Functions
         /// <param name="epsilon">The upper epsilon bound of 'equality' criteria. If |f(x) - g(x)| &lt eps, two functions are considered equal.</param>
         /// <param name="points">The points list to test equality on.</param>
         /// <returns>True if the functions are epsilon-equal within the points list passed, false otherwise.</returns>
-        public static bool MaybeEquals<T, C>(this IFunction<T, T> obj, IFunction<T, T> another, T epsilon, params T[] points) where C : ICalc<T>, new()
+		public static bool PointwiseEquals<T, C>(
+			this IFunction<T, T> obj, 
+			IFunction<T, T> another, 
+			T epsilon, 
+			params T[] points) where C : ICalc<T>, new()
         {
-            return PointwiseEquals<T,C>(obj, another, epsilon, points as IList<T>);
+            return PointwiseEquals<T, C>(obj, another, epsilon, points as IList<T>);
         }
 
-
-        // --------------------------------------------
-        // --------- ЗНАК ФУНКЦИИ ---------------------
-        // --------------------------------------------
-
         /// <summary>
-        /// Returns the number of sign variations in the function list for some certain
-        /// point.
+        /// Returns the number of sign variations in the function list for a given point.
         /// </summary>
         /// <typeparam name="T">The type of polynom coefficients.</typeparam>
         /// <typeparam name="C">The type of polynom coefficients' calculator.</typeparam>
         /// <param name="list">The list of the polynoms to be analyzed.</param>
         /// <returns>The number of sign variations within the list. Zero values do not count.</returns>
-        public static int SignVariations<T, C>(this IList<IFunction<T, T>> list, Numeric<T, C> point) where C : ICalc<T>, new()
+		public static int GetNumberOfSignChanges<T, C>(this IList<IFunction<T, T>> list, Numeric<T, C> point) where C : ICalc<T>, new()
         {
-            int signPrev = 0;
+			int signPrevious = 0;
             int signNew = 0;
-            int k = 0;
+			int signChangesCount = 0;
 
             for (int i = 0; i < list.Count; i++)
             {
                 signNew = Mathematics<T, C>.Sign(list[i].Value(point));
 
-                if (signPrev == 0)
+                if (signPrevious == 0)
                 {
-                    if (signNew != 0)
-                        k++;
-                    else continue;
+					if (signNew != 0)
+					{
+						++signChangesCount;
+					}
+					else
+					{
+						continue;
+					}
                 }
-                else if (signPrev < 0 || signPrev > 0)
+                else if (signPrevious < 0 || signPrevious > 0)
                 {
-                    if (signNew != 0)
-                        k++;
-                    else continue;
+					if (signNew != 0)
+					{
+						++signChangesCount;
+					}
+					else
+					{
+						continue;
+					}
                 }
 
-                signPrev = signNew;
+                signPrevious = signNew;
             }
 
-            return k;
+            return signChangesCount;
         }
-
-        // --------------------------------------------
-        // --------- ПОИСК МАКСИМУМА НА ИНТЕРВАЛЕ -----
-        // --------------------------------------------
 
         public enum SearchFor
         {
@@ -318,12 +334,16 @@ namespace WhiteMath.Functions
         /// </summary>
         /// <typeparam name="T">The type of function argument/value.</typeparam>
         /// <typeparam name="C">The calculator for the argument type.</typeparam>
-        /// <param name="obj">The calling function object.</param>
+        /// <param name="function">The calling function object.</param>
         /// <param name="interval">The interval on which the zero is searched. The value </param>
         /// <param name="epsilonArg">The epsilon value of the argument interval. The 'root' argument would be actually any value in the interval [-epsilon; +epsilon]</param>
         /// <param name="epsilonFunc">The epsilon value of the function zero. That means, that any function value in the interval [-epsilonFunc; epsilonFunc] is considered zero value. This parameter is usually set to absolute zero (so that only true 0 counts), but may become useful when the function calculation method contains precision errors resulting in zero becoming 'non-zero'.</param>
         /// <returns>The argument value resulting in f(x) ~= 0.</returns>
-        public static T ZeroSearchBisectionMethod<T, C>(this IFunction<T, T> obj, BoundedInterval<T, C> interval, Numeric<T,C> epsilonArg, Numeric<T,C> epsilonFunc) where C : ICalc<T>, new()
+		public static T ZeroSearchBisectionMethod<T, C>(
+			this IFunction<T, T> function, 
+			BoundedInterval<T, C> interval, 
+			Numeric<T,C> epsilonArg, 
+			Numeric<T,C> epsilonFunc) where C : ICalc<T>, new()
         {
             ICalc<T> calc = Numeric<T,C>.Calculator;
             
@@ -336,30 +356,32 @@ namespace WhiteMath.Functions
             Numeric<T,C> xMid;
 
             Func<T, T> abs = Mathematics<T, C>.Abs;
-            Func<T, int> sgn = Mathematics<T, C>.Sign;
+			Func<T, int> sign = Mathematics<T, C>.Sign;
 
-            Numeric<T,C> leftVal = obj.Value(left);
+            Numeric<T,C> leftVal = function.Value(left);
             Numeric<T,C> midVal;
-            Numeric<T,C> rightVal = obj.Value(right);
+            Numeric<T,C> rightVal = function.Value(right);
 
-            // -- флаг - чтобы не проделывать лишних вычислений.
+			bool isLeftBoundaryChanged = false;
 
-            bool leftChanged = false;
+			// If there is a zero at either boundary of the interval,
+			// we return at once.
+			// -
+			if ((abs(leftVal) - zero) < epsilonFunc)
+			{
+				return left;
+			}
+			else if ((abs(rightVal) - zero) < epsilonFunc)
+			{
+				return right;
+			}
 
-            // ----- если на концах интервала ноль, то возвращаем сразу.
+			// --------- проверочка
 
-            if ((abs(leftVal) - zero) < epsilonFunc)
-                return left;
-
-            else if ((abs(rightVal) - zero) < epsilonFunc)
-                return right;
-
-            // --------- проверочка
-
-            if (sgn(leftVal) == sgn(rightVal))
-                throw new ArgumentException("Error: the function values are of the same sign on the interval bounds.");
-
-            // ---------------------------------------------------------
+			if (sign(leftVal) == sign(rightVal))
+			{
+				throw new ArgumentException("Error: the function values are of the same sign on the interval bounds.");
+			}
 
             while(true)
             {                
@@ -370,34 +392,38 @@ namespace WhiteMath.Functions
                 if (xMid - left < epsilonArg)
                     return xMid;
 
-                // ----------------------------------------------
+				// ----------------------------------------------
 
-                if(leftChanged)
-                    leftVal = obj.Value(left);
-                else 
-                    rightVal = obj.Value(right);
+				if (isLeftBoundaryChanged)
+				{
+					leftVal = function.Value(left);
+				}
+				else
+				{
+					rightVal = function.Value(right);
+				}
 
-                midVal = obj.Value(xMid);
+                midVal = function.Value(xMid);
 
-                // ------------ ура! Нашли риальни ноль! --------
-
-                if (abs(midVal - zero) < epsilonFunc)
-                    return xMid;
-
-                else if (sgn(rightVal) * sgn(midVal) < 0)
-                {
-                    leftChanged = true;
-                    left = xMid;
-                }
-
-                else if (sgn(leftVal) * sgn(midVal) < 0)
-                {
-                    leftChanged = false;
-                    right = xMid;
-                }
-                else
-                    throw new FunctionException(string.Format("Some particular method iteration failed, possibly due to the precision loss. The function is intended to be of different signs on the interval bounds, but the values are {0} and {1}.", leftVal, rightVal));
-            }
+				if (abs(midVal - zero) < epsilonFunc)
+				{
+					return xMid;
+				}
+				else if (sign(rightVal) * sign(midVal) < 0)
+				{
+					isLeftBoundaryChanged = true;
+					left = xMid;
+				}
+				else if (sign(leftVal) * sign(midVal) < 0)
+				{
+					isLeftBoundaryChanged = false;
+					right = xMid;
+				}
+				else
+				{
+					throw new FunctionException(string.Format("Some particular method iteration failed, possibly due to the precision loss. The function is intended to be of different signs on the interval bounds, but the values are {0} and {1}.", leftVal, rightVal));
+				}
+			}
         }
 
         // --------------------------------------------
