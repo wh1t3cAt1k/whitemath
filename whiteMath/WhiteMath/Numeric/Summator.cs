@@ -48,7 +48,7 @@ namespace WhiteMath
         /// <param name="endIndex">The inclusive ending index of sequence summation.</param>
         /// <param name="memberFormula">The general term formula depending as the function of integer index.</param>
         /// <returns>The result of the sequential summation of provided sequence starting with index <paramref name="startIndex"/> and ending with index <paramref name="endIndex"/>, both inclusive.</returns>
-        public T Sum_Sequentially(Func<int, T> memberFormula, int startIndex, int endIndex)
+        public T SumSequentially(Func<int, T> memberFormula, int startIndex, int endIndex)
         {
             T sum = this.Zero;
 
@@ -71,7 +71,7 @@ namespace WhiteMath
         /// <param name="endIndex">The inclusive ending index of sequence summation.</param>
         /// <param name="memberFormula">The general term formula as the function of <typeparamref name="T"/> argument and an integer index.</param>
         /// <returns>The result of sequential summation of the sequence starting with index <paramref name="startIndex"/> and ending with index <paramref name="endIndex"/>, both inclusive.</returns>
-        public T Sum_Sequentially(T argument, Func<T, int, T> memberFormula, int startIndex, int endIndex)
+		public T SumSequentially(T argument, Func<T, int, T> memberFormula, int startIndex, int endIndex)
         {
             T sum = this.Zero;
 
@@ -100,7 +100,7 @@ namespace WhiteMath
         /// <param name="comparer">The comparer to compare values of type <typeparamref name="T"/>. Should return a positive value if the first value is bigger than the second, zero value if they are equal, and a negative value if the first object is less.</param>
         /// <param name="memberFormula">The general term formula dependent on an integer index.</param>
         /// <returns>The result of lower-to-bigger summation of the sequence starting with index <paramref name="startIndex"/> and ending with index <paramref name="endIndex"/>, both inclusive.</returns>
-        public T SumSmallerToBigger(Func<int, T> memberFormula, int startIndex, int endIndex, IComparer<T> comparer)
+        public T SumSmallerToLarger(Func<int, T> memberFormula, int startIndex, int endIndex, IComparer<T> comparer)
         {
             IPriorityQueue<T> sequence = new BinaryHeap<T>(comparer.GetReverseComparer());
 
@@ -135,7 +135,7 @@ namespace WhiteMath
         /// <param name="memberFormula">The general term formula dependent on both argument and integer index.</param>
         /// <param name="argument">The current argument for the sequence.</param>
         /// <returns>The result of sequential summation of the sequence starting with index <paramref name="startIndex"/> and ending with index <paramref name="endIndex"/>, both inclusive.</returns>
-        public T Sum_SmallerToBigger(T argument, Func<T, int, T> memberFormula, int startIndex, int endIndex, IComparer<T> comparer)
+		public T SumSmallerToLarger(T argument, Func<T, int, T> memberFormula, int startIndex, int endIndex, IComparer<T> comparer)
         {
             IPriorityQueue<T> sequence = new BinaryHeap<T>(comparer.GetReverseComparer());
 
@@ -166,23 +166,27 @@ namespace WhiteMath
         /// <param name="metricProvider">The metric mapping values of type <typeparamref name="T"/> to their integer metric.</param>
         /// <param name="memberFormula">The general term formula dependent on an integer index.</param>
         /// <returns>The result of sequential summation of the sequence starting with index <paramref name="startIndex"/> and ending with index <paramref name="endIndex"/>, both inclusive.</returns>
-        public T Sum_ByIncreasingMetric(Func<int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
+		public T SumByIncreasingMetric(Func<int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
         {
             IComparer<KeyValuePair<int, T>> comparer = Comparer<int>.Default.GetKVPComparerOnKey<int, T>();
             IPriorityQueue<KeyValuePair<int, T>> queue = new BinaryHeap<KeyValuePair<int, T>>(comparer);
 
-            if (startIndex >= endIndex)
-                for (int i = startIndex; i <= endIndex; i++)
-                {
-                    T res = memberFormula(i);
-                    queue.Insert(new KeyValuePair<int, T>(metricProvider.GetMetric(res), res));
-                }
-            else
-                for (int i = endIndex; i >= startIndex; i--)
-                {
-                    T res = memberFormula(i);
-                    queue.Insert(new KeyValuePair<int, T>(metricProvider.GetMetric(res), res));
-                }
+			if (startIndex >= endIndex)
+			{
+				for (int i = startIndex; i <= endIndex; i++)
+				{
+					T res = memberFormula(i);
+					queue.Insert(new KeyValuePair<int, T>(metricProvider.GetMetric(res), res));
+				}
+			}
+			else
+			{
+				for (int i = endIndex; i >= startIndex; i--)
+				{
+					T res = memberFormula(i);
+					queue.Insert(new KeyValuePair<int, T>(metricProvider.GetMetric(res), res));
+				}
+			}
 
             T sum = this.Zero;
 
@@ -209,10 +213,10 @@ namespace WhiteMath
         /// <param name="memberFormula">The general term formula dependent on both argument and integer index.</param>
         /// <param name="argument">The current argument for the sequence.</param>
         /// <returns>The result of sequential summation of the sequence starting with index <paramref name="startIndex"/> and ending with index <paramref name="endIndex"/>, both inclusive.</returns>
-        public T Sum_ByIncreasingMetric(T argument, Func<T, int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
+		public T SumByIncreasingMetric(T argument, Func<T, int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
         {
-            IComparer<KeyValuePair<int, T>>         comparer = Comparer<int>.Default.GetKVPComparerOnKey<int, T>();
-            IPriorityQueue<KeyValuePair<int, T>>    queue = new BinaryHeap<KeyValuePair<int, T>>(comparer);
+            IComparer<KeyValuePair<int, T>> comparer = Comparer<int>.Default.GetKVPComparerOnKey<int, T>();
+            IPriorityQueue<KeyValuePair<int, T>> queue = new BinaryHeap<KeyValuePair<int, T>>(comparer);
             
             if (startIndex >= endIndex)
                 for (int i = startIndex; i <= endIndex; i++)
@@ -242,129 +246,149 @@ namespace WhiteMath
         // ------ By minimum current metric -----
         // --------------------------------------
 
-        public T Sum_ByMinimumMetricSum(Func<int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
+		public T SumByMinimumMetricSum(Func<int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
         {
 			throw new NotImplementedException();
         }
 
         // ---------- abs comparer ---------------
 
-        private class _ABS_INT_COMPARER: IComparer<int>
+        private class AbsoluteIntegerComparer: IComparer<int>
         {
             public int Compare(int one, int two)
             {
                 int absOne = Math.Abs(one);
                 int absTwo = Math.Abs(two);
 
-                if (absOne > absTwo)
-                    return 1;
-                else if (absOne < absTwo)
-                    return -1;
-                else
-                    return 0;
+				if (absOne > absTwo)
+				{
+					return 1;
+				}
+				else if (absOne < absTwo)
+				{
+					return -1;
+				}
+				else
+				{
+					return 0;
+				}
             }
         }
 
-        public T Sum_MinCurrentMetricSum(Func<int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
+        public T SumByMinimumCurrentMetricSum(Func<int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
         {
-            return Sum_MinCurrentMetricSum(this.Zero, delegate(T arg, int index) { return memberFormula(index); }, startIndex, endIndex, metricProvider);
+            return SumByMinimumCurrentMetricSum(this.Zero, delegate(T arg, int index) { return memberFormula(index); }, startIndex, endIndex, metricProvider);
         }
 
-        public T Sum_MinCurrentMetricSum(T argument, Func<T, int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
+		public T SumByMinimumCurrentMetricSum(T argument, Func<T, int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
         {
             LinkedList<KeyValuePair<int, T>> listPositive = new LinkedList<KeyValuePair<int, T>>();  
             LinkedList<KeyValuePair<int, T>> listNegative = new LinkedList<KeyValuePair<int, T>>();
             LinkedList<KeyValuePair<int, T>> listZero = new LinkedList<KeyValuePair<int, T>>();
 
-            IComparer<KeyValuePair<int, T>> comparer = new _ABS_INT_COMPARER().GetKVPComparerOnKey<int, T>();
+            IComparer<KeyValuePair<int, T>> comparer = 
+				new AbsoluteIntegerComparer().GetKVPComparerOnKey<int, T>();
 
-            // ---- добавляем в список -----
+			// ---- добавляем в список -----
 
-            if (startIndex >= endIndex)
-                for (int i = startIndex; i <= endIndex; i++)
-                {
-                    T res = memberFormula(argument, i);
-                    int m = metricProvider.GetMetric(res);
+			if (startIndex >= endIndex)
+			{
+				for (int i = startIndex; i <= endIndex; ++i)
+				{
+					T res = memberFormula(argument, i);
+					int metric = metricProvider.GetMetric(res);
 
-                    if (m > 0)
-                        listPositive.AddLast(new KeyValuePair<int, T>(m, res));
-                    else if (m < 0)
-                        listNegative.AddLast(new KeyValuePair<int, T>(m, res));
-                    else
-                        listZero.AddLast(new KeyValuePair<int, T>(0, res));
-                }
-            else
-                for (int i = endIndex; i >= startIndex; i--)
-                {
-                    T res = memberFormula(argument, i);
-                    int m = metricProvider.GetMetric(res);
+					if (metric > 0)
+					{
+						listPositive.AddLast(new KeyValuePair<int, T>(metric, res));
+					}
+					else if (metric < 0)
+					{
+						listNegative.AddLast(new KeyValuePair<int, T>(metric, res));
+					}
+					else
+					{
+						listZero.AddLast(new KeyValuePair<int, T>(0, res));
+					}
+				}
+			}
+			else
+			{
+				for (int i = endIndex; i >= startIndex; --i)
+				{
+					T res = memberFormula(argument, i);
+					int metric = metricProvider.GetMetric(res);
 
-                    if (m > 0)
-                        listPositive.AddLast(new KeyValuePair<int, T>(m, res));
-                    else if (m < 0)
-                        listNegative.AddLast(new KeyValuePair<int, T>(m, res));
-                    else
-                        listZero.AddLast(new KeyValuePair<int, T>(0, res));
-                }
+					if (metric > 0)
+						listPositive.AddLast(new KeyValuePair<int, T>(metric, res));
+					else if (metric < 0)
+						listNegative.AddLast(new KeyValuePair<int, T>(metric, res));
+					else
+						listZero.AddLast(new KeyValuePair<int, T>(0, res));
+				}
+			}
 
-            // ------------------------------
-            // Сортируем список по возрастающему абсолютному значению ключа.
-            // TODO: сортировка должна выполняться быстрее.
-
+			// Sort the list by increasing absolute key value.
+			// The zeroes need not be sorted.
+			// -
+            // TODO: the sorting could be performed faster?
+			// -
             listPositive.InsertionSort(comparer);
             listNegative.InsertionSort(comparer);
 
-            // нули сортировать не надо :)
-
-            // ---------- А ВОТ ТЕПЕРЬ СУММАЦИЯ. Сначала все числа с нулевой метрикой - они не увеличат суммы.
-
-            T       sum         = this.OperatorPlus(this.Zero, Sum_KeyValueSequence(listZero));
-            long    metricSum   = 0;                 
+			// First we sum the zero-metric numbers as they do not
+			// increase the current metric.
+			// -
+            T sum = this.OperatorPlus(this.Zero, SumValues(listZero));
+            long metricSum = 0;                 
             
-            LinkedListNode<KeyValuePair<int, T>>    analyzedNode;
-
-            // ---------- Готово. Приступаем.
+            LinkedListNode<KeyValuePair<int, T>> analyzedNode;
 
             while (listPositive.Count > 0 || listNegative.Count > 0)
             {
-                #if DEBUG
-                Console.WriteLine(Math.Abs(metricSum));
-                #endif 
+				#if DEBUG
+              	Console.WriteLine(Math.Abs(metricSum));
+				#endif
 
-                // Если кончился отрицательный список - ничем не поможешь.
-
-                if (listNegative.Count == 0)
-                    return this.OperatorPlus(sum, Sum_KeyValueSequence(listPositive));
-                
-                // Если кончился положительный - тоже
-
-                else if (listPositive.Count == 0)
-                    return this.OperatorPlus(sum, Sum_KeyValueSequence(listNegative));
+				// Once we have exhausted either of the the lists,
+				// the only thing we can do is to sum the remaining list
+				// sequentially.
+				// -
+				if (listNegative.Count == 0)
+				{
+					return this.OperatorPlus(sum, SumValues(listPositive));
+				}
+				else if (listPositive.Count == 0)
+				{
+					return this.OperatorPlus(sum, SumValues(listNegative));
+				}
 
                 if (metricSum > 0)     
                 {
-                    // Ищем ключ в отрицательном списке, чтобы максимально уменьшить абсолютное значение суммы.
-
+					// Look for the key in the negative list so as to decrease the 
+					// absolute sum value as possible.
+					// -
                     analyzedNode = listNegative.First;
-                    
-                    // Первое условие здесь - абсолютное значение 
-                    // ключа анализируемого узла меньше суммы метрик + абсолютное значение текущего отрицательного узла
-                    // Остальные нет смысла проверять - там неоптимально.
 
-                    while (Math.Abs(analyzedNode.Value.Key) <= metricSum && analyzedNode != null)
-                        analyzedNode = analyzedNode.Next;
+					// Первое условие здесь - абсолютное значение 
+					// ключа анализируемого узла меньше суммы метрик + абсолютное значение текущего отрицательного узла
+					// Остальные нет смысла проверять - там неоптимально.
 
-                    // Крайний случай - дошли до края.
+					while (Math.Abs(analyzedNode.Value.Key) <= metricSum && analyzedNode != null)
+					{
+						analyzedNode = analyzedNode.Next;
+					}
 
                     if (analyzedNode == null)
                     {
-                        // Одно из двух - или последний отрицательный, или первый положительный.
-                        // В зависимости от того, что хуже.
-
+						// Edge case, we have reached the end.
+						// -
+						// We take either the last negative, or the first 
+						// positive, depending on what's better.
+						// -
                         long positiveKeySum = metricSum + listPositive.First.Value.Key;
                         long negativeKeySum = metricSum + listNegative.Last.Value.Key;
 
-                        // Если прибавить отрицательное выгоднее.
                         if (Math.Abs(positiveKeySum) > Math.Abs(negativeKeySum))
                         {
                             metricSum = negativeKeySum;
@@ -380,21 +404,19 @@ namespace WhiteMath
                             listPositive.RemoveFirst();
                         }
                     }
-
-                    // Еще один край - если это первый же узел.
-
-                    if (analyzedNode == listNegative.First)
+                    else if (analyzedNode == listNegative.First)
                     {
-                        // Одно из двух - или первый отрицательный, или первый положительный.
-                        // В зависимости от того, что хуже.
-
+						// We take either the first negative, or the first 
+						// positive, depending on what's better.
+						// -
                         long positiveKeySum = metricSum + listPositive.First.Value.Key;
                         long negativeKeySum = metricSum + listNegative.First.Value.Key;
 
-                        // Если прибавить отрицательное выгоднее.
                         if (Math.Abs(negativeKeySum) < Math.Abs(positiveKeySum))
                         {
-                            metricSum = negativeKeySum;
+							// Adding a negative is better.
+							// -
+							metricSum = negativeKeySum;
                             sum = this.OperatorPlus(sum, listNegative.First.Value.Value);
 
                             listNegative.RemoveFirst();
@@ -408,23 +430,23 @@ namespace WhiteMath
                         }
 
                     }
-
-                    // Иначе анализируем одно из трех.
-
                     else
                     {
                         long positiveKeySum = metricSum + listPositive.First.Value.Key;
                         long negativeKeySum1 = metricSum + analyzedNode.Previous.Value.Key;
                         long negativeKeySum2 = metricSum + analyzedNode.Value.Key;
 
-                        if (Math.Abs(negativeKeySum1) <= Math.Abs(negativeKeySum2) && Math.Abs(negativeKeySum1) <= Math.Abs(positiveKeySum))
+                        if (Math.Abs(negativeKeySum1) <= Math.Abs(negativeKeySum2) 
+							&& Math.Abs(negativeKeySum1) <= Math.Abs(positiveKeySum))
                         {
                             metricSum = negativeKeySum1;
                             sum = this.OperatorPlus(sum, analyzedNode.Previous.Value.Value);
 
                             listNegative.Remove(analyzedNode.Previous);
                         }
-                        else if (Math.Abs(negativeKeySum2) <= Math.Abs(negativeKeySum1) && Math.Abs(negativeKeySum2) <= Math.Abs(positiveKeySum))
+                        else if (
+							Math.Abs(negativeKeySum2) <= Math.Abs(negativeKeySum1) 
+							&& Math.Abs(negativeKeySum2) <= Math.Abs(positiveKeySum))
                         {
                             metricSum = negativeKeySum2;
                             sum = this.OperatorPlus(sum, analyzedNode.Value.Value);
@@ -440,20 +462,22 @@ namespace WhiteMath
                         }
                     }
                 }
-                else if (metricSum < 0)     // ищем максимальный по модулю и не превосходящий текущего элемент
+                else if (metricSum < 0)
                 {
-                    // Ищем ключ в положительном списке, чтобы максимально уменьшить абсолютное значение суммы.
-
+					// Look for such a key in the list of positives
+					// so as to maximally decrease the absolute value
+					// of metric sum.
+					// -
                     analyzedNode = listPositive.First;
 
-                    // Первое условие здесь - абсолютное значение 
-                    // ключа анализируемого узла меньше суммы метрик + абсолютное значение текущего отрицательного узла
-                    // Остальные нет смысла проверять - там неоптимально.
+					// Первое условие здесь - абсолютное значение 
+					// ключа анализируемого узла меньше суммы метрик + абсолютное значение текущего отрицательного узла
+					// Остальные нет смысла проверять - там неоптимально.
 
-                    while (analyzedNode.Value.Key <= Math.Abs(metricSum) && analyzedNode != null)
-                        analyzedNode = analyzedNode.Next;
-
-                    // Крайний случай - дошли до края.
+					while (analyzedNode.Value.Key <= Math.Abs(metricSum) && analyzedNode != null)
+					{
+						analyzedNode = analyzedNode.Next;
+					}
 
                     if (analyzedNode == null)
                     {
@@ -479,10 +503,7 @@ namespace WhiteMath
                             listNegative.RemoveFirst();
                         }
                     }
-
-                    // Еще один край - если это первый же узел.
-
-                    if (analyzedNode == listPositive.First)
+                    else if (analyzedNode == listPositive.First)
                     {
                         // Одно из двух - или первый отрицательный, или первый положительный.
                         // В зависимости от того, что хуже.
@@ -507,9 +528,6 @@ namespace WhiteMath
                         }
 
                     }
-
-                    // Иначе анализируем одно из трех.
-
                     else
                     {
                         long negativeKeySum = metricSum + listNegative.First.Value.Key;
@@ -541,19 +559,20 @@ namespace WhiteMath
                 }
                 else     
                 {
-                    // сумма метрик равна нулю, уменьшать некуда. Можно не искать, а сразу добавлять. 
-                    // Смотрим, что хуже. Прибавить первое положительное или первое отрицательное.
-
+					// The metric sum is zero. No need to search, just
+					// decide what's better: to add the first positive
+					// or the last negative.
+					// -
                     if (listPositive.First.Value.Key < listNegative.First.Value.Key)
                     {
-                        metricSum += listPositive.First.Value.Key;     // прибавляем к сумме.
+                        metricSum += listPositive.First.Value.Key;
                         sum = this.OperatorPlus(sum, listPositive.First.Value.Value); 
 
                         listPositive.RemoveFirst();
                     }
                     else
                     {
-                        metricSum += listNegative.First.Value.Key;     // прибавляем к сумме.
+                        metricSum += listNegative.First.Value.Key;
                         sum = this.OperatorPlus(sum, listNegative.First.Value.Value); 
 
                         listNegative.RemoveFirst();
@@ -564,19 +583,17 @@ namespace WhiteMath
             return sum;
         }
 
-        // ------------------------------------
-        // ------- helper methods -------------
-        // ------------------------------------
-
         /// <summary>
-        /// Суммирует все значения в слинкованном листе по "значению".
+        /// Sums all values in the linked list of key vale pairs.
         /// </summary>
-        private T Sum_KeyValueSequence(LinkedList<KeyValuePair<int, T>> list)
+		private T SumValues(IEnumerable<KeyValuePair<int, T>> sequence)
         {
             T sum = this.Zero;
 
-            foreach (KeyValuePair<int, T> kvp in list)
-                sum = this.OperatorPlus(sum, kvp.Value);
+			foreach (KeyValuePair<int, T> pair in sequence)
+			{
+				sum = this.OperatorPlus(sum, pair.Value);
+			}
 
             return sum;
         }
