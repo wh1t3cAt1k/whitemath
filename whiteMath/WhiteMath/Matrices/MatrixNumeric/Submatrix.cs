@@ -71,12 +71,12 @@ namespace WhiteMath.Matrices
 
         // -----------------------------------------------------------------------------------
 
-        public override Matrix<T,C> getSubMatrixCopyAt(int i, int j, int rows, int columns)
+        public override Matrix<T,C> GetSubMatrixCopyAt(int i, int j, int rows, int columns)
         {
             CheckArePositive(i, j);
             CheckAreWithinBounds(i + rows, j + columns);
 
-            return parent.getSubMatrixCopyAt(offsetRow + i, offsetColumn + j, rows, columns);
+            return parent.GetSubMatrixCopyAt(offsetRow + i, offsetColumn + j, rows, columns);
         }
 
         // -----------------------------
@@ -88,7 +88,7 @@ namespace WhiteMath.Matrices
         /// </summary>
         public override object Clone()
         {
-            return parent.getSubMatrixCopyAt(offsetRow, offsetColumn, RowCount, ColumnCount);
+            return parent.GetSubMatrixCopyAt(offsetRow, offsetColumn, RowCount, ColumnCount);
         }
 
         protected override Matrix<T,C> Multiply(Matrix<T,C> another)

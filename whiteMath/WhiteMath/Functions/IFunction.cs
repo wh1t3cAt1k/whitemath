@@ -36,11 +36,6 @@ namespace WhiteMath.Functions
     /// </summary>
     public static class IFunctionExtensions
     {
-        // --------------------------------------------
-        // --------- КОНВЕРТАЦИЯ МЕЖДУ-----------------
-        // ----------Func и IFunction -----------------
-        // --------------------------------------------
-
         /// <summary>
         /// 
         /// </summary>
@@ -76,32 +71,6 @@ namespace WhiteMath.Functions
             {
                 return function.Invoke(x);
             }
-        }
-
-        // --------------------------------------------
-        // --------- ТАБЛИЦЫ ФУНКЦИЙ ------------------
-        // --------------------------------------------
-
-        /// <summary>
-        /// Creates the function value table basing on the list of argument value.
-        /// The function table is represented by the point array.
-        /// </summary>
-        /// <example>
-        /// If the argument list is { 1, 2 }, then the object returned is
-        /// { (1, f(1)), (2, f(2)) }.
-        /// </example>
-        /// <typeparam name="T">The type of function argument and value.</typeparam>
-        /// <param name="obj">The calling function object.</param>
-        /// <param name="arguments">The argument parameter list.</param>
-        /// <returns>The function table in the format of a point array.</returns>
-		public static Point<T>[] GetValueTable<T>(this IFunction<T, T> obj, IList<T> arguments)
-        {
-            Point<T>[] arr = new Point<T>[arguments.Count];
-
-            for (int i = 0; i < arguments.Count; i++)
-                arr[i] = new Point<T>(arguments[i], obj.Value(arguments[i]));
-
-            return arr;
         }
 
         /// <summary>
@@ -314,11 +283,6 @@ namespace WhiteMath.Functions
                     right = rightThird;
             }
         }
-
-
-        // --------------------------------------------
-        // --------- ПОИСК НУЛЕЙ НА ИНТЕРВАЛЕ ---------
-        // --------------------------------------------
 
         /// <summary>
         /// Searches for the function root (zero value) on the interval [a; b].

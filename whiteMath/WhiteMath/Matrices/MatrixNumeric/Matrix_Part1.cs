@@ -173,9 +173,13 @@ namespace WhiteMath.Matrices
         {
             Matrix<T, C> transposedMatrix = MatrixNumericHelper<T,C>.GetMatrixOfSize(this.Matrix_Type, this.ColumnCount, this.RowCount);
 
-            for (int i = 0; i < this.RowCount; i++)
-                for (int j = 0; j < this.ColumnCount; j++)
-                    transposedMatrix.SetItemAt(j, i, this.GetElementAt(i, j));
+			for (int i = 0; i < this.RowCount; ++i)
+			{
+				for (int j = 0; j < this.ColumnCount; ++j)
+				{
+					transposedMatrix.SetItemAt(j, i, this.GetElementAt(i, j));
+				}
+			}
 
             return transposedMatrix;
         }
@@ -189,7 +193,7 @@ namespace WhiteMath.Matrices
         /// <param name="rowIndex1">The zero-based index of the first row to be swapped with the second.</param>
         /// <param name="rowIndex2">The zero-based index of the second row to be swapped with the first.</param>
         /// </summary>
-        public virtual void swapRows(int rowIndex1, int rowIndex2)
+        public virtual void SwapRows(int rowIndex1, int rowIndex2)
         {
             CheckAreWithinBounds(rowIndex1, 0);
             CheckAreWithinBounds(rowIndex2, 0);
@@ -210,7 +214,7 @@ namespace WhiteMath.Matrices
         /// </summary>
         /// <param name="columnIndex1">The zero-based index of the first column to be swapped with the second.</param>
         /// <param name="columnIndex2">The zero-based index of the second column to be swapped with the first.</param>
-        public virtual void swapColumns(int columnIndex1, int columnIndex2)
+		public virtual void SwapColumns(int columnIndex1, int columnIndex2)
         {
             CheckAreWithinBounds(0, columnIndex1);
             CheckAreWithinBounds(0, columnIndex2);
@@ -271,14 +275,18 @@ namespace WhiteMath.Matrices
         /// <param name="subMatrix">The submatrix object.</param>
         /// <param name="i">A zero-based row index</param>
         /// <param name="j">A zero-based column index</param>
-        public void layMatrixAt(Matrix<T, C> subMatrix, int i, int j)
+        public void LayMatrixAt(Matrix<T, C> subMatrix, int i, int j)
         {
             CheckArePositive(i, j);
             CheckAreWithinBounds(i + subMatrix.RowCount, j + subMatrix.ColumnCount);
 
-            for (int k = 0; k < subMatrix.RowCount; k++)
-                for (int m = 0; m < subMatrix.ColumnCount; m++)
-                    this.SetItemAt(i + k, j + m, calc.GetCopy(subMatrix.GetElementAt(k, m)));
+			for (int k = 0; k < subMatrix.RowCount; k++)
+			{
+				for (int m = 0; m < subMatrix.ColumnCount; m++)
+				{
+					this.SetItemAt(i + k, j + m, calc.GetCopy(subMatrix.GetElementAt(k, m)));
+				}
+			}
         }
         
         /// <summary>
@@ -289,7 +297,7 @@ namespace WhiteMath.Matrices
         /// <param name="rows">Row count of the submatrix.</param>
         /// <param name="columns">Column count of the submatrix.</param>
         /// <returns>The submatrix of specified size.</returns>
-        public virtual Matrix<T,C> getSubMatrixCopyAt(int i, int j, int rows, int columns)
+        public virtual Matrix<T,C> GetSubMatrixCopyAt(int i, int j, int rows, int columns)
         {
             CheckArePositive(rows, columns);
             CheckAreWithinBounds(i + rows, j + columns);
@@ -315,7 +323,7 @@ namespace WhiteMath.Matrices
         /// <param name="j">Column index of the upper-left corner element</param>
         /// <returns>The submatrix of size [RowCount-i; ColumnCount-j]</returns>
         public Matrix<T, C> getSubMatrixCopyAt(int i, int j)
-            { return this.getSubMatrixCopyAt(i, j, RowCount - i, ColumnCount - j); }
+            { return this.GetSubMatrixCopyAt(i, j, RowCount - i, ColumnCount - j); }
 
         /// <summary>
         /// Overloaded. Gets the binded submatrix for the current matrix.

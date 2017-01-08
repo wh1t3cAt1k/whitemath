@@ -72,7 +72,7 @@ namespace WhiteMath.Matrices
         /// <returns></returns>
         public override object Clone()
         {
-            return this.getSubMatrixCopyAt(0, 0, RowCount, ColumnCount);
+            return this.GetSubMatrixCopyAt(0, 0, RowCount, ColumnCount);
         }
 
         protected override Matrix<T,C> Multiply(Matrix<T,C> another)

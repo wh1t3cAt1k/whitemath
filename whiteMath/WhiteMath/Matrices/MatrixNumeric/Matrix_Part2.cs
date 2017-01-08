@@ -374,7 +374,7 @@ namespace WhiteMath.Matrices
                 if (pivotIndex != i)
                 {
                     P.SwapElements(pivotIndex, i);
-                    C.swapRows(pivotIndex, i);
+                    C.SwapRows(pivotIndex, i);
                 }
 
                 try

@@ -217,41 +217,34 @@ namespace WhiteMath
         {
             IComparer<KeyValuePair<int, T>> comparer = Comparer<int>.Default.GetKVPComparerOnKey<int, T>();
             IPriorityQueue<KeyValuePair<int, T>> queue = new BinaryHeap<KeyValuePair<int, T>>(comparer);
-            
-            if (startIndex >= endIndex)
-                for (int i = startIndex; i <= endIndex; i++)
-                {
-                    T res = memberFormula(argument, i);
-                    queue.Insert(new KeyValuePair<int, T>(metricProvider.GetMetric(res), res));
-                }
-            else
-                for (int i = endIndex; i >= startIndex; i--)
-                {
-                    T res = memberFormula(argument, i); 
-                    queue.Insert(new KeyValuePair<int, T>(metricProvider.GetMetric(res), res));
-                }
+
+			if (startIndex >= endIndex)
+			{
+				for (int i = startIndex; i <= endIndex; i++)
+				{
+					T res = memberFormula(argument, i);
+					queue.Insert(new KeyValuePair<int, T>(metricProvider.GetMetric(res), res));
+				}
+			}
+			else
+			{
+				for (int i = endIndex; i >= startIndex; i--)
+				{
+					T res = memberFormula(argument, i);
+					queue.Insert(new KeyValuePair<int, T>(metricProvider.GetMetric(res), res));
+				}
+			}
 
             T sum = this.Zero;
 
-            while(!queue.IsEmpty)
+            while (!queue.IsEmpty)
             {
-                KeyValuePair<int, T> kvp = queue.Pop();
-                sum = this.OperatorPlus(sum, kvp.Value);
+				KeyValuePair<int, T> kvp = queue.Pop();
+				sum = this.OperatorPlus(sum, kvp.Value);
             }
 
             return sum;
         }
-
-        // --------------------------------------
-        // ------ By minimum current metric -----
-        // --------------------------------------
-
-		public T SumByMinimumMetricSum(Func<int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
-        {
-			throw new NotImplementedException();
-        }
-
-        // ---------- abs comparer ---------------
 
         private class AbsoluteIntegerComparer: IComparer<int>
         {
@@ -275,12 +268,29 @@ namespace WhiteMath
             }
         }
 
-        public T SumByMinimumCurrentMetricSum(Func<int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
-        {
-            return SumByMinimumCurrentMetricSum(this.Zero, delegate(T arg, int index) { return memberFormula(index); }, startIndex, endIndex, metricProvider);
-        }
+        public T SumByMinimumCurrentMetricSum(
+			Func<int, T> memberFormula, 
+			int startIndex, 
+			int endIndex, 
+			IMetricProvider<T> metricProvider)
+        	=> SumByMinimumCurrentMetricSum(
+				this.Zero, 
+				(_, index) => memberFormula(index), 
+				startIndex, 
+				endIndex, 
+				metricProvider);
 
-		public T SumByMinimumCurrentMetricSum(T argument, Func<T, int, T> memberFormula, int startIndex, int endIndex, IMetricProvider<T> metricProvider)
+		/// <summary>
+		/// Sums elements yielded by the specified member formula 
+		/// in such an order so as to keep the absolute value of elements' 
+		/// metrics sum minimal at each step of the summation.
+		/// </summary>
+		public T SumByMinimumCurrentMetricSum(
+			T argument, 
+			Func<T, int, T> memberFormula, 
+			int startIndex, 
+			int endIndex, 
+			IMetricProvider<T> metricProvider)
         {
             LinkedList<KeyValuePair<int, T>> listPositive = new LinkedList<KeyValuePair<int, T>>();  
             LinkedList<KeyValuePair<int, T>> listNegative = new LinkedList<KeyValuePair<int, T>>();
@@ -288,8 +298,6 @@ namespace WhiteMath
 
             IComparer<KeyValuePair<int, T>> comparer = 
 				new AbsoluteIntegerComparer().GetKVPComparerOnKey<int, T>();
-
-			// ---- добавляем в список -----
 
 			if (startIndex >= endIndex)
 			{

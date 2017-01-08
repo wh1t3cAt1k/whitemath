@@ -10,7 +10,7 @@ namespace WhiteMath.Statistics
 {
     public static class CLNRM
     {
-        public struct LeastSquares_Result<T, C> 
+        public struct LeastSquaresResult<T, C> 
 			where C : ICalc<T>, new()
         {
 			Vector<T, C> LeastSquaresCoefficients;
@@ -97,7 +97,7 @@ namespace WhiteMath.Statistics
                 return simpleDif * simpleDif;
             };
 
-            return summator.SumSmallerToBigger(memberFormula, 0, estimatedY.Count - 1, Numeric<T, C>.UnderlyingTypeComparer);
+            return summator.SumSmallerToLarger(memberFormula, 0, estimatedY.Count - 1, Numeric<T, C>.UnderlyingTypeComparer);
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace WhiteMath.Statistics
                 return simpleDif * simpleDif;
             };
 
-            return summator.SumSmallerToBigger(memberFormula, 0, estimatedY.Count - 1, Numeric<T, C>.UnderlyingTypeComparer);
+            return summator.SumSmallerToLarger(memberFormula, 0, estimatedY.Count - 1, Numeric<T, C>.UnderlyingTypeComparer);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace WhiteMath.Statistics
                 return simpleDif * simpleDif;
             };
 
-            return summator.SumSmallerToBigger(memberFormula, 0, realY.Count - 1, Numeric<T, C>.UnderlyingTypeComparer);
+            return summator.SumSmallerToLarger(memberFormula, 0, realY.Count - 1, Numeric<T, C>.UnderlyingTypeComparer);
         }
     }
 }

@@ -71,12 +71,12 @@ namespace WhiteMath.Matrices
             MatrixSDA<T,C> Bnew = new MatrixSDA<T,C>(exp, exp);
             MatrixSDA<T,C> ResNew = new MatrixSDA<T,C>(exp, exp);
 
-            Anew.layMatrixAt(A, 0, 0);
-            Bnew.layMatrixAt(B, 0, 0);
+            Anew.LayMatrixAt(A, 0, 0);
+            Bnew.LayMatrixAt(B, 0, 0);
 
             strassenSkeleton(Anew, Bnew, ResNew, exp);
 
-            result.layMatrixAt(ResNew.getSubMatrixCopyAt(0, 0, result.RowCount, result.ColumnCount), 0, 0);
+            result.LayMatrixAt(ResNew.GetSubMatrixCopyAt(0, 0, result.RowCount, result.ColumnCount), 0, 0);
         }
 
         /// <summary>
@@ -152,21 +152,21 @@ namespace WhiteMath.Matrices
             dif(temp1, P5, temp1);
             sum(temp1, P7, temp1);
 
-            result.layMatrixAt(temp1, 0, 0);
+            result.LayMatrixAt(temp1, 0, 0);
 
             sum(P3, P5, temp1);
 
-            result.layMatrixAt(temp1, 0, size);
+            result.LayMatrixAt(temp1, 0, size);
 
             sum(P2, P4, temp1);
 
-            result.layMatrixAt(temp1, size, 0);
+            result.LayMatrixAt(temp1, size, 0);
 
             dif(P1, P2, temp1);
             sum(temp1, P3, temp1);
             sum(temp1, P6, temp1);
 
-            result.layMatrixAt(temp1, size, size);
+            result.LayMatrixAt(temp1, size, size);
         }
 
         /// <summary>
