@@ -5,40 +5,48 @@ namespace WhiteMath.Functions
     /// <summary>
     /// Class used for syntax analysis of function action lists.
     /// </summary>
-    public static class SyntaxAnalyzer
+    internal static class SyntaxAnalyzer
     {
-        static Regex instruction = new Regex(@"(?<command>[^,]+):", RegexOptions.None);
+		private static Regex actionSubstringRegex = new Regex(
+			@"(?<command>[^,]+):", 
+			RegexOptions.Compiled);
         
-        public static string getActionSubString(this string str)
+		internal static string GetActionSubstring(this string str)
         {
-            return instruction.Match(str).Groups["command"].Value;
+            return actionSubstringRegex.Match(str).Groups["command"].Value;
         }
 
         // ---------------------------
 
-        static Regex firstOp = new Regex(@":(?<operand>[0-9Ee\+\-\.!%$]+),?", RegexOptions.None);
+		private static Regex firstOperandRegex = new Regex(
+			@":(?<operand>[0-9Ee\+\-\.!%$]+),?", 
+			RegexOptions.Compiled);
 
-        public static string getFirstOperand(this string str)
+        internal static string GetFirstOperand(this string str)
         {
-            return firstOp.Match(str).Groups["operand"].Value;
+            return firstOperandRegex.Match(str).Groups["operand"].Value;
         }
 
         // ---------------------------
 
-        static Regex secondOp = new Regex(@"[^,]*:[^,]*,(?<operand>([0-9Ee\+\-\.!%$]+|#.*#)),?", RegexOptions.None);
+		private static Regex secondOperandRegex = new Regex(
+			@"[^,]*:[^,]*,(?<operand>([0-9Ee\+\-\.!%$]+|#.*#)),?", 
+			RegexOptions.Compiled);
 
-        public static string getSecondOperand(this string str)
+        internal static string GetSecondOperand(this string str)
         {
-            return secondOp.Match(str).Groups["operand"].Value;
+            return secondOperandRegex.Match(str).Groups["operand"].Value;
         }
 
         // ---------------------------
 
-        static Regex thirdOp = new Regex(@"[^,]*:[^,]*,([^,]*|#.*#),(?<operand>([0-9Ee\+\-\.!%$]+|#.*#))", RegexOptions.None);
+		private static Regex thirdOperandRegex = new Regex(
+			@"[^,]*:[^,]*,([^,]*|#.*#),(?<operand>([0-9Ee\+\-\.!%$]+|#.*#))", 
+			RegexOptions.Compiled);
 
-        public static string getThirdOperand(this string str)
+        internal static string GetThirdOperand(this string str)
         {
-            return thirdOp.Match(str).Groups["operand"].Value;
+            return thirdOperandRegex.Match(str).Groups["operand"].Value;
         }
     }
 }

@@ -23,9 +23,9 @@ namespace WhiteMath.Functions
             this.action = action;
         }
 
-        public TypeVal Value(TypeArg x)
+        public TypeVal GetValue(TypeArg x)
         {
-            return action.Invoke(operand.Value(x));
+            return action.Invoke(operand.GetValue(x));
         }
     }
 
@@ -42,9 +42,9 @@ namespace WhiteMath.Functions
             this.action = action;
         }
 
-        public TypeVal Value(TypeArg x)
+        public TypeVal GetValue(TypeArg x)
         {
-            return action.Invoke(operand1.Value(x), operand2.Value(x));
+            return action.Invoke(operand1.GetValue(x), operand2.GetValue(x));
         }
     }
 
@@ -62,9 +62,9 @@ namespace WhiteMath.Functions
             this.action = action;
         }
 
-        public TypeVal Value(TypeArg x)
+        public TypeVal GetValue(TypeArg x)
         {
-            return action.Invoke(operand1.Value(x), operand2.Value(x), operand3.Value(x));
+            return action.Invoke(operand1.GetValue(x), operand2.GetValue(x), operand3.GetValue(x));
         }
     }
 
@@ -79,7 +79,7 @@ namespace WhiteMath.Functions
             this.constant = val;
         }
 
-        public TypeVal Value(TypeArg x)
+        public TypeVal GetValue(TypeArg x)
         {
             return this.constant;
         }
@@ -94,7 +94,7 @@ namespace WhiteMath.Functions
             this.message = message;
         }
 
-        public TypeVal Value(TypeArg x)
+        public TypeVal GetValue(TypeArg x)
         {
             throw new FunctionActionUserThrownException(message);
         }

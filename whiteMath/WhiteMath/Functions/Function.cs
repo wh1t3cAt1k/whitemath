@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Globalization;
 
@@ -64,17 +63,17 @@ namespace WhiteMath.Functions
 {
     public class Function: IFunction<double, double>
     {
-        public double this[double x] { get { return Value(x); } }
+        public double this[double x] { get { return GetValue(x); } }
 
         delegate double UnaryAction(double x);
         delegate double BinaryAction(double x, double y);
         delegate bool CheckerAction(double x);
 
-        protected internal char argument;
-        protected internal List<IFunction<double, double>> composedFunc;
-        protected internal List<string> actions;
+        protected internal char _argumentSymbol;
+        protected internal List<IFunction<double, double>> _composedFunctions;
+        protected internal List<string> _actions;
         
-        private double[] actionResults;
+		private double[] _actionResults;
 
         /// <summary>
         /// A special constructor for AnalyticFunction class
@@ -88,14 +87,14 @@ namespace WhiteMath.Functions
         /// <param name="actions"></param>
         public Function(List<string> actions)
         {
-            this.actions = actions;
-            composedFunc = new List<IFunction<double,double>>();
+            this._actions = actions;
+            _composedFunctions = new List<IFunction<double,double>>();
         }
 
         public Function(List<string> actions, List<IFunction<double,double>> composedFunctions)
         {
-            this.actions = actions;
-            this.composedFunc = composedFunctions;
+            this._actions = actions;
+            this._composedFunctions = composedFunctions;
         }
 
         /// <summary>
@@ -103,22 +102,24 @@ namespace WhiteMath.Functions
         /// </summary>
         /// <param name="argumentValue"></param>
         /// <returns></returns>
-        public double Value(double argumentValue)
+        public double GetValue(double argumentValue)
         {
             UnaryAction unaryAction;
             BinaryAction binaryAction;
             CheckerAction checkerAction;
 
-            actionResults = new double[actions.Count];
+            _actionResults = new double[_actions.Count];
 
-            for (int i = 0; i < actions.Count; ++i)
+			for (int actionIndex = 0; actionIndex < _actions.Count; ++actionIndex)
             {
-                string currentActionString = actions[i];
+                string currentActionString = _actions[actionIndex];
 
                 if (string.IsNullOrWhiteSpace(currentActionString))
                 {
-                    throw new FunctionActionSyntaxException("Action string for action number " + i + " should not be empty.");
+                    throw new FunctionActionSyntaxException("Action string for action number " + actionIndex + " should not be empty.");
                 }
+
+				currentActionString = RemoveWhitespaceExceptInErrorMessages(currentActionString);
 
                 unaryAction = new UnaryAction(x => x);
                 binaryAction = new BinaryAction((x, y) => (x + y));
@@ -126,43 +127,14 @@ namespace WhiteMath.Functions
 
                 // Binary or unary action flag.
                 // -
-                bool binary = true; 
-
-                // If no user-defined error messages in the action,
-                // remove all whitespace.
-                // -
-                if (currentActionString.IndexOf('#') == -1)
-                {
-                    currentActionString = currentActionString.Replace(" ", "");
-                }
-                // Otherwise, do some magic.
-                // -
-                else
-                {
-                    StringBuilder stringWithoutWhitespace = new StringBuilder();
-                    bool isInsideErrorMessage = false;
-
-                    for (int j = 0; j < currentActionString.Length; j++)
-                    {
-                        if (currentActionString[j] == '#')
-                        {
-                            isInsideErrorMessage = !isInsideErrorMessage;
-                        }
-                        else if (currentActionString[j] != ' ' || isInsideErrorMessage)
-                        {
-                            stringWithoutWhitespace.Append(currentActionString[j]);
-                        }
-                    }
-
-                    currentActionString = stringWithoutWhitespace.ToString();
-                }
+				bool isBinaryAction = true;
 
                 double a, b;
                 string operand1, operand2, operand3;
 
-                switch(currentActionString.getActionSubString())
+                switch(currentActionString.GetActionSubstring())
                 {
-                    case "ret": binary = false; unaryAction = new UnaryAction(x => x); break;
+                    case "ret": isBinaryAction = false; unaryAction = new UnaryAction(x => x); break;
                     
                     case "+": binaryAction = new BinaryAction((x, y) => (x + y)); break;
                     case "-": binaryAction = new BinaryAction((x, y) => (x - y)); break;
@@ -170,49 +142,49 @@ namespace WhiteMath.Functions
                     case "/": binaryAction = new BinaryAction((x, y) => (x / y)); break;
                     case "^": binaryAction = new BinaryAction(Math.Pow); break;
                     
-                    case "abs": binary = false; unaryAction = new UnaryAction(Math.Abs); break;
-                    case "floor": binary = false; unaryAction = new UnaryAction(Math.Floor); break;
-                    case "ceil": binary = false; unaryAction = new UnaryAction(Math.Ceiling); break;
-                    case "round": binary = false; unaryAction = new UnaryAction(number => Math.Round(number, MidpointRounding.AwayFromZero)); break;
+                    case "abs": isBinaryAction = false; unaryAction = new UnaryAction(Math.Abs); break;
+                    case "floor": isBinaryAction = false; unaryAction = new UnaryAction(Math.Floor); break;
+                    case "ceil": isBinaryAction = false; unaryAction = new UnaryAction(Math.Ceiling); break;
+                    case "round": isBinaryAction = false; unaryAction = new UnaryAction(number => Math.Round(number, MidpointRounding.AwayFromZero)); break;
 
-                    case "sin": binary = false; unaryAction = new UnaryAction(Math.Sin); break;
-                    case "cos": binary = false; unaryAction = new UnaryAction(Math.Cos); break;
-                    case "tg": binary = false; unaryAction = new UnaryAction(Math.Tan); break;
-                    case "ctg": binary = false; unaryAction = new UnaryAction(x => (1 / Math.Tan(x))); break;
+                    case "sin": isBinaryAction = false; unaryAction = new UnaryAction(Math.Sin); break;
+                    case "cos": isBinaryAction = false; unaryAction = new UnaryAction(Math.Cos); break;
+                    case "tg": isBinaryAction = false; unaryAction = new UnaryAction(Math.Tan); break;
+                    case "ctg": isBinaryAction = false; unaryAction = new UnaryAction(x => (1 / Math.Tan(x))); break;
 
-                    case "arcsin": binary = false; unaryAction = new UnaryAction(Math.Asin); break;
-                    case "arccos": binary = false; unaryAction = new UnaryAction(Math.Acos); break;
-                    case "arctg": binary = false; unaryAction = new UnaryAction(Math.Atan); break;
+                    case "arcsin": isBinaryAction = false; unaryAction = new UnaryAction(Math.Asin); break;
+                    case "arccos": isBinaryAction = false; unaryAction = new UnaryAction(Math.Acos); break;
+                    case "arctg": isBinaryAction = false; unaryAction = new UnaryAction(Math.Atan); break;
                     
-                    case "sinh": binary = false; unaryAction = new UnaryAction(Math.Sinh); break;
-                    case "cosh": binary = false; unaryAction = new UnaryAction(Math.Cosh); break;
+                    case "sinh": isBinaryAction = false; unaryAction = new UnaryAction(Math.Sinh); break;
+                    case "cosh": isBinaryAction = false; unaryAction = new UnaryAction(Math.Cosh); break;
                     
-                    case "log": binary = true; binaryAction = new BinaryAction(Math.Log); break;
-                    case "lg": binary = false; unaryAction = new UnaryAction(Math.Log10); break;
+                    case "log": isBinaryAction = true; binaryAction = new BinaryAction(Math.Log); break;
+                    case "lg": isBinaryAction = false; unaryAction = new UnaryAction(Math.Log10); break;
                     
-                    case "sqrt": binary = false; unaryAction = new UnaryAction(Math.Sqrt); break;
-                    case "ln": binary = false; unaryAction = new UnaryAction(Math.Log); break;
+                    case "sqrt": isBinaryAction = false; unaryAction = new UnaryAction(Math.Sqrt); break;
+                    case "ln": isBinaryAction = false; unaryAction = new UnaryAction(Math.Log); break;
                     
-                    case "exp": binary = false; unaryAction = new UnaryAction(Math.Exp); break;
-                    case "sign": binary = false; unaryAction = new UnaryAction(x => Math.Sign(x)); break;
+                    case "exp": isBinaryAction = false; unaryAction = new UnaryAction(Math.Exp); break;
+                    case "sign": isBinaryAction = false; unaryAction = new UnaryAction(x => Math.Sign(x)); break;
                     
                     case ">": case "=": case ">=": case "<=": case "<": case "!=": goto CONDITION;
                     default: throw new FunctionActionSyntaxException("Unknown function name in the list of actions."); 
                 }
 
-                if (binary)
+                if (isBinaryAction)
                 {
-                    operand1 = currentActionString.getFirstOperand();
-                    operand2 = currentActionString.getSecondOperand();
+                    operand1 = currentActionString.GetFirstOperand();
+                    operand2 = currentActionString.GetSecondOperand();
 
                     try
                     {
-                        a = operandMeaning(operand1, composedFunc, actionResults, i, argumentValue);
-                        b = operandMeaning(operand2, composedFunc, actionResults, i, argumentValue);
+                        a = GetOperandValue(operand1, _composedFunctions, _actionResults, actionIndex, argumentValue);
+                        b = GetOperandValue(operand2, _composedFunctions, _actionResults, actionIndex, argumentValue);
                     }
                     catch (Exception actionExecutionException)
                     {
-                        throw new FunctionActionExecutionException(actionExecutionException.Message, i); 
+                        throw new FunctionActionExecutionException(actionExecutionException.Message, actionIndex); 
                     }
 
                     double operationResult; // результат операции
@@ -226,16 +198,16 @@ namespace WhiteMath.Functions
                         operationResult = double.NaN; 
                     }
 
-                    actionResults[i] = operationResult;
+                    _actionResults[actionIndex] = operationResult;
                     goto RETURNER;
                 }
                 else
                 {
-                    operand1 = currentActionString.getFirstOperand();
+                    operand1 = currentActionString.GetFirstOperand();
 
                     try 
                     { 
-                        a = operandMeaning(operand1, composedFunc, actionResults, i, argumentValue); 
+                        a = GetOperandValue(operand1, _composedFunctions, _actionResults, actionIndex, argumentValue); 
                     }
                     catch (Exception xxx)
                     {
@@ -245,7 +217,7 @@ namespace WhiteMath.Functions
                         }
                         else
                         {
-                            throw new FunctionActionExecutionException(xxx.Message, i);
+                            throw new FunctionActionExecutionException(xxx.Message, actionIndex);
                         }
                     }
 
@@ -254,7 +226,7 @@ namespace WhiteMath.Functions
                     try { operationResult = unaryAction(a); }
                     catch { operationResult = double.NaN; }
 
-                    actionResults[i] = operationResult;
+                    _actionResults[actionIndex] = operationResult;
                     goto RETURNER;
                 }
 
@@ -262,27 +234,31 @@ namespace WhiteMath.Functions
             // -
             CONDITION: 
 
-                if (i == 0) throw new FunctionActionSyntaxException("No conditional operators are allowed in the action number 0.");
+                if (actionIndex == 0) throw new FunctionActionSyntaxException("No conditional operators are allowed in the action number 0.");
                 
                 // Should declare additional variable since the action is ternary.
                 // -
                 double c;
                 
-                operand1 = currentActionString.getFirstOperand();
-                operand2 = currentActionString.getSecondOperand();
-                operand3 = currentActionString.getThirdOperand();
+                operand1 = currentActionString.GetFirstOperand();
+                operand2 = currentActionString.GetSecondOperand();
+                operand3 = currentActionString.GetThirdOperand();
 
                 try
                 {
-                    a = operandMeaning(operand1, composedFunc, actionResults, i, argumentValue);
+                    a = GetOperandValue(operand1, _composedFunctions, _actionResults, actionIndex, argumentValue);
                 }
-                catch (Exception xxx)
+				catch (Exception exception)
                 {
-                    if (xxx is FunctionActionUserThrownException) throw;
-                    throw new Exception("Ошибка при выполнении действия " + i + ". " + xxx.Message); 
+					if (exception is FunctionActionUserThrownException)
+					{
+						throw;
+					}
+
+					throw new Exception($"Error while completing action {actionIndex}: {exception.Message}"); 
                 }
 
-                switch(currentActionString.getActionSubString())
+                switch(currentActionString.GetActionSubstring())
                 {
                     case ">": checkerAction = new CheckerAction(x => (x > 0)); break;
                     case "<": checkerAction = new CheckerAction(x => (x < 0)); break;
@@ -295,142 +271,170 @@ namespace WhiteMath.Functions
                 if (checkerAction(a)) 
                     try
                         {   
-                            b = operandMeaning(operand2, composedFunc, actionResults, i, argumentValue);
-                            actionResults[i] = b;
+                            b = GetOperandValue(operand2, _composedFunctions, _actionResults, actionIndex, argumentValue);
+                            _actionResults[actionIndex] = b;
                         }
                     catch (Exception xxx)
                         {
                             if (xxx is FunctionActionUserThrownException) throw;
-                            throw new Exception("Error while performing action number " + i + ". " + xxx.Message); 
+                            throw new Exception("Error while performing action number " + actionIndex + ". " + xxx.Message); 
                         }                        
                 else
                     try
                         {
-                            c = operandMeaning(operand3, composedFunc, actionResults, i, argumentValue);
-                            actionResults[i] = c;
+                            c = GetOperandValue(operand3, _composedFunctions, _actionResults, actionIndex, argumentValue);
+                            _actionResults[actionIndex] = c;
                         }
                     catch (Exception xxx)
                         {
                             if (xxx is FunctionActionUserThrownException) throw;
-                            throw new Exception("Error while performing action number " + i + ". " + xxx.Message);
+                            throw new Exception("Error while performing action number " + actionIndex + ". " + xxx.Message);
                         }
             
             RETURNER: ; 
             }
 
-            return actionResults[actionResults.Length - 1];
+            return _actionResults[_actionResults.Length - 1];
         }
 
-        private double operandMeaning(string operand, List<IFunction<double,double>> composedFunc, double[] actionResults, int num, double x)
+		private string RemoveWhitespaceExceptInErrorMessages(string actionString)
+		{
+			StringBuilder stringWithoutWhitespace = new StringBuilder();
+
+			bool isInsideErrorMessage = false;
+
+			for (int characterIndex = 0; characterIndex < actionString.Length; ++characterIndex)
+			{
+				if (actionString[characterIndex] == '#')
+				{
+					isInsideErrorMessage = !isInsideErrorMessage;
+				}
+				else if (!char.IsWhiteSpace(actionString[characterIndex]) || isInsideErrorMessage)
+				{
+					stringWithoutWhitespace.Append(actionString[characterIndex]);
+				}
+			}
+
+			return stringWithoutWhitespace.ToString();
+		}
+
+		private double GetOperandValue(
+			string operandString, 
+			IList<IFunction<double,double>> composedFunctions, 
+			IList<double> actionResults, 
+			int num, 
+			double x)
         {
-            if (operand == null || operand == "") throw new FunctionActionSyntaxException("One of the operands is missing.");
+			if (string.IsNullOrEmpty(operandString))
+			{
+				throw new FunctionActionSyntaxException("One of the operands is missing.");
+			}
 
             int negativeFlag = 1;
 
             // 'negflag' is multiplied by -1 if the operand
             // is preceded by a minus sign '-'.
             // 
-            if (operand[0] == '-') 
+            if (operandString[0] == '-') 
             { 
                 negativeFlag = -1; 
-                operand = operand.Substring(1); 
+                operandString = operandString.Substring(1); 
             }
 
             // Reference the digit value.
             // -
-            if (char.IsDigit(operand[0])) 
+            if (char.IsDigit(operandString[0])) 
             { 
                 try 
                 { 
                     double tmp = double.Parse(
-                        operand.Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)); return negativeFlag * tmp; 
+                        operandString.Replace(
+							".", 
+							CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)); 
+
+					return negativeFlag * tmp; 
                 } 
                 catch 
                 { 
-                    throw
-                        new FunctionActionSyntaxException("Unknown operand in the action."); 
+                    throw new FunctionActionSyntaxException("Unknown operand in the action."); 
                 } 
             }
             // Referencing the argument value.
             // -
-            else if (operand.Length == 1 && operand[0] == '!')
+            else if (operandString.Length == 1 && operandString[0] == '!')
             {
                 return negativeFlag * x;
             }
             // Referencing the previous action result.
             // -
-            else if (operand.Length == 1 && operand[0] == '$')
+            else if (operandString.Length == 1 && operandString[0] == '$')
             {
-                if (num <= 0) throw new FunctionActionSyntaxException("No previous action for action 0.");
+                if (num <= 0) throw new FunctionActionSyntaxException("There is no previous action for action 0.");
                 return negativeFlag * actionResults[num - 1];
             }
             // Referencing one of the action results by its number (index).
             // -
-            else if (operand[0] == '$')
+            else if (operandString[0] == '$')
             {
-                if (operand.Length <= 2 || operand.LastIndexOf('$') != operand.Length - 1) throw new Exception("Ошибка синтаксиса действия: неверно указано обращение к результату действия по номеру.");
+                if (operandString.Length <= 2 || operandString.LastIndexOf('$') != operandString.Length - 1) throw new Exception("Ошибка синтаксиса действия: неверно указано обращение к результату действия по номеру.");
 
-                operand = operand.Replace("$", "");
-                int callOperationNum = -1;
-                try
-                {
-                    callOperationNum = int.Parse(operand);
-                }
-                catch { throw new FunctionActionSyntaxException("неизвестный номер действия, указанный в обращении."); }
-                if (callOperationNum >= num) throw new FunctionActionSyntaxException("попытка рефлексивного обращения в действии или попытка обращения к еще не выполненному (следующему) действию.");
-                return negativeFlag * actionResults[callOperationNum]; // возвращаем значение действия по номеру
-            }
-            else if (operand[0] == '%') // вызов результата вложенной функции по номеру
-            {
-                if (operand.Length <= 2 || operand.LastIndexOf('%') != operand.Length - 1) throw new FunctionActionSyntaxException("неверно указано обращение к результату вложенной функции.");
-
-                operand = operand.Replace("%", "");
-
-                int callFuncNum = -1;
+                operandString = operandString.Replace("$", "");
+                
+				int callOperationNum = -1;
 
                 try
                 {
-                    callFuncNum = int.Parse(operand);
+                    callOperationNum = int.Parse(operandString);
                 }
-                catch { throw new FunctionActionSyntaxException("wrong inner function number specified."); }
+                catch 
+				{ 
+					throw new FunctionActionSyntaxException("неизвестный номер действия, указанный в обращении."); 
+				}
 
-                if (callFuncNum < 0 || callFuncNum >= composedFunc.Count)
-                    throw new FunctionActionSyntaxException("there is no inner function with such a number (numeration starts from 0!).");
+				if (callOperationNum >= num)
+				{
+					throw new FunctionActionSyntaxException("попытка рефлексивного обращения в действии или попытка обращения к еще не выполненному (следующему) действию.");
+				}
 
-                return negativeFlag * composedFunc[callFuncNum].Value(x);
+				return negativeFlag * actionResults[callOperationNum];
             }
-            else if (operand[0] == '#') // пользовательское сообщение об ошибке
+			// Call an inner function by its index.
+			// -
+            else if (operandString[0] == '%')
             {
-                if (operand.LastIndexOf('#') != operand.Length - 1) throw new FunctionActionSyntaxException("пользовательское сообщение об ошибке в синтаксисе действия должно находиться между двумя символами #.");
-                throw new FunctionActionUserThrownException(operand.Remove(0, 1).Remove(operand.Length - 2));
+                if (operandString.Length <= 2 || operandString.LastIndexOf('%') != operandString.Length - 1) throw new FunctionActionSyntaxException("неверно указано обращение к результату вложенной функции.");
+
+                operandString = operandString.Replace("%", "");
+
+				int composedFunctionIndex = -1;
+
+                try
+                {
+                    composedFunctionIndex = int.Parse(operandString);
+                }
+                catch { throw new FunctionActionSyntaxException("Wrong inner function number specified."); }
+
+				if (composedFunctionIndex < 0 || composedFunctionIndex >= composedFunctions.Count)
+				{
+					throw new FunctionActionSyntaxException("There is no inner function with such a number (numeration starts from 0!).");
+				}
+
+                return negativeFlag * composedFunctions[composedFunctionIndex].GetValue(x);
             }
-
-            throw new FunctionActionSyntaxException("unknown action string syntax.");
-        }
-
-        //TODO: переписать интеграл, чтобы считал по-человечески
-        public double Integral(double xMin, double xMax, double xStep)
-        {
-            double integralSum=0;
-
-            if (xStep <= 0) throw new ArgumentException("Для подсчета интегральных сумм шаг должен быть больше нуля.");
-
-            for (double i = xMin; i<xMax; i += xStep)
+			// User-defined error message.
+			// -
+			else if (operandString[0] == '#')
             {
-                if (double.IsNaN(this[i])) return double.NaN;
-                if (this[i] == double.PositiveInfinity) return double.PositiveInfinity;
-                if (this[i] == double.NegativeInfinity) return double.NegativeInfinity;
-                //предыдущее спорно. есть предложение выкидывать здесь эксепшн
+				if (operandString.LastIndexOf('#') != operandString.Length - 1)
+				{
+					throw new FunctionActionSyntaxException("The user-defined error message in the action string should be located strictly in between two '#' symbols.");
+				}
 
-                if(!(this[i]*this[i-xStep]<=0)) integralSum += (this[i] + this[i+xStep])/2 * xStep;
+                throw new FunctionActionUserThrownException(operandString.Remove(0, 1).Remove(operandString.Length - 2));
             }
 
-            return integralSum;
+			throw new FunctionActionSyntaxException($"Error parsing operand '{operandString}'.");
         }
-
-        // ------------------------------------------------
-        // ---------- PRECOMPILED REFERENCE ---------------
-        // ------------------------------------------------
 
         /// <summary>
         /// Returns the precompiled version of the function.
@@ -490,12 +494,12 @@ namespace WhiteMath.Functions
 
     internal class GammaFunction: IFunction<double,double> // гамма-функция вещественного аргумента не дописано
     {
-        public double Value(double x) { return 0; }
+        public double GetValue(double x) { return 0; }
     }
 
     internal class FactorialLogarithmic : IFunction<double,double> // логарифмический факториал - высокая скорость, низкая точность
     {
-        public double Value(double x)
+        public double GetValue(double x)
         {
             if (x < 1) return 1;
 
@@ -510,7 +514,7 @@ namespace WhiteMath.Functions
 
     internal class Factorial: IFunction<long, long>
     {
-        public long Value(long x)
+        public long GetValue(long x)
         {
             if (x < 1) return 1;
 

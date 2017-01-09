@@ -199,7 +199,7 @@ namespace WhiteMath.Functions
         /// </summary>
         /// <param name="x">The argument of the function.</param>
         /// <returns>The value of the piece function in the specified point.</returns>
-        public T Value(T x)
+        public T GetValue(T x)
         {
             int index = Array.BinarySearch(intervalLefts, x);
 
@@ -216,13 +216,13 @@ namespace WhiteMath.Functions
             BoundedInterval<T, C> needed = pieces[index].Key;
 
             if (needed.Contains(x))
-                return pieces[index].Value.Value(x);
+                return pieces[index].Value.GetValue(x);
 
                 // граничный случай - попали в исключенную границу интервала. Ищем [3; 3], а попали в needed на (3; 6].
                 // надо поискать в прошлом интервале.
 
             else if (index > 0 && pieces[index - 1].Key.Contains(x))
-                return pieces[index - 1].Value.Value(x);
+                return pieces[index - 1].Value.GetValue(x);
             
                 // если нет - ничего не поделаешь.
 

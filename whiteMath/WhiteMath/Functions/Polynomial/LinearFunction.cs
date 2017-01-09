@@ -44,6 +44,6 @@ namespace WhiteMath.Functions
 
         // ----------------------- functionality
 
-        public T Value(T x) { return k*x + b; }
+        public T GetValue(T x) { return k*x + b; }
     }
 }

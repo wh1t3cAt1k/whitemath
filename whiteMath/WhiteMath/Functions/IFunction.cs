@@ -1,6 +1,6 @@
 ﻿using System;
-
 using System.Collections.Generic;
+using System.Linq;
 
 using WhiteMath.Mathematics;
 using WhiteMath.Calculators;
@@ -12,11 +12,11 @@ namespace WhiteMath.Functions
     /// <summary>
     /// The generic function interface.
     /// </summary>
-    /// <typeparam name="TypeArg">The type of the function argument.</typeparam>
-    /// <typeparam name="TypeValue">The type of the function value.</typeparam>
-    public interface IFunction<TypeArg, TypeValue>
+    /// <typeparam name="TArgument">The type of the function argument.</typeparam>
+    /// <typeparam name="TValue">The type of the function value.</typeparam>
+	public interface IFunction<TArgument, TValue>
     {
-        TypeValue Value(TypeArg x);
+        TValue GetValue(TArgument x);
     }
 
     /// <summary>
@@ -28,8 +28,6 @@ namespace WhiteMath.Functions
     {
         IFunctionDifferentiable<TypeArg, TypeValue> Derivative { get; }
     }
-
-    // ------------------------------------
 
     /// <summary>
     /// Static class containing extension methods for any kind of IFunction.
@@ -50,7 +48,7 @@ namespace WhiteMath.Functions
 
 		public static Func<TArg, TVal> AsDelegate<TArg, TVal>(IFunction<TArg, TVal> function)
         {
-			return argument => function.Value(argument);
+			return argument => function.GetValue(argument);
         }
 
         /// <summary>
@@ -67,11 +65,28 @@ namespace WhiteMath.Functions
                 this.function = function;
             }
 
-            public TVal Value(TArg x)
+            public TVal GetValue(TArg x)
             {
                 return function.Invoke(x);
             }
         }
+
+		/// <summary>
+		/// Creates the function value table basing on the list of argument value.
+		/// The function table is represented by the point array.
+		/// </summary>
+		/// <example>
+		/// If the argument list is { 1, 2 }, then the object returned is
+		/// { (1, f(1)), (2, f(2)) }.
+		/// </example>
+		/// <typeparam name="T">The type of function argument and value.</typeparam>
+		/// <param name="function">The calling function object.</param>
+		/// <param name="arguments">The argument parameter list.</param>
+		/// <returns>The function table in the format of a point array.</returns>
+		public static Point<T>[] GetValueTable<T>(this IFunction<T, T> function, IList<T> arguments)
+			=> arguments
+				.Select(argument => new Point<T>(argument, function.GetValue(argument)))
+				.ToArray();
 
         /// <summary>
         /// Creates the function table beginning from a certain point x0, 
@@ -80,12 +95,13 @@ namespace WhiteMath.Functions
         /// </summary>
         /// <typeparam name="T">The type of function argument and value.</typeparam>
         /// <typeparam name="C">The calculator for the function argument/value type.</typeparam>
-        /// <param name="obj">The calling function object.</param>
+        /// <param name="function">The calling function object.</param>
         /// <param name="x0">The first point of the table.</param>
         /// <param name="step">The step between the table points.</param>
         /// <param name="pointCount">The overall point count.</param>
         /// <returns>The function table in the format of a point array.</returns>
-        public static Point<T>[] GetFunctionTable<T, C>(this IFunction<T, T> obj, T x0, T step, int pointCount) where C: ICalc<T>, new()
+		public static Point<T>[] GetValueTable<T, C>(this IFunction<T, T> function, T x0, T step, int pointCount) 
+			where C: ICalc<T>, new()
         {
             Point<T>[] arr = new Point<T>[pointCount];
 
@@ -93,7 +109,7 @@ namespace WhiteMath.Functions
 
             for (int i = 0; i < pointCount; i++)
             {
-                arr[i] = new Point<T>(current, obj.Value(current));
+                arr[i] = new Point<T>(current, function.GetValue(current));
                 current += step;
             }
 
@@ -109,24 +125,27 @@ namespace WhiteMath.Functions
         /// <param name="interval">The interval on which the table is created. Warning! Both of the interval bounds are counted INCLUSIVE!</param>
         /// <param name="pointCount">The overall point count of the function table</param>
         /// <returns>The function table in the format of point array.</returns>
-        public static Point<T>[] GetFunctionTable<T, C>(this IFunction<T, T> obj, BoundedInterval<T,C> interval, int pointCount) where C: ICalc<T>, new()
+		public static Point<T>[] GetValueTable<T, C>(
+			this IFunction<T, T> obj, 
+			BoundedInterval<T,C> interval, 
+			int pointCount) where C: ICalc<T>, new()
         {
-            Point<T>[] arr = new Point<T>[pointCount];
+			Point<T>[] result = new Point<T>[pointCount];
 
             Numeric<T, C> current;
 
             for (int i = 0; i < pointCount; i++)
             {
-                current = interval.LeftBound + (interval.RightBound - interval.LeftBound) * (Numeric<T,C>)i / (Numeric<T,C>)(pointCount - 1);
-                arr[i] = new Point<T>(current, obj.Value(current));
+                current = 
+					interval.LeftBound 
+					+ (interval.RightBound - interval.LeftBound) 
+					        * (Numeric<T,C>)i / (Numeric<T,C>)(pointCount - 1);
+				
+                result[i] = new Point<T>(current, obj.GetValue(current));
             }
 
-            return arr;
+            return result;
         }
-
-        // --------------------------------------------
-        // --------- РАВЕНСТВО ФУНКЦИЙ ----------------
-        // --------------------------------------------
 
         /// <summary>
         /// Checks whether the current function is equal to another at least within the
@@ -154,12 +173,13 @@ namespace WhiteMath.Functions
 					epsilon, 
 					abs(
 						calc.Subtract(
-							currentFunction.Value(points[i]), 
-							anotherFunction.Value(points[i])))))
+							currentFunction.GetValue(points[i]), 
+							anotherFunction.GetValue(points[i])))))
 				{
 					return false;
 				}
 			}
+
             return true;
         }
 
@@ -169,19 +189,17 @@ namespace WhiteMath.Functions
         /// </summary>
         /// <typeparam name="T">The type of function argument/value.</typeparam>
         /// <typeparam name="C">The calculator for the function argument.</typeparam>
-        /// <param name="obj">The calling function object.</param>
-        /// <param name="another">The function object to test equality with.</param>
+        /// <param name="function">The calling function object.</param>
+        /// <param name="anotherFunction">The function object to test equality with.</param>
         /// <param name="epsilon">The upper epsilon bound of 'equality' criteria. If |f(x) - g(x)| &lt eps, two functions are considered equal.</param>
         /// <param name="points">The points list to test equality on.</param>
         /// <returns>True if the functions are epsilon-equal within the points list passed, false otherwise.</returns>
 		public static bool PointwiseEquals<T, C>(
-			this IFunction<T, T> obj, 
-			IFunction<T, T> another, 
+			this IFunction<T, T> function, 
+			IFunction<T, T> anotherFunction, 
 			T epsilon, 
 			params T[] points) where C : ICalc<T>, new()
-        {
-            return PointwiseEquals<T, C>(obj, another, epsilon, points as IList<T>);
-        }
+        	=> PointwiseEquals<T, C>(function, anotherFunction, epsilon, points as IList<T>);
 
         /// <summary>
         /// Returns the number of sign variations in the function list for a given point.
@@ -198,7 +216,7 @@ namespace WhiteMath.Functions
 
             for (int i = 0; i < list.Count; i++)
             {
-                signNew = Mathematics<T, C>.Sign(list[i].Value(point));
+                signNew = Mathematics<T, C>.Sign(list[i].GetValue(point));
 
                 if (signPrevious == 0)
                 {
@@ -274,13 +292,17 @@ namespace WhiteMath.Functions
                 leftThird = (left * two + right) / three;
                 rightThird = (left + two * right) / three;
 
-                funcValLT = obj.Value(leftThird);
-                funcValRT = obj.Value(rightThird);
+                funcValLT = obj.GetValue(leftThird);
+                funcValRT = obj.GetValue(rightThird);
 
-                if (test(funcValLT, funcValRT))
-                    left = leftThird;
-                else
-                    right = rightThird;
+				if (test(funcValLT, funcValRT))
+				{
+					left = leftThird;
+				}
+				else
+				{
+					right = rightThird;
+				}
             }
         }
 
@@ -322,9 +344,9 @@ namespace WhiteMath.Functions
             Func<T, T> abs = Mathematics<T, C>.Abs;
 			Func<T, int> sign = Mathematics<T, C>.Sign;
 
-            Numeric<T,C> leftVal = function.Value(left);
+            Numeric<T,C> leftVal = function.GetValue(left);
             Numeric<T,C> midVal;
-            Numeric<T,C> rightVal = function.Value(right);
+            Numeric<T,C> rightVal = function.GetValue(right);
 
 			bool isLeftBoundaryChanged = false;
 
@@ -340,8 +362,6 @@ namespace WhiteMath.Functions
 				return right;
 			}
 
-			// --------- проверочка
-
 			if (sign(leftVal) == sign(rightVal))
 			{
 				throw new ArgumentException("Error: the function values are of the same sign on the interval bounds.");
@@ -351,23 +371,21 @@ namespace WhiteMath.Functions
             {                
                 xMid = (right + left) / two;
 
-                // ------- достигли требуемой точности - ура!
-
-                if (xMid - left < epsilonArg)
-                    return xMid;
-
-				// ----------------------------------------------
+				if (xMid - left < epsilonArg)
+				{
+					return xMid;
+				}
 
 				if (isLeftBoundaryChanged)
 				{
-					leftVal = function.Value(left);
+					leftVal = function.GetValue(left);
 				}
 				else
 				{
-					rightVal = function.Value(right);
+					rightVal = function.GetValue(right);
 				}
 
-                midVal = function.Value(xMid);
+                midVal = function.GetValue(xMid);
 
 				if (abs(midVal - zero) < epsilonFunc)
 				{
@@ -402,33 +420,54 @@ namespace WhiteMath.Functions
         /// </summary>
         /// <typeparam name="T">The type of the function's argument/value.</typeparam>
         /// <typeparam name="C">The calculator for the function argument.</typeparam>
-        /// <param name="obj">The calling function object.</param>
+        /// <param name="function">The calling function object.</param>
         /// <param name="generator">The uniform distribution (pseudo)random generator.</param>
         /// <param name="interval">The interval on which the integral will be approximated.</param>
-        /// <param name="rectangleHeight">The height of the testing rectangle. Should be more than the function's absolute maximum on the interval tested, otherwise the method would return wrong results. On the other side, the difference between the height and the function's absolute maximum should not be very large as it will reduce the accuracy of the method. The ideal case is equality of the max f(x) on [a; b] and the rectangle height.</param>
-        /// <param name="throwsCount">A positive integer value of overall tests.</param>
+        /// <param name="rectangleHeight">
+		/// The height of the testing rectangle. Should be greater than 
+		/// the function's absolute maximum on the interval tested, otherwise the method 
+		/// will return incorrect results. On the other side, the difference between the height 
+		/// and the function's absolute maximum should not be very large as it will reduce the 
+		/// accuracy of the method. The ideal case is equality of the rectangle height and the function's
+		/// maximum on the specified interval.
+		/// </param>
+        /// <param name="countThrows">A positive integer value of overall tests.</param>
         /// <returns>The value approximating the function integral on the interval specified.</returns>
-        public static T IntegralMonteCarloApproximation<T, C>(this IFunction<T, T> obj, IRandomBounded<T> generator, BoundedInterval<T, C> interval, T rectangleHeight, T throwsCount) where C: ICalc<T>, new()
+        public static T IntegralMonteCarloApproximation<T, C>(
+			this IFunction<T, T> function, 
+			IRandomBounded<T> generator, 
+			BoundedInterval<T, C> interval, 
+			T rectangleHeight, 
+			T countThrows) 
+			where C: ICalc<T>, new()
         {
-            ICalc<T> calc = Numeric<T, C>.Calculator;
+			ICalc<T> calculator = Numeric<T, C>.Calculator;
 
-            T hits = calc.Zero;     // overall hits.
+			T countHits = calculator.Zero;     // overall hits.
             Point<T> randomPoint;   // random point.
 
-            if(!calc.GreaterThan(throwsCount, calc.Zero))
-                throw new ArgumentException("The amount of point throws count should be a positive integer value.");
+			if (!calculator.GreaterThan(countThrows, calculator.Zero))
+			{
+				throw new ArgumentException("The amount of point throws count should be a positive integer value.");
+			}
 
-            for (T i = calc.Zero; calc.GreaterThan(throwsCount, i); i = calc.Increment(i))
+            for (T i = calculator.Zero; calculator.GreaterThan(countThrows, i); i = calculator.Increment(i))
             {
-                randomPoint = new Point<T>(generator.Next(interval.LeftBound, interval.RightBound), generator.Next(calc.Zero, rectangleHeight));
+                randomPoint = new Point<T>(generator.Next(interval.LeftBound, interval.RightBound), generator.Next(calculator.Zero, rectangleHeight));
 
-                // Если попали под функцию - увеличиваем количество хитов.
-
-                if (!calc.GreaterThan(randomPoint.Y, obj.Value(randomPoint.X)))
-                    hits = calc.Increment(hits);
+				if (!calculator.GreaterThan(randomPoint.Y, function.GetValue(randomPoint.X)))
+				{
+					countHits = calculator.Increment(countHits);
+				}
             }
 
-            T result = calc.Divide(calc.Multiply(calc.Multiply(interval.Length, rectangleHeight), hits), throwsCount);
+            T result = calculator.Divide(
+				calculator.Multiply(
+					calculator.Multiply(
+						interval.Length, 
+						rectangleHeight), 
+					countHits), 
+				countThrows);
 
             return result;
         }
@@ -446,38 +485,28 @@ namespace WhiteMath.Functions
         {
             ICalc<T> calc = Numeric<T, C>.Calculator;
 
-            // Если интервал нулевой, то ваще забей.
-
-            if (interval.HasZeroLength)
-                return calc.Zero;
-
-            // Если нет, то ваще не забей.
+			if (interval.HasZeroLength)
+			{
+				return calc.Zero;
+			}
             
-            Numeric<T,C> step = calc.Divide(interval.Length, calc.FromInteger(pointCount));
-
-            Numeric<T, C> two = (Numeric<T, C>)2;
+            Numeric<T, C> step = calc.Divide(interval.Length, calc.FromInteger(pointCount));
+			Numeric<T, C> two = Numeric<T, C>._2;
 
             Numeric<T, C> left = interval.LeftBound + step / two;
             Numeric<T, C> right = interval.RightBound - step / two;
 
-            // Будем хранить элементы по порядку, чтобы при суммировании не терять ерунды.
-            
-            SortedSet<Numeric<T, C>> sorted = new SortedSet<Numeric<T, C>>(Numeric<T, C>.NumericComparer);
+			Summator<T> summator = new Summator<T>(
+				Numeric<T, C>._0,
+				calc.Add);
 
-            for (int i = 0; i < pointCount; i++)
-            {
-                T current = left + (right - left) * (Numeric<T, C>)i / (Numeric<T, C>)(pointCount - 1);
-                sorted.Add(obj.Value(current));
-            }
+			Numeric<T, C> sum = summator.SumSmallerToLarger(
+				index => left + (right - left) * (Numeric<T, C>)index / (Numeric<T, C>)(pointCount - 1),
+				0,
+				pointCount - 1,
+				Numeric<T, C>.UnderlyingTypeComparer);
 
-            // Теперь будем суммировать по порядку, начиная с самых маленьких.
-
-            Numeric<T, C> sum = calc.Zero;
-
-            foreach (Numeric<T, C> element in sorted)
-                sum += element;
-
-            return sum*step;
+            return sum * step;
         }
 
         /// <summary>
@@ -501,7 +530,7 @@ namespace WhiteMath.Functions
 
             // Если нет, то ваще не забей.
 
-            Point<T>[] table = obj.GetFunctionTable<T, C>(interval, pointCount+1);
+            Point<T>[] table = obj.GetValueTable(interval, pointCount+1);
 
             Numeric<T, C> step = calc.Subtract(table[2].X, table[0].X);
             
@@ -539,7 +568,7 @@ namespace WhiteMath.Functions
             else if (pointCount < 4)
                 throw new ArgumentException("The number of points is too low for this method. It should be >= 4.");
 
-            Point<T>[] table = obj.GetFunctionTable(interval, pointCount);
+            Point<T>[] table = obj.GetValueTable(interval, pointCount);
 
             Numeric<T, C> sum1 = table[1].Y;
             Numeric<T, C> sum2 = table[2].Y;

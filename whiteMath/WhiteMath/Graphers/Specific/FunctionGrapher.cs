@@ -73,7 +73,7 @@ namespace WhiteMath.Graphers
                 yprev = ytw;
 
                 xtw = xMin + (i / dotCount)*(xMax - xMin);
-                ytw = function.Value(xtw);
+                ytw = function.GetValue(xtw);
 
                 // около границ области определения должна многократно повышаться точность.
                 // изначально повышается более чем стократно
@@ -97,7 +97,7 @@ namespace WhiteMath.Graphers
                         for (double j=1; j<k; j++)
                         {
                             xtmp = xtw - (step - step * (j / k));
-                            ytmp = function.Value(xtmp);
+                            ytmp = function.GetValue(xtmp);
 
                             if (ytmp < yMin) yMin = ytmp;
                             else if (ytmp > yMax) yMax = ytmp;

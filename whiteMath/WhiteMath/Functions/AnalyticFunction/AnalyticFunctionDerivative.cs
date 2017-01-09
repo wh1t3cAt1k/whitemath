@@ -40,7 +40,7 @@ namespace WhiteMath.Functions
             // handle the *'s.
             analyzeRemainder = analyzeRemainder.InsertMultiplicationSigns();
 
-            return new AnalyticFunction(match.Groups["firstPart"].Value + FindDerivative(analyzeRemainder, this.argument).ParenthesizeIfNegative());
+            return new AnalyticFunction(match.Groups["firstPart"].Value + FindDerivative(analyzeRemainder, this._argumentSymbol).ParenthesizeIfNegative());
         }
 
         // ------------------------------------------

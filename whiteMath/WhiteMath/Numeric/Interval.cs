@@ -247,11 +247,6 @@ namespace WhiteMath
 				.Validate(this.Length / (Numeric<T, C>)parts != Numeric<T,C>.Zero)
 				.OrArgumentException("The specified amount of parts will result in zero-length intervals due to numeric precision.");
 
-			/*
-            Contract.Ensures(Contract.Result<List<BoundedInterval<T, C>>>() != null);
-            Contract.Ensures(Contract.Result<List<BoundedInterval<T,C>>>().Count > 0);
-			*/
-
             return this.Split(this.Length / (Numeric<T,C>)parts, BoundedIntervalSplitOptions.BiggerLastInterval);
         }
 

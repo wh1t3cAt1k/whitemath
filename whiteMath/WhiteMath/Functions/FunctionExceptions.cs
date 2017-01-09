@@ -1,58 +1,66 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace WhiteMath
 {
-    // ------------- EXCEPTIONS для функций
-
     [Serializable]
     public class FunctionException : Exception
-    { public FunctionException(string message) : base(message) { } }
+    { 
+		public FunctionException(string message) 
+			: base(message) 
+		{ } 
+	}
 
     public class FunctionActionSyntaxException : FunctionException
     {
-        public FunctionActionSyntaxException(string message) : base(message) { }
+        public FunctionActionSyntaxException(string message) 
+			: base(message) 
+		{ }
 
-        public override string Message
-        { get { return "Action syntax error: " + base.Message; } }
+        public override string Message 
+			=> "Action syntax error: " + base.Message;
     }
 
     public class FunctionStringSyntaxException : FunctionException
     {
-        public FunctionStringSyntaxException(string message) : base(message) { }
+        public FunctionStringSyntaxException(string message) 
+			: base(message) 
+		{ }
 
-        public override string Message
-        { get { return "Function string syntax error: " + base.Message; } }
+        public override string Message 
+			=> "Function string syntax error: " + base.Message;
     }
 
     public class FunctionActionExecutionException : FunctionException
     {
-        private int actionNum;
+		private int _actionIndex;
 
-        public FunctionActionExecutionException(string message, int actionNum)
+		public FunctionActionExecutionException(string message, int actionIndex)
             : base(message)
-        { this.actionNum = actionNum; }
+        { 
+			this._actionIndex = actionIndex; 
+		}
 
-        public override string Message
-        { get { return "Error occured while doing action №" + actionNum + ": " + base.Message; } }
+        public override string Message 
+			=> "Error occured while doing action #" + _actionIndex + ": " + base.Message;
     }
 
     public class FunctionBadArgumentException : FunctionException
     {
         public FunctionBadArgumentException(string message)
-            : base(message) { }
+            : base(message) 
+		{ }
 
-        public override string Message
-        { get { return "Function called contains bad argument: "+base.Message; } }
+        public override string Message 
+			=> "Function called contains bad argument: " + base.Message;
     }
 
     class FunctionActionUserThrownException : FunctionException
     {
-        public FunctionActionUserThrownException(string message) : base(message) { }
+        public FunctionActionUserThrownException(string message) 
+			: base(message) 
+		{ }
 
-        public override string Message
-        { get { return "Impossible to calculate the function value: " + base.Message; } }
+        public override string Message 
+			=> "Impossible to calculate the function value: " + base.Message;
     }
 }

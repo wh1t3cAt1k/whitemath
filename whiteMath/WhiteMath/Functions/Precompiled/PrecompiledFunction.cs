@@ -10,70 +10,70 @@ namespace WhiteMath.Functions
 
         public PrecompiledFunction(Function function, bool compileComposedFunctions = true)
         {
-            this.actions = new IFunctionAction<double,double>[function.actions.Count];
+            this.actions = new IFunctionAction<double,double>[function._actions.Count];
 
-            if (function.composedFunc != null)
+            if (function._composedFunctions != null)
             {
-                this.composedFunctions = new IFunction<double, double>[function.composedFunc.Count];
+                this.composedFunctions = new IFunction<double, double>[function._composedFunctions.Count];
 
-                for (int i = 0; i < function.composedFunc.Count; i++)
+                for (int i = 0; i < function._composedFunctions.Count; i++)
                 {
-                    if (function.composedFunc[i] is Function && compileComposedFunctions)
-                        this.composedFunctions[i] = new PrecompiledFunction(function.composedFunc[i] as Function, true);
+                    if (function._composedFunctions[i] is Function && compileComposedFunctions)
+                        this.composedFunctions[i] = new PrecompiledFunction(function._composedFunctions[i] as Function, true);
                     else
-                        this.composedFunctions[i] = function.composedFunc[i];
+                        this.composedFunctions[i] = function._composedFunctions[i];
                 }
             }
 
-            for (int i = 0; i < function.actions.Count; i++)
+            for (int i = 0; i < function._actions.Count; i++)
             {
-                string action = function.actions[i].getActionSubString();
+                string action = function._actions[i].GetActionSubstring();
 
                 switch (action)
                 {
-                    case "ret": case "return": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), x => x); break;
-                    case "sin": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Sin); break;
-                    case "cos": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Cos); break;
-                    case "sinh": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Sinh); break;
-                    case "cosh": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Cosh); break;
-                    case "tg": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Tan); break;
-                    case "ctg": case "cotan": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), x => (1 / Math.Tan(x))); break;
-                    case "arcsin": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Asin); break;
-                    case "arccos": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Acos); break;
-                    case "arctg": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Atan); break;
-                    case "ln": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Log); break;
-                    case "lg": case "log10": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Log10); break;
-                    case "abs": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Abs); break;
-                    case "exp": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Exp); break;
-                    case "sign": case "sig": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), x => Math.Sign(x)); break;                    
-                    case "sqrt": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Sqrt); break;
-                    case "floor": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Floor); break;
-                    case "ceil": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), Math.Ceiling); break;
-                    case "round": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), x => Math.Round(x, MidpointRounding.AwayFromZero)); break;
+                    case "ret": case "return": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), x => x); break;
+                    case "sin": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Sin); break;
+                    case "cos": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Cos); break;
+                    case "sinh": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Sinh); break;
+                    case "cosh": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Cosh); break;
+                    case "tg": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Tan); break;
+                    case "ctg": case "cotan": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), x => (1 / Math.Tan(x))); break;
+                    case "arcsin": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Asin); break;
+                    case "arccos": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Acos); break;
+                    case "arctg": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Atan); break;
+                    case "ln": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Log); break;
+                    case "lg": case "log10": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Log10); break;
+                    case "abs": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Abs); break;
+                    case "exp": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Exp); break;
+                    case "sign": case "sig": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), x => Math.Sign(x)); break;                    
+                    case "sqrt": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Sqrt); break;
+                    case "floor": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Floor); break;
+                    case "ceil": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), Math.Ceiling); break;
+                    case "round": this.actions[i] = new UnaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), x => Math.Round(x, MidpointRounding.AwayFromZero)); break;
 
-                    case "+": this.actions[i] = new BinaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), analyzeOperand(i, function.actions[i].getSecondOperand()), (x, y) => (x + y)); break;
-                    case "-": this.actions[i] = new BinaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), analyzeOperand(i, function.actions[i].getSecondOperand()), (x, y) => (x - y)); break;
-                    case "*": this.actions[i] = new BinaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), analyzeOperand(i, function.actions[i].getSecondOperand()), (x, y) => (x * y)); break;
-                    case "/": this.actions[i] = new BinaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), analyzeOperand(i, function.actions[i].getSecondOperand()), (x, y) => (x / y)); break;
-                    case "^": this.actions[i] = new BinaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), analyzeOperand(i, function.actions[i].getSecondOperand()), Math.Pow); break;
+                    case "+": this.actions[i] = new BinaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), analyzeOperand(i, function._actions[i].GetSecondOperand()), (x, y) => (x + y)); break;
+                    case "-": this.actions[i] = new BinaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), analyzeOperand(i, function._actions[i].GetSecondOperand()), (x, y) => (x - y)); break;
+                    case "*": this.actions[i] = new BinaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), analyzeOperand(i, function._actions[i].GetSecondOperand()), (x, y) => (x * y)); break;
+                    case "/": this.actions[i] = new BinaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), analyzeOperand(i, function._actions[i].GetSecondOperand()), (x, y) => (x / y)); break;
+                    case "^": this.actions[i] = new BinaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), analyzeOperand(i, function._actions[i].GetSecondOperand()), Math.Pow); break;
 
-                    case "log": this.actions[i] = new BinaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), analyzeOperand(i, function.actions[i].getSecondOperand()), Math.Log); break;
+                    case "log": this.actions[i] = new BinaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), analyzeOperand(i, function._actions[i].GetSecondOperand()), Math.Log); break;
 
-                    case ">": this.actions[i] = new TernaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), analyzeOperand(i, function.actions[i].getSecondOperand()), analyzeOperand(i, function.actions[i].getThirdOperand()), Functions.IfMore); break;
-                    case ">=": this.actions[i] = new TernaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), analyzeOperand(i, function.actions[i].getSecondOperand()), analyzeOperand(i, function.actions[i].getThirdOperand()), Functions.IfMoreEquals); break;
-                    case "==": this.actions[i] = new TernaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), analyzeOperand(i, function.actions[i].getSecondOperand()), analyzeOperand(i, function.actions[i].getThirdOperand()), Functions.IfEquals); break;
-                    case "<": this.actions[i] = new TernaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), analyzeOperand(i, function.actions[i].getSecondOperand()), analyzeOperand(i, function.actions[i].getThirdOperand()), Functions.IfLess); break;
-                    case "<=": this.actions[i] = new TernaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), analyzeOperand(i, function.actions[i].getSecondOperand()), analyzeOperand(i, function.actions[i].getThirdOperand()), Functions.IfLessEquals); break;
-                    case "!=": this.actions[i] = new TernaryAction<double, double>(analyzeOperand(i, function.actions[i].getFirstOperand()), analyzeOperand(i, function.actions[i].getSecondOperand()), analyzeOperand(i, function.actions[i].getThirdOperand()), Functions.IfNotEquals); break;
+                    case ">": this.actions[i] = new TernaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), analyzeOperand(i, function._actions[i].GetSecondOperand()), analyzeOperand(i, function._actions[i].GetThirdOperand()), Functions.IfMore); break;
+                    case ">=": this.actions[i] = new TernaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), analyzeOperand(i, function._actions[i].GetSecondOperand()), analyzeOperand(i, function._actions[i].GetThirdOperand()), Functions.IfMoreEquals); break;
+                    case "==": this.actions[i] = new TernaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), analyzeOperand(i, function._actions[i].GetSecondOperand()), analyzeOperand(i, function._actions[i].GetThirdOperand()), Functions.IfEquals); break;
+                    case "<": this.actions[i] = new TernaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), analyzeOperand(i, function._actions[i].GetSecondOperand()), analyzeOperand(i, function._actions[i].GetThirdOperand()), Functions.IfLess); break;
+                    case "<=": this.actions[i] = new TernaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), analyzeOperand(i, function._actions[i].GetSecondOperand()), analyzeOperand(i, function._actions[i].GetThirdOperand()), Functions.IfLessEquals); break;
+                    case "!=": this.actions[i] = new TernaryAction<double, double>(analyzeOperand(i, function._actions[i].GetFirstOperand()), analyzeOperand(i, function._actions[i].GetSecondOperand()), analyzeOperand(i, function._actions[i].GetThirdOperand()), Functions.IfNotEquals); break;
 
                     default: throw new FunctionActionSyntaxException("Unknown action string."); 
                 }
             }
         }
 
-        public double Value(double x)
+        public double GetValue(double x)
         {
-            return actions[actions.Length-1].Value(x);     // возвращаем значение функции
+            return actions[actions.Length-1].GetValue(x);     // возвращаем значение функции
         }
 
         // -----------------------------------------------
@@ -112,7 +112,7 @@ namespace WhiteMath.Functions
         /// </summary>
         private class Argument: IFunction<double, double>
         {
-            public double Value(double x)
+            public double GetValue(double x)
             {
                 return x;
             }

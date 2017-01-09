@@ -26,19 +26,13 @@ namespace WhiteMath.Functions
         /// <param name="functionString"></param>
         public AnalyticFunction(string functionString)
         {
-            string beta = functionString;           // временная
-            char arg;                               // символ аргумента
+			string functionStringCopy = functionString;
 
-            arg = Normalize(ref beta); 
-            this.actions = AnalyticFunction.Analyze(beta, arg, 0); 
+			_argumentSymbol = Normalize(ref functionStringCopy);
+			_actions = Analyze(functionStringCopy, _argumentSymbol, 0); 
 
-            this.argument = arg;
             this.functionString = functionString;
         }
-
-        // ------------------------------------------------
-        // ------------ Check and prepare the string ------
-        // ------------------------------------------------
 
         /// <summary>
         /// Returns the letter of the argument (e.g. 'x') and normalizes the string

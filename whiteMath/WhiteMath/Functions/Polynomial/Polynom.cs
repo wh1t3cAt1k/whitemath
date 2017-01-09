@@ -172,7 +172,7 @@ namespace WhiteMath.Functions
 		public Polynom<T, C> GetIntegral(Point<T> point)
         {
             Polynom<T, C> newPolynom = this.GetIntegral(Numeric<T, C>.Zero);
-            newPolynom._coefficients[0] = calc.Subtract(point.Y, newPolynom.Value(point.X));
+            newPolynom._coefficients[0] = calc.Subtract(point.Y, newPolynom.GetValue(point.X));
 
             return newPolynom;
         }
@@ -181,7 +181,7 @@ namespace WhiteMath.Functions
         // --------- value ------------
         // ----------------------------
 
-        public T Value(T x)
+        public T GetValue(T x)
         {
 			Numeric<T, C> result = calc.Zero;
 

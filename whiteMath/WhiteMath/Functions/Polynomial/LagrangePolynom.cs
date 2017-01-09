@@ -156,7 +156,7 @@ namespace WhiteMath.Functions
         // ------- function methods ---------------
         // ----------------------------------------
 
-        public T Value(T x)
+        public T GetValue(T x)
         {
             Numeric<T, C> mul;
             Numeric<T, C> result = Numeric<T, C>.Zero;      // результат

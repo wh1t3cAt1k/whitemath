@@ -91,7 +91,7 @@ namespace WhiteMath.Functions
         // ------ VALUE ----------
         // -----------------------
 
-        public T Value(T x)
+        public T GetValue(T x)
         {
             Numeric<T, C> xNew = x - x0;
 

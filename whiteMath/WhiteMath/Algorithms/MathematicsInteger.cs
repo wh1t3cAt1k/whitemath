@@ -461,8 +461,8 @@ namespace WhiteMath.Mathematics
 				.OrArgumentOutOfRangeException("The number passed to this method should not be negative.");
 
             Numeric<T, C> numberNumeric = number;
-            Numeric<T, C> reduction     = Numeric<T, C>._1;
-            Numeric<T, C> result        = Numeric<T, C>._0;
+            Numeric<T, C> reduction = Numeric<T, C>._1;
+            Numeric<T, C> result = Numeric<T, C>._0;
 
             while (numberNumeric > Numeric<T, C>._0)
             {
@@ -472,8 +472,10 @@ namespace WhiteMath.Mathematics
                 reduction += Numeric<T,C>._2;
             }
 
-            if (numberNumeric < Numeric<T, C>._0)
-                --result;
+			if (numberNumeric < Numeric<T, C>._0)
+			{
+				--result;
+			}
 
             return result;
         }
@@ -500,19 +502,24 @@ namespace WhiteMath.Mathematics
 				.Validate((Numeric<T,C>)number >= Numeric<T,C>.Zero)
 				.OrArgumentOutOfRangeException("The number passed to this method should not be negative.");
 
-            Numeric<T, C> 
-                xPrev = Numeric<T,C>._0, 
-                 xCur = firstEstimate;
+			Numeric<T, C> previousEstimate;
+			Numeric<T, C> currentEstimate;
+
+			currentEstimate = firstEstimate;
 
             while (true)
             {
-                xPrev = xCur;
-                xCur = (xPrev + number / xPrev) / Numeric<T, C>._2;
+                previousEstimate = currentEstimate;
+                currentEstimate = (previousEstimate + number / previousEstimate) / Numeric<T, C>._2;
 
-                if (xCur == xPrev)
-                    return xCur;
-                else if (xCur > xPrev)
-                    return xPrev;
+				if (currentEstimate == previousEstimate)
+				{
+					return currentEstimate;
+				}
+				else if (currentEstimate > previousEstimate)
+				{
+					return previousEstimate;
+				}
             }
         }
     }
