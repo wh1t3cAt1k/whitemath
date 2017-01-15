@@ -27,14 +27,16 @@ namespace WhiteMath.Functions
 
             // Destroy the outer parentheses.
             // -
-            currentFunctionString = currentFunctionString.withoutOuterParentheses();
+            currentFunctionString = currentFunctionString.WithoutOuterParentheses();
 
-            // If the string is "-smth", we should replace it with
-            // "0 - smth"
-            // -
-            if (currentFunctionString[0] == '-') currentFunctionString = currentFunctionString.Insert(0, "0");
+			// If the string is "-smth", we should replace it with
+			// "0 - smth"
+			// -
+			if (currentFunctionString[0] == '-')
+			{
+				currentFunctionString = currentFunctionString.Insert(0, "0");
+			}
 
-            int lastActionindex = currentAction;  // the index of previous subfunction's last action
             string actionFormatted;               // the formatted string of the action
             List<int> operatorsIndexList;         // indices of mathematical operators
             List<string> tempList;                // helper
@@ -80,7 +82,7 @@ namespace WhiteMath.Functions
                     argumentCharacter, 
                     currentAction));
 
-                actionFormatted = String.Format(
+                actionFormatted = string.Format(
                     "{0}:${1}$,$", 
                     currentFunctionString[operatorsIndexList[operatorsIndexList.Count - 1]], 
                     currentAction - 1);

@@ -8,7 +8,7 @@ namespace WhiteMath.Functions
         private IFunctionAction<double, double>[] actions;
         private IFunction<double, double>[] composedFunctions;
 
-        public PrecompiledFunction(Function function, bool compileComposedFunctions = true)
+        public PrecompiledFunction(ActionListFunction function, bool compileComposedFunctions = true)
         {
             this.actions = new IFunctionAction<double,double>[function._actions.Count];
 
@@ -18,10 +18,14 @@ namespace WhiteMath.Functions
 
                 for (int i = 0; i < function._composedFunctions.Count; i++)
                 {
-                    if (function._composedFunctions[i] is Function && compileComposedFunctions)
-                        this.composedFunctions[i] = new PrecompiledFunction(function._composedFunctions[i] as Function, true);
-                    else
-                        this.composedFunctions[i] = function._composedFunctions[i];
+					if (function._composedFunctions[i] is ActionListFunction && compileComposedFunctions)
+					{
+						this.composedFunctions[i] = new PrecompiledFunction(function._composedFunctions[i] as ActionListFunction, true);
+					}
+					else
+					{
+						this.composedFunctions[i] = function._composedFunctions[i];
+					}
                 }
             }
 
@@ -82,19 +86,28 @@ namespace WhiteMath.Functions
 
         private IFunction<double, double> analyzeOperand(int actionNum, string operand)
         {
-            if(operand.Length==1 && !char.IsDigit(operand[0]))
+            if (operand.Length == 1 && !char.IsDigit(operand[0]))
             {
-                if(operand.Equals("!")) return argument;
-                else if (operand.Equals("$")) return this.actions[actionNum-1];
+				if (operand.Equals("!"))
+				{
+					return argument;
+				}
+				else if (operand.Equals("$"))
+				{
+					return this.actions[actionNum - 1];
+				}
                 else
+				{
                     throw new FunctionActionSyntaxException("Bad action syntax in the function action #" + actionNum);
+				}
             }
             
-            // здесь уже точно номер внутри скобочек стоит
-
+			// It is guaranteed that there is a number inside
+			// the brackets now.
+			// -
             switch (operand[0])
             {
-                case '#': return new FunctionExceptionThrower<double, double> (operand.Substring(1, operand.Length - 2));
+                case '#': return new FunctionExceptionThrower<double, double>(operand.Substring(1, operand.Length - 2));
                 case '%': return this.composedFunctions[int.Parse(operand.Substring(1, operand.Length - 2))];
                 case '$': return this.actions[int.Parse(operand.Substring(1, operand.Length - 2))];
                 default: return new ConstantReturner<double, double>(double.Parse(operand.Replace(",", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator).Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)));

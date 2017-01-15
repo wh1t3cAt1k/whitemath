@@ -10,20 +10,21 @@ namespace WhiteMath.Functions
     /// A function that automatically forms its action list
     /// depending on the string representation of the function.
     /// </summary>
-    public partial class AnalyticFunction : Function
+    public partial class AnalyticFunction : ActionListFunction
     {
-        private string functionString;
-        public string FunctionString { get { return functionString; } }
-
-        private AnalyticFunction(List<string> actions)
-            : base(actions)
-        { }
+		/// <summary>
+		/// Gets the string representation of the function.
+		/// </summary>
+		public string FunctionString 
+		{
+			get;
+			private set;
+		}
 
         /// <summary>
         /// Creates a new analytic function object on the basis
         /// of function string like "f(x) = 5x"
         /// </summary>
-        /// <param name="functionString"></param>
         public AnalyticFunction(string functionString)
         {
 			string functionStringCopy = functionString;
@@ -31,25 +32,32 @@ namespace WhiteMath.Functions
 			_argumentSymbol = Normalize(ref functionStringCopy);
 			_actions = Analyze(functionStringCopy, _argumentSymbol, 0); 
 
-            this.functionString = functionString;
+            this.FunctionString = functionString;
         }
 
         /// <summary>
         /// Returns the letter of the argument (e.g. 'x') and normalizes the string
 		/// for further syntax analysis.
         /// </summary>
-		private static char Normalize(ref string str)
+		private static char Normalize(ref string functionString)
         {
             // Kill all whitespace characters.
             // -
-            str = str.Replace(" ", "");
+            functionString = functionString.Replace(" ", "");
 
-            if (char.IsLetter(str, 0) && char.IsLetter(str, 1)) throw new FunctionStringSyntaxException("Only single letters are allowed for the function name (i.e. 'f').");
-            if (str[1] != '(' || str[3] != ')') throw new FunctionStringSyntaxException("The function can only depend on one argument. The argument should be a single latin letter (i.e. 'x').");
+			if (char.IsLetter(functionString, 0) && char.IsLetter(functionString, 1))
+			{
+				throw new FunctionStringSyntaxException("Only single letters are allowed for the function name (i.e. 'f').");
+			}
+
+			if (functionString[1] != '(' || functionString[3] != ')')
+			{
+				throw new FunctionStringSyntaxException("The function can only depend on one argument. The argument should be a single latin letter (i.e. 'x').");
+			}
 
             // Catch the variable.
             // -
-            char argument = char.ToLower(str[2]);
+            char argument = char.ToLower(functionString[2]);
 
             if (!char.IsLetter(argument) || !(argument >= 'a' && argument <= 'z'))
             {
@@ -58,57 +66,77 @@ namespace WhiteMath.Functions
 
             // Ready to work!
             // -
-            str = str.Substring(5);
-            str = str.Replace("@", "");
+            functionString = functionString.Substring(5);
+            functionString = functionString.Replace("@", "");
 
             // Insert multiplication signs where assumed: 15log(x) == 15*log(x)
             // -
-            str = str.InsertMultiplicationSigns();
+            functionString = functionString.InsertMultiplicationSigns();
 
             // Find elementary functions
             // -
-            str = str.Replace("abs", "@abs@");
-            str = str.Replace("arcsin", "@asi@");
-            str = str.Replace("arccos", "@aco@");
-            str = str.Replace("arctg", "@ata@");
-            str = str.Replace("sinh", "@sih@");
-            str = str.Replace("cosh", "@coh@");
-            str = str.Replace("sin", "@sin@");
-            str = str.Replace("cos", "@cos@");
-            str = str.Replace("ctg", "@cot@");
-            str = str.Replace("tg", "@tan@");
-            str = str.Replace("ln", "@lna@");
-            str = str.Replace("lg", "@lg1@");
-            str = str.Replace("log", "@log@");
-            str = str.Replace("exp", "@exp@");
-            str = str.Replace("sqrt", "@sqr@");
-            str = str.Replace("floor", "@flr@");
-            str = str.Replace("ceil", "@cei@");
-            str = str.Replace("round", "@rou@");
+            functionString = functionString.Replace("abs", "@abs@");
+            functionString = functionString.Replace("arcsin", "@asi@");
+            functionString = functionString.Replace("arccos", "@aco@");
+            functionString = functionString.Replace("arctg", "@ata@");
+            functionString = functionString.Replace("sinh", "@sih@");
+            functionString = functionString.Replace("cosh", "@coh@");
+            functionString = functionString.Replace("sin", "@sin@");
+            functionString = functionString.Replace("cos", "@cos@");
+            functionString = functionString.Replace("ctg", "@cot@");
+            functionString = functionString.Replace("tg", "@tan@");
+            functionString = functionString.Replace("ln", "@lna@");
+            functionString = functionString.Replace("lg", "@lg1@");
+            functionString = functionString.Replace("log", "@log@");
+            functionString = functionString.Replace("exp", "@exp@");
+            functionString = functionString.Replace("sqrt", "@sqr@");
+            functionString = functionString.Replace("floor", "@flr@");
+            functionString = functionString.Replace("ceil", "@cei@");
+            functionString = functionString.Replace("round", "@rou@");
 
             // Check for brackets correctness and incorrect operation signs / uknown function names.
             // -
-            int leftCount = 0, rightCount = 0;
+			int leftBracketCount = 0, rightBracketCount = 0;
 
-            for (int i = 0; i < str.Length; i++)
+			for (int characterIndex = 0; characterIndex < functionString.Length; characterIndex++)
             {
-                if (str[i] == '@') { i += 4; continue; }
+                if (functionString[characterIndex] == '@') { characterIndex += 4; continue; }
 
-                if (char.IsSymbol(str[i]) && ("+-*/()^." + argument.ToString()).IndexOf(str[i]) == -1)
-                    throw new FunctionStringSyntaxException("Syntax arror: unknown operation / argument name / function name.");
+				if (char.IsSymbol(functionString[characterIndex]) 
+				    && $"+-*/()^.{argument}".IndexOf(functionString[characterIndex]) == -1)
+				{
+					throw new FunctionStringSyntaxException("Syntax arror: unknown operation / argument name / function name.");
+				}
 
-                // Insert multiplication signs where needed (old version applied for safety).
-                // -
-                if (i < str.Length - 1)
-                    if (char.IsNumber(str[i]) && (argument.ToString() + "(@").IndexOf(str[i + 1]) != -1)
-                        str = str.Insert(i + 1, "*"); // 15x == 15*x и 15(x+5) == 15*(x+5)
+				// Insert multiplication signs where needed (old version applied for safety).
+				// For example, 15x == 15*x и 15(x+5) == 15*(x+5).
+				// -
+				if (characterIndex < functionString.Length - 1)
+				{
+					if (char.IsNumber(functionString[characterIndex]) && (argument + "(@").IndexOf(functionString[characterIndex + 1]) != -1)
+					{
+						functionString = functionString.Insert(characterIndex + 1, "*");
+					}
+				}
                 
-                if (str[i] == '(') { leftCount++; }
-                else if (str[i] == ')') { rightCount++; }
+                if (functionString[characterIndex] == '(') 
+				{ 
+					leftBracketCount++; 
+				}
+                else if (functionString[characterIndex] == ')') 
+				{ 
+					rightBracketCount++; 
+				}
             }
 
-            if (leftCount > rightCount) throw new FunctionStringSyntaxException("Syntax error: not enough closing brackets ')'");
-            if (leftCount < rightCount) throw new FunctionStringSyntaxException("Syntax error: not enough opening brackets '('");
+			if (leftBracketCount > rightBracketCount)
+			{
+				throw new FunctionStringSyntaxException("Syntax error: not enough closing brackets ')'");
+			}
+			if (leftBracketCount < rightBracketCount)
+			{
+				throw new FunctionStringSyntaxException("Syntax error: not enough opening brackets '('");
+			}
 
             return argument;
         }

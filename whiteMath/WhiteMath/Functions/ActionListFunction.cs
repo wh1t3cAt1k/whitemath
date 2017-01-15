@@ -4,7 +4,6 @@ using System.Text;
 using System.Globalization;
 
 /* ДАННЫЙ ФАЙЛ СОДЕРЖИТ определение класса FUNCTION, а также набор вспомогательных математических функций.
- * Объявлен также интерфейс IFunction, обеспечивающий функциональность выдачи значения по аргументу
  * 
  * To be implemented: 
  * 1. Long integer and long exponential arithmetics.
@@ -61,13 +60,13 @@ using System.Globalization;
 
 namespace WhiteMath.Functions
 {
-    public class Function: IFunction<double, double>
+    public class ActionListFunction: IFunction<double, double>
     {
         public double this[double x] { get { return GetValue(x); } }
 
-        delegate double UnaryAction(double x);
-        delegate double BinaryAction(double x, double y);
-        delegate bool CheckerAction(double x);
+        private delegate double UnaryAction(double x);
+        private delegate double BinaryAction(double x, double y);
+        private delegate bool CheckerAction(double x);
 
         protected internal char _argumentSymbol;
         protected internal List<IFunction<double, double>> _composedFunctions;
@@ -78,20 +77,20 @@ namespace WhiteMath.Functions
         /// <summary>
         /// A special constructor for AnalyticFunction class
         /// </summary>
-        protected Function()
+        protected ActionListFunction()
         { }
 
         /// <summary>
         /// Creates a new function using the specified action list
         /// </summary>
         /// <param name="actions"></param>
-        public Function(List<string> actions)
+        public ActionListFunction(List<string> actions)
         {
             this._actions = actions;
             _composedFunctions = new List<IFunction<double,double>>();
         }
 
-        public Function(List<string> actions, List<IFunction<double,double>> composedFunctions)
+        public ActionListFunction(List<string> actions, List<IFunction<double,double>> composedFunctions)
         {
             this._actions = actions;
             this._composedFunctions = composedFunctions;

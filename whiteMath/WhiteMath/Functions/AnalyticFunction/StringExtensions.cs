@@ -32,7 +32,7 @@ namespace WhiteMath.Functions
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        internal static string withoutOuterParentheses(this string str)
+        internal static string WithoutOuterParentheses(this string str)
         {
             string copy = str.Clone() as string;
 

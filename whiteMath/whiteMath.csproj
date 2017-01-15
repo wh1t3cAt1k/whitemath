@@ -325,7 +325,7 @@
     <Compile Include="WhiteMath\Functions\AnalyticFunction\AnalyticFunctionHelper.cs" />
     <Compile Include="WhiteMath\Functions\AnalyticFunction\StringExtensions.cs" />
     <Compile Include="WhiteMath\Functions\FunctionFactory.cs" />
-    <Compile Include="WhiteMath\Functions\Function.cs" />
+    <Compile Include="WhiteMath\Functions\ActionListFunction.cs" />
     <Compile Include="WhiteMath\Functions\FunctionExceptions.cs" />
     <Compile Include="WhiteMath\Functions\IFunction.cs" />
     <Compile Include="WhiteMath\Functions\Interpolation.cs" />
