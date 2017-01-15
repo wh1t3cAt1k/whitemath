@@ -53,7 +53,7 @@ namespace WhiteMath.Functions
         /// </summary>
         public static PieceFunction<T, C> CreateNaturalCubicSpline(IList<Point<T>> points, T defaultValue)
         {
-            int n = points.Count - 1;   // количество точек
+            int n = points.Count - 1;
 
             Numeric<T, C>[] a = new Numeric<T,C>[n];
             Numeric<T, C>[] c = new Numeric<T, C>[n];

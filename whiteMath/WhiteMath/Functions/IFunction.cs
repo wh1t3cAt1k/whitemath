@@ -34,13 +34,6 @@ namespace WhiteMath.Functions
     /// </summary>
     public static class IFunctionExtensions
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TArg"></typeparam>
-        /// <typeparam name="TVal"></typeparam>
-        /// <param name="func"></param>
-        /// <returns></returns>
 		public static IFunction<TArg, TVal> AsFunction<TArg, TVal>(Func<TArg, TVal> func)
         {
             return new DelegateFunction<TArg, TVal>(func);
@@ -51,9 +44,6 @@ namespace WhiteMath.Functions
 			return argument => function.GetValue(argument);
         }
 
-        /// <summary>
-        /// Функция создаваемая на основе делегата Func(T,T).
-        /// </summary>
         private class DelegateFunction<TArg, TVal> : IFunction<TArg, TVal>
         {
             private Func<TArg, TVal> function;

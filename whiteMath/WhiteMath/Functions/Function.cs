@@ -268,30 +268,30 @@ namespace WhiteMath.Functions
                     case "!=": checkerAction = new CheckerAction(x => (x != 0)); break;
                 }
 
-                if (checkerAction(a)) 
-                    try
-                        {   
-                            b = GetOperandValue(operand2, _composedFunctions, _actionResults, actionIndex, argumentValue);
-                            _actionResults[actionIndex] = b;
-                        }
-                    catch (Exception xxx)
-                        {
-                            if (xxx is FunctionActionUserThrownException) throw;
-                            throw new Exception("Error while performing action number " + actionIndex + ". " + xxx.Message); 
-                        }                        
-                else
-                    try
-                        {
-                            c = GetOperandValue(operand3, _composedFunctions, _actionResults, actionIndex, argumentValue);
-                            _actionResults[actionIndex] = c;
-                        }
-                    catch (Exception xxx)
-                        {
-                            if (xxx is FunctionActionUserThrownException) throw;
-                            throw new Exception("Error while performing action number " + actionIndex + ". " + xxx.Message);
-                        }
-            
-            RETURNER: ; 
+				try
+				{
+					if (checkerAction(a))
+					{
+						b = GetOperandValue(operand2, _composedFunctions, _actionResults, actionIndex, argumentValue);
+						_actionResults[actionIndex] = b;
+					}
+					else
+					{
+						c = GetOperandValue(operand3, _composedFunctions, _actionResults, actionIndex, argumentValue);
+						_actionResults[actionIndex] = c;
+					}
+				}
+				catch (FunctionActionUserThrownException)
+				{
+					throw;
+				}
+				catch (Exception exception)
+				{
+					throw new FunctionActionExecutionException(exception.Message, actionIndex);
+				}
+
+
+				RETURNER: ; 
             }
 
             return _actionResults[_actionResults.Length - 1];
