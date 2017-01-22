@@ -5,30 +5,35 @@ using WhiteMath.Vectors;
 
 namespace WhiteMath.Matrices
 {
-    public static class SLAESolving
+    public static class SlaeSolving
     {
         /// <summary>
         /// This algorithm uses the LU-Factorization of coefficient matrix in order
         /// to calculate the solution of the equation system.
-        /// 
         /// As LU-Factorization is not guaranteed to exist for every 
         /// non-singular matrix, this method may sometimes fail.
         /// </summary>
         /// <param name="coefficients">A square matrix of unknown terms' coefficients.</param>
-        /// <param name="freeTerm">A vector of free terms.</param>
-        /// <param name="x">The vector containing the solution of the equation system.</param>
-        public static void LU_FactorizationSolving<T, C>(Matrix<T, C> coefficients, Vector<T, C> freeTerm, out Vector<T, C> x) 
+        /// <param name="freeTerms">A vector of free terms.</param>
+        /// <param name="solutionVector">The vector containing the solution of the equation system.</param>
+		public static void SolveLuFactorization<T, C>(
+			Matrix<T, C> coefficients, 
+			Vector<T, C> freeTerms, 
+			out Vector<T, C> solutionVector) 
 			where C : ICalc<T>, new()
         {
-            if (coefficients.RowCount != coefficients.ColumnCount)
-                throw new ArgumentException("Only square matrices are supported.");
+			if (coefficients.RowCount != coefficients.ColumnCount)
+			{
+				throw new ArgumentException("Only square matrices are supported.");
+			}
 
             int dim = coefficients.RowCount;
 
             MatrixSDA<T, C> K = new MatrixSDA<T, C>(dim, dim);
             MatrixSDA<T, C> M = new MatrixSDA<T, C>(dim, dim);
 
-            // Заполняем единичную диагональ матрицы K.
+            // Fill in the unit diagonal of K.
+			// -
             for (int i = 0; i < dim; i++)
             {
                 for (int j = 0; j < dim; j++)
@@ -39,11 +44,14 @@ namespace WhiteMath.Matrices
                 M[0, i] = coefficients[0, i] / K[0, 0];
             }
 
-            // вектор промежуточных решений
+            // Intermediate solutions vector.
+			// -
             Vector<T,C> y = new Vector<T,C>(dim);
-            y[0] = freeTerm[0] / K[0, 0];
+            y[0] = freeTerms[0] / K[0, 0];
 
-            Numeric<T,C> s; // вспомогательная
+			// Auxiliary.
+			// -
+            Numeric<T,C> s;
 
             for (int i = 1; i < dim; i++)
             {
@@ -71,21 +79,21 @@ namespace WhiteMath.Matrices
                     }
 
                     M[i, j] = (coefficients[i, j] - s1) / K[i, i];
-                    y[i] = (freeTerm[i] - s2) / K[i, i];
+                    y[i] = (freeTerms[i] - s2) / K[i, i];
                 }
             }
 
-            x = new Vector<T,C>(dim);
-            x[dim - 1] = y[dim - 1];
+            solutionVector = new Vector<T,C>(dim);
+            solutionVector[dim - 1] = y[dim - 1];
 
             for (int i = dim - 2; i >= 0; i--)
             {
                 s = (Numeric<T,C>)0;
 
                 for (int z = i + 1; z < dim; z++)
-                    s += M[i, z] * x[z];
+                    s += M[i, z] * solutionVector[z];
 
-                x[i] = y[i] - s;
+                solutionVector[i] = y[i] - s;
             }
 
             return;

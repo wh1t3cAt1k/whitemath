@@ -256,7 +256,7 @@ namespace WhiteMath.Functions
 
             Vector<T, C> result;
 
-            Matrices.SLAESolving.LU_FactorizationSolving(matrix, frees, out result);
+            Matrices.SlaeSolving.SolveLuFactorization(matrix, frees, out result);
 
             this._coefficients = result.AsNumericArray().Cut();
 

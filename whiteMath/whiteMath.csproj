@@ -232,7 +232,6 @@
     <Compile Include="WhiteMath\Matrices\Exceptions\MatrixExceptions.cs" />
     <Compile Include="WhiteMath\Matrices\Helper\NumericHelper.cs" />
     <Compile Include="WhiteMath\Matrices\IMatrix.cs" />
-    <Compile Include="WhiteMath\Matrices\IndexPair.cs" />
     <Compile Include="WhiteMath\Matrices\MatrixNumeric\Matrix_Part1.cs" />
     <Compile Include="WhiteMath\Matrices\MatrixNumeric\Matrix_Part2.cs" />
     <Compile Include="WhiteMath\Matrices\MatrixNumeric\MatrixDI.cs" />
@@ -240,11 +239,11 @@
     <Compile Include="WhiteMath\Matrices\MatrixNumeric\MatrixSDA.cs" />
     <Compile Include="WhiteMath\Matrices\MatrixNumeric\MinorMatrix.cs" />
     <Compile Include="WhiteMath\Matrices\MatrixNumeric\Submatrix.cs" />
-    <Compile Include="WhiteMath\Matrices\SLAE\Solver.cs" />
-    <Compile Include="WhiteMath\Matrices\Winders\01_RowByRowWinder.cs" />
-    <Compile Include="WhiteMath\Matrices\Winders\02_ZigZagWinder.cs" />
-    <Compile Include="WhiteMath\Matrices\Winders\03_SpiralWinder.cs" />
-    <Compile Include="WhiteMath\Matrices\Winders\04_ChaoticWinder.cs" />
+    <Compile Include="WhiteMath\Matrices\SLAE\SlaeSolving.cs" />
+    <Compile Include="WhiteMath\Matrices\Winders\RowByRowWinder.cs" />
+    <Compile Include="WhiteMath\Matrices\Winders\ZigZagWinder.cs" />
+    <Compile Include="WhiteMath\Matrices\Winders\SpiralWinder.cs" />
+    <Compile Include="WhiteMath\Matrices\Winders\ChaoticWinder.cs" />
     <Compile Include="WhiteMath\Matrices\Winders\Winder.cs" />
     <Compile Include="WhiteMath\Matrices\Winders\Winders.cs" />
     <Compile Include="WhiteMath\Imaging\Decal.cs" />
@@ -387,6 +386,7 @@
     <Compile Include="WhiteMath\General\Structures\TreeNodeExtensions.cs" />
     <Compile Include="WhiteMath\Functions\ExpressionNodes\ExpressionNode.cs" />
     <Compile Include="WhiteMath\Functions\ExpressionNodes\ExpressionHelper.cs" />
+    <Compile Include="WhiteMath\Matrices\IndexPair.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

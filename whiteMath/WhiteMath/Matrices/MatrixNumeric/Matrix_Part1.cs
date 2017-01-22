@@ -95,8 +95,8 @@ namespace WhiteMath.Matrices
         /// <returns>The double value at specified point.</returns>
         public Numeric<T,C> this[IndexPair indexPair]
         {
-            get { return this[indexPair.row, indexPair.column]; }
-            set { this[indexPair.row, indexPair.column] = value; }
+            get { return this[indexPair.Row, indexPair.Column]; }
+            set { this[indexPair.Row, indexPair.Column] = value; }
         }
 
         // -----------------------------------

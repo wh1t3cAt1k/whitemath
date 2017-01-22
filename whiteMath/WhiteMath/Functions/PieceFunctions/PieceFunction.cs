@@ -20,45 +20,35 @@ namespace WhiteMath.Functions
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="C"></typeparam>
-    public class PieceFunction<T,C>: IFunction<T,T> where C: ICalc<T>, new()
+    public class PieceFunction<T,C>: IFunction<T, T> where C: ICalc<T>, new()
     {
         protected KeyValuePair<BoundedInterval<T, C>, IFunction<T, T>>[] pieces;
         protected T[] intervalLefts;
 
         protected T defaultValue;
         
-        // ------------------------
-        // ------- type -----------
-        // ------------------------
-
         /// <summary>
         /// Gets the type of the piece function.
         /// </summary>
         public PieceFunctionType Type { get; internal set; }
 
-        // ------------------------
-        // ------- comparison -----
-        // ------------------------
-
-        private static IComparer<KeyValuePair<BoundedInterval<T, C>, IFunction<T, T>>> _KVPComparerInstance = new _KVPComparer();
+		private static IComparer<KeyValuePair<BoundedInterval<T, C>, IFunction<T, T>>> _kvpComparerInstance 
+			= new _KVPComparer();
 
         /// <summary>
-        /// Сравнивает KeyValuePairs на основе левых границ их интервалов.
-        /// ЗАМОРОЧЕНО!!!
+		/// Compares key-value pairs based on their interval left boundaries.
         /// </summary>
         private class _KVPComparer : IComparer<KeyValuePair<BoundedInterval<T, C>, IFunction<T, T>>>
         {
-            private Comparison<BoundedInterval<T, C>> comparison = BoundedInterval<T, C>.IntervalComparisons.LeftBoundComparison;
+            private Comparison<BoundedInterval<T, C>> _comparison = BoundedInterval<T, C>.IntervalComparisons.LeftBoundComparison;
 
-            public int Compare(KeyValuePair<BoundedInterval<T, C>, IFunction<T, T>> one, KeyValuePair<BoundedInterval<T, C>, IFunction<T, T>> two)
+            public int Compare(
+				KeyValuePair<BoundedInterval<T, C>, IFunction<T, T>> one, 
+				KeyValuePair<BoundedInterval<T, C>, IFunction<T, T>> two)
             {
-                return comparison(one.Key, two.Key);
+                return _comparison(one.Key, two.Key);
             }
         }
-
-        // ------------------------
-        // ------- ctors ----------
-        // ------------------------
 
         /// <summary>
         /// Creates a new instance of PieceFunction using a parameter list of KeyValuePair objects and a default value.
@@ -83,7 +73,7 @@ namespace WhiteMath.Functions
 
             // Сортируем массив по левым границам.
 
-            Array.Sort(this.pieces, _KVPComparerInstance);
+            Array.Sort(this.pieces, _kvpComparerInstance);
 
             // Создаем отдельно массив левых границ, чтобы быстро искать
             // При вычислении значения функции.
@@ -122,7 +112,7 @@ namespace WhiteMath.Functions
             for (int i = 0; i < intervals.Count; i++)
                 this.pieces[i] = new KeyValuePair<BoundedInterval<T,C>, IFunction<T, T>>(intervals[i], functions[i]);
 
-            Array.Sort(this.pieces, _KVPComparerInstance);
+            Array.Sort(this.pieces, _kvpComparerInstance);
 
             // Отдельно - массив левых границ
             

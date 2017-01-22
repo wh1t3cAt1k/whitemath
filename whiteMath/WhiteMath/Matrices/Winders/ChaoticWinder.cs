@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace WhiteMath.Matrices
 {
@@ -18,7 +15,7 @@ namespace WhiteMath.Matrices
         internal ChaoticWinder(IMatrix matrix) 
             : base(matrix.RowCount, matrix.ColumnCount) { }
 
-        Random gen = new Random();
+		Random _generator = new Random();
         
         /// <summary>
         /// Обеспечивает двусторонний проход по массиву стандартной построчной развертки
@@ -30,15 +27,16 @@ namespace WhiteMath.Matrices
             // ------ первоначальная развертка
 
             RowByRowWinder temp = new RowByRowWinder(this.rows, this.columns);
-            IndexPair t = new IndexPair();
-            this.trace = temp.trace;
+            IndexPair t;
+
+			this.trace = temp.trace;
 
             // ------ проход по циклу с обменами
 
             for (int i = 0; i < trace.Length; i++)
             {
-                int switchInd = gen.Next(trace.Length);
-                int switchInd2 = gen.Next(trace.Length);
+                int switchInd = _generator.Next(trace.Length);
+                int switchInd2 = _generator.Next(trace.Length);
 
                 t = trace[i];
                 trace[i] = trace[switchInd];

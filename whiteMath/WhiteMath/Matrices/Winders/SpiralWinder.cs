@@ -25,16 +25,26 @@ internal sealed class SpiralWinder : Winder
             wereSteppingDown = false;
             wereSteppingRight = false;
 
-            // Stepping right at upper border
-            if (j < columns - level - 1) wereSteppingRight = true;
+			// Stepping right at upper border.
+			// -
+			if (j < columns - level - 1)
+			{
+				wereSteppingRight = true;
+			}
+
             while (j < columns - level - 1)
             {
                 trace[elements - (count--)] = new IndexPair(i, j);
                 j++;
             }
 
-            // Stepping down at rightmost border.
-            if (i < rows - level - 1) wereSteppingDown = true;
+			// Stepping down at rightmost border.
+			// -
+			if (i < rows - level - 1)
+			{
+				wereSteppingDown = true;
+			}
+
             while (i < rows - level - 1)
             {
                 trace[elements - (count--)] = new IndexPair(i, j);
@@ -42,6 +52,7 @@ internal sealed class SpiralWinder : Winder
             }
 
             // Stepping left at downmost border.
+			// -
             if (wereSteppingDown && wereSteppingRight)
             {
                 while (j > level)
@@ -50,7 +61,9 @@ internal sealed class SpiralWinder : Winder
                     j--;
                 }
             }
+
             // Stepping up at leftmost border.
+			// -
             if (wereSteppingDown && wereSteppingRight)
             {
                 while (i > level + 1)
@@ -60,10 +73,19 @@ internal sealed class SpiralWinder : Winder
                 }
             }
 
-            level++;    // increase indent level
-        } while (count > 1);
+			// Increase indent level
+			// -
+			++level;
+        } 
+		while (count > 1);
 
-        if(count>0) trace[elements - 1] = new IndexPair(i, j);  // предусмотрено для нулевых матриц
+		if (count > 0)
+		{
+			// For null matrices.
+			// -
+			trace[elements - 1] = new IndexPair(i, j);
+		}
+
         return;
     }
 }

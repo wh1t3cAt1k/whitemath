@@ -9,9 +9,7 @@ namespace WhiteMath.Functions
     /// Represents a standard cubic function:
     /// y = a(x-x0)^3 + b(x-x0)^2 + c(x-x0) + d.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="C"></typeparam>
-    public class CubicFunction<T,C>: IFunction<T, T> where C: ICalc<T>, new()
+    public class CubicFunction<T, C>: IFunction<T, T> where C: ICalc<T>, new()
     {
         private static C calc = Numeric<T, C>.Calculator;
 
@@ -77,7 +75,7 @@ namespace WhiteMath.Functions
             Vector<T,C> result;
             Vector<T,C> rights = new T[] { firstPoint.Y, secondPoint.Y, firstDerivative, secondDerivative };
 
-            WhiteMath.Matrices.SLAESolving.LU_FactorizationSolving(matrix, rights, out result);
+            SlaeSolving.SolveLuFactorization(matrix, rights, out result);
 
             this.a = result[0];
             this.b = result[1];
