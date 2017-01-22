@@ -16,8 +16,6 @@ namespace WhiteMath.Functions
             return actionSubstringRegex.Match(str).Groups["command"].Value;
         }
 
-        // ---------------------------
-
 		private static Regex firstOperandRegex = new Regex(
 			@":(?<operand>[0-9Ee\+\-\.!%$]+),?", 
 			RegexOptions.Compiled);
@@ -27,8 +25,6 @@ namespace WhiteMath.Functions
             return firstOperandRegex.Match(str).Groups["operand"].Value;
         }
 
-        // ---------------------------
-
 		private static Regex secondOperandRegex = new Regex(
 			@"[^,]*:[^,]*,(?<operand>([0-9Ee\+\-\.!%$]+|#.*#)),?", 
 			RegexOptions.Compiled);
@@ -37,8 +33,6 @@ namespace WhiteMath.Functions
         {
             return secondOperandRegex.Match(str).Groups["operand"].Value;
         }
-
-        // ---------------------------
 
 		private static Regex thirdOperandRegex = new Regex(
 			@"[^,]*:[^,]*,([^,]*|#.*#),(?<operand>([0-9Ee\+\-\.!%$]+|#.*#))", 

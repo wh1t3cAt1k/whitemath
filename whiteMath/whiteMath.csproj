@@ -385,6 +385,8 @@
     <Compile Include="WhiteMath\ArithmeticLong\Bases\B32768.cs" />
     <Compile Include="WhiteMath\ArithmeticLong\Bases\B65536.cs" />
     <Compile Include="WhiteMath\General\Structures\TreeNodeExtensions.cs" />
+    <Compile Include="WhiteMath\Functions\ExpressionNodes\ExpressionNode.cs" />
+    <Compile Include="WhiteMath\Functions\ExpressionNodes\ExpressionHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -457,5 +459,6 @@
     <Folder Include="WhiteMath\Calculators\" />
     <Folder Include="WhiteMath\ArithmeticLong\" />
     <Folder Include="WhiteMath\ArithmeticLong\Bases\" />
+    <Folder Include="WhiteMath\Functions\ExpressionNodes\" />
   </ItemGroup>
 </Project>
