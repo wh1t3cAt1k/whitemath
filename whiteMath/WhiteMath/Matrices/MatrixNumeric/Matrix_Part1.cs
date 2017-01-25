@@ -1,6 +1,7 @@
 ﻿using System;
 
 using WhiteMath.Calculators;
+using WhiteMath.Matrices.Winders;
 
 namespace WhiteMath.Matrices
 {
@@ -504,7 +505,7 @@ namespace WhiteMath.Matrices
         {
 			T[] result = new T[this.ElementCount];
 
-            winder.reset();
+            winder.Reset();
 
 			for (int elementIndex = 0; elementIndex < this.ElementCount; ++elementIndex)
 			{
@@ -533,7 +534,7 @@ namespace WhiteMath.Matrices
 				throw new ArgumentException("The element count of the current matrix and the element count of the flat matrix must match.");
 			}
 
-            winder.reset();
+            winder.Reset();
             
 			for (int elementIndex = 0; elementIndex < this.ElementCount; ++elementIndex)
             {

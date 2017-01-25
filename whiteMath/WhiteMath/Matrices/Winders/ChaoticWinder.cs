@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WhiteMath.Matrices
+namespace WhiteMath.Matrices.Winders
 {
     /// <summary>
     /// Performs a (pseudo) chaotic matrix winding/unwinding.
@@ -22,29 +22,28 @@ namespace WhiteMath.Matrices
         /// путем пошаговой перестановки текущего элемента со случайным и 
         /// центрально-симметрично текущему со случайным.
         /// </summary>
-        protected override void formTrace()
+        protected override void MakeTrace()
         {
-            // ------ первоначальная развертка
+			RowByRowWinder rowByRowWinder = new RowByRowWinder(this.rows, this.columns);
+            
+			IndexPair temporaryIndexPair;
 
-            RowByRowWinder temp = new RowByRowWinder(this.rows, this.columns);
-            IndexPair t;
+			this.trace = rowByRowWinder.trace;
 
-			this.trace = temp.trace;
-
-            // ------ проход по циклу с обменами
-
-            for (int i = 0; i < trace.Length; i++)
+            // Element exchange loop.
+			// -
+			for (int i = 0; i < trace.Length; i++)
             {
-                int switchInd = _generator.Next(trace.Length);
-                int switchInd2 = _generator.Next(trace.Length);
+				int switchIndex1 = _generator.Next(trace.Length);
+				int switchIndex2 = _generator.Next(trace.Length);
 
-                t = trace[i];
-                trace[i] = trace[switchInd];
-                trace[switchInd] = t;
+                temporaryIndexPair = trace[i];
+                trace[i] = trace[switchIndex1];
+                trace[switchIndex1] = temporaryIndexPair;
 
-                t = trace[trace.Length - i - 1];
-                trace[trace.Length - i - 1] = trace[switchInd2];
-                trace[switchInd2] = t;
+                temporaryIndexPair = trace[trace.Length - i - 1];
+                trace[trace.Length - i - 1] = trace[switchIndex2];
+                trace[switchIndex2] = temporaryIndexPair;
             }
         }
     }

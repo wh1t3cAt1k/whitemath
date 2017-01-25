@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using WhiteMath.Calculators;
 using WhiteMath.General;
 using WhiteMath.Matrices;
+using WhiteMath.Matrices.Winders;
 using WhiteMath.Vectors;
 
 namespace WhiteMath.Statistics

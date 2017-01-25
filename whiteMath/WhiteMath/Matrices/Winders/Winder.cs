@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace WhiteMath.Matrices
+﻿namespace WhiteMath.Matrices.Winders
 {
     /// <summary>
     /// Minimal interface functionality for winders.
@@ -13,10 +8,9 @@ namespace WhiteMath.Matrices
         IndexPair GetNextIndexPair();
 
         /// <summary>
-        /// Resets the winder so the indexing starts from the beginning
-        /// (often from the from the [0,0], but this may vary depending on the implementation)
+        /// Resets the winder so the indexing starts from the beginning.
         /// </summary>
-        void reset();
+        void Reset();
     }
 
     /// <summary>
@@ -41,15 +35,15 @@ namespace WhiteMath.Matrices
             this.elements = rows * columns;
             this.trace = new IndexPair[elements];
 
-            formTrace();
+            MakeTrace();
         }
 
-        public void reset()
+        public void Reset()
         {
             currentIndex = 0;
         }
 
-        protected abstract void formTrace();  // forms the trace
+        protected abstract void MakeTrace();  // forms the trace
         
         /// <summary>
         /// Returns the next index pair for winding/unwinding the matrix with/into a flat array.
