@@ -5,16 +5,15 @@
 	/// </summary>
 	internal sealed class SpiralWinder : Winder
 	{
-		int count;
-		int i, j;
 
 		internal SpiralWinder(IMatrix matrix) : base(matrix.RowCount, matrix.ColumnCount) { }
 		internal SpiralWinder(int rowCount, int columnCount) : base(rowCount, columnCount) { }
 
 		protected override void MakeTrace()
 		{
-			count = elements;
-			i = j = 0;
+			int count = _elementCount;
+			int rowIndex = 0;
+			int columnIndex = 0;
 
 			bool wereSteppingDown;
 			bool wereSteppingRight;
@@ -27,38 +26,38 @@
 
 				// Stepping right at upper border.
 				// -
-				if (j < columns - level - 1)
+				if (columnIndex < _columnCount - level - 1)
 				{
 					wereSteppingRight = true;
 				}
 
-				while (j < columns - level - 1)
+				while (columnIndex < _columnCount - level - 1)
 				{
-					trace[elements - (count--)] = new IndexPair(i, j);
-					j++;
+					trace[_elementCount - (count--)] = new IndexPair(rowIndex, columnIndex);
+					columnIndex++;
 				}
 
 				// Stepping down at rightmost border.
 				// -
-				if (i < rows - level - 1)
+				if (rowIndex < _rowCount - level - 1)
 				{
 					wereSteppingDown = true;
 				}
 
-				while (i < rows - level - 1)
+				while (rowIndex < _rowCount - level - 1)
 				{
-					trace[elements - (count--)] = new IndexPair(i, j);
-					i++;
+					trace[_elementCount - (count--)] = new IndexPair(rowIndex, columnIndex);
+					rowIndex++;
 				}
 
 				// Stepping left at downmost border.
 				// -
 				if (wereSteppingDown && wereSteppingRight)
 				{
-					while (j > level)
+					while (columnIndex > level)
 					{
-						trace[elements - (count--)] = new IndexPair(i, j);
-						j--;
+						trace[_elementCount - (count--)] = new IndexPair(rowIndex, columnIndex);
+						columnIndex--;
 					}
 				}
 
@@ -66,10 +65,10 @@
 				// -
 				if (wereSteppingDown && wereSteppingRight)
 				{
-					while (i > level + 1)
+					while (rowIndex > level + 1)
 					{
-						trace[elements - (count--)] = new IndexPair(i, j);
-						i--;
+						trace[_elementCount - (count--)] = new IndexPair(rowIndex, columnIndex);
+						rowIndex--;
 					}
 				}
 
@@ -83,10 +82,8 @@
 			{
 				// For null matrices.
 				// -
-				trace[elements - 1] = new IndexPair(i, j);
+				trace[_elementCount - 1] = new IndexPair(rowIndex, columnIndex);
 			}
-
-			return;
 		}
 	}
 }

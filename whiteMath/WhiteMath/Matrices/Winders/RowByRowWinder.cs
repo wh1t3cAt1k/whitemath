@@ -10,12 +10,10 @@
 
 		protected override void MakeTrace()
 		{
-			for (int i = 0; i < elements; ++i)
+			for (int index = 0; index < _elementCount; ++index)
 			{
-				trace[i] = new IndexPair(i / rows, i % rows);
+				trace[index] = new IndexPair(index / _rowCount, index % _rowCount);
 			}
-
-			return;
 		}
 	}
 }

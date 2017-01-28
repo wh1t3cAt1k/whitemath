@@ -82,20 +82,14 @@ namespace WhiteMath.Randoms
 				Math.Sqrt); 
         }
 
-        // -------------- RNG methods ------
-
-        private Numeric<T, C> NextFromMinusOneToPlusOne()
+		internal Numeric<T, C> NextFromMinusOneToPlusOne()
         {
 			// We take number in [0; 1),
 			// Double it, get a number in [0; 2),
-			// Subtract a number in [0; 1),
-			// Resulting value is in [-1; +1).
+			// Subtract one,
+			// The resulting value is in [-1; +1).
 			// -
-            return Calculator.Subtract(
-				Calculator.Multiply(
-					Numeric<T, C>._2, 
-					_generator.NextInUnitInterval()), 
-				_generator.NextInUnitInterval());
+			return Numeric<T, C>._2 * _generator.NextInUnitInterval() - Numeric<T, C>._1;
         }
 
         public T Next()

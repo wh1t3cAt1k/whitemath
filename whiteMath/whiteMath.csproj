@@ -209,7 +209,6 @@
     <Compile Include="WhiteMath\Algorithms\MathematicsTrigonometric.cs" />
     <Compile Include="WhiteMath\Algorithms\Messages.cs" />
     <Compile Include="WhiteMath\RationalNumbers\Rational.cs" />
-    <Compile Include="WhiteMath\RationalNumbers\UnitTests.cs" />
     <Compile Include="WhiteMath\Randoms\Interfaces.cs" />
     <Compile Include="WhiteMath\Randoms\RandomCryptographic.cs" />
     <Compile Include="WhiteMath\Randoms\RandomFunctionalityExtensions.cs" />
@@ -221,7 +220,6 @@
     <Compile Include="WhiteMath\Randoms\RandomMersenneTwister.cs" />
     <Compile Include="WhiteMath\Randoms\RandomNormalBoxMuller.cs" />
     <Compile Include="WhiteMath\Randoms\RandomStandard.cs" />
-    <Compile Include="WhiteMath\Randoms\UnitTests.cs" />
     <Compile Include="WhiteMath\Numeric\IConvertible.cs" />
     <Compile Include="WhiteMath\Numeric\IMetricsProvider.cs" />
     <Compile Include="WhiteMath\Numeric\Interval.cs" />

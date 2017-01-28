@@ -1,13 +1,12 @@
-﻿namespace WhiteMath.Matrices.Winders
+﻿using System;
+
+namespace WhiteMath.Matrices.Winders
 {
 	/// <summary>
-	/// Performs a zig-zag matrix winding/unwinding
+	/// Performs a zig-zag matrix winding/unwinding.
 	/// </summary>
 	internal sealed class ZigZagWinder : Winder
 	{
-		private int i;
-		private int j;
-
 		/// <summary>
 		/// The direction to go.
 		/// 
@@ -58,7 +57,7 @@
 		/// Analyzes the direction basing on where from we have came to the moment
 		/// and on what the cell type is.
 		/// </summary>
-		private void AnalyzeDirection()
+		private void AnalyzeDirection(int rowIndex, int columnIndex)
 		{
 			// The direction map
 			// 2 3 4
@@ -91,28 +90,41 @@
 		/// There is no need to check boundaries – they must already be checked at
 		/// the previous step.
 		/// </summary>
-		private void PerformStep()
+		private IndexPair PerformStep(int rowIndex, int columnIndex)
 		{
 			switch (_direction)
 			{
-				case 4: i--; j++; break;
-				case 5: j++; break;
-				case 7: i++; break;
-				case 8: i++; j--; break;
-				default: break;
+				case 4: 
+					--rowIndex; 
+					++columnIndex;
+					break;
+				case 5: 
+					++columnIndex; 
+					break;
+				case 7: 
+					++rowIndex;
+					break;
+				case 8: 
+					++rowIndex; 
+					--columnIndex; 
+					break;
+				default: 
+					throw new Exception();
 			}
+
+			return new IndexPair(rowIndex, columnIndex);
 		}
 
 		/// <summary>
 		/// Analyzes the cell type basing on what the surrounding matrix borders are.
 		/// </summary>
-		private void AnalyzeCellType()
+		private void AnalyzeCellType(int rowIndex, int columnIndex)
 		{
 			_celltype = 0;                           // No borders by default
-			if (i == 0) _celltype++;                 // Upper border
-			if (i == rows - 1) _celltype += 2;       // Down border
-			if (j == 0) _celltype += 4;              // Left border
-			if (j == columns - 1) _celltype += 8;    // Right border
+			if (rowIndex == 0) _celltype++;                 // Upper border
+			if (rowIndex == _rowCount - 1) _celltype += 2;       // Down border
+			if (columnIndex == 0) _celltype += 4;              // Left border
+			if (columnIndex == _columnCount - 1) _celltype += 8;    // Right border
 		}
 
 		internal ZigZagWinder(IMatrix matrix) : base(matrix.RowCount, matrix.ColumnCount) { }
@@ -120,15 +132,21 @@
 
 		protected override void MakeTrace()
 		{
-			for (int k = 0; k < this.elements; k++)
-			{
-				trace[k] = new IndexPair(i, j);
-				AnalyzeCellType();
-				AnalyzeDirection();
-				PerformStep();
-			}
+			int rowIndex = 0;
+			int columnIndex = 0;
 
-			i = j = 0;
+			for (int traceIndex = 0; traceIndex < this._elementCount; ++traceIndex)
+			{
+				trace[traceIndex] = new IndexPair(rowIndex, columnIndex);
+
+				AnalyzeCellType(rowIndex, columnIndex);
+				AnalyzeDirection(rowIndex, columnIndex);
+
+				IndexPair stepResult = PerformStep(rowIndex, columnIndex);
+
+				rowIndex = stepResult.Row;
+				columnIndex = stepResult.Column;
+			}
 		}
 	}
 }

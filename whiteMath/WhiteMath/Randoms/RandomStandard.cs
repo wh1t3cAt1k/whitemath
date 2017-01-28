@@ -75,9 +75,6 @@ namespace WhiteMath.Randoms
             return _libraryGenerator.Next(minValue, maxValue);
         }
 
-        // ---------------------------------------------------------------------
-        // --------------------- functionality extended by IRandomExtensions----
-
         BoundedGenerator<long> genLongBounded;
         UpperBoundedGenerator<long> genLongUpperBounded;
         UnboundedGenerator<long> genLongUnbounded;

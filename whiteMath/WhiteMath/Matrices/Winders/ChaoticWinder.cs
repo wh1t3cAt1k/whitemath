@@ -24,7 +24,7 @@ namespace WhiteMath.Matrices.Winders
         /// </summary>
         protected override void MakeTrace()
         {
-			RowByRowWinder rowByRowWinder = new RowByRowWinder(this.rows, this.columns);
+			RowByRowWinder rowByRowWinder = new RowByRowWinder(this._rowCount, this._columnCount);
             
 			IndexPair temporaryIndexPair;
 

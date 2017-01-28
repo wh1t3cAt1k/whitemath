@@ -1,4 +1,6 @@
-﻿namespace WhiteMath.Matrices.Winders
+﻿using System.Collections.ObjectModel;
+
+namespace WhiteMath.Matrices.Winders
 {
     /// <summary>
     /// Minimal interface functionality for winders.
@@ -20,27 +22,26 @@
     public abstract class Winder: IWinder
     {
         protected internal IndexPair[] trace;
-        protected int currentIndex = 0;
+		protected int _currentIndex = 0;
 
-        protected int rows;
-        protected int columns;
-
-        protected int elements;
+        protected int _rowCount;
+        protected int _columnCount;
+        protected int _elementCount;
         
         protected Winder(int rowCount, int columnCount)
         {
-            this.rows = rowCount;
-            this.columns = columnCount;
+            this._rowCount = rowCount;
+            this._columnCount = columnCount;
+            this._elementCount = this._rowCount * this._columnCount;
 
-            this.elements = rows * columns;
-            this.trace = new IndexPair[elements];
+            this.trace = new IndexPair[_elementCount];
 
             MakeTrace();
         }
 
         public void Reset()
         {
-            currentIndex = 0;
+            _currentIndex = 0;
         }
 
         protected abstract void MakeTrace();  // forms the trace
@@ -51,8 +52,12 @@
         /// <returns>The IndexPair object.</returns>
         public IndexPair GetNextIndexPair()
         {
-            if(currentIndex==trace.Length) currentIndex=0;
-            return this.trace[currentIndex++];
+			if (_currentIndex == trace.Length)
+			{
+				_currentIndex = 0;
+			}
+
+            return this.trace[_currentIndex++];
         }
     }
 }

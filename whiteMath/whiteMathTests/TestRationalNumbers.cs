@@ -1,14 +1,12 @@
-﻿#if (INCLUDE_UNIT_TESTS)
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 using IntRational = WhiteMath.RationalNumbers.Rational<int, WhiteMath.Calculators.CalcInt>;
 using IntRationalCalculator = WhiteMath.Calculators.CalcRational<int, WhiteMath.Calculators.CalcInt>;
 
-namespace WhiteMath.RationalNumbers
+namespace WhiteMathTests
 {
 	[TestFixture]
-	public class UnitTests
+	public class TestRationalNumbers
 	{
 		private static readonly IntRationalCalculator calculator = new IntRationalCalculator();
 
@@ -154,5 +152,3 @@ namespace WhiteMath.RationalNumbers
 		}
 	}
 }
-
-#endif

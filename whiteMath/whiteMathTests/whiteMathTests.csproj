@@ -33,6 +33,8 @@
   <ItemGroup>
     <Compile Include="TestPrimalityTests.cs" />
     <Compile Include="TestExpressionNodes.cs" />
+    <Compile Include="TestRationalNumbers.cs" />
+    <Compile Include="TestRandomGenerators.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
