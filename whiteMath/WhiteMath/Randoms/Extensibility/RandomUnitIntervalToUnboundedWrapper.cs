@@ -50,20 +50,20 @@ namespace WhiteMath.Randoms.Extensibility
 		/// </summary>
 		/// <param name="generator">A floating-point generator.</param>
 		/// <param name="absoluteInclusiveMinimum">The lower inclusive boundary for generated numbers.</param>
-		/// <param name="absoluteInclusiveMaximum">The upper exclusive boundary for generated numbers.</param>
+		/// <param name="absoluteExclusiveMaximum">The upper exclusive boundary for generated numbers.</param>
 		public RandomUnitIntervalToUnboundedWrapper(
 			IRandomUnitInterval<T> generator, 
-			T absoluteInclusiveMinimum, 
-			T absoluteInclusiveMaximum)
+			Numeric<T, C> absoluteInclusiveMinimum, 
+			Numeric<T, C> absoluteExclusiveMaximum)
 		{
 			Condition.ValidateNotNull(generator, nameof(generator));
 			Condition
-				.Validate(Numeric<T, C>.Calculator.GreaterThan(absoluteInclusiveMaximum, absoluteInclusiveMinimum))
+				.Validate(absoluteExclusiveMaximum > absoluteInclusiveMinimum)
 				.OrArgumentOutOfRangeException("The lower boundary should be less than the upper boundary.");
 
 			this.Generator = generator;
 			this.Minimum = absoluteInclusiveMinimum;
-			this.Maximum = absoluteInclusiveMaximum;
+			this.Maximum = absoluteExclusiveMaximum;
 		}
 	}
 }
