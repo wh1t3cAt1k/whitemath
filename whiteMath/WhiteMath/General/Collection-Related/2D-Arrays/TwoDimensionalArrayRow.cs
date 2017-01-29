@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 namespace WhiteMath.General
 {

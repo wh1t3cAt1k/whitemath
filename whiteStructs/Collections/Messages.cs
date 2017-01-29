@@ -1,4 +1,4 @@
-﻿namespace whiteStructs.Collections
+﻿namespace WhiteStructs.Collections
 {
 	public class Messages
 	{

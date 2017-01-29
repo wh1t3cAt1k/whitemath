@@ -209,7 +209,7 @@
     <Compile Include="WhiteMath\Algorithms\MathematicsTrigonometric.cs" />
     <Compile Include="WhiteMath\Algorithms\Messages.cs" />
     <Compile Include="WhiteMath\RationalNumbers\Rational.cs" />
-    <Compile Include="WhiteMath\Randoms\Interfaces.cs" />
+    <Compile Include="WhiteMath\Randoms\IRandomBoundedUnbounded.cs" />
     <Compile Include="WhiteMath\Randoms\RandomCryptographic.cs" />
     <Compile Include="WhiteMath\Randoms\RandomFunctionalityExtensions.cs" />
     <Compile Include="WhiteMath\Randoms\RandomLaggedFibonacci.cs" />
@@ -385,6 +385,15 @@
     <Compile Include="WhiteMath\Functions\ExpressionNodes\ExpressionNode.cs" />
     <Compile Include="WhiteMath\Functions\ExpressionNodes\ExpressionHelper.cs" />
     <Compile Include="WhiteMath\Matrices\IndexPair.cs" />
+    <Compile Include="WhiteMath\Randoms\IRandomUnbounded.cs" />
+    <Compile Include="WhiteMath\Randoms\IRandomBounded.cs" />
+    <Compile Include="WhiteMath\Randoms\IRandomUnitInterval.cs" />
+    <Compile Include="WhiteMath\Randoms\IRandomBytes.cs" />
+    <Compile Include="WhiteMath\Randoms\RandomBoundedExtensions.cs" />
+    <Compile Include="WhiteMath\Randoms\IRandomUpperBounded.cs" />
+    <Compile Include="WhiteMath\Randoms\Extensibility\RandomUnitIntervalToBoundedWrapper.cs" />
+    <Compile Include="WhiteMath\Randoms\Extensibility\RandomUnitIntervalToUnboundedWrapper.cs" />
+    <Compile Include="WhiteMath\Randoms\Extensibility\RandomUnitIntervalExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -458,5 +467,6 @@
     <Folder Include="WhiteMath\ArithmeticLong\" />
     <Folder Include="WhiteMath\ArithmeticLong\Bases\" />
     <Folder Include="WhiteMath\Functions\ExpressionNodes\" />
+    <Folder Include="WhiteMath\Randoms\Extensibility\" />
   </ItemGroup>
 </Project>

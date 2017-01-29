@@ -6,10 +6,10 @@ using System.Drawing;
 using WhiteMath;
 using WhiteMath.Calculators;
 
-using whiteStructs.Conditions;
-using whiteStructs.Collections;
+using WhiteStructs.Conditions;
+using WhiteStructs.Collections;
 
-namespace whiteStructs.Drawing
+namespace WhiteStructs.Drawing
 {
     /// <summary>
     /// This class provides a way of mapping a real coefficient

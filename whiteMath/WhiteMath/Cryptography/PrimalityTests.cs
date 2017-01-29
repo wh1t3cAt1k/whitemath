@@ -5,7 +5,7 @@ using WhiteMath.Calculators;
 using WhiteMath.Randoms;
 using WhiteMath.ArithmeticLong;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 namespace WhiteMath.Cryptography
 {

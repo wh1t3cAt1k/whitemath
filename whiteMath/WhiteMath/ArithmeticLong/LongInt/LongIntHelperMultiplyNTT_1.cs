@@ -6,7 +6,7 @@ using System.Numerics;
 using WhiteMath.Mathematics;
 using WhiteMath.Calculators;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 namespace WhiteMath.ArithmeticLong
 {

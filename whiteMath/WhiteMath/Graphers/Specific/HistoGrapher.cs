@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Drawing;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 namespace WhiteMath.Graphers
 {
@@ -49,9 +49,9 @@ namespace WhiteMath.Graphers
 			Condition.ValidateNotNull(values, nameof(values));
 			Condition
 				.Validate(points.Count == values.Count)
-				.OrArgumentException(whiteStructs.Collections.Messages.SequenceLengthsAreNotEqual);
+				.OrArgumentException(WhiteStructs.Collections.Messages.SequenceLengthsAreNotEqual);
 			Condition
-				.ValidateNotEmpty(points, whiteStructs.Collections.Messages.SequenceShouldNotBeEmpty);
+				.ValidateNotEmpty(points, WhiteStructs.Collections.Messages.SequenceShouldNotBeEmpty);
 
             _initialize(points.Select((point, pointIndex) => new KeyValuePair<string, double>(point, values[pointIndex])));
         }
@@ -65,7 +65,7 @@ namespace WhiteMath.Graphers
 			Condition.ValidateNotNull(pointValuePairs, nameof(pointValuePairs));
 			Condition.ValidateNotEmpty(
 					pointValuePairs, 
-					whiteStructs.Collections.Messages.SequenceShouldNotBeEmpty);
+					WhiteStructs.Collections.Messages.SequenceShouldNotBeEmpty);
 
             _initialize(pointValuePairs);
         }

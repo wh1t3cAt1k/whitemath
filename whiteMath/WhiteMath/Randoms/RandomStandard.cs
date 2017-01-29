@@ -1,6 +1,6 @@
 ﻿using System;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 namespace WhiteMath.Randoms
 {
@@ -14,29 +14,21 @@ namespace WhiteMath.Randoms
         IRandomBoundedUnbounded<int>, 
         IRandomBoundedUnbounded<long>, 
         IRandomBoundedUnbounded<ulong>,
-        IRandomFloatingPoint<double>,
+        IRandomUnitInterval<double>,
         IRandomBytes
     {
 		private Random _libraryGenerator;
 
         /// <summary>
-        /// Creates a new instance of RandomStandard class using a clock-dependent
-        /// unknown seed value. 
+        /// Creates a new instance of RandomStandard class with
+		/// an optional integer seed value.
         /// </summary>
-        public RandomStandard()
+        public RandomStandard(int? seed = null)
         {
-            _libraryGenerator = new Random();
-            InitializeGeneratorDelegates();
-        }
-
-        /// <summary>
-        /// Creates a new instance of RandomStandard class using an explicitly
-        /// provided integer seed value.
-        /// </summary>
-        /// <param name="seed"></param>
-        public RandomStandard(int seed)
-        {
-            _libraryGenerator = new Random(seed);
+			_libraryGenerator = seed == null
+				? new Random()
+				: new Random(seed.Value);
+			
             InitializeGeneratorDelegates();
         }
 
@@ -167,16 +159,12 @@ namespace WhiteMath.Randoms
                 genLongBounded(minValue, maxValue);
         }
 
-        // ---------------------------------------------------------------------
-        // --------------------- end functionality extended --------------------
-        // ---------------------------------------------------------------------
-
         /// <summary>
         /// Returns the next pseudo-random double value
         /// in the [0; 1) interval.
         /// </summary>
         /// <returns>The next double value in the [0; 1) interval.</returns>
-        public double NextDouble_SingleInterval()
+		public double NextDoubleInUnitInterval()
         {
             return _libraryGenerator.NextDouble();
         }
@@ -197,24 +185,23 @@ namespace WhiteMath.Randoms
         /// Return the next pseudo-random double value
         /// in the [min; max) interval.
         /// </summary>
-        /// <param name="min">The lower inclusive bound of the number to be generated.</param>
-        /// <param name="max">The upper exclusive bound of the number to be generated.</param>
+        /// <param name="minInclusive">The lower inclusive bound of the number to be generated.</param>
+        /// <param name="maxExclusive">The upper exclusive bound of the number to be generated.</param>
         /// <returns>The next pseudo-random double value in the [min; max) interval.</returns>
-        public double NextDouble(double min, double max)
+		public double NextDouble(double minInclusive, double maxExclusive)
         {
-            double length = max - min;
+			// TODO: check that min inclusive is less than max exclusive
+			// -
+			double intervalLength = maxExclusive - minInclusive;
 
-            return min + NextDouble_SingleInterval() * length;
+            return minInclusive + NextDoubleInUnitInterval() * intervalLength;
         }
 
         // ---------------------------------------------------
         // ------- explicit interface implementations --------
         // ---------------------------------------------------
 
-        int IRandomUnbounded<int>.Next()
-        {
-            return this.NextInt();
-        }
+        int IRandomUnbounded<int>.Next() => this.NextInt();
 
         int IRandomBounded<int>.Next(int min, int max)
         {
@@ -223,10 +210,7 @@ namespace WhiteMath.Randoms
             return this.NextInt(min, max);
         }
 
-        long IRandomUnbounded<long>.Next()
-        {
-            return this.NextLong();
-        }
+        long IRandomUnbounded<long>.Next() => this.NextLong();
 
         long IRandomBounded<long>.Next(long minValue, long maxValue)
         {
@@ -235,10 +219,7 @@ namespace WhiteMath.Randoms
             return this.NextLong(minValue, maxValue);
         }
 
-        ulong IRandomUnbounded<ulong>.Next()
-        {
-            return this.NextULong();
-        }
+        ulong IRandomUnbounded<ulong>.Next() => this.NextULong();
 
         ulong IRandomBounded<ulong>.Next(ulong min, ulong max)
         {
@@ -247,9 +228,6 @@ namespace WhiteMath.Randoms
             return this.NextULong(min, max);
         }
 
-        double IRandomFloatingPoint<double>.NextInUnitInterval()
-        {
-            return this.NextDouble_SingleInterval();
-        }
+        double IRandomUnitInterval<double>.NextInUnitInterval() => this.NextDoubleInUnitInterval();
     }
 }

@@ -16,7 +16,7 @@ namespace WhiteMath.Randoms
     {
 		private static readonly ICalc<T> Calculator = Numeric<T, C>.Calculator;
 
-		private IRandomFloatingPoint<T> _generator;
+		private IRandomUnitInterval<T> _generator;
         
 		private Numeric<T,C> _mean;
 		private Numeric<T,C> _standardDeviation;
@@ -30,7 +30,7 @@ namespace WhiteMath.Randoms
 		public bool IsIntegerGenerator => false;
 
         public RandomNormalBoxMuller(
-			IRandomFloatingPoint<T> uniformGenerator, 
+			IRandomUnitInterval<T> uniformGenerator, 
 			T mean, 
 			T standardDeviation, 
 			Func<T, T> naturalLogarithm, 
@@ -54,7 +54,7 @@ namespace WhiteMath.Randoms
         }
 
         public RandomNormalBoxMuller(
-			IRandomFloatingPoint<T> uniformGenerator, 
+			IRandomUnitInterval<T> uniformGenerator, 
 			Func<T, T> naturalLogarithmFunction, 
 			Func<T, T> squareRootFunction)
             : this(
@@ -82,12 +82,11 @@ namespace WhiteMath.Randoms
 				Math.Sqrt); 
         }
 
-		internal Numeric<T, C> NextFromMinusOneToPlusOne()
+		private Numeric<T, C> NextFromMinusOneToPlusOne()
         {
-			// We take number in [0; 1),
-			// Double it, get a number in [0; 2),
-			// Subtract one,
-			// The resulting value is in [-1; +1).
+			// We take a number in [0; 1).
+			// Double it, get a number in [0; 2).
+			// Subtract one, get a number in [-1; +1).
 			// -
 			return Numeric<T, C>._2 * _generator.NextInUnitInterval() - Numeric<T, C>._1;
         }
@@ -97,7 +96,7 @@ namespace WhiteMath.Randoms
             if (_isNextAvailable)
             {
                 _isNextAvailable = false;
-                return this._mean + _next * this._standardDeviation;
+                return _mean + _next * _standardDeviation;
             }
 
             T current;

@@ -5,7 +5,7 @@ using System.Text;
 
 using System.Diagnostics.Contracts;
 
-namespace whiteStructs.Testing
+namespace WhiteStructs.Testing
 {
     /// <summary>
     /// Represents a one-argument function.

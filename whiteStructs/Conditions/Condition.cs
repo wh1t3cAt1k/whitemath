@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace whiteStructs.Conditions
+namespace WhiteStructs.Conditions
 {
 	/// <summary>
 	/// Provides basic functionality for method pre-condition checking.
@@ -76,7 +76,7 @@ namespace whiteStructs.Conditions
 		public class ConditionTestResult
 		{
 			/// <summary>
-			/// Gets a value indicating whether this <see cref="whiteStructs.Conditions.Condition+ConditionTestResult"/> holds.
+			/// Gets a value indicating whether this <see cref="WhiteStructs.Conditions.Condition+ConditionTestResult"/> holds.
 			/// </summary>
 			/// <value><c>true</c> if the condition holds; otherwise, <c>false</c>.</value>
 			public bool Holds { get; }

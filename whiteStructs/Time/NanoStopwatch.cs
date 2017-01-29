@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace whiteStructs.Time
+namespace WhiteStructs.Time
 {
     /// <summary>
     /// The class designed to accurately measure time intervals.

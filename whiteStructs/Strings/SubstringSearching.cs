@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace whiteStructs.Strings
+namespace WhiteStructs.Strings
 {
     public static class SubstringSearching
     {

@@ -3,7 +3,7 @@
 using System;
 using NUnit.Framework;
 
-namespace whiteStructs.Collections
+namespace WhiteStructs.Collections
 {
 	[TestFixture]
 	public class UnitTests

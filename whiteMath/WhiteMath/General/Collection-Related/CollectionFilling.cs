@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using WhiteMath.Randoms;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 namespace WhiteMath.General
 {

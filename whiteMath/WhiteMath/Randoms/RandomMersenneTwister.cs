@@ -6,7 +6,7 @@ namespace WhiteMath.Randoms
     public class RandomMersenneTwister: 
         IRandomBounded<int>, IRandomUnbounded<int>,
         IRandomBounded<uint>, IRandomUnbounded<uint>,
-        IRandomFloatingPoint<double>        
+        IRandomUnitInterval<double>        
     {
         /* Period parameters */
         private const int N = 624;
@@ -154,7 +154,7 @@ namespace WhiteMath.Randoms
         // ---------- explicit interface ------
         // ---------- implementations ---------
 
-        double IRandomFloatingPoint<double>.NextInUnitInterval()
+        double IRandomUnitInterval<double>.NextInUnitInterval()
         {
             return this.NextDouble();
         }

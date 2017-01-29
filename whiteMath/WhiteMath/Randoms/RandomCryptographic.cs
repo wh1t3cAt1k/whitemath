@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 namespace WhiteMath.Randoms
 {
     /// <summary>
     /// Represents a random number generator wrapper built
-    /// on a cryptographically strong <see cref="RandomNumberGenerator"/> instance.
+    /// on a cryptographically strong <see cref="RandomNumberGenerator"/> 
+	/// instance.
     /// </summary>
     public class RandomCryptographic:
         IRandomBoundedUnbounded<int>,
@@ -15,55 +16,57 @@ namespace WhiteMath.Randoms
         IRandomBoundedUnbounded<long>,
         IRandomBoundedUnbounded<ulong>
     {
-        private RandomNumberGenerator gen;
+		private RandomNumberGenerator _generator;
 
-        private UpperBoundedGenerator<int>      ___nextIntUB;
-        private UpperBoundedGenerator<uint>     ___nextUIntUB;
-        private UpperBoundedGenerator<long>     ___nextLongUB;
-        private UpperBoundedGenerator<ulong>    ___nextULongUB;
+		private UpperBoundedGenerator<int> _getNextIntUpperBounded;
+		private UpperBoundedGenerator<uint> _getNextUnsignedIntUpperBounded;
+		private UpperBoundedGenerator<long> _getNextLongUpperBounded;
+		private UpperBoundedGenerator<ulong> _getNextUnsignedLongUpperBounded;
 
-        private UnboundedGenerator<int>         ___nextIntNB;
-        private UnboundedGenerator<uint>        ___nextUIntNB;
-        private UnboundedGenerator<long>        ___nextLongNB;
-        private UnboundedGenerator<ulong>       ___nextULongNB;
+		private UnboundedGenerator<int> _getNextIntUnbounded;
+		private UnboundedGenerator<uint> _getNextUnsignedIntUnbounded;
+		private UnboundedGenerator<long> _getNextLongUnbounded;
+		private UnboundedGenerator<ulong> _getNextUnsignedLongUnbounded;
 
-        private BoundedGenerator<int>           ___nextIntB;
-        private BoundedGenerator<uint>          ___nextUIntB;
-        private BoundedGenerator<long>          ___nextLongB;
-        private BoundedGenerator<ulong>         ___nextULongB;
+		private BoundedGenerator<int> _getNextIntBounded;
+		private BoundedGenerator<uint> _getNextUnsignedIntBounded;
+		private BoundedGenerator<long> _getNextLongBounded;
+		private BoundedGenerator<ulong> _getNextUnsignedLongBounded;
         
         /// <summary>
         /// Initializes an instance of <see cref="RandomCryptographic"/>
         /// with a single instance of cryptographically strong <see cref="RandomNumberGenerator"/>.
         /// </summary>
-        /// <param name="gen">
+        /// <param name="generator">
         /// An instance of cryptographically strong <see cref="RandomNumberGenerator"/>.
         /// If <c>null</c>, an instance built from <see cref="RNGCryptoServiceProvider.Create"/> will be used.
         /// </param>
-        public RandomCryptographic(RandomNumberGenerator gen = null)
+		public RandomCryptographic(RandomNumberGenerator generator = null)
         {
-            if (gen == null)
-                gen = RNGCryptoServiceProvider.Create();
+			if (generator == null)
+			{
+				generator = RandomNumberGenerator.Create();
+			}
 
-            this.gen = gen;
+            _generator = generator;
 
             // initialize methods
 
-            this.___nextIntB = RandomFunctionalityExtensions.CreateNextIntBounded(this.gen.GetBytes);
-            this.___nextIntNB = RandomFunctionalityExtensions.CreateNextIntUnbounded(this.gen.GetBytes);
-            this.___nextIntUB = RandomFunctionalityExtensions.CreateNextIntUpperBounded(this.gen.GetBytes);
+            this._getNextIntBounded = RandomFunctionalityExtensions.CreateNextIntBounded(this._generator.GetBytes);
+            this._getNextIntUnbounded = RandomFunctionalityExtensions.CreateNextIntUnbounded(this._generator.GetBytes);
+            this._getNextIntUpperBounded = RandomFunctionalityExtensions.CreateNextIntUpperBounded(this._generator.GetBytes);
 
-            this.___nextLongB = RandomFunctionalityExtensions.CreateNextLongBounded(this.gen.GetBytes);
-            this.___nextLongNB = RandomFunctionalityExtensions.CreateNextLongUnbounded(this.gen.GetBytes);
-            this.___nextLongUB = RandomFunctionalityExtensions.CreateNextLongUpperBounded(this.gen.GetBytes);
+            this._getNextLongBounded = RandomFunctionalityExtensions.CreateNextLongBounded(this._generator.GetBytes);
+            this._getNextLongUnbounded = RandomFunctionalityExtensions.CreateNextLongUnbounded(this._generator.GetBytes);
+            this._getNextLongUpperBounded = RandomFunctionalityExtensions.CreateNextLongUpperBounded(this._generator.GetBytes);
 
-            this.___nextUIntB = RandomFunctionalityExtensions.CreateNextUIntBounded(this.gen.GetBytes);
-            this.___nextUIntNB = RandomFunctionalityExtensions.CreateNextUIntUnbounded(this.gen.GetBytes);
-            this.___nextUIntUB = RandomFunctionalityExtensions.CreateNextUIntUpperBounded(this.gen.GetBytes);
+            this._getNextUnsignedIntBounded = RandomFunctionalityExtensions.CreateNextUIntBounded(this._generator.GetBytes);
+            this._getNextUnsignedIntUnbounded = RandomFunctionalityExtensions.CreateNextUIntUnbounded(this._generator.GetBytes);
+            this._getNextUnsignedIntUpperBounded = RandomFunctionalityExtensions.CreateNextUIntUpperBounded(this._generator.GetBytes);
 
-            this.___nextULongB = RandomFunctionalityExtensions.CreateNextULongBounded(this.gen.GetBytes);
-            this.___nextULongNB = RandomFunctionalityExtensions.CreateNextULongUnbounded(this.gen.GetBytes);
-            this.___nextULongUB = RandomFunctionalityExtensions.CreateNextULongUpperBounded(this.gen.GetBytes);
+            this._getNextUnsignedLongBounded = RandomFunctionalityExtensions.CreateNextULongBounded(this._generator.GetBytes);
+            this._getNextUnsignedLongUnbounded = RandomFunctionalityExtensions.CreateNextULongUnbounded(this._generator.GetBytes);
+            this._getNextUnsignedLongUpperBounded = RandomFunctionalityExtensions.CreateNextULongUpperBounded(this._generator.GetBytes);
         }
 
         // ---------------------------------------------------------
@@ -76,7 +79,7 @@ namespace WhiteMath.Randoms
         public uint NextUInt()
         {
             return
-                ___nextUIntNB();
+                _getNextUnsignedIntUnbounded();
         }
 
         /// <summary>
@@ -90,7 +93,7 @@ namespace WhiteMath.Randoms
 			Condition.ValidatePositive(maxValue, "The upper exclusive boundary for generated values should be positive.");
 
             return
-                ___nextUIntUB(maxValue);
+                _getNextUnsignedIntUpperBounded(maxValue);
         }
 
         /// <summary>
@@ -107,7 +110,7 @@ namespace WhiteMath.Randoms
 				.OrArgumentException("The upper exclusive boundary should be bigger than the lower inclusive boundary.");
 
             return
-                ___nextUIntB(minValue, maxValue);
+                _getNextUnsignedIntBounded(minValue, maxValue);
         }
 
 
@@ -119,7 +122,7 @@ namespace WhiteMath.Randoms
         public ulong NextULong()
         {
             return
-                ___nextULongNB();
+                _getNextUnsignedLongUnbounded();
         }
 
         /// <summary>
@@ -135,7 +138,7 @@ namespace WhiteMath.Randoms
 				.OrArgumentOutOfRangeException("The upper exclusive boundary for generated values should be positive.");
 
             return
-                ___nextULongUB(maxValue);
+                _getNextUnsignedLongUpperBounded(maxValue);
         }
 
         /// <summary>
@@ -152,7 +155,7 @@ namespace WhiteMath.Randoms
 				.OrArgumentException("The upper exclusive boundary should be bigger than the lower inclusive boundary.");
 
             return
-                ___nextULongB(minValue, maxValue);
+                _getNextUnsignedLongBounded(minValue, maxValue);
         }
 
         /// <summary>
@@ -163,7 +166,7 @@ namespace WhiteMath.Randoms
         public int NextInt()
         {
             return
-                ___nextIntNB();
+                _getNextIntUnbounded();
         }
 
         /// <summary>
@@ -177,7 +180,7 @@ namespace WhiteMath.Randoms
 			Condition.ValidatePositive(maxValue, "The upper exclusive boundary should be a positive number.");
 
             return
-                ___nextIntUB(maxValue);
+                _getNextIntUpperBounded(maxValue);
         }
 
         /// <summary>
@@ -194,7 +197,7 @@ namespace WhiteMath.Randoms
 				.OrArgumentException("The upper exclusive boundary should be bigger than the lower inclusive boundary.");
 
             return
-                ___nextIntB(minValue, maxValue);
+                _getNextIntBounded(minValue, maxValue);
         }
 
 
@@ -206,7 +209,7 @@ namespace WhiteMath.Randoms
         public long NextLong()
         {
             return
-                ___nextLongNB();
+                _getNextLongUnbounded();
         }
 
         /// <summary>
@@ -220,7 +223,7 @@ namespace WhiteMath.Randoms
 			Condition.ValidatePositive(maxValue, "The upper exclusive boundary should be a positive number.");
 
             return
-                ___nextLongUB(maxValue);
+                _getNextLongUpperBounded(maxValue);
         }
 
         /// <summary>
@@ -237,22 +240,35 @@ namespace WhiteMath.Randoms
 				.OrArgumentException("The upper exclusive boundary should be bigger than the lower inclusive boundary.");
 			
             return
-                ___nextLongB(minValue, maxValue);
+                _getNextLongBounded(minValue, maxValue);
         }
 
-        // -----------------------------------------------------------
-        // ------------ explicit interface implementation ------------
+		#region Explicit Interface Implementation
 
-        int IRandomUnbounded<int>.Next()                         { return ___nextIntNB(); }
-        int IRandomBounded<int>.Next(int min, int max)         { return ___nextIntB(min, max); }
+		int IRandomUnbounded<int>.Next() 
+			=> this.NextInt();
 
-        uint IRandomUnbounded<uint>.Next()                       { return ___nextUIntNB(); }
-        uint IRandomBounded<uint>.Next(uint min, uint max)     { return ___nextUIntB(min, max); }
+		int IRandomBounded<int>.Next(int minInclusive, int maxExclusive) 
+			=> this.NextInt(minInclusive, maxExclusive);
 
-        long IRandomUnbounded<long>.Next()                       { return ___nextLongNB(); }
-        long IRandomBounded<long>.Next(long min, long max)     { return ___nextLongB(min, max); }
+		uint IRandomUnbounded<uint>.Next() 
+			=> this.NextUInt();
 
-        ulong IRandomUnbounded<ulong>.Next()                     { return ___nextULongNB(); }
-        ulong IRandomBounded<ulong>.Next(ulong min, ulong max) { return ___nextULongB(min, max); }
+		uint IRandomBounded<uint>.Next(uint minInclusive, uint maxExclusive) 
+			=> this.NextUInt(minInclusive, maxExclusive);
+
+		long IRandomUnbounded<long>.Next() 
+			=> this.NextLong();
+
+		long IRandomBounded<long>.Next(long minInclusive, long maxExclusive) 
+			=> this.NextLong(minInclusive, maxExclusive);
+
+		ulong IRandomUnbounded<ulong>.Next()
+			=> this.NextULong();
+
+		ulong IRandomBounded<ulong>.Next(ulong minInclusive, ulong maxExclusive) 
+			=> this.NextULong(minInclusive, maxExclusive);
+
+		#endregion
     }
 }

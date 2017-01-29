@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using System.Diagnostics.Contracts;
 
-namespace whiteStructs.Forms
+namespace WhiteStructs.Forms
 {
     /// <summary>
     /// This class provides different extension methods

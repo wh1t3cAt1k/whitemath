@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using WhiteMath.Mathematics;
 using WhiteMath.Calculators;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 using WhiteMath = WhiteMath.Mathematics.Mathematics<int, WhiteMath.Calculators.CalcInt>;
 

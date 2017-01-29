@@ -9,8 +9,8 @@ using WhiteMath.Calculators;
 using WhiteMath.General;
 using WhiteMath.Randoms;
 
-using whiteStructs.Conditions;
-using whiteStructs.Collections;
+using WhiteStructs.Conditions;
+using WhiteStructs.Collections;
 
 namespace WhiteMath.Cryptography
 {

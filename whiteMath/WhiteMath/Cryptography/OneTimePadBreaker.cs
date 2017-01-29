@@ -4,7 +4,7 @@ using System.Linq;
 
 using WhiteMath.General;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 namespace WhiteMath.Cryptography
 {

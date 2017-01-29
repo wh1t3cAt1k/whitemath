@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using WhiteMath.Calculators;
 using WhiteMath.Randoms;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 namespace WhiteMath.General
 {
@@ -69,7 +69,7 @@ namespace WhiteMath.General
         /// <param name="numericComparer">An optional numeric comparer for <typeparamref name="N"/> type. If <c>null</c>, a standard comparer will be used (if exists, otherwise, an exception will be thrown).</param>
         public static void Shuffle<T, N>(
 			this IList<T> list, 
-			IRandomFloatingPoint<N> generator, 
+			IRandomUnitInterval<N> generator, 
 			IComparer<N> numericComparer = null)
         {
 			Condition.ValidateNotNull(list, nameof(list));

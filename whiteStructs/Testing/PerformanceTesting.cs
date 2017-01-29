@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.Contracts;
 
-using whiteStructs.Time;
+using WhiteStructs.Time;
 
-namespace whiteStructs.Testing
+namespace WhiteStructs.Testing
 {
     /// <summary>
     /// Represents a one-argument procedure without a return value.

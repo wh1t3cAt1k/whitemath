@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace whiteStructs.Properties {
+namespace WhiteStructs.Properties {
     using System;
     
     

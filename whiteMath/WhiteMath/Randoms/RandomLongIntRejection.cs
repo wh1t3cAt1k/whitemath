@@ -1,6 +1,6 @@
 ﻿using System;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 using WhiteMath.ArithmeticLong;
 

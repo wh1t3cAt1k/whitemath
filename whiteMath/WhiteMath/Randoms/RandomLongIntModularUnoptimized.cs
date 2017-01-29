@@ -2,7 +2,7 @@
 
 using WhiteMath.ArithmeticLong;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 namespace WhiteMath.Randoms
 {
@@ -15,11 +15,12 @@ namespace WhiteMath.Randoms
     /// multiplication/division along with rejection sampling, though optimized.
     /// </remarks>
     /// <typeparam name="B">The type specifying the digit base for the <c>LongInt&lt;B&gt;</c> type.</typeparam>
-    [Obsolete("This implementation is slower than RandomLongIntModular.")]
-    public class RandomLongIntModularUnoptimized<B> : IRandomBounded<LongInt<B>> where B : IBase, new()
+	[Obsolete("This implementation is slower than " + nameof(RandomLongIntModular<B>))]
+    public class RandomLongIntModularUnoptimized<B> : IRandomBounded<LongInt<B>> 
+		where B : IBase, new()
     {
-        private IRandomBounded<int>                         intGenerator;           // integer generator
-        private Func<LongInt<B>, LongInt<B>, LongInt<B>>    multiplication;         // multiplication function
+		private IRandomBounded<int> _integerGenerator;
+		private Func<LongInt<B>, LongInt<B>, LongInt<B>> _multiply;
 
         /// <summary>
         /// Gets the total amount of generated numbers that 
@@ -47,22 +48,28 @@ namespace WhiteMath.Randoms
         /// If <c>null</c>, a new <c>RandomStandard</c> instance will be used.
         /// </param>
         /// <see cref="RandomStandard"/>
-        /// <param name="multiplication">
+        /// <param name="multiply">
         /// A function taking two <c>LongInt&lt;<typeparamref name="B"/>&gt;</c> numbers 
         /// and returning their multiplication product.
         /// If <c>null</c>, the simple, O(n^2) multiplication method will be used.
         /// </param>
         /// <see cref="LongInt&lt;B&gt;.Helper.MultiplySimple"/>
-        public RandomLongIntModularUnoptimized(IRandomBounded<int> intGenerator = null, Func<LongInt<B>, LongInt<B>, LongInt<B>> multiplication = null)
+        public RandomLongIntModularUnoptimized(
+			IRandomBounded<int> intGenerator = null, 
+			Func<LongInt<B>, LongInt<B>, LongInt<B>> multiply = null)
         {
-            if (intGenerator == null)
-                intGenerator = new RandomStandard();
+			if (intGenerator == null)
+			{
+				intGenerator = new RandomStandard();
+			}
 
-            if (multiplication == null)
-                multiplication = LongInt<B>.Helper.MultiplySimple;
+			if (multiply == null)
+			{
+				multiply = LongInt<B>.Helper.MultiplySimple;
+			}
 
-            this.intGenerator = intGenerator;
-            this.multiplication = multiplication;
+            this._integerGenerator = intGenerator;
+            this._multiply = multiply;
         }
 
         /// <summary>
@@ -95,20 +102,26 @@ namespace WhiteMath.Randoms
             
             LongInt<B> result = new LongInt<B>();
 
-        REPEAT:
+			while (true)
+			{
+				result.Digits.Clear();
 
-            result.Digits.Clear();
+				for (int i = 0; i < maxExclusive.Length; ++i)
+				{
+					result.Digits.Add(_integerGenerator.Next(0, LongInt<B>.BASE));
+				}
 
-            for (int i = 0; i < maxExclusive.Length; i++)
-                result.Digits.Add(intGenerator.Next(0, LongInt<B>.BASE));
+				result.DealWithZeroes();
 
-            result.DealWithZeroes();
-
-            if (result >= upperBound)
-            {
-                ++TotalRejected;
-                goto REPEAT;
-            }
+				if (result >= upperBound)
+				{
+					++TotalRejected;
+				}
+				else
+				{
+					break;
+				}
+			}
 
             return result % maxExclusive;
         }

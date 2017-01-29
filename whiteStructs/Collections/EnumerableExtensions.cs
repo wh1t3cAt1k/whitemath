@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
-namespace whiteStructs.Collections
+namespace WhiteStructs.Collections
 {
     public static class EnumerableExtensions
     {

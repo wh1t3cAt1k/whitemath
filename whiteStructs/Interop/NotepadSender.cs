@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace whiteStructs.Interop
+namespace WhiteStructs.Interop
 {
     /// <summary>
     /// This class allows sending text to Windows Notepad.

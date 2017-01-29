@@ -6,8 +6,8 @@ using WhiteMath.Mathematics;
 using WhiteMath.Calculators;
 using WhiteMath.General;
 
-using whiteStructs.Conditions;
-using whiteStructs.Collections;
+using WhiteStructs.Conditions;
+using WhiteStructs.Collections;
 
 namespace WhiteMath.Statistics
 {

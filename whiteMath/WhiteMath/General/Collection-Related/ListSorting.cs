@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using whiteStructs.Collections;
+using WhiteStructs.Collections;
 
 namespace WhiteMath.General
 {

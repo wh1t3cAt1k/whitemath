@@ -2,7 +2,7 @@
 
 using WhiteMath.ArithmeticLong;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 namespace WhiteMath.Randoms
 {

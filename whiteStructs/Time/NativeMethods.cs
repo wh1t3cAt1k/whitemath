@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace whiteStructs.Time
+namespace WhiteStructs.Time
 {
     public static class NativeMethods
     {

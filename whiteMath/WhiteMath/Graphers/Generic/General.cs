@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-using whiteStructs.Conditions;
+using WhiteStructs.Conditions;
 
 namespace WhiteMath.Graphers
 {
