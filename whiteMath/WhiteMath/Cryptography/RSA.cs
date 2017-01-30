@@ -173,18 +173,27 @@ namespace WhiteMath.Cryptography
         /// Hidden method - tries the first 100 primes to test divisibility.
         /// If not divisible - proceeds with Miller-Rabin.
         /// </summary>
-        private static bool __isPrimeOptimized<B>(LongInt<B> number)
+		private static bool IsPrimeOptimized<B>(LongInt<B> number)
             where B: IBase, new()
         {
-            RandomMersenneTwister gen = new RandomMersenneTwister();
-            RandomLongIntModular<B> lgen = new RandomLongIntModular<B>(gen);
+			RandomMersenneTwister doubleGenerator = new RandomMersenneTwister();
+			RandomLongIntModular<B> longIntegerGenerator = new RandomLongIntModular<B>(doubleGenerator);
 
-            foreach (int prime in firstPrimes)
-                if (number % prime == 0)
-                    return false;
+			foreach (int prime in firstPrimes)
+			{
+				if (number % prime == 0)
+				{
+					return false;
+				}
+			}
 
-            if (PrimalityTests.CalculateCompositeProbabilityMillerRabin(number, lgen, number.LengthInBinaryPlaces) < 1)
-                return true;
+			if (PrimalityTests.CalculateCompositeProbabilityMillerRabin(
+				number, 
+				longIntegerGenerator, 
+				number.LengthInBinaryPlaces) < 1)
+			{
+				return true;
+			}
 
             return false;
         }
@@ -196,27 +205,20 @@ namespace WhiteMath.Cryptography
         /// <typeparam name="B">An implementation of <c>IBase</c> interface which specifies the digit base of <c>LongInt&lt;<typeparamref name="B"/>&gt;</c> numbers.</typeparam>
         /// <param name="digits">The desired number of digits in the public key.</param>
         /// <param name="randomGenerator">A random generator for long integer numbers.</param>
-        /// <param name="primalityTest"></param>
-        /// <returns></returns>
+        /// <param name="primalityTest">A function which returns <c>true</c> if its argument is prime.</param>
         public static Point<LongInt<B>> GetKey<B>(int digits, IRandomBounded<LongInt<B>> randomGenerator = null, Func<LongInt<B>, bool> primalityTest = null) where B: IBase, new()
         {
 			Condition
 				.Validate(digits > 1)
 				.OrArgumentOutOfRangeException("The number of digits in the key should be more than 1.");
-            
-            /*
-            Contract.Ensures(
-                (Contract.Result<Point<LongInt<B>>>().X * Contract.Result<Point<LongInt<B>>>().Y)
-                .Length == digits);
-            */
-
+			
             long bits = (long)Math.Ceiling(Math.Log(LongInt<B>.BASE, 2));   // сколько бит занимает BASE
 
             if (randomGenerator == null)
                 randomGenerator = new RandomLongIntModular<B>(new RandomMersenneTwister());
 
             if (primalityTest == null)
-                primalityTest = (x => __isPrimeOptimized(x));
+                primalityTest = (x => IsPrimeOptimized(x));
 
             LongInt<B>
                 firstPrime,
@@ -224,21 +226,21 @@ namespace WhiteMath.Cryptography
 
             int half = digits / 2;
 
-            // На текущий момент длина ключа может оказаться МЕНЬШЕ
-            // запланированной. Сделать так, чтобы она всегда была одна.
-            // Нижеуказанный генератор тоже снести.
-
-            IRandomBoundedUnbounded<int> tmp = new RandomCryptographic();
+			// TODO: at the moment, the key length can be smaller
+			// than planned. We need to ensure that it is always the same.
+			// The generator below should also be destroyed. (?)
+			// -
+			IRandomBoundedUnbounded<int> cryptographicGenerator = new RandomCryptographic();
 
             do
             {
-                firstPrime = new LongInt<B>(half, tmp, false);
+                firstPrime = new LongInt<B>(half, cryptographicGenerator, false);
             }
             while (!primalityTest(firstPrime));
 
             do
             {
-                secondPrime = new LongInt<B>(digits - half, tmp, false);
+                secondPrime = new LongInt<B>(digits - half, cryptographicGenerator, false);
             }
             while (!primalityTest(secondPrime));
 
@@ -318,11 +320,6 @@ namespace WhiteMath.Cryptography
 				.Validate(secretExponent > 0)
 				.OrArgumentOutOfRangeException("The secret exponent should be positive.");
 			
-			/*
-            Contract.Requires(Contract.ForAll(numberSequence, x => x != null), "At least one number in the sequence is null.");
-            Contract.Requires(Contract.ForAll(numberSequence, x => !x.Negative), "At least one number in the sequence is negative.");
-            */
-
 			if (numberSequence.IsSingleElement())
 			{
 				return Decrypt(numberSequence.First(), publicKey, secretExponent);

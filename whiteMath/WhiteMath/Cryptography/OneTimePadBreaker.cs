@@ -12,25 +12,23 @@ namespace WhiteMath.Cryptography
     /// This class tries to break the one-time pad cipher using
     /// several distinct ASCII-encoded messages which were 
     /// encrypted with the same one-time pad key.
-    /// 
-    /// The messages are expected to contain ONLY whitespace 0x20 and letter characters.
+    /// The messages are expected to contain ONLY whitespace 0x20 
+	/// and letter characters.
     /// </summary>
     [Serializable]
     public class OneTimePadBreaker
     {
-        private List<byte[]> m_cipherTexts; 
-        private List<byte?[]> m_messages;
+		private List<byte[]> _cipherTexts; 
+		private List<byte?[]> _messages;
         private byte?[] key;
 
         /// <summary>
         /// Adds a ciphertext to the breaker and processes it,
-        /// recovering as much information as possible about the current and the 
-        /// previously passed messages, as well as about the key used
+        /// recovering as much information as possible about the current 
+		/// and the previously passed messages, as well as about the key used
         /// to encrypt them.
         /// </summary>
-        /// <param name="hexString"></param>
-        /// <param name="bigEndian"></param>
-        public void addCipherText(string hexString, bool bigEndian = false)
+		public void AddCipherText(string hexString, bool bigEndian = false)
         {
 			Condition.ValidateNotNull(hexString, nameof(hexString));
 
@@ -42,17 +40,17 @@ namespace WhiteMath.Cryptography
 			Condition.ValidateNotNull(cipherText, nameof(cipherText));
 			Condition.ValidateNonNegative(cipherText.Length, "The cipher text should not be empty");
 
-            m_cipherTexts.Add(cipherText.Clone() as byte[]);
-            m_messages.Add(new byte?[cipherText.Length]);
+            _cipherTexts.Add(cipherText.Clone() as byte[]);
+            _messages.Add(new byte?[cipherText.Length]);
 
-            _processLastCipherText();
+            ProcessLastCipherText();
         }
 
         /// <summary>
         /// Bitwise XORs the messages, perhaps of different length.
         /// </summary>
         /// <returns></returns>
-        private static byte[] _xor(byte[] messageOne, byte[] messageTwo)
+		private static byte[] BitwiseXor(byte[] messageOne, byte[] messageTwo)
         {
             byte[] result = new byte[Math.Max(messageOne.Length, messageTwo.Length)];
 
@@ -79,17 +77,17 @@ namespace WhiteMath.Cryptography
         /// <summary>
         /// Processes the lately added ciphertext.
         /// </summary>
-        private void _processLastCipherText()
+		private void ProcessLastCipherText()
         {
-            byte[] lastCipherText = m_cipherTexts.Last();
+            byte[] lastCipherText = _cipherTexts.Last();
 
             // Process all but the last cyphertexts,
             // XORing them with the last one.
-
-            for (int i = 0; i < m_cipherTexts.Count - 1; ++i)
+			// -
+            for (int i = 0; i < _cipherTexts.Count - 1; ++i)
             {
-                byte[] currentCipherText = m_cipherTexts[i];
-                byte[] cipherXor = _xor(currentCipherText, lastCipherText);
+                byte[] currentCipherText = _cipherTexts[i];
+                byte[] cipherXor = BitwiseXor(currentCipherText, lastCipherText);
 
                 // Now go through XOR of two messages and look for whitespace XORs
                 // We need to look only on the first half of the byte of the character.
