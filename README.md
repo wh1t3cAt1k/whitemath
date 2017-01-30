@@ -1,6 +1,6 @@
 # whiteMath + whiteStructs
 
-whiteMath is an open-source, [hopefully] programmer-friendly C# .NET mathematical/algorithmic library.
+whiteMath is an open-source, programmer-friendly C# .NET mathematical/algorithmic library.
 
 Current version: 0.2.0
 
@@ -19,12 +19,12 @@ It can already do something:
 
 - Generic mathematical functions for arbitrary numeric types using the Numeric<T, C> wrapper. 
 
-You just write a calculator (see ICalc<T>) for your brand-new `MyComplex`, `MyInt` or `Foo` numeric type 
-(it can even be a `string`) that has basic operations and constants defined (such as zero, sum, subtraction, 
-multiplication etc.) - poof, magic! these generic functions start working for you. They can even calculate 
-trigonometry and exponentiation (using Taylor series expansion).
+You just write an `ICalc` calculator for your brand-new `MyComplex`, `MyInt` or `Foo` numeric type 
+(it can even be a `string`) that has basic operations and constants defined, such as zero, sum, subtraction, 
+multiplication etc. Then – poof, magic! These generic functions start working for you. They can even do 
+trigonometry and exponentiation using Taylor series expansion.
 
-All the statistical functions, such as SampleAverage, MovingAverage etc. are also (hopefully) going to work 
+All the statistical functions, such as `SampleAverage`, `MovingAverage` etc. are also (hopefully) going to work 
 with arbitrary numeric types.
 
 - Long integer arithmetic with arbitrary numeric bases for digit arrays (something `BigInt` doesn't have).
@@ -94,7 +94,7 @@ We have introduced unit tests in 0.1.0, so please report and contribute meaningf
 ## Important Copyright Notes
 
 - The idea of `Numeric<T, C>` appears to be stolen / rewritten from somewhere.
-- DoubleInfoExtraction.cs is also taken from somewhere, I will happily give credit if someone points out the author.
+- `DoubleInfoExtraction.cs` is also taken from somewhere, I will happily give credit if someone points out the author.
 - There are numerous other bits of code which I didn't care about when I took them from the Web, but it is understood that all their authors deserve at least their name to be mentioned. 
 
 So please drop me an email if you find anything that should be given credit for.
