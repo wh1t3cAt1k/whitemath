@@ -18,20 +18,20 @@ namespace WhiteMath.Randoms
     {
 		private RandomNumberGenerator _generator;
 
-		private UpperBoundedGenerator<int> _getNextIntUpperBounded;
-		private UpperBoundedGenerator<uint> _getNextUnsignedIntUpperBounded;
-		private UpperBoundedGenerator<long> _getNextLongUpperBounded;
-		private UpperBoundedGenerator<ulong> _getNextUnsignedLongUpperBounded;
+		private GenerateUpperBounded<int> _getNextIntUpperBounded;
+		private GenerateUpperBounded<uint> _getNextUnsignedIntUpperBounded;
+		private GenerateUpperBounded<long> _getNextLongUpperBounded;
+		private GenerateUpperBounded<ulong> _getNextUnsignedLongUpperBounded;
 
-		private UnboundedGenerator<int> _getNextIntUnbounded;
-		private UnboundedGenerator<uint> _getNextUnsignedIntUnbounded;
-		private UnboundedGenerator<long> _getNextLongUnbounded;
-		private UnboundedGenerator<ulong> _getNextUnsignedLongUnbounded;
+		private GenerateUnbounded<int> _getNextIntUnbounded;
+		private GenerateUnbounded<uint> _getNextUnsignedIntUnbounded;
+		private GenerateUnbounded<long> _getNextLongUnbounded;
+		private GenerateUnbounded<ulong> _getNextUnsignedLongUnbounded;
 
-		private BoundedGenerator<int> _getNextIntBounded;
-		private BoundedGenerator<uint> _getNextUnsignedIntBounded;
-		private BoundedGenerator<long> _getNextLongBounded;
-		private BoundedGenerator<ulong> _getNextUnsignedLongBounded;
+		private GenerateBounded<int> _getNextIntBounded;
+		private GenerateBounded<uint> _getNextUnsignedIntBounded;
+		private GenerateBounded<long> _getNextLongBounded;
+		private GenerateBounded<ulong> _getNextUnsignedLongBounded;
         
         /// <summary>
         /// Initializes an instance of <see cref="RandomCryptographic"/>

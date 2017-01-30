@@ -1,9 +1,11 @@
 ﻿using System.Text;
 using System.Collections.Generic;
 
+using WhiteMath.Calculators;
+
 using WhiteStructs.Conditions;
 
-namespace WhiteMath.Randoms
+namespace WhiteMath.Randoms.Extensibility
 {
 	/// <summary>
 	/// This class contains various extension methods for <see cref="IRandomBounded{T}"/>.
@@ -44,6 +46,14 @@ namespace WhiteMath.Randoms
 			}
 
 			return builder.ToString();
+		}
+
+		public static IRandomUpperBounded<T> AsUpperBoundedGenerator<T, C>(this IRandomBounded<T> generator)
+			where C: ICalc<T>, new()
+		{
+			Condition.ValidateNotNull(generator, nameof(generator));
+
+			return new RandomBoundedToUpperBoundedWrapper<T, C>(generator);
 		}
 	}
 }

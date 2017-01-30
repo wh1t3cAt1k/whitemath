@@ -67,13 +67,13 @@ namespace WhiteMath.Randoms
             return _libraryGenerator.Next(minValue, maxValue);
         }
 
-        BoundedGenerator<long> genLongBounded;
-        UpperBoundedGenerator<long> genLongUpperBounded;
-        UnboundedGenerator<long> genLongUnbounded;
+        GenerateBounded<long> genLongBounded;
+        GenerateUpperBounded<long> genLongUpperBounded;
+        GenerateUnbounded<long> genLongUnbounded;
 
-        BoundedGenerator<ulong> genULongBounded;
-        UpperBoundedGenerator<ulong> genULongUpperBounded;
-        UnboundedGenerator<ulong> genULongUnbounded;
+        GenerateBounded<ulong> genULongBounded;
+        GenerateUpperBounded<ulong> genULongUpperBounded;
+        GenerateUnbounded<ulong> genULongUnbounded;
 
 		private void InitializeGeneratorDelegates()
         {

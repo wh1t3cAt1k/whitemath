@@ -14,5 +14,4 @@
 		/// <returns>A random value in the [0; 1) interval.</returns>
 		T NextInUnitInterval();
 	}
-
 }

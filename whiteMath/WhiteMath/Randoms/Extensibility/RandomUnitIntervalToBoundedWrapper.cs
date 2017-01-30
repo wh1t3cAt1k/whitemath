@@ -5,7 +5,7 @@ using WhiteStructs.Conditions;
 namespace WhiteMath.Randoms.Extensibility
 {
 	/// <summary>
-	/// This class wraps around a <c>RandomFloatingPoint&lt;<typeparamref name="T"/>&gt;</c>
+	/// This class wraps around an <see cref="IRandomUnitInterval{T}"/>
 	/// to treat it as an unbounded generator in a certain interval 
 	/// (absolute minimum and absolute maximum values should be provided).
 	/// </summary>
@@ -15,7 +15,8 @@ namespace WhiteMath.Randoms.Extensibility
 	/// </remarks>
 	/// <typeparam name="T">The type of generated numbers.</typeparam>
 	/// <typeparam name="C">A calculator type for the <typeparamref name="T"/> type.</typeparam>
-	public class RandomUnitIntervalToBoundedWrapper<T, C> : IRandomBounded<T> where C : ICalc<T>, new()
+	public class RandomUnitIntervalToBoundedWrapper<T, C> : IRandomBounded<T> 
+		where C : ICalc<T>, new()
 	{
 		public IRandomUnitInterval<T> Generator { get; private set; }
 
@@ -26,16 +27,16 @@ namespace WhiteMath.Randoms.Extensibility
 		/// Please notice that for bigger intervals the quality of the distribution
 		/// may seriously suffer due to scale irregularity of some numeric types, e.g. <c>double</c>.
 		/// </remarks>
-		/// <param name="min">The lower inclusive bound of generated numbers.</param>
-		/// <param name="max">The upper exclusive bound of generated numbers.</param>
-		public T Next(T min, T max)
+		/// <param name="minInclusive">The lower inclusive bound of generated numbers.</param>
+		/// <param name="maxExclusive">The upper exclusive bound of generated numbers.</param>
+		public T Next(T minInclusive, T maxExclusive)
 		{
 			Condition
-				.Validate(Numeric<T, C>.Calculator.GreaterThan(max, min))
+				.Validate(Numeric<T, C>.Calculator.GreaterThan(maxExclusive, minInclusive))
 				.OrArgumentOutOfRangeException("The lower boundary should be less than the upper boundary.");
 
-			Numeric<T, C> minValue = min;
-			Numeric<T, C> maxValue = max;
+			Numeric<T, C> minValue = minInclusive;
+			Numeric<T, C> maxValue = maxExclusive;
 
 			return minValue + Generator.NextInUnitInterval() * (maxValue - minValue);
 		}

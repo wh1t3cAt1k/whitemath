@@ -389,11 +389,12 @@
     <Compile Include="WhiteMath\Randoms\IRandomBounded.cs" />
     <Compile Include="WhiteMath\Randoms\IRandomUnitInterval.cs" />
     <Compile Include="WhiteMath\Randoms\IRandomBytes.cs" />
-    <Compile Include="WhiteMath\Randoms\RandomBoundedExtensions.cs" />
     <Compile Include="WhiteMath\Randoms\IRandomUpperBounded.cs" />
     <Compile Include="WhiteMath\Randoms\Extensibility\RandomUnitIntervalToBoundedWrapper.cs" />
     <Compile Include="WhiteMath\Randoms\Extensibility\RandomUnitIntervalToUnboundedWrapper.cs" />
     <Compile Include="WhiteMath\Randoms\Extensibility\RandomUnitIntervalExtensions.cs" />
+    <Compile Include="WhiteMath\Randoms\Extensibility\RandomBoundedExtensions.cs" />
+    <Compile Include="WhiteMath\Randoms\Extensibility\RandomBoundedToUpperBoundedWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
