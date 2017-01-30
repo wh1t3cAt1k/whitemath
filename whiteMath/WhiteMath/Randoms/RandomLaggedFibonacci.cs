@@ -53,16 +53,19 @@ namespace WhiteMath.Randoms
         /// It is not recommended to provide random lag values as it will affect
         /// the quality of the generator randomization.
         /// </summary>
-        /// <param name="firstGenerator">The IRandom(T) implementer object to receive the first values of the pseudo-random sequence.</param>
-        /// <param name="a">The first lag of the fibonacci generator. Optional. By default, equals 97.</param>
-        /// <param name="b">The second lag of the fibonacci generator. Optional. By default, equals 33.</param>
-        public RandomLaggedFibonacci(IRandomUnitInterval<double> firstGenerator, int a = 97, int b = 33)
+		/// <param name="firstValuesGenerator">
+		/// The <see cref="IRandomUnitInterval{double}"/> generator to 
+		/// receive the first values of the pseudo-random sequence.
+		/// </param>
+        /// <param name="a">The first lag parameter of the fibonacci generator. By default, equals 97.</param>
+        /// <param name="b">The second lag parameter of the fibonacci generator. By default, equals 33.</param>
+		public RandomLaggedFibonacci(IRandomUnitInterval<double> firstValuesGenerator, int a = 97, int b = 33)
         {
 			int max = Math.Max(a, b);
 
 			for (int i = 0; i < max; ++i)
 			{
-				_valueList.AddLast(firstGenerator.NextInUnitInterval());
+				_valueList.AddLast(firstValuesGenerator.NextInUnitInterval());
 			}
 
             _xkmaNode = _valueList.First;

@@ -20,8 +20,8 @@ namespace WhiteMath.Randoms
 		private Random _libraryGenerator;
 
         /// <summary>
-        /// Creates a new instance of RandomStandard class with
-		/// an optional integer seed value.
+        /// Creates a new instance of RandomStandard class 
+		/// with an optional integer seed value.
         /// </summary>
         public RandomStandard(int? seed = null)
         {
