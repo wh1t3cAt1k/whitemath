@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\PrimesUpTo10000.txt" />
+    <EmbeddedResource Include="Resources\PrimesUpTo1000.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

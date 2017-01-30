@@ -13,8 +13,8 @@ using NUnit.Framework;
 
 namespace WhiteMathTests
 {
-	using LongInt = LongInt<B100k>;
-	using RandomLongInt = RandomLongIntModular<B100k>;
+	using LongInt = LongInt<B10>;
+	using RandomLongInt = RandomLongIntModular<B10>;
 
 	[TestFixture]
 	public class TestPrimalityTests
@@ -24,43 +24,43 @@ namespace WhiteMathTests
 		const double FALSE_POSITIVES_EPSILON = 0.001;
 		const double FALSE_NEGATIVES_EPSILON = 0.001;
 
-		private static IEnumerable<LongInt> _primesUpTo10000;
-		private static IEnumerable<LongInt> _compositesUpTo10000;
+		private static IEnumerable<LongInt> _primesUpTo1000;
+		private static IEnumerable<LongInt> _compositesUpTo1000;
 
-		private static IEnumerable<LongInt> PrimesUpTo10000
+		private static IEnumerable<LongInt> PrimesUpTo1000
 		{
 			get
 			{
-				if (_primesUpTo10000 != null) return _primesUpTo10000;
+				if (_primesUpTo1000 != null) return _primesUpTo1000;
 
 				using (StreamReader primesFileReader = new StreamReader(Assembly
 					.GetExecutingAssembly()
-					.GetManifestResourceStream("whiteMathTests.Resources.PrimesUpTo10000.txt")))
+					.GetManifestResourceStream("whiteMathTests.Resources.PrimesUpTo1000.txt")))
 				{
-					_primesUpTo10000 = primesFileReader
+					_primesUpTo1000 = primesFileReader
 						.ReadToEnd()
 						.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries)
 						.Select(numberString => LongInt.Parse(numberString))
 						.ToArray();
 				}
 
-				return _primesUpTo10000;
+				return _primesUpTo1000;
 			}
 		}
 
-		private static IEnumerable<LongInt> CompositesUpTo10000
+		private static IEnumerable<LongInt> CompositesUpTo1000
 		{
 			get
 			{
-				if (_compositesUpTo10000 != null) return _compositesUpTo10000;
+				if (_compositesUpTo1000 != null) return _compositesUpTo1000;
 
-				_compositesUpTo10000 = Enumerable
-					.Range(2, 9999)
+				_compositesUpTo1000 = Enumerable
+					.Range(2, 999)
 					.Select(number => new LongInt(number))
-					.Except(PrimesUpTo10000)
+					.Except(PrimesUpTo1000)
 					.ToArray();
 
-				return _compositesUpTo10000;
+				return _compositesUpTo1000;
 			}
 		}
 
@@ -69,7 +69,7 @@ namespace WhiteMathTests
 		{
 			// Don't take too much or unit tests will run forever.
 			// -
-			foreach (LongInt prime in PrimesUpTo10000.Take(10))
+			foreach (LongInt prime in PrimesUpTo1000.Take(10))
 			{
 				Assert.That(prime.IsPrimeWilsonTheorem());
 			}
@@ -80,7 +80,7 @@ namespace WhiteMathTests
 		{
 			// Don't take too much or unit tests will run forever.
 			// -
-			foreach (LongInt nonPrime in CompositesUpTo10000.Take(10))
+			foreach (LongInt nonPrime in CompositesUpTo1000.Take(10))
 			{
 				Assert.IsFalse(nonPrime.IsPrimeWilsonTheorem());
 			}
@@ -104,7 +104,7 @@ namespace WhiteMathTests
 			RandomLongInt generator = new RandomLongInt(
 				new RandomStandard(RANDOM_SEED));
 
-			foreach (LongInt prime in PrimesUpTo10000)
+			foreach (LongInt prime in PrimesUpTo1000)
 			{
 				Assert.That(prime.IsPrimeFermat(generator, NUMBER_ROUNDS));
 			}
@@ -119,7 +119,7 @@ namespace WhiteMathTests
 			int totalTested = 0;
 			int falsePositives = 0;
 
-			foreach (LongInt composite in CompositesUpTo10000)
+			foreach (LongInt composite in CompositesUpTo1000)
 			{
 				if (composite.IsPrimeFermat(generator, NUMBER_ROUNDS)) 
 				{
@@ -138,7 +138,7 @@ namespace WhiteMathTests
 			RandomLongInt generator = new RandomLongInt(
 				new RandomStandard(RANDOM_SEED));
 
-			foreach (LongInt prime in PrimesUpTo10000)
+			foreach (LongInt prime in PrimesUpTo1000)
 			{
 				Assert.That(
 					calculateCompositeProbability(prime, generator, NUMBER_ROUNDS) <= FALSE_POSITIVES_EPSILON);
@@ -151,7 +151,7 @@ namespace WhiteMathTests
 			RandomLongInt generator = new RandomLongInt(
 				new RandomStandard(RANDOM_SEED));
 
-			foreach (LongInt composite in CompositesUpTo10000)
+			foreach (LongInt composite in CompositesUpTo1000)
 			{
 				Assert.That(
 					calculateCompositeProbability(composite, generator, NUMBER_ROUNDS) >= 1 - FALSE_NEGATIVES_EPSILON);

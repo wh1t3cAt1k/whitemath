@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-using WhiteMath.RationalNumbers;
+using WhiteMath.Numeric;
 
 using IntRational = WhiteMath.RationalNumbers.Rational<int, WhiteMath.Calculators.CalcInt>;
 using IntRationalCalculator = WhiteMath.Calculators.CalcRational<int, WhiteMath.Calculators.CalcInt>;
@@ -97,23 +97,6 @@ namespace WhiteMathTests
 		}
 
 		[Test]
-		public void TestPositiveInfinityIsEqualToPositiveInfinity()
-		{
-			IntRational firstPositiveInfinity = new IntRational(SpecialNumberType.PositiveInfinity);
-			IntRational secondPositiveInfinity = new IntRational(SpecialNumberType.PositiveInfinity);
-
-			Assert.That(firstPositiveInfinity == secondPositiveInfinity);
-		}
-
-		public void TestNegativeInfinityIsEqualToNegativeInfinity()
-		{
-			IntRational firstNegativeInfinity = new IntRational(SpecialNumberType.NegativeInfinity);
-			IntRational secondNegativeInfinity = new IntRational(SpecialNumberType.NegativeInfinity);
-
-			Assert.That(firstNegativeInfinity == secondNegativeInfinity);
-		}
-
-		[Test]
 		public void TestPositiveInfinityPlusPositiveNumberIsPositiveInfinity()
 		{
 			IntRational positiveInfinity = new IntRational(SpecialNumberType.PositiveInfinity);
@@ -151,6 +134,67 @@ namespace WhiteMathTests
 			IntRational positiveInfinity = new IntRational(SpecialNumberType.PositiveInfinity);
 			IntRational NaN = new IntRational(SpecialNumberType.NaN);
 			Assert.That((positiveInfinity + NaN).IsNaN);
+		}
+
+		[Test]
+		[TestCase(SpecialNumberType.PositiveInfinity, SpecialNumberType.NegativeInfinity, true)]
+		[TestCase(SpecialNumberType.PositiveInfinity, SpecialNumberType.None, true)]
+		[TestCase(SpecialNumberType.PositiveInfinity, SpecialNumberType.PositiveInfinity, false)]
+		[TestCase(SpecialNumberType.PositiveInfinity, SpecialNumberType.NaN, false)]
+		[TestCase(SpecialNumberType.None, SpecialNumberType.NegativeInfinity, true)]
+		[TestCase(SpecialNumberType.None, SpecialNumberType.PositiveInfinity, false)]
+		[TestCase(SpecialNumberType.None, SpecialNumberType.NaN, false)]
+		[TestCase(SpecialNumberType.NegativeInfinity, SpecialNumberType.NegativeInfinity, false)]
+		[TestCase(SpecialNumberType.NegativeInfinity, SpecialNumberType.None, false)]
+		[TestCase(SpecialNumberType.NegativeInfinity, SpecialNumberType.PositiveInfinity, false)]
+		[TestCase(SpecialNumberType.NegativeInfinity, SpecialNumberType.NaN, false)]
+		[TestCase(SpecialNumberType.NaN, SpecialNumberType.NegativeInfinity, false)]
+		[TestCase(SpecialNumberType.NaN, SpecialNumberType.None, false)]
+		[TestCase(SpecialNumberType.NaN, SpecialNumberType.PositiveInfinity, false)]
+		[TestCase(SpecialNumberType.NaN, SpecialNumberType.NaN, false)]
+		public void Test_GreaterThanOperator_ComparesSpecialNumbersCorrectly(
+			SpecialNumberType firstValueType,
+			SpecialNumberType secondValueType,
+			bool expectedResult)
+		{
+			IntRational firstValue = firstValueType != SpecialNumberType.None
+				? new IntRational(firstValueType)
+				: new IntRational(0, 1);
+
+			IntRational secondValue = secondValueType != SpecialNumberType.None
+				? new IntRational(secondValueType)
+				: new IntRational(0, 1);
+
+			Assert.That(firstValue > secondValue, Is.EqualTo(expectedResult));
+		}
+
+		[Test]
+		[TestCase(SpecialNumberType.PositiveInfinity, SpecialNumberType.NegativeInfinity, false)]
+		[TestCase(SpecialNumberType.PositiveInfinity, SpecialNumberType.None, false)]
+		[TestCase(SpecialNumberType.PositiveInfinity, SpecialNumberType.PositiveInfinity, true)]
+		[TestCase(SpecialNumberType.PositiveInfinity, SpecialNumberType.NaN, false)]
+		[TestCase(SpecialNumberType.NegativeInfinity, SpecialNumberType.NegativeInfinity, true)]
+		[TestCase(SpecialNumberType.NegativeInfinity, SpecialNumberType.None, false)]
+		[TestCase(SpecialNumberType.NegativeInfinity, SpecialNumberType.PositiveInfinity, false)]
+		[TestCase(SpecialNumberType.NegativeInfinity, SpecialNumberType.NaN, false)]
+		[TestCase(SpecialNumberType.NaN, SpecialNumberType.NegativeInfinity, false)]
+		[TestCase(SpecialNumberType.NaN, SpecialNumberType.None, false)]
+		[TestCase(SpecialNumberType.NaN, SpecialNumberType.PositiveInfinity, false)]
+		[TestCase(SpecialNumberType.NaN, SpecialNumberType.NaN, false)]
+		public void Test_EqualsOperator_ComparesSpecialNumbersCorrectly(
+			SpecialNumberType firstValueType,
+			SpecialNumberType secondValueType,
+			bool expectedResult)
+		{
+			IntRational firstValue = firstValueType != SpecialNumberType.None
+				? new IntRational(firstValueType)
+				: new IntRational(0, 1);
+
+			IntRational secondValue = secondValueType != SpecialNumberType.None
+				? new IntRational(secondValueType)
+				: new IntRational(0, 1);
+
+			Assert.That(firstValue == secondValue, Is.EqualTo(expectedResult));
 		}
 	}
 }

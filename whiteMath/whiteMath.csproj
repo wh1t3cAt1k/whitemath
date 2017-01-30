@@ -221,7 +221,7 @@
     <Compile Include="WhiteMath\Randoms\RandomNormalBoxMuller.cs" />
     <Compile Include="WhiteMath\Randoms\RandomStandard.cs" />
     <Compile Include="WhiteMath\Numeric\IConvertible.cs" />
-    <Compile Include="WhiteMath\Numeric\IMetricsProvider.cs" />
+    <Compile Include="WhiteMath\Numeric\IMetricProvider.cs" />
     <Compile Include="WhiteMath\Numeric\Interval.cs" />
     <Compile Include="WhiteMath\Numeric\Numeric.cs" />
     <Compile Include="WhiteMath\Numeric\StreamMonotonicityChecker.cs" />
@@ -395,6 +395,8 @@
     <Compile Include="WhiteMath\Randoms\Extensibility\RandomUnitIntervalExtensions.cs" />
     <Compile Include="WhiteMath\Randoms\Extensibility\RandomBoundedExtensions.cs" />
     <Compile Include="WhiteMath\Randoms\Extensibility\RandomBoundedToUpperBoundedWrapper.cs" />
+    <Compile Include="WhiteMath\Numeric\SpecialNumberType.cs" />
+    <Compile Include="WhiteMath\Numeric\SpecialNumberHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

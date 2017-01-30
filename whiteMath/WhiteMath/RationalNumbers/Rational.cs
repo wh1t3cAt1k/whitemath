@@ -4,24 +4,17 @@ using System.Globalization;
 
 using WhiteMath.Mathematics;
 using WhiteMath.Calculators;
+using WhiteMath.Numeric;
 
 namespace WhiteMath.RationalNumbers
 {
-	public enum SpecialNumberType
-	{
-		None = 0,
-		NaN = 1,
-		PositiveInfinity = 2,
-		NegativeInfinity = 3
-	}
-
     /// <summary>
-    /// The struct representing the rational number as a pair of integer-like numbers.
-    /// For example:
-    /// <example>Rational&lt;LongInt, CalcLongInt&gt;</example>
-    /// <example>Rational&lt;int, CalcInt&gt;</example>
+    /// The struct representing the rational number as a pair of integer-like numbers,
+	/// for example, <see cref="Rational{int, CalcInt}"/>.
     /// </summary>
-    /// <typeparam name="T">The integer-like type of numerator and denominator.</typeparam>
+    /// <typeparam name="T">
+	/// The integer-like type of the numerator and denominator.
+	/// </typeparam>
     public partial class Rational<T, C> : ICloneable where C : ICalc<T>, new()
     {
 		private static C calc = Numeric<T, C>.Calculator;
@@ -58,49 +51,29 @@ namespace WhiteMath.RationalNumbers
 		/// Gets a value indicating whether this instance is not a number.
 		/// </summary>
 		/// <value><c>true</c>, if this instance is NaN; otherwise, <c>false</c>.</value>
-		public bool IsNaN
-		{
-			get
-			{
-				return this.SpecialNumberType == SpecialNumberType.NaN;
-			}
-		}
+		public bool IsNaN 
+			=> this.SpecialNumberType == SpecialNumberType.NaN;
 
 		/// <summary>
 		/// Gets a value indicating whether this instance is a positive infinity.
 		/// </summary>
 		/// <value><c>true</c> if this instance is a positive infinity; otherwise, <c>false</c>.</value>
 		public bool IsPositiveInfinity
-		{
-			get
-			{
-				return this.SpecialNumberType == SpecialNumberType.PositiveInfinity;
-			}
-		}
+			=> this.SpecialNumberType == SpecialNumberType.PositiveInfinity;
 
 		/// <summary>
 		/// Gets a value indicating whether this instance is a negative infinity.
 		/// </summary>
 		/// <value><c>true</c> if this instance is a negative infinity; otherwise, <c>false</c>.</value>
 		public bool IsNegativeInfinity
-		{
-			get
-			{
-				return this.SpecialNumberType == SpecialNumberType.NegativeInfinity;
-			}
-		}
+			=> this.SpecialNumberType == SpecialNumberType.NegativeInfinity;
 
 		/// <summary>
 		/// Gets a value indicating whether this instance is a positive or a negative infinity.
 		/// </summary>
 		/// <value><c>true</c> if this instance is an infinity; otherwise, <c>false</c>.</value>
 		public bool IsInfinity
-		{
-			get
-			{
-				return this.IsPositiveInfinity || this.IsNegativeInfinity;
-			}
-		}
+			=> this.IsPositiveInfinity || this.IsNegativeInfinity;
 
 		/// <summary>
 		/// Gets a value indicating whether this instance is a normal number, i.e. not NaN or
@@ -108,12 +81,7 @@ namespace WhiteMath.RationalNumbers
 		/// </summary>
 		/// <value><c>true</c> if this instance is normal number; otherwise, <c>false</c>.</value>
 		public bool IsNormalNumber
-		{
-			get
-			{
-				return !this.IsInfinity && !this.IsNaN;
-			}
-		}
+			=> !this.IsInfinity && !this.IsNaN;
 
         /// <summary>
 		/// Initializes a new instance of the <see cref="Rational{T, C}"/> class
@@ -129,8 +97,8 @@ namespace WhiteMath.RationalNumbers
         }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="WhiteMath.RationalNumbers.Rational{T, C}"/> class
-		/// using a special number type provided.
+		/// Initializes a new instance of the <see cref="RationalNumbers.Rational{T, C}"/> 
+		/// class using the special number type provided.
 		/// </summary>
 		/// <param name="specialNumberType">Special number type.</param>
 		public Rational(SpecialNumberType specialNumberType)
@@ -399,24 +367,17 @@ namespace WhiteMath.RationalNumbers
 
         public static bool operator ==(Rational<T, C> first, Rational<T, C> second)
         {
-			if (!first.IsNormalNumber && !second.IsNormalNumber && !first.IsNaN)
-			{
-				return first.SpecialNumberType == second.SpecialNumberType;
-			}
-			else if (first.IsNaN || first.IsNormalNumber != second.IsNormalNumber)
-			{
-				return false;
-			}
-			else if (first.IsNormalNumber && second.IsNormalNumber)
+			bool? specialNumberComparisonResult 
+				= SpecialNumberHelper.AreEqual(first.SpecialNumberType, second.SpecialNumberType);
+
+			if (specialNumberComparisonResult == null)
 			{
 				return 
 					calc.Equal(first.Numerator, second.Numerator) && 
 					calc.Equal(first.Denominator, second.Denominator);
 			}
-			else
-			{
-				throw new InvalidProgramException();
-			}
+
+			return specialNumberComparisonResult.Value;
         }
 			
         public static bool operator !=(Rational<T, C> first, Rational<T, C> second)
@@ -424,16 +385,24 @@ namespace WhiteMath.RationalNumbers
             return !(first == second);
         }
 
-        public static bool operator >(Rational<T, C> one, Rational<T, C> two)
+		public static bool operator >(Rational<T, C> first, Rational<T, C> second)
         {
-			/*
-            if (one is NotANumber || two is NotANumber) return false;
-            else if (one is Positive_Infinity || two is Negative_Infinity) return true;
-            else if (two is Positive_Infinity || one is Negative_Infinity) return false;
-			*/
+			bool? specialNumberComparisonResult
+				= SpecialNumberHelper.IsGreaterThan(first.SpecialNumberType, second.SpecialNumberType);
 
-            T denomLcm = Mathematics<T, C>.LowestCommonMultiple(one.Denominator, two.Denominator, Mathematics<T, C>.GreatestCommonDivisor(one.Denominator, two.Denominator));
-            return calc.GreaterThan(calc.Multiply(one.Numerator, calc.Divide(denomLcm, one.Denominator)), calc.Multiply(two.Numerator, calc.Divide(denomLcm, two.Denominator)));
+			if (specialNumberComparisonResult == null)
+			{
+				T lowestCommonMultiple = Mathematics<T, C>.LowestCommonMultiple(
+					first.Denominator,
+					second.Denominator,
+					Mathematics<T, C>.GreatestCommonDivisor(first.Denominator, second.Denominator));
+
+				return calc.GreaterThan(
+					calc.Multiply(first.Numerator, calc.Divide(lowestCommonMultiple, first.Denominator)),
+					calc.Multiply(second.Numerator, calc.Divide(lowestCommonMultiple, second.Denominator)));
+			}
+
+			return specialNumberComparisonResult.Value;
         }
 
         public static bool operator <(Rational<T, C> one, Rational<T, C> two)
@@ -502,14 +471,14 @@ namespace WhiteMath.RationalNumbers
                 numberString = numberString.Substring(0, exponentSymbolIndex);
             }
 
-			// Trim all the leading and trailing zeroes
+			// Trim all the leading and trailing zeroes.
 			// -
 			numberString.Trim('0');
 
-            // Find the decimal separator
+            // Find the decimal separator.
 			// -
             string decimalSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-            int separatorIndex = numberString.IndexOf(decimalSeparator);
+			int separatorIndex = numberString.IndexOf(decimalSeparator, StringComparison.CurrentCultureIgnoreCase);
 
             if (separatorIndex > 0)
             {
@@ -520,13 +489,13 @@ namespace WhiteMath.RationalNumbers
 					Mathematics<T, C>.PowerInteger(calc.FromInteger(10), numberOfCharactersAfterSeparator));
 
 				numberString = numberString.Replace(
-					System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, 
+					CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, 
 					"");
             }
 
             T numerator = calc.Multiply(calc.Parse(numberString), numeratorMultiplier);
 
-            return new Rational<T,C>(numerator, denominator);
+            return new Rational<T, C>(numerator, denominator);
         }
 
         /// <summary>
@@ -597,13 +566,13 @@ namespace WhiteMath.RationalNumbers
 
         /// <summary>
         /// Used by the overloaded ToString() method, provides one of the following number formats:
-        /// 1. IntegerPair:		[num; denom]
-        /// 2. Num_Div_Denom:	num/denom
-        /// 3. Both:			[num/denom]
+		/// 1. <see cref="IntegerPair"/>: [num; denom]
+		/// 2. <see cref="NumeratorSlashDenominator"/>: num/denom
+		/// 3. <see cref="BracketedNumeratorSlashDenominator"/>: [num/denom]
         /// </summary>
         public enum NumberFormat
         {
-			IntegerPair, NumeratorSlashDenominator, Both
+			IntegerPair, NumeratorSlashDenominator, BracketedNumeratorSlashDenominator
         }
 
         /// <summary>
@@ -612,7 +581,7 @@ namespace WhiteMath.RationalNumbers
         /// <returns>The string value containing representation of the number.</returns>
         public override string ToString()
         {
-            return ToString(NumberFormat.Both);
+            return ToString(NumberFormat.BracketedNumeratorSlashDenominator);
         }
 
         public string ToString(NumberFormat formatType)
@@ -625,9 +594,13 @@ namespace WhiteMath.RationalNumbers
 			{
 				return string.Format("[{0}; {1}]", this.Numerator, this.Denominator);
 			}
-			else
+			else if (formatType == NumberFormat.BracketedNumeratorSlashDenominator)
 			{
 				return string.Format("[{0}/{1}]", this.Numerator, this.Denominator);
+			}
+			else
+			{
+				throw new ArgumentException(nameof(formatType));
 			}
         }
 
@@ -659,17 +632,23 @@ namespace WhiteMath.RationalNumbers
                 outerNegationSign = true;
             }
 
-            // Destroy the outer parentheses
+			// Destroy the outer parentheses
 			// -
-            if (value[0] == '[' && value[value.Length - 1] == ']')
-                value = value.Substring(1, value.Length - 2);
+			if (value[0] == '[' && value[value.Length - 1] == ']')
+			{
+				value = value.Substring(1, value.Length - 2);
+			}
 
             string[] split;
 
-            if (value.Contains(';'))
-                split = value.Split(';');
-            else
-                split = value.Split('/');
+			if (value.Contains(';'))
+			{
+				split = value.Split(';');
+			}
+			else
+			{
+				split = value.Split('/');
+			}
 
             Rational<T, C> result = new Rational<T, C>(
 				calc.Parse(split[0]), 
