@@ -122,11 +122,13 @@ namespace WhiteMath.Randoms
 					byte[] buffer = new byte[4];
 					byteGenerator(buffer);
 
-					// All elder places after the whole
-					// number of bytes should be zeroed out.
+					// All elder places after the whole number of bytes 
+					// should be zeroed out.
 					// -
-					for (int i = wholeBytes + 1; i < 4; i++)
-						buffer[i] = 0;
+					for (int byteIndex = wholeBytes + 1; byteIndex < 4; ++byteIndex)
+					{
+						buffer[byteIndex] = 0;
+					}
 
 					if (wholeBytes < 4)
 					{
@@ -146,7 +148,9 @@ namespace WhiteMath.Randoms
 							buffer[wholeBytes] &= mask;
 						}
 						else
+						{
 							buffer[wholeBytes] = 0;
+						}
 					}
 
 					sampledValue = BitConverter.ToUInt32(buffer, 0);
@@ -160,6 +164,75 @@ namespace WhiteMath.Randoms
                 return sampledValue;
             };
         }
+
+		/// <summary>
+		/// Based on the random bytes generator function, produces a function
+		/// that generates upper-bounded inclusive <see cref="ulong"/> generator 
+		/// function.
+		/// </summary>
+		internal static Func<ulong, ulong> CreateNextULongUpperBoundedInclusive(GenerateBytes byteGenerator)
+		{
+			return delegate (ulong maxInclusiveValue)
+			{
+				if (maxInclusiveValue == 0)
+				{
+					return 0;
+				}
+
+				int wholeBytes;
+				int tailBits;
+
+				wholeBytes = GetWholeSignificantBytesCount(maxInclusiveValue, out tailBits);
+
+				ulong sampledValue;
+
+				while (true)
+				{
+					byte[] buffer = new byte[8];
+					byteGenerator(buffer);
+
+					// All elder places after the whole
+					// number of bytes should be zeroed out.
+					// -
+					for (int byteIndex = wholeBytes + 1; byteIndex < 8; byteIndex++)
+					{
+						buffer[byteIndex] = 0;
+					}
+
+					if (wholeBytes < 8)
+					{
+						if (tailBits > 0)
+						{
+							// tailbits = 1 --> mask = 00000001
+							// tailbits = 3 --> mask = 00000111
+
+							byte mask = 1;
+
+							for (int j = 1; j < tailBits; j++)
+							{
+								mask <<= 1;
+								mask += 1;
+							}
+
+							buffer[wholeBytes] &= mask;
+						}
+						else
+						{
+							buffer[wholeBytes] = 0;
+						}
+					}
+
+					sampledValue = BitConverter.ToUInt64(buffer, 0);
+
+					if (sampledValue <= maxInclusiveValue)
+					{
+						break;
+					}
+				}
+
+				return sampledValue;
+			};
+		}
 
         /// <summary>
         /// Returns a delegate that is able to generate random
@@ -296,75 +369,6 @@ namespace WhiteMath.Randoms
 
 			return significantBytes;
 		}
-
-        /// <summary>
-		/// Based on the random bytes generator function, produces a function
-		/// that generates upper-bounded inclusive <see cref="ulong"/> generator 
-		/// function.
-        /// </summary>
-		internal static Func<ulong, ulong> CreateNextULongUpperBoundedInclusive(GenerateBytes byteGenerator)
-        {
-			return delegate(ulong maxInclusiveValue)
-            {
-				if (maxInclusiveValue == 0)
-				{
-					return 0;
-				}
-
-                int wholeBytes;
-				int tailBits;
-
-				wholeBytes = GetWholeSignificantBytesCount(maxInclusiveValue, out tailBits);
-
-				ulong sampledValue;
-
-				while (true)
-				{
-					byte[] buffer = new byte[8];
-					byteGenerator(buffer);
-
-					// All elder places after the whole
-					// number of bytes should be zeroed out.
-					// -
-					for (int i = wholeBytes + 1; i < 8; i++)
-					{
-						buffer[i] = 0;
-					}
-
-					if (wholeBytes < 8)
-					{
-						if (tailBits > 0)
-						{
-							// tailbits = 1 --> mask = 00000001
-							// tailbits = 3 --> mask = 00000111
-
-							byte mask = 1;
-
-							for (int j = 1; j < tailBits; j++)
-							{
-								mask <<= 1;
-								mask += 1;
-							}
-
-							buffer[wholeBytes] &= mask;
-						}
-						else
-						{
-							buffer[wholeBytes] = 0;
-						}
-					}
-
-					sampledValue = BitConverter.ToUInt64(buffer, 0);
-
-					if (sampledValue <= maxInclusiveValue)
-					{
-						break;
-					}
-				}
-
-                return sampledValue;
-            };
-        }
 
         /// <summary>
         /// Returns a delegate that is able to generate random

@@ -7,6 +7,14 @@ using WhiteMath.Calculators;
 
 namespace WhiteMath.RationalNumbers
 {
+	public enum SpecialNumberType
+	{
+		None = 0,
+		NaN = 1,
+		PositiveInfinity = 2,
+		NegativeInfinity = 3
+	}
+
     /// <summary>
     /// The struct representing the rational number as a pair of integer-like numbers.
     /// For example:
@@ -18,15 +26,11 @@ namespace WhiteMath.RationalNumbers
     {
 		private static C calc = Numeric<T, C>.Calculator;
 
-		public enum SpecialNumberType
+		public SpecialNumberType SpecialNumberType 
 		{
-			None = 0,
-			NaN = 1,
-			PositiveInfinity = 2,
-			NegativeInfinity = 3
-		}
-
-		private SpecialNumberType _specialNumberType = SpecialNumberType.None;
+			get;
+			private set;
+		} = SpecialNumberType.None;
 
 		public T Numerator
 		{
@@ -58,7 +62,7 @@ namespace WhiteMath.RationalNumbers
 		{
 			get
 			{
-				return this._specialNumberType == SpecialNumberType.NaN;
+				return this.SpecialNumberType == SpecialNumberType.NaN;
 			}
 		}
 
@@ -70,7 +74,7 @@ namespace WhiteMath.RationalNumbers
 		{
 			get
 			{
-				return this._specialNumberType == SpecialNumberType.PositiveInfinity;
+				return this.SpecialNumberType == SpecialNumberType.PositiveInfinity;
 			}
 		}
 
@@ -82,7 +86,7 @@ namespace WhiteMath.RationalNumbers
 		{
 			get
 			{
-				return this._specialNumberType == SpecialNumberType.NegativeInfinity;
+				return this.SpecialNumberType == SpecialNumberType.NegativeInfinity;
 			}
 		}
 
@@ -136,7 +140,7 @@ namespace WhiteMath.RationalNumbers
 				throw new ArgumentException("This constructor is intended only for constructing NaN or infinities.");
 			}
 
-			this._specialNumberType = specialNumberType;
+			this.SpecialNumberType = specialNumberType;
 			this.Numerator = calc.Zero;
 			this.Denominator = calc.Zero;
 		}
@@ -157,7 +161,7 @@ namespace WhiteMath.RationalNumbers
 
 			if (calc.Equal(this.Numerator, calc.Zero))
 			{
-				// We only want to have a single representation ]
+				// We only want to have a single representation
 				// for zero.
 				// -
 				this.Denominator = calc.FromInteger(1);
@@ -198,15 +202,15 @@ namespace WhiteMath.RationalNumbers
 			{
 				if (calc.Equal(this.Numerator, calc.Zero))
 				{
-					this._specialNumberType = SpecialNumberType.NaN;
+					this.SpecialNumberType = SpecialNumberType.NaN;
 				}
 				else if (calc.GreaterThan(calc.Zero, this.Numerator))
 				{
-					this._specialNumberType = SpecialNumberType.NegativeInfinity;
+					this.SpecialNumberType = SpecialNumberType.NegativeInfinity;
 				}
 				else
 				{
-					this._specialNumberType = SpecialNumberType.PositiveInfinity;
+					this.SpecialNumberType = SpecialNumberType.PositiveInfinity;
 				}
 
 				this.Numerator = calc.Zero;
@@ -218,9 +222,7 @@ namespace WhiteMath.RationalNumbers
             return true;
         }
 
-        ///-----------------------------------
-        ///----ARITHMETIC OPERATORS-----------
-        ///-----------------------------------
+		#region Arithmetic Operators
 
         public static Rational<T, C> operator +(Rational<T, C> first, Rational<T, C> second)
         {
@@ -241,9 +243,9 @@ namespace WhiteMath.RationalNumbers
 			}
 			else if (!first.IsNormalNumber && !second.IsNormalNumber)
 			{
-				if (first._specialNumberType == second._specialNumberType)
+				if (first.SpecialNumberType == second.SpecialNumberType)
 				{
-					return new Rational<T, C>(first._specialNumberType);
+					return new Rational<T, C>(first.SpecialNumberType);
 				}
 				else
 				{
@@ -252,7 +254,7 @@ namespace WhiteMath.RationalNumbers
 			}
 			else if (!first.IsNormalNumber && second.IsNormalNumber)
 			{
-				return new Rational<T, C>(first._specialNumberType);
+				return new Rational<T, C>(first.SpecialNumberType);
 			}
 			else
 			{
@@ -283,7 +285,7 @@ namespace WhiteMath.RationalNumbers
 			else if (
 				first.IsNaN ||
 				second.IsNaN ||
-				first._specialNumberType == second._specialNumberType)
+				first.SpecialNumberType == second.SpecialNumberType)
 			{
 				return new Rational<T, C>(SpecialNumberType.NaN);
 			}
@@ -321,7 +323,7 @@ namespace WhiteMath.RationalNumbers
 				}
 				else
 				{
-					return new Rational<T, C>(first._specialNumberType);
+					return new Rational<T, C>(first.SpecialNumberType);
 				}
 			}
 			else
@@ -355,7 +357,7 @@ namespace WhiteMath.RationalNumbers
 				}
 				else
 				{
-					return new Rational<T, C>(first._specialNumberType);
+					return new Rational<T, C>(first.SpecialNumberType);
 				}
 			}
 			else if (first.IsNormalNumber && second.IsInfinity)
@@ -394,7 +396,7 @@ namespace WhiteMath.RationalNumbers
         {
 			if (!first.IsNormalNumber && !second.IsNormalNumber && !first.IsNaN)
 			{
-				return first._specialNumberType == second._specialNumberType;
+				return first.SpecialNumberType == second.SpecialNumberType;
 			}
 			else if (first.IsNaN || first.IsNormalNumber != second.IsNormalNumber)
 			{
@@ -450,9 +452,9 @@ namespace WhiteMath.RationalNumbers
             return !(one > two);
         }
 
-        ///-----------------------------------
-        ///-------------CONVERSION OPERATORS--
-        ///-----------------------------------
+		#endregion
+
+		#region Conversion Operators
 
         public static implicit operator Rational<T, C>(T num)
         {
@@ -543,6 +545,8 @@ namespace WhiteMath.RationalNumbers
             return calc.Divide(obj.Numerator, obj.Denominator);
         }
 
+		#endregion
+
         /// <summary>
         /// Gets the exact deep copy of the current number.
         /// </summary>
@@ -565,8 +569,6 @@ namespace WhiteMath.RationalNumbers
         /// <summary>
         /// Checks if two Rationals store the same numeric value.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public override bool Equals(object obj)
         {
 			if (!(obj is Rational<T, C>))
@@ -578,7 +580,8 @@ namespace WhiteMath.RationalNumbers
 				return (this == (obj as Rational<T, C>));
 			}
 		}
-        // -------------------------------------- String representation
+
+		#region String Representation
 
         /// <summary>
         /// Used by the overloaded ToString() method, provides one of the following number formats:
@@ -588,7 +591,7 @@ namespace WhiteMath.RationalNumbers
         /// </summary>
         public enum NumberFormat
         {
-            IntegerPair, Num_Div_Denom, Both
+			IntegerPair, NumeratorSlashDenominator, Both
         }
 
         /// <summary>
@@ -602,7 +605,7 @@ namespace WhiteMath.RationalNumbers
 
         public string ToString(NumberFormat formatType)
         {
-			if (formatType == NumberFormat.Num_Div_Denom)
+			if (formatType == NumberFormat.NumeratorSlashDenominator)
 			{
 				return string.Format("{0}/{1}", this.Numerator, this.Denominator);
 			}
@@ -615,8 +618,6 @@ namespace WhiteMath.RationalNumbers
 				return string.Format("[{0}/{1}]", this.Numerator, this.Denominator);
 			}
         }
-
-        // --------------------------------- PARSE
 
         /// <summary>
         /// Parses the string containing the rational number.
@@ -636,7 +637,6 @@ namespace WhiteMath.RationalNumbers
 			// TODO: should be rewritten using regular expressions.
 			// TODO: add checks for the incorrect arguments.
 			// -
-
             bool outerNegationSign = false;
             
             value = value.Replace(" ", "");
@@ -672,5 +672,7 @@ namespace WhiteMath.RationalNumbers
 				return result;
 			}
         }
+
+		#endregion
     }
 }

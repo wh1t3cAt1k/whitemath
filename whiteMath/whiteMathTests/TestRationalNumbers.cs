@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
 
+using WhiteMath.RationalNumbers;
+
 using IntRational = WhiteMath.RationalNumbers.Rational<int, WhiteMath.Calculators.CalcInt>;
 using IntRationalCalculator = WhiteMath.Calculators.CalcRational<int, WhiteMath.Calculators.CalcInt>;
 
@@ -88,8 +90,8 @@ namespace WhiteMathTests
 		[Test]
 		public void TestNaNIsNotEqualToNaN()
 		{
-			IntRational firstNaN = new IntRational(IntRational.SpecialNumberType.NaN);
-			IntRational secondNaN = new IntRational(IntRational.SpecialNumberType.NaN);
+			IntRational firstNaN = new IntRational(SpecialNumberType.NaN);
+			IntRational secondNaN = new IntRational(SpecialNumberType.NaN);
 
 			Assert.That(firstNaN != secondNaN);
 		}
@@ -97,16 +99,16 @@ namespace WhiteMathTests
 		[Test]
 		public void TestPositiveInfinityIsEqualToPositiveInfinity()
 		{
-			IntRational firstPositiveInfinity = new IntRational(IntRational.SpecialNumberType.PositiveInfinity);
-			IntRational secondPositiveInfinity = new IntRational(IntRational.SpecialNumberType.PositiveInfinity);
+			IntRational firstPositiveInfinity = new IntRational(SpecialNumberType.PositiveInfinity);
+			IntRational secondPositiveInfinity = new IntRational(SpecialNumberType.PositiveInfinity);
 
 			Assert.That(firstPositiveInfinity == secondPositiveInfinity);
 		}
 
 		public void TestNegativeInfinityIsEqualToNegativeInfinity()
 		{
-			IntRational firstNegativeInfinity = new IntRational(IntRational.SpecialNumberType.NegativeInfinity);
-			IntRational secondNegativeInfinity = new IntRational(IntRational.SpecialNumberType.NegativeInfinity);
+			IntRational firstNegativeInfinity = new IntRational(SpecialNumberType.NegativeInfinity);
+			IntRational secondNegativeInfinity = new IntRational(SpecialNumberType.NegativeInfinity);
 
 			Assert.That(firstNegativeInfinity == secondNegativeInfinity);
 		}
@@ -114,7 +116,7 @@ namespace WhiteMathTests
 		[Test]
 		public void TestPositiveInfinityPlusPositiveNumberIsPositiveInfinity()
 		{
-			IntRational positiveInfinity = new IntRational(IntRational.SpecialNumberType.PositiveInfinity);
+			IntRational positiveInfinity = new IntRational(SpecialNumberType.PositiveInfinity);
 			IntRational normalNumber = new IntRational(5, 7);
 			Assert.That((positiveInfinity + normalNumber).IsPositiveInfinity);
 		}
@@ -122,7 +124,7 @@ namespace WhiteMathTests
 		[Test]
 		public void TestPositiveInfinityPlusNegativeNumberIsPositiveInfinity()
 		{
-			IntRational positiveInfinity = new IntRational(IntRational.SpecialNumberType.PositiveInfinity);
+			IntRational positiveInfinity = new IntRational(SpecialNumberType.PositiveInfinity);
 			IntRational normalNumber = new IntRational(-5, 7);
 			Assert.That((positiveInfinity + normalNumber).IsPositiveInfinity);
 		}
@@ -130,24 +132,24 @@ namespace WhiteMathTests
 		[Test]
 		public void TestPositiveInfinityPlusPositiveInfinityIsPositiveInfinity()
 		{
-			IntRational firstInfinity = new IntRational(IntRational.SpecialNumberType.PositiveInfinity);
-			IntRational secondInfinity = new IntRational(IntRational.SpecialNumberType.PositiveInfinity);
+			IntRational firstInfinity = new IntRational(SpecialNumberType.PositiveInfinity);
+			IntRational secondInfinity = new IntRational(SpecialNumberType.PositiveInfinity);
 			Assert.That((firstInfinity + secondInfinity).IsPositiveInfinity);
 		}
 
 		[Test]
 		public void TestPositiveInfinityPlusNegativeInfinityIsNaN()
 		{
-			IntRational positiveInfinity = new IntRational(IntRational.SpecialNumberType.PositiveInfinity);
-			IntRational negativeInfinity = new IntRational(IntRational.SpecialNumberType.NegativeInfinity);
+			IntRational positiveInfinity = new IntRational(SpecialNumberType.PositiveInfinity);
+			IntRational negativeInfinity = new IntRational(SpecialNumberType.NegativeInfinity);
 			Assert.That((positiveInfinity + negativeInfinity).IsNaN);
 		}
 
 		[Test]
 		public void TestPositiveInfinityPlusNaNIsNaN()
 		{
-			IntRational positiveInfinity = new IntRational(IntRational.SpecialNumberType.PositiveInfinity);
-			IntRational NaN = new IntRational(IntRational.SpecialNumberType.NaN);
+			IntRational positiveInfinity = new IntRational(SpecialNumberType.PositiveInfinity);
+			IntRational NaN = new IntRational(SpecialNumberType.NaN);
 			Assert.That((positiveInfinity + NaN).IsNaN);
 		}
 	}
