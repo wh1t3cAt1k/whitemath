@@ -156,8 +156,13 @@ namespace WhiteMath.RationalNumbers
         /// </summary>
         private void Normalize()
         {
-			if (!this.IsNormalNumber) 
+			if (!this.IsNormalNumber)
+			{
+				this.Numerator = calc.Zero;
+				this.Denominator = calc.Zero;
+
 				return;
+			}
 
 			if (calc.Equal(this.Numerator, calc.Zero))
 			{
@@ -175,7 +180,7 @@ namespace WhiteMath.RationalNumbers
 				this.Numerator = calc.Divide(this.Numerator, greatestCommonDivisor);
 				this.Denominator = calc.Divide(this.Denominator, greatestCommonDivisor);
 
-				// Negate the denominator if it's negative
+				// Negate the denominator if it's negative.
 				// -
 				if (calc.GreaterThan(calc.Zero, this.Denominator))
 				{
@@ -556,14 +561,21 @@ namespace WhiteMath.RationalNumbers
         }
 
         /// <summary>
-        /// Gets the hash code for current number.
+        /// Get the hash code of the current number.
+		/// Uses a normalized representation of the number.
         /// </summary>
         public override int GetHashCode()
         {
-			// TODO: since the numerator and the denominator are mutable,
-			// it is not a good idea to implement it this way.
-			// -
-            return Numerator.GetHashCode() + Denominator.GetHashCode();
+			Rational<T, C> normalizedNumber = this.Clone() as Rational<T, C>;
+
+			normalizedNumber.Normalize();
+
+			unchecked
+			{
+				return
+					normalizedNumber.Numerator.GetHashCode()
+					+ normalizedNumber.Denominator.GetHashCode();
+			}
         }
 
         /// <summary>
