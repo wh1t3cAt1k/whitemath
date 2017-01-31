@@ -41,8 +41,8 @@ namespace WhiteMath.Functions
 	        && this[0] == Numeric<T, C>.Zero;
 
         /// <summary>
-        /// Returns the polynom normed by its high-order coefficient.
-        /// The high-order coefficient of the resulting polynom would be equal to 1.
+        /// Returns the polynom normalized by its high-order coefficient.
+        /// The highest-order coefficient of the resulting polynom would be equal to 1.
         /// The polynom returned would contain all the same roots as the current.
         /// </summary>
 		public Polynom<T, C> NormalizedPolynom
@@ -100,8 +100,10 @@ namespace WhiteMath.Functions
             {
                 coefficients[i] = this._coefficients[i + derivativeDegree];
 
-                for (int j = 0; j < derivativeDegree; j++)
-                    coefficients[i] *= calc.FromInteger(i + derivativeDegree - j);
+				for (int j = 0; j < derivativeDegree; j++)
+				{
+					coefficients[i] *= calc.FromInteger(i + derivativeDegree - j);
+				}
             }
 
             return new Polynom<T, C>(coefficients);
@@ -176,10 +178,6 @@ namespace WhiteMath.Functions
 
             return newPolynom;
         }
-
-        // ----------------------------
-        // --------- value ------------
-        // ----------------------------
 
         public T GetValue(T x)
         {
@@ -279,7 +277,6 @@ namespace WhiteMath.Functions
         // -------- operators -----------
         // ------------------------------
 
-        // Сложение
 		public static Polynom<T, C> operator +(Polynom<T, C> first, Polynom<T, C> second)
         {
             Numeric<T, C>[] coefficients = new Numeric<T, C>[Math.Max(first._coefficients.Length, second._coefficients.Length)];
@@ -303,13 +300,13 @@ namespace WhiteMath.Functions
             return new Polynom<T, C>(coefficients);
         }
 
-        public static Polynom<T, C> operator -(Polynom<T, C> one)
+		public static Polynom<T, C> operator -(Polynom<T, C> polynom)
         {
-			Numeric<T, C>[] resultCoefficients = new Numeric<T, C>[one._coefficients.Length];
+			Numeric<T, C>[] resultCoefficients = new Numeric<T, C>[polynom._coefficients.Length];
 
-			for (int i = 0; i < one._coefficients.Length; ++i)
+			for (int i = 0; i < polynom._coefficients.Length; ++i)
 			{
-				resultCoefficients[i] = -one._coefficients[i];
+				resultCoefficients[i] = -polynom._coefficients[i];
 			}
 
             return new Polynom<T, C>(resultCoefficients);
@@ -413,15 +410,21 @@ namespace WhiteMath.Functions
 
             for (int i = firstCopy.Length - 1; i >= second.Degree; i--)
             {
-                // Очередной коэффициент результата
-                result[result.Length - firstCopy.Length + i] = firstCopy[i] / second._coefficients[second._coefficients.Length - 1];
+                // The next coefficient of the result.
+				// -
+                result[result.Length - firstCopy.Length + i] 
+					= firstCopy[i] / second._coefficients[second._coefficients.Length - 1];
 
-                // При обратном умножении получаем ноль в соответствующем коэффициенте.
+                // When multiplying back, we get zero in the
+				// respective coefficient.
+				// -
                 firstCopy[i] = Numeric<T, C>.Zero;
 
-                // Теперь из делимого вычтем делитель, умноженный на полученный коэффициент.
-                for (int j = second._coefficients.Length - 2; j >= 0; j--)
-                    firstCopy[i + j - second._coefficients.Length + 1] -= second._coefficients[j] * result[result.Length - firstCopy.Length + i];
+				// Теперь из делимого вычтем делитель, умноженный на полученный коэффициент.
+				for (int j = second._coefficients.Length - 2; j >= 0; j--)
+				{
+					firstCopy[i + j - second._coefficients.Length + 1] -= second._coefficients[j] * result[result.Length - firstCopy.Length + i];
+				}
             }
 
             remainder = new Polynom<T, C>(firstCopy);

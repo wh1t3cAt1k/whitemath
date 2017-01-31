@@ -31,19 +31,20 @@ namespace WhiteMath.Functions
         /// <summary>
         /// Constructs the linear function on the basis of two points passed.
         /// </summary>
-        /// <param name="firstPoint"></param>
-        /// <param name="secondPoint"></param>
         public LinearFunction(Point<T> firstPoint, Point<T> secondPoint)
         {
             if (calc.Equal(firstPoint.X, secondPoint.X))
                 throw new ArgumentException("The X coordinates of the two points must differ.");
 
-            this.k = calc.Divide(calc.Subtract(firstPoint.Y, secondPoint.Y), calc.Subtract(firstPoint.X, secondPoint.X));
-            this.b = calc.Subtract(firstPoint.Y, calc.Multiply(firstPoint.X, k));
+            this.k = calc.Divide(
+				calc.Subtract(firstPoint.Y, secondPoint.Y), 
+				calc.Subtract(firstPoint.X, secondPoint.X));
+			
+            this.b = calc.Subtract(
+				firstPoint.Y, 
+				calc.Multiply(firstPoint.X, k));
         }
 
-        // ----------------------- functionality
-
-        public T GetValue(T x) { return k*x + b; }
+        public T GetValue(T x) => k*x + b;
     }
 }
