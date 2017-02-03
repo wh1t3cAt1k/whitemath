@@ -82,10 +82,7 @@ namespace WhiteStructs.Testing
 
                 result.Add(new KeyValuePair<HT, decimal>(highLevelValue, currentTime));
 
-                // Performed the test - tell everyone!
-                // -
-                if (this.TestPerformed != null)
-                    this.TestPerformed.Invoke(highLevelValue, currentTime);
+                this.TestPerformed?.Invoke(highLevelValue, currentTime);
 
                 highLevelValue = highLevelChangeFunction(highLevelChanges, highLevelValue);
                 ++highLevelChanges;
