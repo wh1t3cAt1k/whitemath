@@ -403,31 +403,34 @@ namespace WhiteMath.Functions
                 return new Polynom<T, C>(Numeric<T, C>.Zero);
             }
 
-			Numeric<T, C>[] firstCopy = new Numeric<T, C>[first._coefficients.Length];
+			Numeric<T, C>[] firstCoefficients = new Numeric<T, C>[first._coefficients.Length];
             Numeric<T, C>[] result = new Numeric<T, C>[first.Degree - second.Degree + 1];
 
-            ServiceMethods.Copy(first._coefficients, firstCopy);
+            ServiceMethods.Copy(first._coefficients, firstCoefficients);
 
-            for (int i = firstCopy.Length - 1; i >= second.Degree; i--)
+            for (int i = firstCoefficients.Length - 1; i >= second.Degree; i--)
             {
                 // The next coefficient of the result.
 				// -
-                result[result.Length - firstCopy.Length + i] 
-					= firstCopy[i] / second._coefficients[second._coefficients.Length - 1];
+                result[result.Length - firstCoefficients.Length + i] 
+					= firstCoefficients[i] / second._coefficients[second._coefficients.Length - 1];
 
                 // When multiplying back, we get zero in the
 				// respective coefficient.
 				// -
-                firstCopy[i] = Numeric<T, C>.Zero;
+                firstCoefficients[i] = Numeric<T, C>.Zero;
 
-				// Теперь из делимого вычтем делитель, умноженный на полученный коэффициент.
+				// From the dividend, subtract the divisor multiplied by
+				// the resulting coefficient.
+				// -
 				for (int j = second._coefficients.Length - 2; j >= 0; j--)
 				{
-					firstCopy[i + j - second._coefficients.Length + 1] -= second._coefficients[j] * result[result.Length - firstCopy.Length + i];
+					firstCoefficients[i + j - second._coefficients.Length + 1] 
+						-= second._coefficients[j] * result[result.Length - firstCoefficients.Length + i];
 				}
             }
 
-            remainder = new Polynom<T, C>(firstCopy);
+            remainder = new Polynom<T, C>(firstCoefficients);
 
             return new Polynom<T, C>(result);
         }

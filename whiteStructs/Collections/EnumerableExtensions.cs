@@ -118,9 +118,11 @@ namespace WhiteStructs.Collections
 
 			T min = enumerator.Current;
 
-            while (enumerator.MoveNext())
-                if (comparer.Compare(enumerator.Current, min) < 0)
-                    min = enumerator.Current;
+			while (enumerator.MoveNext())
+			{
+				if (comparer.Compare(enumerator.Current, min) < 0)
+					min = enumerator.Current;
+			}
 
             return min;
         }

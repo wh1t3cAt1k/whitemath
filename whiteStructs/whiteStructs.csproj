@@ -184,7 +184,6 @@
     <Compile Include="Testing\ResultTesting.cs" />
     <Compile Include="Conditions\Condition.cs" />
     <Compile Include="Time\NanoStopwatch.cs" />
-    <Compile Include="Time\NativeMethods.cs" />
     <Compile Include="Collections\EnumerableExtensions.cs" />
     <Compile Include="Collections\Messages.cs" />
     <Compile Include="Collections\UnitTests.cs" />
