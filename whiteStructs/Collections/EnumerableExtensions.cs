@@ -22,15 +22,22 @@ namespace WhiteStructs.Collections
         /// <returns>A string which enumerates the values of the sequence through the separator string specified.</returns>
         public static string ToElementString<T>(this IEnumerable<T> sequence, string separator = "|", Func<T, string> toString = null)
         {
-            StringBuilder res = new StringBuilder();
+			StringBuilder result = new StringBuilder();
 
-            foreach (T obj in sequence)
-                res.Append(String.Format("{0}{1}", separator, (toString == null ? obj.ToString() : toString(obj))));
+			foreach (T obj in sequence)
+			{
+				result.Append(string.Format(
+					"{0}{1}",
+					separator,
+					(toString == null ? obj.ToString() : toString(obj))));
+			}
 
-            if (res.Length > 0)
-                res.Append(separator);
+			if (result.Length > 0)
+			{
+				result.Append(separator);
+			}
 
-            return res.ToString();
+            return result.ToString();
         }
 
         /// <summary>

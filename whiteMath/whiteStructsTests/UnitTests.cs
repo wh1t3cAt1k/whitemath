@@ -1,9 +1,10 @@
-﻿#if (INCLUDE_UNIT_TESTS)
+﻿using System;
 
-using System;
+using WhiteStructs.Collections;
+
 using NUnit.Framework;
 
-namespace WhiteStructs.Collections
+namespace WhiteStructsTests
 {
 	[TestFixture]
 	public class UnitTests
@@ -27,7 +28,8 @@ namespace WhiteStructs.Collections
 		{
 			int[] nullCollection = null;
 
-			Assert.Throws(typeof(ArgumentNullException), delegate {
+			Assert.Throws(typeof(ArgumentNullException), delegate 
+			{
 				nullCollection.IsSingleElement();
 			});
 		}
@@ -51,11 +53,10 @@ namespace WhiteStructs.Collections
 		{
 			int[] nullCollection = null;
 
-			Assert.Throws(typeof(ArgumentNullException), delegate {
+			Assert.Throws(typeof(ArgumentNullException), delegate 
+			{
 				nullCollection.IsEmpty();
 			});
 		}
 	}
 }
-
-#endif

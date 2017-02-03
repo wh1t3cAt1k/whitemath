@@ -183,10 +183,8 @@
     <Compile Include="Testing\PerformanceTesting.cs" />
     <Compile Include="Testing\ResultTesting.cs" />
     <Compile Include="Conditions\Condition.cs" />
-    <Compile Include="Time\NanoStopwatch.cs" />
     <Compile Include="Collections\EnumerableExtensions.cs" />
     <Compile Include="Collections\Messages.cs" />
-    <Compile Include="Collections\UnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

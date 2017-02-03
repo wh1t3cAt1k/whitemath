@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Diagnostics.Contracts;
 
-using WhiteStructs.Time;
+using WhiteStructs.Conditions;
 
 namespace WhiteStructs.Testing
 {
@@ -16,19 +16,18 @@ namespace WhiteStructs.Testing
 
     /// <summary>
     /// Represents an event handler which is called once 
-    /// the <see cref="PerformanceTester"/> performs a single
-    /// test during two-level testing.
+	/// the <see cref="PerformanceTester{T, HT}"/> performs 
+	/// a single test during two-level testing.
     /// </summary>
     /// <typeparam name="HT">The type of high-level tester argument.</typeparam>
     /// <param name="highLevelValue">The value of high-level tester argument.</param>
     /// <param name="meanTime">The mean running time of tested procedure.</param>
-    public delegate void TestPerformedEventHandler<HT>(HT highLevelValue, double meanTime);
+    public delegate void TestPerformedEventHandler<HT>(HT highLevelValue, decimal meanTime);
 
     /// <summary>
     /// This class provides means for conducting perfomance tests
     /// of one-argument procedures.
     /// </summary>
-    [ContractVerification(true)]
     public class PerformanceTester<T, HT>
     {
         /// <summary>
@@ -39,7 +38,7 @@ namespace WhiteStructs.Testing
 
         /// <summary>
         /// Gets the procedure which mean running time is tested
-        /// by the current <see cref="PerformanceTester&lt;T, HT&gt;"/>.
+		/// by the current <see cref="PerformanceTester{T, HT}"/>.
         /// </summary>
         public OneArgumentProcedure<T> TestedProcedure { get; private set; }
 
@@ -51,26 +50,25 @@ namespace WhiteStructs.Testing
         /// <param name="procedure">A delegate pointing to a one-argument procedure.</param>
         public PerformanceTester(OneArgumentProcedure<T> procedure)
         {
-            Contract.Requires<ArgumentNullException>(procedure != null, "procedure");
+			Condition.ValidateNotNull(procedure, nameof(procedure));
 
             this.TestedProcedure = procedure;
         }
 
-        public List<KeyValuePair<HT, double>> TestProcedureTwoLevel(
-            HT                                  highLevelInitialValue,
-            Func<int, HT, HT>                   highLevelChangeFunction,
-            Func<int, HT, bool>                 highLevelStopCriteria,
-            Func<int, HT, T>                    lowLevelValueProvider,
-            Func<int, HT, Func<int, bool>>      lowLevelStopCriteriaProvider,
-            bool                                idleRun = true
-            )
+        public List<KeyValuePair<HT, decimal>> TestProcedureTwoLevel(
+            HT highLevelInitialValue,
+            Func<int, HT, HT> highLevelChangeFunction,
+            Func<int, HT, bool> highLevelStopCriteria,
+            Func<int, HT, T> lowLevelValueProvider,
+            Func<int, HT, Func<int, bool>> lowLevelStopCriteriaProvider,
+			bool idleRun = true)
         {
-            Contract.Requires<ArgumentNullException>(highLevelChangeFunction != null, "highLevelChangeFunction");
-            Contract.Requires<ArgumentNullException>(highLevelStopCriteria != null, "highLevelStopCriteria");
-            Contract.Requires<ArgumentNullException>(lowLevelValueProvider != null, "lowLevelValueProvider");
-            Contract.Requires<ArgumentNullException>(lowLevelStopCriteriaProvider != null, "lowLevelStopCriteriaProvider");
+			Condition.ValidateNotNull(highLevelChangeFunction, nameof(highLevelChangeFunction));
+			Condition.ValidateNotNull(highLevelStopCriteria, nameof(highLevelStopCriteria));
+			Condition.ValidateNotNull(lowLevelValueProvider, nameof(lowLevelValueProvider));
+			Condition.ValidateNotNull(lowLevelStopCriteriaProvider, nameof(lowLevelStopCriteriaProvider));
 
-            List<KeyValuePair<HT, double>> result = new List<KeyValuePair<HT, double>>();
+            List<KeyValuePair<HT, decimal>> result = new List<KeyValuePair<HT, decimal>>();
 
             int highLevelChanges = 0;
             HT highLevelValue = highLevelInitialValue;
@@ -80,9 +78,9 @@ namespace WhiteStructs.Testing
                 T lowLevelValue = lowLevelValueProvider(highLevelChanges, highLevelValue);
                 Func<int, bool> lowLevelStopCriteria = lowLevelStopCriteriaProvider(highLevelChanges, highLevelInitialValue);
 
-                double currentTime = TestProcedure(lowLevelValue, lowLevelStopCriteria, idleRun);
+                decimal currentTime = TestProcedure(lowLevelValue, lowLevelStopCriteria, idleRun);
 
-                result.Add(new KeyValuePair<HT, double>(highLevelValue, currentTime));
+                result.Add(new KeyValuePair<HT, decimal>(highLevelValue, currentTime));
 
                 // Performed the test - tell everyone!
                 // -
@@ -96,19 +94,19 @@ namespace WhiteStructs.Testing
             return result;
         }
 
-        public List<KeyValuePair<HT, double>> TestProcedureTwoLevel(
-            HT                                  highLevelInitialValue,
-            Func<int, HT, HT>                   highLevelChangeFunction,
-            Func<int, HT, bool>                 highLevelStopCriteria,
-            Func<int, HT, Func<int, T>>         lowLevelGeneratorProvider,
-            Func<int, HT, Func<int, bool>>      lowLevelStopCriteriaProvider,
-            bool                                lowLevelPrecalculateArguments = true,
-            bool                                idleRun = true)
+        public List<KeyValuePair<HT, decimal>> TestProcedureTwoLevel(
+            HT highLevelInitialValue,
+            Func<int, HT, HT> highLevelChangeFunction,
+            Func<int, HT, bool> highLevelStopCriteria,
+            Func<int, HT, Func<int, T>> lowLevelGeneratorProvider,
+            Func<int, HT, Func<int, bool>> lowLevelStopCriteriaProvider,
+            bool lowLevelPrecalculateArguments = true,
+            bool idleRun = true)
         {
-            Contract.Requires<ArgumentNullException>(highLevelChangeFunction != null, "highLevelChangeFunction");
-            Contract.Requires<ArgumentNullException>(highLevelStopCriteria != null, "highLevelStopCriteria");
-            Contract.Requires<ArgumentNullException>(lowLevelGeneratorProvider != null, "lowLevelGeneratorProvider");
-            Contract.Requires<ArgumentNullException>(lowLevelStopCriteriaProvider != null, "lowLevelStopCriteriaProvider");
+			Condition.ValidateNotNull(highLevelChangeFunction, nameof(highLevelChangeFunction));
+			Condition.ValidateNotNull(highLevelStopCriteria, nameof(highLevelStopCriteria));
+			Condition.ValidateNotNull(lowLevelGeneratorProvider, nameof(lowLevelGeneratorProvider));
+			Condition.ValidateNotNull(lowLevelStopCriteriaProvider, nameof(lowLevelStopCriteriaProvider));
 
             Func<int, HT, T> initialValueProvider                   = (index, highValue) => (lowLevelGeneratorProvider(index, highValue))(0);
             Func<int, HT, Func<int, T, T>> changeFunctionProvider   = (highIndex, highValue) => ((lowIndex, junk) => lowLevelGeneratorProvider(highIndex, highValue)(lowIndex));
@@ -125,75 +123,76 @@ namespace WhiteStructs.Testing
                 idleRun);
         }
 
-        public List<KeyValuePair<HT, double>> TestProcedureTwoLevel(
-            HT                                  highLevelInitialValue,
-            Func<int, HT, HT>                   highLevelChangeFunction,
-            Func<int, HT, bool>                 highLevelStopCriteria,
-            Func<int, HT, T>                    lowLevelInitialValueProvider,
-            Func<int, HT, Func<int, T, T>>      lowLevelChangeFunctionProvider,
-            Func<int, HT, Func<int, T, bool>>   lowLevelStopCriteriaProvider,
-            bool                                lowLevelPrecalculateArguments = true,
-            bool                                idleRun = true)
+        public List<KeyValuePair<HT, decimal>> TestProcedureTwoLevel(
+            HT highLevelInitialValue,
+            Func<int, HT, HT> highLevelChangeFunction,
+            Func<int, HT, bool> highLevelStopCriteria,
+            Func<int, HT, T> lowLevelInitialValueProvider,
+            Func<int, HT, Func<int, T, T>> lowLevelChangeFunctionProvider,
+            Func<int, HT, Func<int, T, bool>> lowLevelStopCriteriaProvider,
+            bool lowLevelPrecalculateArguments = true,
+			bool performIdleRun = true)
         {
-            Contract.Requires<ArgumentNullException>(lowLevelChangeFunctionProvider != null, "lowLevelChangeFunctionProvider");
-            Contract.Requires<ArgumentNullException>(lowLevelInitialValueProvider != null, "lowLevelInitialValueProvider");
-            Contract.Requires<ArgumentNullException>(lowLevelStopCriteriaProvider != null, "lowLevelStopCriteriaProvider");
-            Contract.Requires<ArgumentNullException>(highLevelChangeFunction != null, "highLevelChangeFunction");
-            Contract.Requires<ArgumentNullException>(highLevelStopCriteria != null, "highLevelStopCriteria");
+			Condition.ValidateNotNull(lowLevelChangeFunctionProvider, nameof(lowLevelChangeFunctionProvider));
+			Condition.ValidateNotNull(lowLevelInitialValueProvider != null, nameof(lowLevelInitialValueProvider));
+			Condition.ValidateNotNull(lowLevelStopCriteriaProvider != null, nameof(lowLevelStopCriteriaProvider));
+			Condition.ValidateNotNull(highLevelChangeFunction != null, nameof(highLevelChangeFunction));
+			Condition.ValidateNotNull(highLevelStopCriteria != null, nameof(highLevelStopCriteria));
 
-            List<KeyValuePair<HT, double>> result = new List<KeyValuePair<HT, double>>();
+            List<KeyValuePair<HT, decimal>> result = new List<KeyValuePair<HT, decimal>>();
 
-            int highLevelChanges    = 0;
-            HT highLevelValue       = highLevelInitialValue;
+            int highLevelChanges = 0;
+            HT highLevelValue = highLevelInitialValue;
 
             while(!highLevelStopCriteria(highLevelChanges, highLevelValue))
             {
                 Console.WriteLine(highLevelChanges);
 
-                T lowLevelInitialValue                  = lowLevelInitialValueProvider(highLevelChanges, highLevelValue); 
-                Func<int, T, T> lowLevelChangeFunction  = lowLevelChangeFunctionProvider(highLevelChanges, highLevelValue);
+                T lowLevelInitialValue = lowLevelInitialValueProvider(highLevelChanges, highLevelValue); 
+                Func<int, T, T> lowLevelChangeFunction = lowLevelChangeFunctionProvider(highLevelChanges, highLevelValue);
                 Func<int, T, bool> lowLevelStopCriteria = lowLevelStopCriteriaProvider(highLevelChanges, highLevelValue);
 
-                double currentTime = TestProcedure(lowLevelInitialValue, lowLevelChangeFunction, lowLevelStopCriteria, lowLevelPrecalculateArguments, idleRun);
+                decimal currentTime = TestProcedure(
+					lowLevelInitialValue, 
+					lowLevelChangeFunction, 
+					lowLevelStopCriteria, 
+					lowLevelPrecalculateArguments, 
+					performIdleRun);
 
-                // Одного холостого запуска вполне достаточно.
+				// One idle run is enough.
+				// -
+				if (performIdleRun)
+				{
+					performIdleRun = false;
+				}
 
-                if (idleRun)
-                    idleRun = false;
+                result.Add(new KeyValuePair<HT, decimal>(highLevelValue, currentTime));
 
-                result.Add(new KeyValuePair<HT,double>(highLevelValue, currentTime));
-
-                // -----------------------------------
-                // ----- выполнил тест - скажи соседу!
-                // -----------------------------------
-
-                if (this.TestPerformed != null)
-                    this.TestPerformed.Invoke(highLevelValue, currentTime);
-
-                // -----------------------------------
+				this.TestPerformed?.Invoke(highLevelValue, currentTime);
 
                 highLevelValue = highLevelChangeFunction(highLevelChanges, highLevelValue);
+
                 ++highLevelChanges;
             }
 
             return result;
         }
 
-        public double TestProcedure(
-            Func<int, T>        generator, 
-            Func<int, bool>     stopCriteria, 
-            bool                precalculateArguments = true, 
-            bool                idleRun = true)
+        public decimal TestProcedure(
+            Func<int, T> generator, 
+            Func<int, bool> stopCriteria, 
+            bool precalculateArguments = true, 
+			bool performIdleRun = true)
         {
-            Contract.Requires<ArgumentNullException>(generator != null, "generator");
-            Contract.Requires<ArgumentNullException>(stopCriteria != null, "stopCriteria");
+			Condition.ValidateNotNull(generator, nameof(generator));
+			Condition.ValidateNotNull(stopCriteria, nameof(stopCriteria));
 
             return TestProcedure(
                 generator(0),
-                (totalChanges, junk) => generator(totalChanges),
-                (totalChanges, junk) => stopCriteria(totalChanges), 
+                (totalChanges, _) => generator(totalChanges),
+                (totalChanges, _) => stopCriteria(totalChanges), 
                 precalculateArguments, 
-                idleRun); 
+                performIdleRun);
         }
 
         /// <summary>
@@ -206,24 +205,23 @@ namespace WhiteStructs.Testing
         /// <param name="changeFunction"></param>
         /// <param name="stopCriteria"></param>
         /// <param name="precalculateArguments"></param>
-        /// <param name="idleRun"></param>
+        /// <param name="performIdleRun"></param>
         /// <returns></returns>
-        public double TestProcedure(
-            T                       initialArgument, 
-            Func<int, T, T>         changeFunction, 
-            Func<int, T, bool>      stopCriteria, 
-            bool                    precalculateArguments = true, 
-            bool                    idleRun = true)
+        public decimal TestProcedure(
+            T initialArgument, 
+            Func<int, T, T> changeFunction, 
+            Func<int, T, bool> stopCriteria, 
+            bool precalculateArguments = true, 
+			bool performIdleRun = true)
         {
-            Contract.Requires<ArgumentNullException>(changeFunction != null, "changeFunction");
-            Contract.Requires<ArgumentNullException>(stopCriteria != null, "stopCriteria");
+			Condition.ValidateNotNull(changeFunction, nameof(changeFunction));
+			Condition.ValidateNotNull(stopCriteria, nameof(stopCriteria));
 
             int totalChanges = 0;
 
-            NanoStopWatch sw = new NanoStopWatch();
-            T currentArgument = initialArgument;
+			Stopwatch stopwatch = new Stopwatch();
 
-            List<KeyValuePair<T, double>> result = new List<KeyValuePair<T, double>>();
+            T currentArgument = initialArgument;
 
             if (precalculateArguments)
             {
@@ -238,13 +236,13 @@ namespace WhiteStructs.Testing
                     ++totalChanges;
                 }
 
-                // Фактически мы выполнили предвычисление всех значений аргумента,
-                // так что теперь выполняется вызов перегруженного варианта функции.
-
-                return TestProcedure(preparedArguments, idleRun);
+				// We have in fact pre-calculated all argument values,
+				// now we call the overloaded variant of the function.
+				// -
+                return TestProcedure(preparedArguments, performIdleRun);
             }
 
-            if (idleRun)
+            if (performIdleRun)
             {
                 this.TestedProcedure(currentArgument);
                 
@@ -252,44 +250,46 @@ namespace WhiteStructs.Testing
                 changeFunction(0, currentArgument);
             }
 
-            sw.reset();
-            sw.start();
+            stopwatch.Reset();
+			stopwatch.Start();
 
             while (!stopCriteria(totalChanges, currentArgument))
-            {
-                // make time measurements
-                // -----------------------
-
+			{
                 this.TestedProcedure(currentArgument);
 
                 currentArgument = changeFunction(totalChanges, currentArgument);
                 ++totalChanges;
             }
 
-            sw.stop();
+			stopwatch.Stop();
 
-            return (double)sw.getIntervalInMillis() / totalChanges;
+			return (decimal)stopwatch.ElapsedMilliseconds / totalChanges;
         }
 
         /// <summary>
-        /// Для проведения тестов с множеством предопределенных аргументов.
+        /// Performance test procedure with a sequence of pre-defined arguments.
         /// </summary>
         /// <param name="arguments"></param>
-        /// <param name="idleRun"></param>
-        /// <returns></returns>
-        public double TestProcedure(IEnumerable<T> arguments, bool idleRun = true)
+        /// <param name="performIdleRun">
+		/// If set to <c>true</c>, the tested procedure will be called once prior
+		/// to starting the stopwatch, with the first element of <paramref name="arguments"/> 
+		/// passed as the procedure argument.
+		/// </param>
+		public decimal TestProcedure(IEnumerable<T> arguments, bool performIdleRun = true)
         {
-            Contract.Requires<ArgumentNullException>(arguments != null, "arguments");
-            Contract.Requires<ArgumentException>(arguments.Count() > 0, "The argument list should not be empty.");
+			Condition.ValidateNotNull(arguments, nameof(arguments));
+			Condition.ValidateNotEmpty(arguments, "The argument list should not be empty.");
 
             int testCount = 0;
 
-            if (idleRun)
-                this.TestedProcedure(arguments.First());
+			if (performIdleRun)
+			{
+				this.TestedProcedure(arguments.First());
+			}
 
-            NanoStopWatch sw = new NanoStopWatch();
+			Stopwatch stopwatch = new Stopwatch();
 
-            sw.start();
+            stopwatch.Start();
 
             foreach (T nextArgument in arguments)
             {
@@ -297,32 +297,35 @@ namespace WhiteStructs.Testing
                 ++testCount;
             }
 
-            sw.stop();
+            stopwatch.Stop();
 
-            return (double)(sw.getIntervalInMillis() / testCount);
+			return (decimal)stopwatch.ElapsedMilliseconds / testCount;
         }
 
         /// <summary>
-        /// Для проведения нескольких тестов с одним аргументом.
+        /// Several tests with the same argument.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="argument"></param>
         /// <param name="stopCriteria"></param>
-        /// <param name="idleRun"></param>
+        /// <param name="performIdleRun"></param>
         /// <returns></returns>
-        public double TestProcedure(T argument, Func<int, bool> stopCriteria, bool idleRun = true)
+        public decimal TestProcedure(
+			T argument, 
+			Func<int, bool> stopCriteria, 
+			bool performIdleRun = true)
         {
             int testCount = 0;
 
-            if (idleRun)
+            if (performIdleRun)
             {
                 this.TestedProcedure(argument);
                 stopCriteria(0);
             }
 
-            NanoStopWatch sw = new NanoStopWatch();
+			Stopwatch stopwatch = new Stopwatch();
 
-            sw.start();
+            stopwatch.Start();
 
             while (!stopCriteria(testCount))
             {
@@ -330,9 +333,9 @@ namespace WhiteStructs.Testing
                 ++testCount;
             }
 
-            sw.stop();
+            stopwatch.Stop();
 
-            return (double)(sw.getIntervalInMillis() / testCount);
+			return (decimal)stopwatch.ElapsedMilliseconds / testCount;
         }
     }
 }

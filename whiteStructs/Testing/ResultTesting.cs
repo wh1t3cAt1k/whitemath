@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-using System.Diagnostics.Contracts;
+using WhiteStructs.Conditions;
 
 namespace WhiteStructs.Testing
 {
@@ -17,14 +14,12 @@ namespace WhiteStructs.Testing
     public delegate R OneArgumentFunction<T, R>(T arg);
 
     /// <summary>
-    /// This class contains the event data for the
-    /// <c>TestConductedEventHandler&lt;<typeparamref name="T"/>,<typeparamref name="R"/>&gt;</c>
-    /// event.
+    /// This class contains the event data for the 
+	/// <see cref="TestConductedEventHandler{T, R}"/> event.
     /// </summary>
     /// <see cref="TestConductedEventHandler&lt;T,R&gt;"/>
     /// <typeparam name="T">The type of tested function's argument.</typeparam>
     /// <typeparam name="R">The type of tested function's return value.</typeparam>
-    [ContractVerification(true)]
     public class TestConductedEventArgs<T, R> : EventArgs
     {
         /// <summary>
@@ -48,11 +43,13 @@ namespace WhiteStructs.Testing
         /// <c>ResultTester&lt;<typeparamref name="T"/>,<typeparamref name="R"/>&gt;</c>
         /// should stop further testing.
         /// </summary>
-        public bool Stop { get; set; }
+		public bool MustStop { get; set; }
 
         public TestConductedEventArgs(int testNumber, T argument, R result)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(testNumber > 0, "The number of the test in the series should be a positive number.");
+			Condition
+				.Validate(testNumber > 0)
+				.OrArgumentOutOfRangeException("The number of the test in the series should be a positive number.");
             
             this.TestNumber = testNumber;
             this.Argument = argument;

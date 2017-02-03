@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "whiteMathTests", "whiteMathTests\whiteMathTests.csproj", "{5444CE48-59E6-4CD7-8A56-DF80EFA1FF67}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "whiteStructsTests", "whiteStructsTests\whiteStructsTests.csproj", "{6073A13B-FC2C-410B-BDC5-2ED1A45D57F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Benchmark|Any CPU = Benchmark|Any CPU
@@ -45,6 +47,14 @@ Global
 		{5444CE48-59E6-4CD7-8A56-DF80EFA1FF67}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5444CE48-59E6-4CD7-8A56-DF80EFA1FF67}.DebugNonWindows|Any CPU.ActiveCfg = Debug|Any CPU
 		{5444CE48-59E6-4CD7-8A56-DF80EFA1FF67}.DebugNonWindows|Any CPU.Build.0 = Debug|Any CPU
+		{6073A13B-FC2C-410B-BDC5-2ED1A45D57F7}.Benchmark|Any CPU.ActiveCfg = Release|Any CPU
+		{6073A13B-FC2C-410B-BDC5-2ED1A45D57F7}.Benchmark|Any CPU.Build.0 = Release|Any CPU
+		{6073A13B-FC2C-410B-BDC5-2ED1A45D57F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6073A13B-FC2C-410B-BDC5-2ED1A45D57F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6073A13B-FC2C-410B-BDC5-2ED1A45D57F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6073A13B-FC2C-410B-BDC5-2ED1A45D57F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6073A13B-FC2C-410B-BDC5-2ED1A45D57F7}.DebugNonWindows|Any CPU.ActiveCfg = Debug|Any CPU
+		{6073A13B-FC2C-410B-BDC5-2ED1A45D57F7}.DebugNonWindows|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
