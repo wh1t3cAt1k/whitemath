@@ -7,17 +7,15 @@ namespace WhiteStructs.Conditions
 	/// <summary>
 	/// Provides basic functionality for method pre-condition checking.
 	/// <example>
-	/// Condition.Requires(x >= 0).OrThrowArgumentException("Argument is negative");
+	/// Condition.Validate(x >= 0).OrThrowArgumentException("Argument is negative");
 	/// </example>
 	/// <example>
-	/// Condition.RequiresNotNull(x);
+	/// Condition.ValidateNotNull(x);
 	/// </example>
 	/// </summary>
 	public static class Condition
 	{
-		public sealed class ValidationException: Exception
-		{
-		}
+		public sealed class ValidationException: Exception { }
 
 		public static ConditionTestResult Validate(bool condition)
 		{
@@ -26,7 +24,7 @@ namespace WhiteStructs.Conditions
 
 		/// <summary>
 		/// Validates that a given value is not <c>null</c>,
-		/// or throws a <see cref="System.ArgumentNullException"/>.
+		/// or throws a <see cref="ArgumentNullException"/>.
 		/// </summary>
 		/// <param name="argument">A value to test for <c>null</c>.</param>
 		/// <param name="exceptionMessage">An optional exception message.</param>
@@ -36,8 +34,8 @@ namespace WhiteStructs.Conditions
 		}
 
 		/// <summary>
-		/// Validates that a given value is positive, or throws a 
-		/// <see cref="System.ArgumentOutOfRangeException"/>.
+		/// Validates that a given value is positive, or throws an 
+		/// <see cref="ArgumentOutOfRangeException"/>.
 		/// </summary>
 		/// <param name="argument">A value to test for being positive.</param>
 		/// <param name="exceptionMessage">An optional exception message.</param>
@@ -49,8 +47,8 @@ namespace WhiteStructs.Conditions
 		}
 
 		/// <summary>
-		/// Validates that a given value is non-negative, or throws a 
-		/// <see cref="System.ArgumentOutOfRangeException"/>.
+		/// Validates that a given value is non-negative, or throws an
+		/// <see cref="ArgumentOutOfRangeException"/>.
 		/// </summary>
 		/// <param name="argument">A value to test for being non-negative.</param>
 		/// <param name="exceptionMessage">An optional exception message.</param>
@@ -63,7 +61,7 @@ namespace WhiteStructs.Conditions
 
 		/// <summary>
 		/// Validates that a given sequence is not empty, or throws
-		/// a <see cref="System.ArgumentException"/>. Does not test that 
+		/// an <see cref="ArgumentException"/>. Does not test that 
 		/// the sequence is not <c>null</c>.
 		/// </summary>
 		/// <param name="sequence">The sequence to test for.</param>
@@ -92,8 +90,10 @@ namespace WhiteStructs.Conditions
 			/// <param name="exceptionMessage">An optional exception message.</param>
 			public void OrArgumentException(string exceptionMessage = null)
 			{
-				if (Holds)
+				if (this.Holds)
+				{
 					return;
+				}
 
 				if (exceptionMessage != null)
 				{
@@ -106,13 +106,15 @@ namespace WhiteStructs.Conditions
 			}
 
 			/// <summary>
-			/// Throws a <see cref="System.ArgumentNullException"/> if the condition doesn't hold.
+			/// Throws an <see cref="ArgumentNullException"/> if the condition doesn't hold.
 			/// </summary>
 			/// <param name="exceptionMessage">An optional exception message.</param>
 			public void OrArgumentNullException(string exceptionMessage = null)
 			{
 				if (this.Holds)
+				{
 					return;
+				}
 
 				if (exceptionMessage != null)
 				{
@@ -125,14 +127,16 @@ namespace WhiteStructs.Conditions
 			}
 
 			/// <summary>
-			/// Throws a <see cref="System.ArgumentOutOfRangeException"/> if the 
+			/// Throws an <see cref="ArgumentOutOfRangeException"/> if the 
 			/// condition doesn't hold.
 			/// </summary>
 			/// <param name="exceptionMessage">An optional exception message.</param>
 			public void OrArgumentOutOfRangeException(string exceptionMessage = null)
 			{
-				if (Holds)
+				if (this.Holds)
+				{
 					return;
+				}
 
 				if (exceptionMessage != null)
 				{
@@ -165,7 +169,7 @@ namespace WhiteStructs.Conditions
 			}
 
 			/// <summary>
-			/// Throws a given <see cref="System.Exception"/> if the 
+			/// Throws a given <see cref="Exception"/> if the 
 			/// condition doesn't hold.
 			/// </summary>
 			/// <param name="exception">The exception to throw.</param>
@@ -173,10 +177,14 @@ namespace WhiteStructs.Conditions
 			{
 				exception = exception ?? new ValidationException();
 
-				if (Holds)
+				if (this.Holds)
+				{
 					return;
+				}
 				else
+				{
 					throw exception;
+				}
 			}
 		}
 	}
