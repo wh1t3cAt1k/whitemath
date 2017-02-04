@@ -35,17 +35,25 @@ namespace WhiteStructs.Testing
         /// </summary>
         public Action<T> TestedProcedure { get; private set; }
 
+		/// <summary>
+		/// If set to <c>true</c>, the tested procedure will be called once prior
+		/// to starting the performance stopwatch. The procedure will be called with 
+		/// the first available argument.
+		/// </summary>
+		public bool PerformIdleRun { get; private set; }
+
         /// <summary>
         /// Initializes the <see cref="PerformanceTester&lt;T, HT&gt;"/> with 
         /// a one-argument procedure which mean running time is
         /// to be estimated.
         /// </summary>
         /// <param name="procedure">A delegate pointing to a one-argument procedure.</param>
-        public PerformanceTester(Action<T> procedure)
+        public PerformanceTester(Action<T> procedure, bool performIdleRun)
         {
 			Condition.ValidateNotNull(procedure, nameof(procedure));
 
             this.TestedProcedure = procedure;
+			this.PerformIdleRun = performIdleRun;
         }
 
         public List<KeyValuePair<HT, decimal>> TestProcedureTwoLevel(
@@ -53,8 +61,7 @@ namespace WhiteStructs.Testing
             Func<int, HT, HT> highLevelChangeFunction,
             Func<int, HT, bool> highLevelStopCriteria,
             Func<int, HT, T> lowLevelValueProvider,
-            Func<int, HT, Func<int, bool>> lowLevelStopCriteriaProvider,
-			bool idleRun = true)
+            Func<int, HT, Func<int, bool>> lowLevelStopCriteriaProvider)
         {
 			Condition.ValidateNotNull(highLevelChangeFunction, nameof(highLevelChangeFunction));
 			Condition.ValidateNotNull(highLevelStopCriteria, nameof(highLevelStopCriteria));
@@ -71,7 +78,7 @@ namespace WhiteStructs.Testing
                 T lowLevelValue = lowLevelValueProvider(highLevelChanges, highLevelValue);
                 Func<int, bool> lowLevelStopCriteria = lowLevelStopCriteriaProvider(highLevelChanges, highLevelInitialValue);
 
-                decimal currentTime = TestProcedure(lowLevelValue, lowLevelStopCriteria, idleRun);
+				decimal currentTime = TestProcedure(lowLevelValue, lowLevelStopCriteria);
 
                 result.Add(new KeyValuePair<HT, decimal>(highLevelValue, currentTime));
 
@@ -90,17 +97,16 @@ namespace WhiteStructs.Testing
             Func<int, HT, bool> highLevelStopCriteria,
             Func<int, HT, Func<int, T>> lowLevelGeneratorProvider,
             Func<int, HT, Func<int, bool>> lowLevelStopCriteriaProvider,
-            bool lowLevelPrecalculateArguments = true,
-            bool idleRun = true)
+            bool lowLevelPrecalculateArguments = true)
         {
 			Condition.ValidateNotNull(highLevelChangeFunction, nameof(highLevelChangeFunction));
 			Condition.ValidateNotNull(highLevelStopCriteria, nameof(highLevelStopCriteria));
 			Condition.ValidateNotNull(lowLevelGeneratorProvider, nameof(lowLevelGeneratorProvider));
 			Condition.ValidateNotNull(lowLevelStopCriteriaProvider, nameof(lowLevelStopCriteriaProvider));
 
-            Func<int, HT, T> initialValueProvider                   = (index, highValue) => (lowLevelGeneratorProvider(index, highValue))(0);
-            Func<int, HT, Func<int, T, T>> changeFunctionProvider   = (highIndex, highValue) => ((lowIndex, junk) => lowLevelGeneratorProvider(highIndex, highValue)(lowIndex));
-            Func<int, HT, Func<int, T, bool>> stopCriteriaProvider  = (highIndex, highValue) => ((lowIndex, junk) => lowLevelStopCriteriaProvider(highIndex, highValue)(lowIndex));
+            Func<int, HT, T> initialValueProvider = (index, highValue) => (lowLevelGeneratorProvider(index, highValue))(0);
+            Func<int, HT, Func<int, T, T>> changeFunctionProvider = (highIndex, highValue) => ((lowIndex, junk) => lowLevelGeneratorProvider(highIndex, highValue)(lowIndex));
+            Func<int, HT, Func<int, T, bool>> stopCriteriaProvider = (highIndex, highValue) => ((lowIndex, junk) => lowLevelStopCriteriaProvider(highIndex, highValue)(lowIndex));
 
             return TestProcedureTwoLevel(
                 highLevelInitialValue,
@@ -109,8 +115,7 @@ namespace WhiteStructs.Testing
                 initialValueProvider,
                 changeFunctionProvider,
                 stopCriteriaProvider,
-                lowLevelPrecalculateArguments,
-                idleRun);
+                lowLevelPrecalculateArguments);
         }
 
         public List<KeyValuePair<HT, decimal>> TestProcedureTwoLevel(
@@ -120,8 +125,7 @@ namespace WhiteStructs.Testing
             Func<int, HT, T> lowLevelInitialValueProvider,
             Func<int, HT, Func<int, T, T>> lowLevelChangeFunctionProvider,
             Func<int, HT, Func<int, T, bool>> lowLevelStopCriteriaProvider,
-            bool lowLevelPrecalculateArguments = true,
-			bool performIdleRun = true)
+            bool lowLevelPrecalculateArguments = true)
         {
 			Condition.ValidateNotNull(lowLevelChangeFunctionProvider, nameof(lowLevelChangeFunctionProvider));
 			Condition.ValidateNotNull(lowLevelInitialValueProvider != null, nameof(lowLevelInitialValueProvider));
@@ -146,15 +150,7 @@ namespace WhiteStructs.Testing
 					lowLevelInitialValue, 
 					lowLevelChangeFunction, 
 					lowLevelStopCriteria, 
-					lowLevelPrecalculateArguments, 
-					performIdleRun);
-
-				// One idle run is enough.
-				// -
-				if (performIdleRun)
-				{
-					performIdleRun = false;
-				}
+					lowLevelPrecalculateArguments);
 
                 result.Add(new KeyValuePair<HT, decimal>(highLevelValue, currentTime));
 
@@ -171,8 +167,7 @@ namespace WhiteStructs.Testing
         public decimal TestProcedure(
             Func<int, T> generator, 
             Func<int, bool> stopCriteria, 
-            bool precalculateArguments = true, 
-			bool performIdleRun = true)
+            bool precalculateArguments = true)
         {
 			Condition.ValidateNotNull(generator, nameof(generator));
 			Condition.ValidateNotNull(stopCriteria, nameof(stopCriteria));
@@ -181,27 +176,18 @@ namespace WhiteStructs.Testing
                 generator(0),
                 (totalChanges, _) => generator(totalChanges),
                 (totalChanges, _) => stopCriteria(totalChanges), 
-                precalculateArguments, 
-                performIdleRun);
+                precalculateArguments);
         }
 
         /// <summary>
         /// Performs a performance test of specified procedure by substituting different 
         /// values of its argument and returning a mean value of function performance time.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="initialArgument"></param>
-        /// <param name="changeFunction"></param>
-        /// <param name="stopCriteria"></param>
-        /// <param name="precalculateArguments"></param>
-        /// <param name="performIdleRun"></param>
-        /// <returns></returns>
         public decimal TestProcedure(
             T initialArgument, 
             Func<int, T, T> changeFunction, 
             Func<int, T, bool> stopCriteria, 
-            bool precalculateArguments = true, 
-			bool performIdleRun = true)
+            bool precalculateArguments = true)
         {
 			Condition.ValidateNotNull(changeFunction, nameof(changeFunction));
 			Condition.ValidateNotNull(stopCriteria, nameof(stopCriteria));
@@ -228,10 +214,10 @@ namespace WhiteStructs.Testing
 				// We have in fact pre-calculated all argument values,
 				// now we call the overloaded variant of the function.
 				// -
-                return TestProcedure(preparedArguments, performIdleRun);
+                return TestProcedure(preparedArguments);
             }
 
-            if (performIdleRun)
+			if (this.PerformIdleRun)
             {
                 this.TestedProcedure(currentArgument);
                 
@@ -259,19 +245,14 @@ namespace WhiteStructs.Testing
         /// Performance test procedure with a sequence of pre-defined arguments.
         /// </summary>
         /// <param name="arguments"></param>
-        /// <param name="performIdleRun">
-		/// If set to <c>true</c>, the tested procedure will be called once prior
-		/// to starting the stopwatch, with the first element of <paramref name="arguments"/> 
-		/// passed as the procedure argument.
-		/// </param>
-		public decimal TestProcedure(IEnumerable<T> arguments, bool performIdleRun = true)
+		public decimal TestProcedure(IEnumerable<T> arguments)
         {
 			Condition.ValidateNotNull(arguments, nameof(arguments));
 			Condition.ValidateNotEmpty(arguments, "The argument list should not be empty.");
 
             int testCount = 0;
 
-			if (performIdleRun)
+			if (this.PerformIdleRun)
 			{
 				this.TestedProcedure(arguments.First());
 			}
@@ -296,27 +277,26 @@ namespace WhiteStructs.Testing
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="argument"></param>
-        /// <param name="stopCriteria"></param>
+        /// <param name="stopCriterion"></param>
         /// <param name="performIdleRun"></param>
         /// <returns></returns>
         public decimal TestProcedure(
 			T argument, 
-			Func<int, bool> stopCriteria, 
-			bool performIdleRun = true)
+			Func<int, bool> stopCriterion)
         {
             int testCount = 0;
 
-            if (performIdleRun)
+			if (this.PerformIdleRun)
             {
                 this.TestedProcedure(argument);
-                stopCriteria(0);
+                stopCriterion(0);
             }
 
 			Stopwatch stopwatch = new Stopwatch();
 
             stopwatch.Start();
 
-            while (!stopCriteria(testCount))
+            while (!stopCriterion(testCount))
             {
                 this.TestedProcedure(argument);
                 ++testCount;
