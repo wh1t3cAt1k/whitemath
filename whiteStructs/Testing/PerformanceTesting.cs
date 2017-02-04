@@ -8,13 +8,6 @@ using WhiteStructs.Conditions;
 namespace WhiteStructs.Testing
 {
     /// <summary>
-    /// Represents a one-argument procedure without a return value.
-    /// </summary>
-    /// <typeparam name="T">The type of the argument that procedure receives.</typeparam>
-    /// <param name="arg">The argument received by the procedure.</param>
-    public delegate void OneArgumentProcedure<T>(T arg);
-
-    /// <summary>
     /// Represents an event handler which is called once 
 	/// the <see cref="PerformanceTester{T, HT}"/> performs 
 	/// a single test during two-level testing.
@@ -40,7 +33,7 @@ namespace WhiteStructs.Testing
         /// Gets the procedure which mean running time is tested
 		/// by the current <see cref="PerformanceTester{T, HT}"/>.
         /// </summary>
-        public OneArgumentProcedure<T> TestedProcedure { get; private set; }
+        public Action<T> TestedProcedure { get; private set; }
 
         /// <summary>
         /// Initializes the <see cref="PerformanceTester&lt;T, HT&gt;"/> with 
@@ -48,7 +41,7 @@ namespace WhiteStructs.Testing
         /// to be estimated.
         /// </summary>
         /// <param name="procedure">A delegate pointing to a one-argument procedure.</param>
-        public PerformanceTester(OneArgumentProcedure<T> procedure)
+        public PerformanceTester(Action<T> procedure)
         {
 			Condition.ValidateNotNull(procedure, nameof(procedure));
 
@@ -197,7 +190,6 @@ namespace WhiteStructs.Testing
         /// values of its argument and returning a mean value of function performance time.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="procedure"></param>
         /// <param name="initialArgument"></param>
         /// <param name="changeFunction"></param>
         /// <param name="stopCriteria"></param>
