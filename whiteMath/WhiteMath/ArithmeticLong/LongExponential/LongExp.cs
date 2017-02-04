@@ -6,15 +6,18 @@ using WhiteMath.General;
 
 namespace WhiteMath.ArithmeticLong
 {
-    public class LongExp<P> where P: IPrecision, new()
+    public class LongExp<B, P>
+		where B: IBase, new()
+		where P: IPrecision, new()
     {
-        private static P precision = new P();
+		private static B baseInstance = new B();
+        private static P precisionInstance = new P();
         
-		private static readonly int MAXDIGITS = precision.Precision;
-		private static readonly int BASE = precision.Base;
+		private static readonly int MAXIMUM_DIGITS = precisionInstance.Precision;
+		private static readonly int DIGIT_BASE = baseInstance.Base;
 
-		private static readonly string digitFormatter = getDigitFormatter();
-        private static readonly int fieldLength = (int)Math.Log10(BASE);
+        private static readonly int fieldLength = (int)Math.Log10(DIGIT_BASE);
+		private static readonly string digitFormatter = $"{{0:d{fieldLength}}}";
 
         /// <summary>
         /// Gets the exponent of the number.
@@ -29,28 +32,18 @@ namespace WhiteMath.ArithmeticLong
         /// <summary>
         /// Gets the flag determining whether the number is negative.
         /// </summary>
-        public bool Negative { get; private set; }
-
-        // -------------------------
-        // ----- CTORS -------------
-        // -------------------------
-
-        private void init()
-        {
-            this.Mantiss = new List<int>();
-        }
+		public bool IsNegative { get; private set; }
 
         /// <summary>
         /// Parameterless constructor, sets the zero number value.
         /// </summary>
         public LongExp()
         {
-            init();
-
+			this.Mantiss = new List<int>();
             this.Exponent = 0;
             this.Mantiss.Add(0);
 
-            this.Negative = false;
+            this.IsNegative = false;
         }
 
         /// <summary>
@@ -62,7 +55,7 @@ namespace WhiteMath.ArithmeticLong
         /// <param name="digitCount">The digit length of the number. Cannot be more than specified by IPrecision precision class.</param>
         public LongExp(int digitCount, BoundedInterval<int, CalcInt> powerInterval, Random generator)
         {
-            this.Negative = (generator.Next(0, 2) == 0 ? false : true);
+            this.IsNegative = (generator.Next(0, 2) == 0 ? false : true);
 
             // Randomize the explonent
             // -
@@ -71,18 +64,18 @@ namespace WhiteMath.ArithmeticLong
             // Now to the mantiss.
             // -
             this.Mantiss = new List<int>(digitCount);
-            this.Mantiss.Add(generator.Next(1, BASE));
+            this.Mantiss.Add(generator.Next(1, DIGIT_BASE));
 
             // ...Because the first digit should be significant.
 
             int i = 1;
 
             for ( ; i < digitCount - 1; i++)
-                this.Mantiss.Add(generator.Next(0, BASE));
+                this.Mantiss.Add(generator.Next(0, DIGIT_BASE));
 
             if (i < digitCount)
             {
-                this.Mantiss.Add(generator.Next(1, BASE));
+                this.Mantiss.Add(generator.Next(1, DIGIT_BASE));
             }
         }
 
@@ -95,29 +88,17 @@ namespace WhiteMath.ArithmeticLong
         /// The precision class should be specified as the type argument for the method.
         /// REQUIREMENTS: will NOT convert to another numeric base. Only to another precision.
         /// </summary>
-		/// <typeparam name="TPrecision">The precision class.</typeparam>
-		public LongExp<TPrecision> PrecisionConvert<TPrecision>() 
-			where TPrecision : IPrecision, new()
+		/// <typeparam name="PNew">The precision class.</typeparam>
+		public LongExp<B, PNew> PrecisionConvert<PNew>() 
+			where PNew : IPrecision, new()
         {
-            LongExp<TPrecision> obj = new LongExp<TPrecision>();
+			LongExp<B, PNew> result = new LongExp<B, PNew>();
 
-            obj.Mantiss = new List<int>();
+            result.Mantiss = new List<int>();
+            result.IsNegative = this.IsNegative;
+            result.Exponent = this.Exponent;
 
-			int newBase = new TPrecision().Base;
-
-			if (newBase == LongExp<TPrecision>.BASE)
-			{
-				obj.Mantiss.AddRange(this.Mantiss.ToArray());
-			}
-			else
-			{
-				throw new ArgumentException("Cannot convert a long exponential number from one digits base to another. Precisions may vary, but the base should stay the same.");
-			}
-
-            obj.Negative = this.Negative;
-            obj.Exponent = this.Exponent;
-
-            return obj;
+            return result;
         }
 
         // -----------------------------
@@ -147,21 +128,8 @@ namespace WhiteMath.ArithmeticLong
 
             // Обрубаем лишнюю точность.
 
-            if (Mantiss.Count > MAXDIGITS)
-                Mantiss.RemoveRange(0, Mantiss.Count - MAXDIGITS);
-        }
-
-        // --------------------------
-        // ------- SERVICE ----------
-        // --------------------------
-
-        /// <summary>
-        /// Gets the digit formatter for ToString() output.
-        /// </summary>
-        /// <returns></returns>
-        private static string getDigitFormatter()
-        {
-            return "{0:d" + fieldLength.ToString() + "}";
+            if (Mantiss.Count > MAXIMUM_DIGITS)
+                Mantiss.RemoveRange(0, Mantiss.Count - MAXIMUM_DIGITS);
         }
     }
 }
