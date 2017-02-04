@@ -140,8 +140,6 @@ namespace WhiteStructs.Testing
 
             while(!highLevelStopCriteria(highLevelChanges, highLevelValue))
             {
-                Console.WriteLine(highLevelChanges);
-
                 T lowLevelInitialValue = lowLevelInitialValueProvider(highLevelChanges, highLevelValue); 
                 Func<int, T, T> lowLevelChangeFunction = lowLevelChangeFunctionProvider(highLevelChanges, highLevelValue);
                 Func<int, T, bool> lowLevelStopCriteria = lowLevelStopCriteriaProvider(highLevelChanges, highLevelValue);
