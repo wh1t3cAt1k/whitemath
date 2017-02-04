@@ -27,20 +27,21 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\packages\NUnit.3.6.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="UnitTests.cs" />
+    <Compile Include="EnumerableExtensionsTests.cs" />
+    <Compile Include="StringExtensionsSubstringsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\whiteStructs\whiteStructs.csproj">
       <Project>{84D6674A-B7A0-49CC-8ECD-0AE03FA63383}</Project>
       <Name>whiteStructs</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -27,7 +27,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\packages\NUnit.3.6.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -35,9 +35,6 @@
     <Compile Include="TestExpressionNodes.cs" />
     <Compile Include="TestRationalNumbers.cs" />
     <Compile Include="TestRandomGenerators.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\whiteMath.csproj">
@@ -51,6 +48,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\PrimesUpTo10000.txt" />
     <EmbeddedResource Include="Resources\PrimesUpTo1000.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

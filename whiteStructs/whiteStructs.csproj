@@ -178,7 +178,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Strings\SubstringSearching.cs" />
+    <Compile Include="Strings\StringExtensionsSubstrings.cs" />
     <Compile Include="Testing\ExcelSequenceFormer.cs" />
     <Compile Include="Testing\PerformanceTester.cs" />
     <Compile Include="Testing\ResultTesting.cs" />

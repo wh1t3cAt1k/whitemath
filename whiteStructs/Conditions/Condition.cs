@@ -74,7 +74,8 @@ namespace WhiteStructs.Conditions
 		public class ConditionTestResult
 		{
 			/// <summary>
-			/// Gets a value indicating whether this <see cref="WhiteStructs.Conditions.Condition+ConditionTestResult"/> holds.
+			/// Gets a value indicating whether this 
+			/// <see cref="ConditionTestResult"/> holds.
 			/// </summary>
 			/// <value><c>true</c> if the condition holds; otherwise, <c>false</c>.</value>
 			public bool Holds { get; }
@@ -85,7 +86,7 @@ namespace WhiteStructs.Conditions
 			}
 
 			/// <summary>
-			/// Throws a <see cref="System.ArgumentException"/> if the condition doesn't hold.
+			/// Throws an <see cref="ArgumentException"/> if the condition doesn't hold.
 			/// </summary>
 			/// <param name="exceptionMessage">An optional exception message.</param>
 			public void OrArgumentException(string exceptionMessage = null)

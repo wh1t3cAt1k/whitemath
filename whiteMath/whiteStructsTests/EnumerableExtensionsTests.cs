@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace WhiteStructsTests
 {
 	[TestFixture]
-	public class UnitTests
+	public class EnumerableExtensionsTests
 	{
 		[Test]
 		public void TestSingletonCollectionIsSingleton()
