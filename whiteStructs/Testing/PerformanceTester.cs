@@ -8,26 +8,26 @@ using WhiteStructs.Conditions;
 namespace WhiteStructs.Testing
 {
     /// <summary>
-    /// Represents an event handler which is called once 
-	/// the <see cref="PerformanceTester{T, HT}"/> performs 
-	/// a single test during two-level testing.
-    /// </summary>
-    /// <typeparam name="HT">The type of high-level tester argument.</typeparam>
-    /// <param name="highLevelValue">The value of high-level tester argument.</param>
-    /// <param name="meanTime">The mean running time of tested procedure.</param>
-    public delegate void TestPerformedEventHandler<HT>(HT highLevelValue, decimal meanTime);
-
-    /// <summary>
-    /// This class provides means for conducting perfomance tests
-    /// of one-argument procedures.
+    /// This class provides means for conducting perfomance 
+	/// tests of generic one-argument procedures.
     /// </summary>
     public class PerformanceTester<T, HT>
     {
+		/// <summary>
+		/// Represents an event handler which is called once 
+		/// the <see cref="PerformanceTester{T, HT}"/> performs 
+		/// a single test during two-level testing.
+		/// </summary>
+		/// <typeparam name="HT">The type of high-level tester argument.</typeparam>
+		/// <param name="highLevelValue">The value of high-level tester argument.</param>
+		/// <param name="meanTime">The mean running time of tested procedure.</param>
+		public delegate void TestPerformedEventHandler(HT highLevelValue, decimal meanTime);
+
         /// <summary>
         /// This event fires once the <see cref="PerformanceTester&lt;T, HT&gt;"/>
         /// during performs a single test during two-level testing.
         /// </summary>
-        public event TestPerformedEventHandler<HT> TestPerformed;
+        public event TestPerformedEventHandler TestPerformed;
 
         /// <summary>
         /// Gets the procedure which mean running time is tested
@@ -43,9 +43,8 @@ namespace WhiteStructs.Testing
 		public bool PerformIdleRun { get; private set; }
 
         /// <summary>
-        /// Initializes the <see cref="PerformanceTester&lt;T, HT&gt;"/> with 
-        /// a one-argument procedure which mean running time is
-        /// to be estimated.
+		/// Initializes the <see cref="PerformanceTester{T, HT}"/> with a 
+		/// one-argument procedure whose average running time is to be estimated.
         /// </summary>
         /// <param name="procedure">A delegate pointing to a one-argument procedure.</param>
         public PerformanceTester(Action<T> procedure, bool performIdleRun)
@@ -162,51 +161,69 @@ namespace WhiteStructs.Testing
             return result;
         }
 
+		/// <summary>
+		/// Measures the tested procedure's average execution time
+		/// over the range of arguments defined by the argument provider
+		/// function.
+		/// </summary>
+		/// <returns>The procedure.</returns>
+		/// <param name="argumentProvider">
+		/// A function accepting the zero-based number of the
+		/// current procedure run and returning the value of
+		/// the argument that the tested procedure should be
+		/// executed with during the run.
+		/// </param>
+		/// <param name="stopCriterion">
+		/// A function accepting the zero-based number of the
+		/// current procedure run and returning <c>true</c>
+		/// if testing should be stopped prior to the run.
+		/// </param>
         public decimal TestProcedure(
-            Func<int, T> generator, 
-            Func<int, bool> stopCriteria, 
-            bool precalculateArguments = true)
+			Func<int, T> argumentProvider, 
+			Func<int, bool> stopCriterion, 
+            bool precalculateArguments)
         {
-			Condition.ValidateNotNull(generator, nameof(generator));
-			Condition.ValidateNotNull(stopCriteria, nameof(stopCriteria));
+			Condition.ValidateNotNull(argumentProvider, nameof(argumentProvider));
+			Condition.ValidateNotNull(stopCriterion, nameof(stopCriterion));
 
             return TestProcedure(
-                generator(0),
-                (totalChanges, _) => generator(totalChanges),
-                (totalChanges, _) => stopCriteria(totalChanges), 
+                argumentProvider(0),
+                (totalChanges, _) => argumentProvider(totalChanges),
+                (totalChanges, _) => stopCriterion(totalChanges), 
                 precalculateArguments);
         }
 
         /// <summary>
-        /// Performs a performance test of specified procedure by substituting different 
-        /// values of its argument and returning a mean value of function performance time.
+		/// Measures the tested procedure's average execution time
+		/// over the range of arguments defined by the initial argument
+		/// value and the argument change rule. The tested procedure is 
+		/// repeatedly called using the next argument value until the 
+		/// specified stop criterion function returns <c>true</c>.
         /// </summary>
         public decimal TestProcedure(
             T initialArgument, 
-            Func<int, T, T> changeFunction, 
-            Func<int, T, bool> stopCriteria, 
-            bool precalculateArguments = true)
+			Func<int, T, T> argumentChangeFunction, 
+			Func<int, T, bool> stopCriterion, 
+            bool precalculateArguments)
         {
-			Condition.ValidateNotNull(changeFunction, nameof(changeFunction));
-			Condition.ValidateNotNull(stopCriteria, nameof(stopCriteria));
+			Condition.ValidateNotNull(argumentChangeFunction, nameof(argumentChangeFunction));
+			Condition.ValidateNotNull(stopCriterion, nameof(stopCriterion));
 
-            int totalChanges = 0;
-
-			Stopwatch stopwatch = new Stopwatch();
+			int runsCount = 0;
 
             T currentArgument = initialArgument;
 
             if (precalculateArguments)
             {
-                List<T> preparedArguments = new List<T>();
+				ICollection<T> preparedArguments = new List<T>();
                 preparedArguments.Add(initialArgument);
 
-                while (!stopCriteria(totalChanges, currentArgument))
+                while (!stopCriterion(runsCount, currentArgument))
                 {
-                    currentArgument = changeFunction(totalChanges, currentArgument);
+                    currentArgument = argumentChangeFunction(runsCount, currentArgument);
                     preparedArguments.Add(currentArgument);
 
-                    ++totalChanges;
+                    ++runsCount;
                 }
 
 				// We have in fact pre-calculated all argument values,
@@ -218,31 +235,28 @@ namespace WhiteStructs.Testing
 			if (this.PerformIdleRun)
             {
                 this.TestedProcedure(currentArgument);
-                
-                stopCriteria(0, currentArgument);
-                changeFunction(0, currentArgument);
             }
 
-            stopwatch.Reset();
+			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
 
-            while (!stopCriteria(totalChanges, currentArgument))
+            while (!stopCriterion(runsCount, currentArgument))
 			{
                 this.TestedProcedure(currentArgument);
 
-                currentArgument = changeFunction(totalChanges, currentArgument);
-                ++totalChanges;
+                currentArgument = argumentChangeFunction(runsCount, currentArgument);
+                ++runsCount;
             }
 
 			stopwatch.Stop();
 
-			return (decimal)stopwatch.ElapsedMilliseconds / totalChanges;
+			return (decimal)stopwatch.ElapsedMilliseconds / runsCount;
         }
 
         /// <summary>
-        /// Performance test procedure with a sequence of pre-defined arguments.
+        /// Measures the tested procedure's average execution time
+		/// over the sequence of specified arguments.
         /// </summary>
-        /// <param name="arguments"></param>
 		public decimal TestProcedure(IEnumerable<T> arguments)
         {
 			Condition.ValidateNotNull(arguments, nameof(arguments));
@@ -271,27 +285,32 @@ namespace WhiteStructs.Testing
         }
 
         /// <summary>
-        /// Several tests with the same argument.
+		/// Measures the tested procedure's average execution time.
+		/// The tested procedure is repeatedly called with the 
+		/// specified argument value until the specified stop
+		/// criterion function returns <c>true</c>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="argument"></param>
-        /// <param name="stopCriterion"></param>
-        /// <param name="performIdleRun"></param>
-        /// <returns></returns>
+        /// <param name="argument">
+		/// The argument value with which the <see cref="TestedProcedure"/>
+		/// will be called during performance test.
+		/// </param>
+        /// <param name="stopCriterion">
+		/// A function accepting the number of procedure executions as 
+		/// a parameter and returning a boolean value that indicates 
+		/// whether the performance testing should stop.
+		/// </param>
         public decimal TestProcedure(
 			T argument, 
 			Func<int, bool> stopCriterion)
         {
-            int testCount = 0;
-
 			if (this.PerformIdleRun)
             {
                 this.TestedProcedure(argument);
-                stopCriterion(0);
             }
 
-			Stopwatch stopwatch = new Stopwatch();
+			int testCount = 0;
 
+			Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
             while (!stopCriterion(testCount))

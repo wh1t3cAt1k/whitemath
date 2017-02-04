@@ -180,7 +180,7 @@
     </Compile>
     <Compile Include="Strings\SubstringSearching.cs" />
     <Compile Include="Testing\ExcelSequenceFormer.cs" />
-    <Compile Include="Testing\PerformanceTesting.cs" />
+    <Compile Include="Testing\PerformanceTester.cs" />
     <Compile Include="Testing\ResultTesting.cs" />
     <Compile Include="Conditions\Condition.cs" />
     <Compile Include="Collections\EnumerableExtensions.cs" />
