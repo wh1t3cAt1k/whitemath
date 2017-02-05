@@ -588,12 +588,14 @@ namespace WhiteMath.General
 
             C calc = Numeric<T, C>.Calculator;
 
-            int ret = list.Count - 1;
+			int result = list.Count - 1;
 
-            while (list[ret] == Numeric<T, C>.Zero && ret > 0)
-                ret--;
+			while (list[result] == Numeric<T, C>.Zero && result > 0)
+			{
+				--result;
+			}
 
-            return ret + 1;
+            return result + 1;
         }
 
         /// <summary>
@@ -633,9 +635,8 @@ namespace WhiteMath.General
 
         /// <summary>
         /// Used with long integers digit arrays. Cut the incoming list
-        /// so that it contains only significant digits.
-        /// 
-        /// The cutting is performed in-place, without creation of new objects.
+        /// so that it contains only significant digits. The cutting is 
+		/// performed in-place, without creation of new objects.
         /// </summary>
         /// <param name="list">The digits list to be cut.</param>
         public static void CutInPlace(this List<int> list)
@@ -644,11 +645,11 @@ namespace WhiteMath.General
 
             int difference = list.Count - list.CountSignificant();
 
-            if (difference > 0)
-                list.RemoveRange(list.Count - difference, difference);
+			if (difference > 0)
+			{
+				list.RemoveRange(list.Count - difference, difference);
+			}
         }
-
-        // ---------------
 
         /// <summary>
         /// Used with long integers digit arrays. Cuts the incoming list
@@ -656,36 +657,40 @@ namespace WhiteMath.General
         /// </summary>
         /// <param name="list">The incoming digits list.</param>
         /// <returns>The list without leading zeroes.</returns>
-        public static Numeric<T, C>[] Cut<T,C>(this IList<Numeric<T,C>> list) where C: ICalc<T>, new()
+        public static Numeric<T, C>[] Cut<T, C>(this IList<Numeric<T,C>> list) where C: ICalc<T>, new()
         {
 			Condition.ValidateNotNull(list, nameof(list));
 
             Numeric<T,C>[] newList = new Numeric<T,C>[list.CountSignificant()];
 
-            General.ServiceMethods.Copy(list, 0, newList, 0, newList.Length);
+            Copy(list, 0, newList, 0, newList.Length);
 
             return newList;
         }
 
-        // -----------------------------
-        // ------- inversion count -----
-        // -----------------------------
-
-        public static int InversionCount<T, C>(this IList<T> list) where C: ICalc<T>, new()
+        public static int InversionCount<T, C>(this IList<T> list) 
+			where C: ICalc<T>, new()
         {
-            int k = 0;
+			int inversionsCount = 0;
             
             C calc = Numeric<T, C>.Calculator;
 
-            for(int step=1; step<list.Count; step++)
-                for (int i=step; i<list.Count; i++)
-                    if(calc.GreaterThan(list[i-step], list[i]))
-                        k++;
+			for (int step = 1; step < list.Count; step++)
+			{
+				for (int i = step; i < list.Count; i++)
+				{
+					if (calc.GreaterThan(list[i - step], list[i]))
+					{
+						++inversionsCount;
+					}
+				}
+			}
 
-            return k;
+            return inversionsCount;
         }
 
-        public static int InversionCount<T, C>(this IList<Numeric<T, C>> list) where C : ICalc<T>, new()
+        public static int InversionCount<T, C>(this IList<Numeric<T, C>> list) 
+			where C : ICalc<T>, new()
         {
             int k = 0;
 

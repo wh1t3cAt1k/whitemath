@@ -9,12 +9,9 @@ namespace WhiteMath.ArithmeticLong
     public class LongExp<B, P>
 		where B: IBase, new()
 		where P: IPrecision, new()
-    {
-		private static B baseInstance = new B();
-        private static P precisionInstance = new P();
-        
-		private static readonly int MAXIMUM_DIGITS = precisionInstance.Precision;
-		private static readonly int DIGIT_BASE = baseInstance.Base;
+    {        
+		private static readonly int MAXIMUM_DIGITS = new P().Precision;
+		private static readonly int DIGIT_BASE = new B().Base;
 
         private static readonly int fieldLength = (int)Math.Log10(DIGIT_BASE);
 		private static readonly string digitFormatter = $"{{0:d{fieldLength}}}";
@@ -66,14 +63,14 @@ namespace WhiteMath.ArithmeticLong
             this.Mantiss = new List<int>(digitCount);
             this.Mantiss.Add(generator.Next(1, DIGIT_BASE));
 
-            // ...Because the first digit should be significant.
+            int digitIndex = 1;
 
-            int i = 1;
+			for (; digitIndex < digitCount - 1; ++digitIndex)
+			{
+				this.Mantiss.Add(generator.Next(0, DIGIT_BASE));
+			}
 
-            for ( ; i < digitCount - 1; i++)
-                this.Mantiss.Add(generator.Next(0, DIGIT_BASE));
-
-            if (i < digitCount)
+            if (digitIndex < digitCount)
             {
                 this.Mantiss.Add(generator.Next(1, DIGIT_BASE));
             }
@@ -113,23 +110,27 @@ namespace WhiteMath.ArithmeticLong
         /// <summary>
         /// Normalizes the number so that it does not contain any leading zeroes
         /// (exponent additions may occur) and its precision is in the range
-        /// specified by used IPrecision class.
+		/// specified by the used <see cref="IPrecision"/>.
         /// </summary>
         private void Normalize()
         {
-            int exponentAdd = Mantiss.Count;
+            int exponentAdd = this.Mantiss.Count;
 
-            Mantiss.CutInPlace();
+            this.Mantiss.CutInPlace();
 
-            exponentAdd -= Mantiss.Count;   // теперь здесь хранится значение сдвига.
+            exponentAdd -= Mantiss.Count;
 
-            if (exponentAdd > 0)
-                this.Exponent += exponentAdd;
+			if (exponentAdd > 0)
+			{
+				this.Exponent += exponentAdd;
+			}
 
-            // Обрубаем лишнюю точность.
-
-            if (Mantiss.Count > MAXIMUM_DIGITS)
-                Mantiss.RemoveRange(0, Mantiss.Count - MAXIMUM_DIGITS);
+			// Cutting the excessive precision
+			// -
+			if (Mantiss.Count > MAXIMUM_DIGITS)
+			{
+				Mantiss.RemoveRange(0, Mantiss.Count - MAXIMUM_DIGITS);
+			}
         }
     }
 }

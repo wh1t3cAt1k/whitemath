@@ -15,7 +15,8 @@ namespace WhiteMath.ArithmeticLong
     /// Represents a long integer number with theoretically unlimited precision.
     /// </summary>
     [Serializable]
-    public partial class LongInt<B>: ICloneable where B: IBase, new()
+    public partial class LongInt<B>: ICloneable 
+		where B: IBase, new()
     {
         public static readonly int BASE = new B().Base;
 
@@ -24,8 +25,10 @@ namespace WhiteMath.ArithmeticLong
 
         private static readonly string digitFormatter = GetDigitFormatter();
 
-        // значение степени десятки или двойки для получения основания. -1 значит, что основание - ни десятка, ни двойка. 
-        // также отражает длину одной цифры в десятичных или бинарных знаках.
+		// The length of one digit in decimal or binary places.
+		// At the same time, denotes the power of two or ten
+		// which is equal to BASE.
+		// -
         private static readonly int fieldLength = -1;
 
         #region Standard exceptions
@@ -75,7 +78,7 @@ namespace WhiteMath.ArithmeticLong
         /// Works only if the base of the number is an integer power of ten, otherwise,
         /// a NotSupportedException shall be thrown.
         /// </summary>
-        public static int PlacesInADigit_Decimal
+		public static int DecimalPlacesPerDigit
         {
             get
             {
@@ -91,7 +94,7 @@ namespace WhiteMath.ArithmeticLong
         /// Works only if the base of the number is an integer power of two, otherwise,
         /// a NotSupportedException shall be thrown.
         /// </summary>
-        public static int PlacesInADigit_Binary
+		public static int BinaryPlacesPerDigit
         {
             get
             {
@@ -101,34 +104,26 @@ namespace WhiteMath.ArithmeticLong
                 return fieldLength;
             }
         }
-
-        //-----------------------------------
-        //---------INVARIANTS ---------------
-        //-----------------------------------
-
-		/*
-        [ContractInvariantMethod]
-        private void ___invariant()
-        {
-            Contract.Invariant(this.Digits != null);
-            Contract.Invariant(Contract.ForAll(this.Digits, x => (x >= 0)));    // never should a digit be negative
-        }
-		*/
         
         //-----------------------------------
         //---------PUBLIC PROPERTIES---------
         //-----------------------------------
 
         /// <summary>
-        /// Returns the length of the current number in BASE-based digits.
-        /// <see cref="BASE"/>
+		/// Returns the length of the number in <see cref="BASE"/>-based digits.
         /// </summary>
         public int Length { get { return Digits.Count; } }
 
         /// <summary>
         /// Returns the digits list for the current number.
         /// </summary>
-        public List<int> Digits { get; private set; }
+        internal List<int> Digits { get; private set; }
+
+		/// <summary>
+		/// Gets the list of <see cref="BASE"/>-based digits 
+		/// of the current number.
+		/// </summary>
+		public IReadOnlyList<int> DigitList => Digits;
 
         /// <summary>
         /// Returns <c>true</c> if the current number is negative.
@@ -137,14 +132,15 @@ namespace WhiteMath.ArithmeticLong
 
         /// <summary>
         /// Gets a flag signalizing whether the current number
-        /// is even, i.e. has a zero remainder after division by 2.
+        /// is even, i.e. has a zero remainder after division by two.
         /// </summary>
-        public bool IsEven { get { return LongIntegerMethods.IsEven(BASE, this.Digits); } }
+        public bool IsEven => LongIntegerMethods.IsEven(BASE, this.Digits);
 
         /// <summary>
-        /// Returns the LongInt digit at specified position.
-        /// Lower indexes correspond to less significant digits (i.e. the order is big endian), so
-        /// with <c>i</c>'th digit corresponding to <c>BASE^i</c>.
+        /// Gets or sets the value of the digit at the specified position.
+        /// Smaller indices correspond to less significant digits, so the 
+		/// <c>i</c>'th digit corresponds to the <c>i</c>th power of 
+		/// <see cref="BASE"/>.
         /// </summary>
         /// <param name="digitIndex">The index of the desired number.</param>
         /// <returns>The digit on the zero-based position <paramref name="digitIndex"/>.</returns>
@@ -154,15 +150,11 @@ namespace WhiteMath.ArithmeticLong
             set { Digits[digitIndex] = value; }
         }
 
-        //-----------------------------------
-        //-----------CONSTRUCTORS------------
-        //-----------------------------------
+		#region Constructors
 
-        // static initialization
-        
         /// <summary>
-        /// Статическая инициализация. Проверяет, не является ли основание числа целой степенью
-        /// десятки или двойки.
+		/// Static initializer. Checks if the base is a whole integer power
+		/// of two or ten.
         /// </summary>
         static LongInt()
         {
@@ -185,8 +177,8 @@ namespace WhiteMath.ArithmeticLong
         /// </summary>
         public LongInt()
         {
-            this.IsNegative = false;                  // is positive.
-            this.Digits = new List<int>() { 0 };    // is zero.
+            this.IsNegative = false;
+            this.Digits = new List<int>() { 0 };
         }
 
         /// <summary>
@@ -230,6 +222,8 @@ namespace WhiteMath.ArithmeticLong
 
             this.Digits.FillByAppending(digitCount, digit);
         }
+
+		#endregion
 
         /// <summary>
         /// The constructor designed to create a pseudo-random LongInt
@@ -375,9 +369,8 @@ namespace WhiteMath.ArithmeticLong
         /// </summary>
         private LongInt(int initialSize)
         {
-            IsNegative = false;                   // is positive
-            Digits = new List<int>();           // no digits yet
-            Digits.Capacity = initialSize;      // sets the initial size.
+            this.IsNegative = false;
+			this.Digits = new List<int>(initialSize);
         }
 
         /// <summary>
@@ -388,10 +381,14 @@ namespace WhiteMath.ArithmeticLong
 		/// </param>
 		public LongInt(long number)
         {
-            IsNegative = (number < 0);
-            number = (number > 0 ? number : -number);
+            this.IsNegative = (number < 0);
+            
+			number = (number > 0 ? number : -number);
 
-            Digits = new List<int>();
+			// TODO: might serve us well to guess the
+			// initial capacity here.
+			// -
+            this.Digits = new List<int>();
 
             do
             {
@@ -401,9 +398,7 @@ namespace WhiteMath.ArithmeticLong
             while (number > 0);
         }
 
-        //-----------------------------------
-        //------CONVERSION OPERATORS---------
-        //-----------------------------------
+		#region Conversion Operators
 
         /// <summary>
         /// Performs an unchecked conversion of a LongInt number into a primitive long.
@@ -424,7 +419,8 @@ namespace WhiteMath.ArithmeticLong
         }
 
         /// <summary>
-        /// Performs an implicit conversion of a long number into LongInt.
+		/// Performs an implicit conversion of a long number 
+		/// into <see cref="LongInt{B}"/>.
         /// </summary>
         /// <param name="num">The long number to convert.</param>
         /// <returns>The LongInt number.</returns>
@@ -433,14 +429,14 @@ namespace WhiteMath.ArithmeticLong
             return new LongInt<B>(num);
         }
 
-        //-----------------------------------
-        //------ARITHMETIC OPERATORS---------
-        //-----------------------------------
+		#endregion
+
+		#region Arithmetic Operators
 
         public static LongInt<B> operator +(LongInt<B> one, LongInt<B> two)
         {
-            // Check for negativeness.
-
+			// TODO: this is not quite thread-safe?
+			// -
             if (!one.IsNegative && two.IsNegative)
             {
                 two.IsNegative ^= true;
@@ -465,7 +461,6 @@ namespace WhiteMath.ArithmeticLong
             res.Digits.AddRange(new int[maxLength + 1]);
             res.IsNegative = one.IsNegative && two.IsNegative;        // negative only if both are negative,
                                                                 // other cases at (*)
-
             LongIntegerMethods.Sum(LongInt<B>.BASE, res.Digits, one.Digits, two.Digits);
             res.DealWithZeroes();
 
@@ -600,14 +595,10 @@ namespace WhiteMath.ArithmeticLong
                 return number;
             }
 
-			// Increment the current digit.
-			// If it overflows, we switch to the next one and increment it.
-			// We repeat this process until some digit will not overflow
-			// or we run out of digits.
-
-            // Увеличиваем цифру числа на единицу.
-            // Если происходит переполнение цифры, переходим к следующей и увеличиваем ее на единицу.
-            // Так до тех пор, пока все-таки не прибавим - или у нас не кончатся цифры
+			// Increment the current digit. If it overflows, we switch to 
+			// the next one and increment it. We repeat this process until
+			// some digit yields without overflowing, or until we run out 
+			// of digits.
             // -
             while (currentDigitIndex < number.Length)
             {
@@ -643,8 +634,9 @@ namespace WhiteMath.ArithmeticLong
         {
             int currentDigitIndex = 0;
 
-            // Если число отрицательное, по модулю его на самом деле надо увеличивать
-            //
+			// If the number is negative, its modulus should be
+			// incremented insted.
+            // -
             if(num.IsNegative)
             {
                 num.IsNegative = false;
@@ -671,8 +663,8 @@ namespace WhiteMath.ArithmeticLong
                 {
                     num[currentDigitIndex] = newDigit;
 
-                    // Старшие цифры могли стать нулями в результате заимствований.
-                    // Надо проверить.
+					// The elder digits could have become zero
+					// as a result of borrowing. Need to clean up.
                     // -
                     if (num[num.Length - 1] == 0)
                     {
@@ -683,8 +675,8 @@ namespace WhiteMath.ArithmeticLong
                 }
             }
 
-            // Крайний случай - кончились цифры.
-            // Значит теперь это минус единица!
+			// Edge case - we have ran out of digits.
+			// This means that the number is (-1).
             // -
             num.Digits.Clear();
             num.Digits.Add(1);
@@ -693,9 +685,9 @@ namespace WhiteMath.ArithmeticLong
             return num;
         }
 
-        //---------------------------------------
-        //------FAST--BASE ROOT -MULTIPLICATION--
-        //---------------------------------------
+		#endregion
+
+		#region Fast Multiplication by a BASE root
 
         /// <summary>
         /// If the base of the current number digits is an integer power of some value <paramref name="rootValue"/>,
@@ -718,7 +710,7 @@ namespace WhiteMath.ArithmeticLong
         /// <returns>The result of current number's multiplication by <paramref name="rootValue"/>^<paramref name="rootPower"/>.</returns>
         public LongInt<B> BaseRootMultiply(int rootValue, int rootDegree, int rootPower)
         {
-            // TODO: if power < 0.
+            // TODO: if power < 0?
             // -
             LongInt<B> tmp = this.Clone() as LongInt<B>;
 
@@ -831,8 +823,6 @@ namespace WhiteMath.ArithmeticLong
             return result;
         }
 
-        // --------- BASE MULTIPLY -------------------
-
         /// <summary>
         /// If the digits base for the current number X is BASE,
         /// the method would return return 
@@ -882,8 +872,6 @@ namespace WhiteMath.ArithmeticLong
 
             return tmp;
         }
-
-        // -------------------------------------------
 
         /// <summary>
         /// Shifts the current number to the left by the specified amount of decimal digits.
@@ -991,10 +979,7 @@ namespace WhiteMath.ArithmeticLong
             return one;
         }
 
-
-        //-----------------------------------
-        //------SERVICE METHODS--------------
-        //-----------------------------------
+		#endregion
 
         /// <summary>
         /// Gets the digit formatter for ToString() output.
@@ -1031,10 +1016,6 @@ namespace WhiteMath.ArithmeticLong
         /// <summary>
         /// Chooses the bigger and the smaller absolute number of two.
         /// </summary>
-        /// <param name="one"></param>
-        /// <param name="two"></param>
-        /// <param name="bigger"></param>
-        /// <param name="smaller"></param>
         private static bool CompareAbsolute(LongInt<B> one, LongInt<B> two, out LongInt<B> bigger, out LongInt<B> smaller)
         {
             bool neg1 = one.IsNegative;
@@ -1054,16 +1035,10 @@ namespace WhiteMath.ArithmeticLong
             return res;
         }
 
-        //-----------------------------------
-        //------COMPARISON OPERATORS---------
-        //-----------------------------------
+		#region Comparison Operators
 
         public static bool operator >(LongInt<B> one, LongInt<B> two)
         {
-            //-----------------------------------------------------
-            //---If one number is negative and another is positive.
-            //------------------------------------------------------
-
             if (!one.IsNegative && two.IsNegative) return true;
             else if (one.IsNegative && !two.IsNegative) return false;
             else if (one.IsNegative && two.IsNegative)
@@ -1079,23 +1054,19 @@ namespace WhiteMath.ArithmeticLong
                 return temp;
             }
 
-            // ---------------------------
-            // --Numbers are both positive
-            // ---------------------------
+			// Now we know that numbers are both positive.
+			// -
+			if (one.Length > two.Length)
+			{
+				return true;
+			}
+			else if (one.Length < two.Length)
+			{
+				return false;
+			}
 
-            if (one.Length > two.Length) 
-                return true;
-
-            else if (one.Length < two.Length) 
-                return false;
-
-            // ------------------
-            // --Lengths are same
-            // ------------------
-
-            bool junk;
-
-			return LongIntegerMethods.GreaterThan(one.Digits, two.Digits, out junk);
+            bool _;
+			return LongIntegerMethods.GreaterThan(one.Digits, two.Digits, out _);
         }
 
         public static bool operator <(LongInt<B> one, LongInt<B> two)
@@ -1139,9 +1110,9 @@ namespace WhiteMath.ArithmeticLong
             return !(one > two);
         }
 
-        //-----------------------------------
-        //------OBJECT METHODS OVERRIDE------
-        //-----------------------------------
+		#endregion
+
+		#region Object Methods Override
 
         /// <summary>
         /// Creates a copy of current LongInt number.
@@ -1184,6 +1155,8 @@ namespace WhiteMath.ArithmeticLong
             return res;
         }
 
+		#endregion
+
         //-----------------------------------
         //------CONVERSION ---- METHODS------
         //-----------------------------------
@@ -1206,9 +1179,7 @@ namespace WhiteMath.ArithmeticLong
             return result;
         }
 
-        //-----------------------------------
-        //------STRING -------- METHODS------
-        //-----------------------------------
+		#region String Methods
 
         /// <summary>
         /// Returns the string representation of the current LongInt number.
@@ -1247,8 +1218,16 @@ namespace WhiteMath.ArithmeticLong
         /// <returns></returns>
         public static bool TryParse(string value, out LongInt<B> result)
         {
-            try { result = Parse(value); return true; }
-            catch { result = null; return false; }
+            try 
+			{ 
+				result = Parse(value); 
+				return true; 
+			}
+            catch 
+			{ 
+				result = null; 
+				return false; 
+			}
         }
 
         /// <summary>
@@ -1266,51 +1245,46 @@ namespace WhiteMath.ArithmeticLong
         {
 			Condition.ValidateNotNull(value, nameof(value));
 
-			// Работает только для десятичных чисел.
-			// Если нет, то придется сначала преобразовывать в десятичное, а потом
-			// из десятичного в число по требуемому основанию.
-
 			if (!LongInt<B>.IsBasePowerOfTen)
 			{
 				return LongInt<Bases.B10k>.Parse(value).BaseConvert<B>();
 			}
 
-            LongInt<B> res = new LongInt<B>(value.Length / fieldLength + 1);
+			LongInt<B> result = new LongInt<B>(value.Length / fieldLength + 1);
 
             try
             {
                 if (value[0] == '-')
                 {
                     value = value.Substring(1);
-                    res.IsNegative = true;
+                    result.IsNegative = true;
                 }
 
-                int digCount = (int)Math.Ceiling((double)value.Length / fieldLength);
-
                 // Parse the digits
+				// -
+				int digitIndex = value.Length - fieldLength;
 
-                int i = value.Length - fieldLength;
-
-                for (; i > 0; i -= fieldLength)
-                    res.Digits.Add(int.Parse(value.Substring(i, fieldLength)));
+				for (; digitIndex > 0; digitIndex -= fieldLength)
+				{
+					result.Digits.Add(int.Parse(value.Substring(digitIndex, fieldLength)));
+				}
 
                 // Add the "tail"
+				// -
+                result.Digits.Add(int.Parse(value.Substring(0, fieldLength + digitIndex)));
 
-                res.Digits.Add(int.Parse(value.Substring(0, fieldLength + i)));
+				result.DealWithZeroes();
 
-                // Cut the leading zeroes
-
-                i = res.Digits.Count - 1;
-
-                while (res.Digits[i] == 0 && i > 0)
-                    res.Digits.RemoveAt(i--);
-
-                return res;
+                return result;
             }
-            catch(FormatException ex)
+			catch (FormatException exception)
             {
-                throw new FormatException("Couldn't parse the specified string value into LongInt.", ex);
+                throw new FormatException(
+					"Couldn't parse the specified string value into LongInt.", 
+					exception);
             }
         }
+
+		#endregion
     }
 }
