@@ -62,7 +62,7 @@ namespace WhiteMath.ArithmeticLong
         /// Returns the length of the current number in binary digits.
         /// Works ONLY for numbers whose digits base is an integer power of two.
         /// </summary>
-        public long LengthInBinaryPlaces
+        public long LengthInBits
         {
             get
             {

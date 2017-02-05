@@ -65,7 +65,7 @@ namespace WhiteMath.Cryptography
             MillerRabinFactorize(numDecremented, out t, out s);
 
             LongInt<B> upperBound = Mathematics<LongInt<B>, CalcLongInt<B>>.Min(
-				number.LengthInBinaryPlaces * number.LengthInBinaryPlaces, 
+				number.LengthInBits * number.LengthInBits, 
 				numDecremented);
 
 			for (LongInt<B> i = 2; i <= upperBound; i++)

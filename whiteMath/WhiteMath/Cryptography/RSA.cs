@@ -190,7 +190,7 @@ namespace WhiteMath.Cryptography
 			if (PrimalityTests.CalculateCompositeProbabilityMillerRabin(
 				number, 
 				longIntegerGenerator, 
-				number.LengthInBinaryPlaces) < 1)
+				number.LengthInBits) < 1)
 			{
 				return true;
 			}
