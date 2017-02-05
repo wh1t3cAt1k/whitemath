@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace WhiteStructs.Collections
 {
@@ -12,15 +13,39 @@ namespace WhiteStructs.Collections
 	{
 		private readonly IList<T> _source;
 
-		public int Count => this._source.Count;
-		public T this[int index] => this._source[index];
+		public int Count
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get
+			{
+				return this._source.Count;
+			}
+		}
+
+		public T this[int index]
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get
+			{
+				return this._source[index];
+			}
+		}
 
 		public ReadOnlyListWrapper(IList<T> source) 
 		{ 
 			this._source = source; 
 		}
 
-		public IEnumerator<T> GetEnumerator() => this._source.GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public IEnumerator<T> GetEnumerator()
+		{
+			return this._source.GetEnumerator();
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return this.GetEnumerator();
+		}
 	}
 }
