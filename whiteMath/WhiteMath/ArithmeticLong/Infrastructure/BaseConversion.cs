@@ -58,7 +58,7 @@ namespace WhiteMath.ArithmeticLong.Infrastructure
         /// <param name="fromBase">The numeric base of incoming list.</param>
         /// <param name="newBase">The numeric base for the incoming list to be converted to.</param>
         /// <returns>The list containing digits of numeric base <paramref name="newBase"/>, whilst equal to the incoming list.</returns>
-        public static int[] BaseConvert(IList<int> from, int fromBase, int newBase)
+        public static int[] BaseConvert(IReadOnlyList<int> from, int fromBase, int newBase)
         {
             int[] to = new int[GetRequiredDigitCountForConversion(fromBase, newBase, from.Count)];
 
@@ -67,7 +67,7 @@ namespace WhiteMath.ArithmeticLong.Infrastructure
             return to.Cut();
         }
 
-		public static void BaseConvert(IList<int> from, IList<int> to, int fromBase, int newBase)
+		public static void BaseConvert(IReadOnlyList<int> from, IList<int> to, int fromBase, int newBase)
         {
             // проверяем, не кратное ли основание
 
@@ -82,7 +82,7 @@ namespace WhiteMath.ArithmeticLong.Infrastructure
             else
             {
                 int k = 0;
-                IList<int> divide = from;
+                IReadOnlyList<int> divide = from;
 
                 while (divide.CountSignificant() > 1 || divide[0] > 0)
                 {
@@ -99,7 +99,7 @@ namespace WhiteMath.ArithmeticLong.Infrastructure
         /// в том случае, если основания кратны.
         /// </summary>
 		private static void ConvertPowered(
-			IList<int> sourceDigits, 
+			IReadOnlyList<int> sourceDigits, 
 			IList<int> targetDigits, 
 			int sourceBase, 
 			int targetBase, 

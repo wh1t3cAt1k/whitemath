@@ -8,6 +8,7 @@ using WhiteMath.General;
 using WhiteMath.Randoms;
 
 using WhiteStructs.Conditions;
+using WhiteStructs.Collections;
 
 namespace WhiteMath.ArithmeticLong
 {
@@ -104,10 +105,8 @@ namespace WhiteMath.ArithmeticLong
                 return fieldLength;
             }
         }
-        
-        //-----------------------------------
-        //---------PUBLIC PROPERTIES---------
-        //-----------------------------------
+       
+		#region Object State
 
         /// <summary>
 		/// Returns the length of the number in <see cref="BASE"/>-based digits.
@@ -149,6 +148,8 @@ namespace WhiteMath.ArithmeticLong
             get { return Digits[digitIndex]; }
             set { Digits[digitIndex] = value; }
         }
+
+		#endregion
 
 		#region Constructors
 
@@ -358,7 +359,7 @@ namespace WhiteMath.ArithmeticLong
             if (digitsBase == LongInt<B>.BASE)
                 this.Digits = new List<int>(digits);
             else
-                this.Digits = new List<int>(BaseConversion.BaseConvert(digits, digitsBase, LongInt<B>.BASE));
+				this.Digits = new List<int>(BaseConversion.BaseConvert(digits.AsReadOnly(), digitsBase, LongInt<B>.BASE));
 
             this.IsNegative = negative;
             this.DealWithZeroes();
@@ -544,7 +545,7 @@ namespace WhiteMath.ArithmeticLong
 
         public static LongInt<B> operator /(LongInt<B> one, LongInt<B> two)
         {
-            return Helper.Div(one, two);
+            return Helper.Divide(one, two);
         }
 
         public static int operator %(LongInt<B> one, int two)
@@ -560,7 +561,7 @@ namespace WhiteMath.ArithmeticLong
         public static LongInt<B> operator %(LongInt<B> one, LongInt<B> two)
         {
             LongInt<B> remainder;
-            LongInt<B>.Helper.Div(one, two, out remainder);
+            LongInt<B>.Helper.Divide(one, two, out remainder);
 
             return remainder;
         }

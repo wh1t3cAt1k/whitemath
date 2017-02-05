@@ -5,26 +5,23 @@ using System.Linq;
 using WhiteMath.General;
 
 using WhiteStructs.Conditions;
+using WhiteStructs.Collections;
 
 namespace WhiteMath.ArithmeticLong
 {
     /// <summary>
-    /// This class provides static methods
-    /// for different long integer calculation purposes.
+    /// This class provides static methods for various long 
+	/// integer calculation purposes.
     /// </summary>
     public static class LongIntegerMethods
     {
-        // -------------------------------------
-        // ---------------- COMPARISON ---------
-        // -------------------------------------
-
         /// <summary>
         /// Checks whether the specified long integer number is even.
         /// </summary>
         /// <param name="BASE">The base of digits of the <paramref name="operand"/>. If even, the checking takes O(1) time. If odd, the time is O(n).</param>
         /// <param name="operand">A list which contains the digits of the long integer modulo <paramref name="BASE"/>, starting with the least significant digit.</param>
         /// <returns>True if the long integer number defined by <paramref name="operand"/> is even, false otherwise.</returns>
-        public static bool IsEven(int BASE, IList<int> operand)
+        public static bool IsEven(int BASE, IReadOnlyList<int> operand)
         {
 			Condition.Validate(BASE > 1).OrArgumentOutOfRangeException(Messages.DigitBaseNeedsToBeBiggerThanOne);
 			Condition.ValidateNotNull(operand, nameof(operand));
@@ -66,7 +63,7 @@ namespace WhiteMath.ArithmeticLong
         /// <param name="BASE">The base of digits of the <paramref name="operand"/>. If divisible by five, the checking takes O(1) time. If not, the time is O(n).</param>
         /// <param name="operand">A list which contains the digits of the long integer modulo <paramref name="BASE"/>, starting with the least significant digit.</param>
         /// <returns>True if the long integer number defined by <paramref name="operand"/> is divisible by five, false otherwise.</returns>
-        public static bool IsDivisibleByFive(int BASE, IList<int> operand)
+        public static bool IsDivisibleByFive(int BASE, IReadOnlyList<int> operand)
         {
 			Condition.Validate(BASE > 1).OrArgumentOutOfRangeException(Messages.DigitBaseNeedsToBeBiggerThanOne);
 			Condition.ValidateNotNull(operand, nameof(operand));
@@ -78,10 +75,9 @@ namespace WhiteMath.ArithmeticLong
             {
                 int lastBaseDigit = BASE % 10;
 
-                // Работаем с сериями остатков степеней BASE при делении на 5.
-                // -----------------------------------------------------------
-
-                int[] remainderSeries;
+				// We work with series of remainders of BASE divided by five.
+				// -
+				int[] remainderSeries;
 
                 switch (lastBaseDigit)
                 {
@@ -116,14 +112,14 @@ namespace WhiteMath.ArithmeticLong
 
         /// <summary>
         /// Checks whether one natural long integer number is bigger than another.
-        /// Digit arrays can contain leading zeroes, digits should be of the same base for both parameters.
-        /// Need not specify BASE.
+        /// Digit arrays can contain leading zeroes, digits should be of the same 
+		/// base for both parameters. Need not specify BASE.
         /// </summary>
         /// <param name="one">The first long integer digits array.</param>
         /// <param name="two">The second long integer digits array.</param>
         /// <param name="equals">The out argument showing if the second number is actually equal to the first one.</param>
         /// <returns></returns>
-        public static bool GreaterThan(IList<int> one, IList<int> two, out bool equals)
+        public static bool GreaterThan(IReadOnlyList<int> one, IReadOnlyList<int> two, out bool equals)
         {
 			Condition.ValidateNotNull(one, nameof(one));
 			Condition.ValidateNotNull(two, nameof(two));
@@ -175,10 +171,7 @@ namespace WhiteMath.ArithmeticLong
         /// Checks whether the two natural long integers store the same value.
         /// Digits array can contain leading zeroes, digits should be of the same BASE. (need not specify)
         /// </summary>
-        /// <param name="one"></param>
-        /// <param name="two"></param>
-        /// <returns></returns>
-        public static bool Equals(IList<int> one, IList<int> two)
+        public static bool Equals(IReadOnlyList<int> one, IReadOnlyList<int> two)
         {
 			Condition.ValidateNotNull(one, nameof(one));
 			Condition.ValidateNotNull(two, nameof(two));
@@ -332,7 +325,6 @@ namespace WhiteMath.ArithmeticLong
             return;
         }
 
-
         // ---------------------------------------
         // ----------- DIFFERENCE ----------------
         // ---------------------------------------
@@ -350,14 +342,14 @@ namespace WhiteMath.ArithmeticLong
         /// <param name="two"></param>
         /// <param name="result"></param>
         /// <param name="BASE"></param>
-        public static bool Subtract(int BASE, IList<int> result, IList<int> one, IList<int> two)
+        public static bool Subtract(int BASE, IList<int> result, IReadOnlyList<int> one, IReadOnlyList<int> two)
         {
 			Condition.ValidateNotNull(one, nameof(one));
 			Condition.ValidateNotNull(two, nameof(two));
 			Condition.ValidateNotNull(result, nameof(result));
 
-            // TODO: turn this into a unit test
-			// Contract.Ensures(Contract.ForAll(result, x => (x >= 0)));           // all digits should be positive.
+            // TODO: turn this into a unit test.
+			// Contract.Ensures(Contract.ForAll(result, x => (x >= 0)));
 
             int i;
             int temp;
@@ -399,7 +391,7 @@ namespace WhiteMath.ArithmeticLong
         /// <param name="two">The divisor.</param>
         /// <param name="remainder">The reference to store the remainder.</param>
         /// <returns>The quotient containing only significant digits (no trailing zeroes).</returns>
-		public static IList<int> Divide(int BASE, IList<int> one, IList<int> two, out IList<int> remainder)
+		public static IList<int> Divide(int BASE, IReadOnlyList<int> one, IReadOnlyList<int> two, out IList<int> remainder)
         {
 			Condition.ValidateNotNull(one, nameof(one));
 			Condition.ValidateNotNull(two, nameof(two));
@@ -415,7 +407,7 @@ namespace WhiteMath.ArithmeticLong
 
             int[] result = new int[one.CountSignificant() - two.CountSignificant() + 1];
 
-            remainder = Divide(BASE, result, one, two).Cut();
+			remainder = Divide(BASE, result, one, two).AsReadOnly().Cut();
 
             return result.Cut();
         }
@@ -429,7 +421,7 @@ namespace WhiteMath.ArithmeticLong
         /// <param name="result">The digits array to store the result. WARNING! Should be able to store AT LEAST one.Count - two.Count + 1 digits.</param>
         /// <param name="one">The digits array containing the first operand.</param>
         /// <param name="two">The digits array containing the second operand.</param>
-        public static IList<int> Divide(int BASE, IList<int> result, IList<int> one, IList<int> two)
+        public static IList<int> Divide(int BASE, IList<int> result, IReadOnlyList<int> one, IReadOnlyList<int> two)
         {
 			Condition.ValidateNotNull(one, nameof(one));
 			Condition.ValidateNotNull(two, nameof(two));
@@ -452,7 +444,8 @@ namespace WhiteMath.ArithmeticLong
             result.FillByAssign(0);
             // ------------------
 
-            IList<int> u, v;
+			IList<int> u;
+			IList<int> v;
 
             int uShift, vShift, i;
             long temp, temp1, temp2;
@@ -461,40 +454,38 @@ namespace WhiteMath.ArithmeticLong
             int qGuess, remainder;
             int borrow, carry;
 
-            // Проверим, надо ли домножать.
-            // Если да - увы, надо выделять дополнительную память.
-
+			// Check if we need to scale. If yes, alas,
+			// additional memory needs to be allocated.
+			// -
             scale = BASE / (two[two.CountSignificant() - 1] + 1);
 
             if (scale > 1)
             {
                 u = new int[one.Count + 2];
                 v = new int[two.Count + 2];
-                int[] scaleAr = new int[] { scale };
 
-                MultiplySimple(BASE, u, one, scaleAr);
-                MultiplySimple(BASE, v, two, scaleAr);
+				int[] scaleDigitsArray = { scale };
+
+                MultiplySimple(BASE, u, one, scaleDigitsArray);
+                MultiplySimple(BASE, v, two, scaleDigitsArray);
             }
             else
             {
-                // Число будет "портиться", поэтому нужно создать хоть копию.
-
+                // The number will be spoiled, so we need to 
+				// create a copy.
+				// -
                 u = new int[one.CountSignificant() + 1];
-                General.ServiceMethods.Copy(one, 0, u, 0, u.Count - 1);
+				ServiceMethods.Copy(one, 0, u, 0, u.Count - 1);
 
-                // Делитель портиться не будет.
-
-                v = two;
+				v = new int[two.CountSignificant()];
+				ServiceMethods.Copy(one, 0, v, 0, v.Count);
             }
 
-            // ------------
+			int n = v.AsReadOnly().CountSignificant();
+			int m = u.AsReadOnly().CountSignificant() - n;
 
-            int n = v.CountSignificant();
-            int m = u.CountSignificant() - n;
-
-            // ------------
-            // Добавлено -1
-
+            // Added -1.
+			// -
             for (vShift = m, uShift = n + vShift; vShift >= 0; --vShift, --uShift)
             {
                 qGuess = (int)(((long)u[uShift] * BASE + u[uShift - 1]) / v[n - 1]);
@@ -518,7 +509,8 @@ namespace WhiteMath.ArithmeticLong
                 // начиная с позиции vJ+i
                 carry = 0; borrow = 0;
 
-                // цикл по цифрам two
+                // Loop over the second number's digits.
+				// -
                 for (i = 0; i < n; i++)
                 {
                     // получить в temp цифру произведения B*qGuess
@@ -560,16 +552,20 @@ namespace WhiteMath.ArithmeticLong
                     borrow = 0;
                 }
 
-                // Прошло ли вычитание нормально ?
+                // Did the subtraction go normally?
+				// -
                 if (borrow == 0)
                 {
-                    // Да, частное угадано правильно
+					// Yes, the quotient guess was correct.
+					// -
                     result[vShift] = qGuess;
                 }
                 else
                 {
-                    // Нет, последний перенос при вычитании borrow = -1,
-                    // значит, qGuess на единицу больше истинного частного        
+					// No, the last borrow during subtraction is -1,
+					// which means qGuess is 1 larger than the true
+					// quotient.
+					// -
                     result[vShift] = qGuess - 1;
 
                     // добавить одно, вычтенное сверх необходимого B к U
@@ -600,13 +596,13 @@ namespace WhiteMath.ArithmeticLong
                 // u.digits.RemoveAt(i--);
             }
 
-            // Возвращаем остаток.
-            // Только надо поделить на scale.
+			// Return the remainder, also need to scale back.
+			// -
+			int[] remainderDigits = new int[u.Count];
 
-            int[] remDigits = new int[u.Count];
-            LongIntegerMethods.DivideByInteger(BASE, remDigits, u, scale);
+			DivideByInteger(BASE, remainderDigits, u.AsReadOnly(), scale);
 
-            return remDigits;
+            return remainderDigits;
         }
 
         /// <summary>
@@ -619,7 +615,7 @@ namespace WhiteMath.ArithmeticLong
         /// <param name="two">The natural integer divisor.</param>
         /// <param name="remainder">The reference to store the remainder.</param>
         /// <returns>An array containing only significant digits of the quotient.</returns>
-        public static int[] DivideByInteger(int BASE, IList<int> one, int two, out int remainder)
+        public static int[] DivideByInteger(int BASE, IReadOnlyList<int> one, int two, out int remainder)
         {
 			Condition.ValidateNotNull(one, nameof(one));
 			Condition.Validate(two > 0).OrArgumentOutOfRangeException(Messages.DivisorShouldBePositive);
@@ -639,7 +635,7 @@ namespace WhiteMath.ArithmeticLong
         /// <param name="result">The digit array to contain the result. WARNING! Should be safe to store all [one.Count] digits</param>
         /// <param name="one">The first operand. Should be non-negative.</param>
         /// <param name="two">The second operand. Should be positive.</param>
-        public static int DivideByInteger(int BASE, IList<int> result, IList<int> one, int two)
+        public static int DivideByInteger(int BASE, IList<int> result, IReadOnlyList<int> one, int two)
         {
 			Condition.ValidateNotNull(result, nameof(result));
 			Condition.ValidateNotNull(one, nameof(one));
@@ -676,7 +672,7 @@ namespace WhiteMath.ArithmeticLong
         /// Multiplies one natural long integer by another.
         /// The result digits array must be safe to contain one.Count + two.Count elements.
         /// </summary>
-        public static void MultiplySimple(int BASE, IList<int> result, IList<int> one, IList<int> two)
+        public static void MultiplySimple(int BASE, IList<int> result, IReadOnlyList<int> one, IReadOnlyList<int> two)
         {
 			Condition.ValidateNotNull(result, nameof(result));
 			Condition.ValidateNotNull(one, nameof(one));

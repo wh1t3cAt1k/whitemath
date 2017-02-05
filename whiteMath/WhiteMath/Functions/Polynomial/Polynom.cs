@@ -200,7 +200,7 @@ namespace WhiteMath.Functions
         /// </summary>
         /// <param name="coefficients"></param>
         public Polynom(params Numeric<T, C>[] coefficients)
-            : this(coefficients as IList<Numeric<T, C>>)
+            : this(coefficients as IReadOnlyList<Numeric<T, C>>)
         { }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace WhiteMath.Functions
         /// array.
         /// </summary>
         /// <param name="coefficients"></param>
-        public Polynom(IList<Numeric<T, C>> coefficients)
+        public Polynom(IReadOnlyList<Numeric<T, C>> coefficients)
         {
             int countSignificant = coefficients.CountSignificant();
 

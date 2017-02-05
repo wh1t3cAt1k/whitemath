@@ -16,7 +16,13 @@ namespace WhiteMath.ArithmeticLong
 			/// Adds together two long integer numbers with the
 			/// specified shift values.
 			/// </summary>
-			private static void SumPrivate(int BASE, IList<int> result, IList<int> op1, int shift1, IList<int> op2, int shift2)
+			private static void SumPrivate(
+				int digitBase, 
+				IList<int> result, 
+				IReadOnlyList<int> firstOperand, 
+				int firstShift, 
+				IReadOnlyList<int> secondOperand, 
+				int secondShift)
 			{
 				int i;
 				long tmp;
@@ -26,21 +32,19 @@ namespace WhiteMath.ArithmeticLong
 				{
 					tmp = carry;
 
-					if (i - shift1 >= 0 && i - shift1 < op1.Count)
-						tmp += op1[i - shift1];
-					if (i - shift2 >= 0 && i - shift2 < op2.Count)
-						tmp += op2[i - shift2];
+					if (i - firstShift >= 0 && i - firstShift < firstOperand.Count)
+						tmp += firstOperand[i - firstShift];
+					if (i - secondShift >= 0 && i - secondShift < secondOperand.Count)
+						tmp += secondOperand[i - secondShift];
 
-					result[i] = (int)(tmp % BASE);
-					carry = (int)(tmp / BASE);
+					result[i] = (int)(tmp % digitBase);
+					carry = (int)(tmp / digitBase);
 				}
 
 				return;
 			}
 
-			//---------------------------------------------------------------
-			//---------------------NUMBER DIVISION---------------------------
-			//---------------------------------------------------------------
+			#region Number Division
 
 			/// <summary>
 			/// Performs the integral division of two long integer numbers.
@@ -48,15 +52,14 @@ namespace WhiteMath.ArithmeticLong
 			/// <param name="one">The first LongInt number.</param>
 			/// <param name="two">The second LongInt number.</param>
 			/// <returns>The result of integral division without the remainder.</returns>
-			public static LongInt<B> Div(LongInt<B> one, LongInt<B> two)
+			public static LongInt<B> Divide(LongInt<B> one, LongInt<B> two)
 			{
 				Condition.ValidateNotNull(one, nameof(one));
 				Condition.ValidateNotNull(two, nameof(two));
 
-				LongInt<B> junk;
+				LongInt<B> _;
 
-				return
-					Div(one, two, out junk);
+				return Divide(one, two, out _);
 			}
 
 			/// <summary>
@@ -66,7 +69,7 @@ namespace WhiteMath.ArithmeticLong
 			/// <param name="two">The second LongInt number.</param>
 			/// <param name="remainder">The reference to contain the remainder.</param>
 			/// <returns>The result of integral division.</returns>
-			public static LongInt<B> Div(LongInt<B> one, LongInt<B> two, out LongInt<B> remainder)
+			public static LongInt<B> Divide(LongInt<B> one, LongInt<B> two, out LongInt<B> remainder)
 			{
 				Condition.ValidateNotNull(one, nameof(one));
 				Condition.ValidateNotNull(two, nameof(two));
@@ -121,16 +124,13 @@ namespace WhiteMath.ArithmeticLong
 				return result;
 			}
 
-			//---------------------------------------------------------------
-			//---------------------NUMBER MULTIPLICATION---------------------
-			//---------------------------------------------------------------
+			#endregion
+
+			#region Number Multiplication
 
 			/// <summary>
-			/// Performs a simple, square-complex multiplication of two LongInt numbers.
+			/// Performs a simple, square time complexity multiplication of two LongInt numbers.
 			/// </summary>
-			/// <param name="one"></param>
-			/// <param name="two"></param>
-			/// <returns></returns>
 			public static LongInt<B> MultiplySimple(LongInt<B> one, LongInt<B> two)
 			{
 				// the resulting number can have double length.
@@ -149,15 +149,17 @@ namespace WhiteMath.ArithmeticLong
 				return res;
 			}
 
-			// --------------------------------
-			// -------- INTEGER SQRT ----------
-			// --------------------------------
+			#endregion
 
-			// Надо вычислить статически,
-			// является ли BASE полным квадратом.
+			#region Integer Square Root
 
-			private static readonly int BASE_SQRT_FLOOR = Mathematics<int, CalcInt>.SquareRootInteger(LongInt<B>.BASE, LongInt<B>.BASE);
-			private static readonly bool BASE_IS_FULL_SQUARE = (BASE_SQRT_FLOOR * BASE_SQRT_FLOOR == LongInt<B>.BASE);
+			// Need to statically calculate whether the BASE is a full square.
+			// -
+			private static readonly int BASE_SQRT_FLOOR 
+				= Mathematics<int, CalcInt>.SquareRootInteger(LongInt<B>.BASE, LongInt<B>.BASE);
+
+			private static readonly bool IS_BASE_FULL_SQUARE 
+				= (BASE_SQRT_FLOOR * BASE_SQRT_FLOOR == LongInt<B>.BASE);
 
 			/// <summary>
 			/// Returns the integer part of the square root
@@ -175,13 +177,13 @@ namespace WhiteMath.ArithmeticLong
 
 				LongInt<B> firstEstimate = number;
 
-				// Имеет смысл находить лучшее, чем само число,
-				// первое приближение, только в том случае,
-				// если число имеет длину более 1.
-
+				// An initial estimate better than the number itself
+				// is only reasonable to look for in case of digit
+				// length more than 1.
+				// -
 				if (number.Length > 1)
 				{
-					if (!BASE_IS_FULL_SQUARE || number.Length % 2 == 0)
+					if (!IS_BASE_FULL_SQUARE || number.Length % 2 == 0)
 					{
 						firstEstimate = LongInt<B>.CreatePowerOfBase((number.Length + 1) / 2);
 					}
@@ -196,9 +198,9 @@ namespace WhiteMath.ArithmeticLong
 					Mathematics<LongInt<B>, CalcLongInt<B>>.SquareRootInteger(number, firstEstimate);
 			}
 
-			// --------------------------------
-			// -------- EXPONENTIATION --------
-			// --------------------------------
+			#endregion
+
+			#region Exponentiation
 
 			[Obsolete]
 			public static LongInt<B> PowerIntegerModularSlow<B>(
@@ -293,6 +295,8 @@ namespace WhiteMath.ArithmeticLong
 
 				return result;
 			}
+
+			#endregion
 		}
 	}
 }

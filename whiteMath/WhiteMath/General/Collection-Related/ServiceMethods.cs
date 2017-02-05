@@ -5,6 +5,7 @@ using WhiteMath.Calculators;
 using WhiteMath.Randoms;
 
 using WhiteStructs.Conditions;
+using WhiteStructs.Collections;
 
 namespace WhiteMath.General
 {
@@ -366,7 +367,7 @@ namespace WhiteMath.General
         /// <typeparam name="T">The type of the elements in the list.</typeparam>
         /// <param name="source">The source list.</param>
         /// <param name="destination">The destination list.</param>
-        public static void Copy<T>(IList<T> source, IList<T> destination)
+        public static void Copy<T>(IReadOnlyList<T> source, IList<T> destination)
         {
 			Condition.ValidateNotNull(source, nameof(source));
 			Condition.ValidateNotNull(destination, nameof(destination));
@@ -379,7 +380,7 @@ namespace WhiteMath.General
         /// to the destination list. The filling of the destination list is started
         /// from destinationIndex.
         /// </summary>
-        public static void Copy<T>(IList<T> source, int sourceIndex, IList<T> destination, int destinationIndex)
+        public static void Copy<T>(IReadOnlyList<T> source, int sourceIndex, IList<T> destination, int destinationIndex)
         {
 			Condition.ValidateNotNull(source, nameof(source));
 
@@ -391,7 +392,7 @@ namespace WhiteMath.General
         /// to the destination list. The filling of the destination list is started
         /// from destinationIndex.
         /// </summary>
-        public static void Copy<T>(IList<T> source, int sourceIndex, IList<T> destination, int destinationIndex, int length)
+        public static void Copy<T>(IReadOnlyList<T> source, int sourceIndex, IList<T> destination, int destinationIndex, int length)
         {
 			Condition.ValidateNotNull(source, nameof(source));
 
@@ -562,16 +563,18 @@ namespace WhiteMath.General
         /// </summary>
         /// <param name="list">The long integer digits list.</param>
         /// <returns>The number of significant digits in the number.</returns>
-        public static int CountSignificant(this IList<int> list)
+        public static int CountSignificant(this IReadOnlyList<int> list)
         {
 			Condition.ValidateNotNull(list, nameof(list));
 
-            int ret = list.Count - 1;
+			int result = list.Count - 1;
 
-            while (list[ret] == 0 && ret > 0)
-                ret--;
+			while (list[result] == 0 && result > 0)
+			{
+				result--;
+			}
 
-            return ret + 1;
+            return result + 1;
         }
 
         /// <summary>
@@ -582,7 +585,7 @@ namespace WhiteMath.General
         /// <typeparam name="C">The calculator for the coefficient type.</typeparam>
         /// <param name="list">The list of coefficients.</param>
         /// <returns>The number of significant coefficients of the polynom.</returns>
-        public static int CountSignificant<T, C>(this IList<Numeric<T, C>> list) where C: ICalc<T>, new()
+        public static int CountSignificant<T, C>(this IReadOnlyList<Numeric<T, C>> list) where C: ICalc<T>, new()
         {
 			Condition.ValidateNotNull(list, nameof(list));
 
@@ -604,13 +607,13 @@ namespace WhiteMath.General
         /// </summary>
         /// <param name="list">The incoming digits list.</param>
         /// <returns>The list without leading zeroes.</returns>
-        public static int[] Cut(this IList<int> list)
+        public static int[] Cut(this IReadOnlyList<int> list)
         {
 			Condition.ValidateNotNull(list, nameof(list));
 
-            int[] newList = new int[list.CountSignificant()];
+			int[] newList = new int[list.CountSignificant()];
 
-            General.ServiceMethods.Copy(list, 0, newList, 0, newList.Length);
+            Copy(list, 0, newList, 0, newList.Length);
 
             return newList;
         }
@@ -628,7 +631,7 @@ namespace WhiteMath.General
             List<int> newList = new List<int>(list.CountSignificant());
             newList.AddRange(new int[newList.Capacity]);
 
-            General.ServiceMethods.Copy(list, 0, newList, 0, newList.Count);
+            Copy(list, 0, newList, 0, newList.Count);
 
             return newList;
         }
@@ -657,7 +660,7 @@ namespace WhiteMath.General
         /// </summary>
         /// <param name="list">The incoming digits list.</param>
         /// <returns>The list without leading zeroes.</returns>
-        public static Numeric<T, C>[] Cut<T, C>(this IList<Numeric<T,C>> list) where C: ICalc<T>, new()
+        public static Numeric<T, C>[] Cut<T, C>(this IReadOnlyList<Numeric<T,C>> list) where C: ICalc<T>, new()
         {
 			Condition.ValidateNotNull(list, nameof(list));
 

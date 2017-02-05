@@ -10,6 +10,7 @@
     <AssemblyName>whiteStructs</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -185,6 +186,8 @@
     <Compile Include="Conditions\Condition.cs" />
     <Compile Include="Collections\EnumerableExtensions.cs" />
     <Compile Include="Collections\Messages.cs" />
+    <Compile Include="Collections\ListExtensions.cs" />
+    <Compile Include="Collections\ReadOnlyListWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

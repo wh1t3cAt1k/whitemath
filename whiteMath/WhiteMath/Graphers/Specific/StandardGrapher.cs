@@ -6,6 +6,8 @@ using System.Drawing;
 using WhiteMath.Graphers.Services;
 using WhiteMath.General;
 
+using WhiteStructs.Collections;
+
 using CoordinateTransformer = WhiteMath.Graphers.CoordinateTransformer<double, WhiteMath.Calculators.CalcDouble>;
 
 namespace WhiteMath.Graphers
@@ -60,7 +62,7 @@ namespace WhiteMath.Graphers
         {
             Point<double>[] arr = new Point<double>[PointsArray.Count];
 
-            ServiceMethods.Copy(PointsArray, arr);
+			ServiceMethods.Copy(PointsArray.AsReadOnly(), arr);
             return arr;
         }
 
@@ -147,7 +149,7 @@ namespace WhiteMath.Graphers
             // ServiceMethods.Copy(this.PointsArray, minInd - (minInd == 0 ? 0 : 1), temp.PointsArray, 0, (maxInd == (PointsArray.Count - 1) ? maxInd : maxInd + 1) - (minInd == 0 ? minInd : (minInd - 1)) + 1);
 
             temp.PointsArray = new Point<double>[maxInd - minInd + 1];
-            ServiceMethods.Copy(this.PointsArray, minInd, temp.PointsArray, 0, maxInd - minInd + 1);
+			ServiceMethods.Copy(this.PointsArray.AsReadOnly(), minInd, temp.PointsArray, 0, maxInd - minInd + 1);
 
             // находим новые минимальные и максимальные значения
 

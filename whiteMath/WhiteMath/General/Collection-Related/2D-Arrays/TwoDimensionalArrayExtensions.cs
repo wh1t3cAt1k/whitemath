@@ -150,7 +150,7 @@ namespace WhiteMath.General
         /// <param name="matrix">The two-dimensional array to be modified.</param>
         /// <param name="rowIndex">The row index of the two-dimensional array.</param>
         /// <param name="list">The list containing the values to be placed in the specified row.</param>
-        public static void SetRowAt<T>(this T[,] matrix, int rowIndex, IList<T> list)
+        public static void SetRowAt<T>(this T[,] matrix, int rowIndex, IReadOnlyList<T> list)
         {
 			Condition.ValidateNotNull(matrix, nameof(matrix));
 			Condition.ValidateNotNull(list, nameof(list));

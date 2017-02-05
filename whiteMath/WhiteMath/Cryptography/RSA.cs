@@ -400,7 +400,7 @@ namespace WhiteMath.Cryptography
 
                     LongInt<B> remainder;
 
-                    number = LongInt<B>.Helper.Div(number, publicKey, out remainder);
+                    number = LongInt<B>.Helper.Divide(number, publicKey, out remainder);
                     remainder = LongInt<B>.Helper.PowerIntegerModular(remainder, publicExponent, publicKey);
 
                     result.Add(remainder);
