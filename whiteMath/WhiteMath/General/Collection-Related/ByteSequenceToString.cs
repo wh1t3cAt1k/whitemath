@@ -16,40 +16,66 @@ namespace WhiteMath.General
         /// <summary>
         /// Digit to hexadecimal.
         /// </summary>
-        private static string ___toHexSymbol(this int digit, bool upperCase)
+		private static string ToHexSymbol(this int digit, bool upperCase)
         {
-            if (digit < 10)
-                return digit.ToString();
-            else if (digit == 10)
-                return (upperCase ? "A" : "a");
-            else if (digit == 11)
-                return (upperCase ? "B" : "b");
-            else if (digit == 12)
-                return (upperCase ? "C" : "c");
-            else if (digit == 13)
-                return (upperCase ? "D" : "d");
-            else if (digit == 14)
-                return (upperCase ? "E" : "e");
-            else if (digit == 15)
-                return (upperCase ? "F" : "f");
-            else
-                throw new ArgumentException("APOCALYPTIC EXCEPTION. Hexadecimal digit is not a hexadecimal digit.");
+			string result;
+
+			switch (digit)
+			{
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+					result = digit.ToString();
+					break;
+				case 10:
+					result = "a";
+					break;
+				case 11:
+					result = "b";
+					break;
+				case 12:
+					result = "c";
+					break;
+				case 13:
+					result = "d";
+					break;
+				case 14:
+					result = "e";
+					break;
+				case 15:
+					result = "f";
+					break;
+				default:
+					throw new ArgumentException(
+						"The argument is not a representation of a hexadecimal digit.",
+						nameof(digit));
+			}
+
+			return upperCase 
+				? result 
+				: result.ToUpperInvariant();
         }
 
         /// <summary>
         /// Converts a sequence of bytes into a hexadecimal string.
         /// </summary>
-        /// <param name="bigEndian">
-        /// If this parameter is set to true, than in two consecutive hex string symbols, 
-        /// the first is treated as the least significant part of the byte, 
-        /// and the second one as the most significant, e.g. <c>A1</c>
+        /// <param name="isBigEndian">
+        /// If this parameter is set to <c>true</c>, than in two consecutive hex 
+		/// string symbols, the first is treated as the least significant part 
+		/// of the byte, and the second one as the most significant, e.g. <c>A1</c>
         /// would mean <c>26</c> and not <c>161</c>.
         /// </param>
         /// <param name="sequence">A sequence of bytes to be represented as a hex string.</param>
-        /// <param name="upperCase">A flag specifying whether the 
+        /// <param name="isUpperCase">A flag specifying whether the 
         /// A, B, C, D, E, F digits, if any appear, should be uppercase.</param>
         /// <returns>A hexadecimal string </returns>
-        public static string ToHexString(IEnumerable<byte> sequence, bool upperCase, bool bigEndian = false)
+		public static string ToHexString(IEnumerable<byte> sequence, bool isUpperCase, bool isBigEndian = false)
         {
 			Condition.ValidateNotNull(sequence, nameof(sequence));
 
@@ -57,15 +83,15 @@ namespace WhiteMath.General
 
             foreach (byte nextByte in sequence)
             {
-                if (bigEndian)
+                if (isBigEndian)
                 {
-                    builder.Append((nextByte & 0x0f).___toHexSymbol(false));
-                    builder.Append(((nextByte & 0xf0) >> 4).___toHexSymbol(false));
+					builder.Append((nextByte & 0x0f).ToHexSymbol(isUpperCase));
+					builder.Append(((nextByte & 0xf0) >> 4).ToHexSymbol(isUpperCase));
                 }
                 else
                 {
-                    builder.Append(((nextByte & 0xf0) >> 4).___toHexSymbol(false));
-                    builder.Append((nextByte & 0x0f).___toHexSymbol(false));
+					builder.Append(((nextByte & 0xf0) >> 4).ToHexSymbol(isUpperCase));
+					builder.Append((nextByte & 0x0f).ToHexSymbol(isUpperCase));
                 }
             }
 
@@ -102,25 +128,25 @@ namespace WhiteMath.General
                 hexString = hexString.Substring(1);
             }
 
-            byte[] arr = new byte[(hexString.Length + 1) / 2];
+			byte[] result = new byte[(hexString.Length + 1) / 2];
 
             for (int i = 0; i < hexString.Length; i += 2)
             {
                 if (bigEndian)
                 {
-                    arr[i / 2] = byte.Parse(
+                    result[i / 2] = byte.Parse(
                         (i + 1 < hexString.Length ? hexString[i + 1].ToString() : "") + hexString[i],
                         System.Globalization.NumberStyles.AllowHexSpecifier);
                 }
                 else
                 {
-                    arr[i / 2] = byte.Parse(
+                    result[i / 2] = byte.Parse(
                         hexString[i] + (i + 1 < hexString.Length ? hexString[i + 1].ToString() : ""),
                         System.Globalization.NumberStyles.AllowHexSpecifier);
                 }
             }
 
-            return arr;
+            return result;
         }
     }
 }

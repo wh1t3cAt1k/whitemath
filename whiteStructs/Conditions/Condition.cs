@@ -15,7 +15,7 @@ namespace WhiteStructs.Conditions
 	/// </summary>
 	public static class Condition
 	{
-		public sealed class ValidationException: Exception { }
+		public sealed class ConditionValidationException: Exception { }
 
 		public static ConditionTestResult Validate(bool condition)
 		{
@@ -150,14 +150,16 @@ namespace WhiteStructs.Conditions
 			}
 
 			/// <summary>
-			/// Throws a <see cref="System.IndexOutOfRangeException"/> if the 
-			/// condition doesn't hold.
+			/// Throws an <see cref="IndexOutOfRangeException"/> 
+			/// if the condition doesn't hold.
 			/// </summary>
 			/// <param name="exceptionMessage">An optional exception message.</param>
 			public void OrIndexOutOfRangeException(string exceptionMessage = null)
 			{
-				if (Holds)
+				if (this.Holds)
+				{
 					return;
+				}
 
 				if (exceptionMessage != null)
 				{
@@ -176,7 +178,7 @@ namespace WhiteStructs.Conditions
 			/// <param name="exception">The exception to throw.</param>
 			public void OrException(Exception exception = null)
 			{
-				exception = exception ?? new ValidationException();
+				exception = exception ?? new ConditionValidationException();
 
 				if (this.Holds)
 				{
