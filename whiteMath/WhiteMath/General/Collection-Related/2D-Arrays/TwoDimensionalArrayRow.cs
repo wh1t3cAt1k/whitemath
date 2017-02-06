@@ -145,18 +145,12 @@ namespace WhiteMath.General
         /// two-dimensional which the current object
         /// wraps around. 
         /// </summary>
-        public int ParentRow { get; private set; }
+		public int ParentRowIndex { get; private set; }
 
-        /// <summary>
-        /// Returns the number of elements in the row.
-        /// </summary>
-        public int Count
-        {
-            get
-            {
-                return Parent.GetLength(1);
-            }
-        }
+		/// <summary>
+		/// Returns the number of elements in the row.
+		/// </summary>
+		public int Count => Parent.GetLength(1);
 
         /// <summary>
         /// Gets or sets the value at the specified index of the collection.
@@ -167,21 +161,19 @@ namespace WhiteMath.General
         {
             get
             {
-                if (index < 0 || index >= this.Count)
-                {
-                    throw new ArgumentOutOfRangeException("index");
-                }
+				Condition
+					.Validate(index >= 0 && index < this.Count)
+					.OrArgumentOutOfRangeException(nameof(index));
 
-                return this.Parent[ParentRow, index];
+                return this.Parent[this.ParentRowIndex, index];
             }
             set
             {
-                if (index < 0 || index >= this.Count)
-                {
-                    throw new ArgumentOutOfRangeException("index");
-                }
+				Condition
+					.Validate(index >= 0 && index < this.Count)
+					.OrArgumentOutOfRangeException(nameof(index));
 
-                this.Parent[ParentRow, index] = value;
+                this.Parent[this.ParentRowIndex, index] = value;
             }
         }
 
@@ -191,8 +183,7 @@ namespace WhiteMath.General
         /// specified.
         /// </summary>
         /// <param name="matrix">
-        /// The source two-dimensional array object
-        /// to be wrapped.
+        /// The source two-dimensional array object to be wrapped.
         /// </param>
         /// <param name="rowIndex">
         /// The row index of the source object to be fixed.
@@ -202,10 +193,10 @@ namespace WhiteMath.General
 			Condition.ValidateNotNull(matrix, nameof(matrix));
 			Condition
 				.Validate(rowIndex >= 0 && rowIndex < matrix.GetLength(0))
-				.OrArgumentOutOfRangeException("The row index is out of range.");
+				.OrArgumentOutOfRangeException(nameof(rowIndex));
 
             this.Parent = matrix;
-            this.ParentRow = rowIndex;
+            this.ParentRowIndex = rowIndex;
         }
     }
 }
