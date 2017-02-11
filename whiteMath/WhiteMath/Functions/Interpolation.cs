@@ -58,7 +58,7 @@ namespace WhiteMath.Functions
             Numeric<T, C>[] a = new Numeric<T,C>[n];
             Numeric<T, C>[] c = new Numeric<T, C>[n];
 
-            DefaultList<Numeric<T, C>> b = new DefaultList<Numeric<T,C>>(new Numeric<T,C>[n], Numeric<T,C>.Zero);
+            ListWithDefault<Numeric<T, C>> b = new ListWithDefault<Numeric<T,C>>(new Numeric<T,C>[n], Numeric<T,C>.Zero);
             
             Numeric<T, C>[] delta = new Numeric<T,C>[n];
             Numeric<T, C>[] lambda = new Numeric<T,C>[n];

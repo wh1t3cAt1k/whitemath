@@ -287,8 +287,8 @@
     <Compile Include="WhiteMath\General\Collection-Related\2D-Arrays\ZeroBasedMatrixWrapper.cs" />
     <Compile Include="WhiteMath\General\Collection-Related\ByteSequenceToString.cs" />
     <Compile Include="WhiteMath\General\Collection-Related\ClassicEnumerator.cs" />
-    <Compile Include="WhiteMath\General\Collection-Related\CollectionFilling.cs" />
-    <Compile Include="WhiteMath\General\Collection-Related\DefaultList.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\CollectionFillingExtensions.cs" />
+    <Compile Include="WhiteMath\General\Collection-Related\ListWithDefault.cs" />
     <Compile Include="WhiteMath\General\Collection-Related\LinkedListSorting.cs" />
     <Compile Include="WhiteMath\General\Collection-Related\ListFilling.cs" />
     <Compile Include="WhiteMath\General\Collection-Related\ListFragment.cs" />

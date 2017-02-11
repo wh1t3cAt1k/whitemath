@@ -32,7 +32,7 @@ namespace WhiteMath.Cryptography
         {
 			Condition.ValidateNotNull(hexString, nameof(hexString));
 
-            this.addCipherText(ByteSequenceToString.RestoreFromHexString(hexString, bigEndian));
+            this.addCipherText(ByteSequenceToString.FromHexString(hexString, bigEndian));
         }
 
         public void addCipherText(byte[] cipherText)
