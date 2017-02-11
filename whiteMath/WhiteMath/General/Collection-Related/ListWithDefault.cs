@@ -5,17 +5,13 @@ namespace WhiteMath.General
 {
     /// <summary>
     /// This class is used to return a default element
-    /// when the index specified is out of the bounds.
+    /// when the specified index is out of the bounds.
     /// </summary>
     public class ListWithDefault<T>: IList<T>
     {
         private IList<T> _source;
 
         public T DefaultElement { get; private set; }
-
-        // --------------------------
-        // ----- CTORS --------------
-        // --------------------------
 
         /// <summary>
         /// Constructs a new instance of DefaultList.
@@ -25,10 +21,6 @@ namespace WhiteMath.General
             this._source = list;
 			this.DefaultElement = defaultValue;
         }
-
-        // --------------------------
-        // ----- INDEXERS -----------
-        // --------------------------
 
         public T this[int index]
         {
