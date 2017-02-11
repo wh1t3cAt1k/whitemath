@@ -112,7 +112,7 @@ namespace WhiteMath.General
         /// would mean <c>26</c> and not <c>161</c>.
         /// </param>
         /// <returns>A byte array made from <paramref name="hexString"/>.</returns>
-        public static byte[] RestoreFromHexString(string hexString, bool bigEndian = false)
+        public static byte[] FromHexString(string hexString, bool bigEndian = false)
         {
 			Condition.ValidateNotNull(hexString, nameof(hexString));
 

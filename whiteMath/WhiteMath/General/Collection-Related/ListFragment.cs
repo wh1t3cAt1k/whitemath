@@ -8,7 +8,6 @@ namespace WhiteMath.General
     /// Represents the list fragment determined by the parent list and a set of indices.
     /// Logically considered incontinuous.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class ListFragment<T> : IList<T>
     {
         IList<T> list;
@@ -23,21 +22,27 @@ namespace WhiteMath.General
         /// <summary>
         /// The indexer for the list fragment.
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public T this[int index] { get { return list[indices[index]]; } set { list[indices[index]] = value; } }
+        public T this[int index] 
+		{ 
+			get 
+			{ 
+				return list[indices[index]]; 
+			} 
+			set 
+			{ 
+				list[indices[index]] = value; 
+			} 
+		}
 
         /// <summary>
         /// Returns true if the list fragment is read only.
         /// </summary>
-        public bool IsReadOnly { get { return list.IsReadOnly; } }
+        public bool IsReadOnly => list.IsReadOnly;
 
         /// <summary>
         /// Returns the amount of elements in the list fragment.
         /// </summary>
-        public int Count { get { return indices.Length; } }
-
-        // -------------------------------------------
+        public int Count => indices.Length;
 
         /// <summary>
         /// Returns the logical index of the element that is equal to the key.
@@ -56,8 +61,6 @@ namespace WhiteMath.General
         /// <summary>
         /// Returns true if the list fragment contains the element equal to the key specified.
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
         public bool Contains(T key)
         {
             for (int i = 0; i < Count; i++)
@@ -70,61 +73,45 @@ namespace WhiteMath.General
         /// <summary>
         /// Copies all the elements from the list fragment to an array.
         /// </summary>
-        /// <param name="array"></param>
-        /// <param name="offset"></param>
         public void CopyTo(T[] array, int offset)
         {
             for (int i = 0; i < Count; i++)
                 array[offset + i] = this[i];
         }
 
-        // ----------------------------- Enumerators
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return new ClassicEnumerator<T>(this);
-        }
-
-        // ----------------------------- NOT SUPPORTED
+        public IEnumerator<T> GetEnumerator() => new ClassicEnumerator<T>(this);
 
         public bool Remove(T key)
         {
-            throw new NotImplementedException("The operation is not supported by list fragments.");
+            throw new NotSupportedException("The operation is not supported by list fragments.");
         }
 
         public void RemoveAt(int index)
         {
-            throw new NotImplementedException("The operation is not supported by list fragments.");
+            throw new NotSupportedException("The operation is not supported by list fragments.");
         }
 
         public void Clear()
         {
-            throw new NotImplementedException("The operation is not supported by list fragments.");
+            throw new NotSupportedException("The operation is not supported by list fragments.");
         }
 
         public void Add(T key)
         {
-            throw new NotImplementedException("The operation is not supported by list fragments.");
+            throw new NotSupportedException("The operation is not supported by list fragments.");
         }
 
         public void Insert(int index, T value)
         {
-            throw new NotImplementedException("The operation is not supported by list fragments.");
+            throw new NotSupportedException("The operation is not supported by list fragments.");
         }
-
-        // --------------------------- Static miracles
 
         /// <summary>
         /// Returns the list fragment containing all parent list elements with odd indices.
         /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public static ListFragment<T> getOdds(IList<T> list)
+		public static ListFragment<T> GetOdds(IList<T> list)
         {
             int[] indices = new int[list.Count / 2];
 
@@ -137,9 +124,7 @@ namespace WhiteMath.General
         /// <summary>
         /// Returns the list fragment containing all parent list elements with even indices.
         /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public static ListFragment<T> getEvens(IList<T> list)
+		public static ListFragment<T> GetEvens(IList<T> list)
         {
             int[] indices = new int[list.Count / 2 + list.Count % 2];
 
@@ -152,12 +137,9 @@ namespace WhiteMath.General
         /// <summary>
         /// Returns the list fragment containing all the elements of the parent list
         /// in the order of Bit-Reverse-Permutation.
-        /// 
         /// Frequently used in iterational FFT and other algorithms.
         /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public static ListFragment<T> getBitReversed(IList<T> list)
+		public static ListFragment<T> GetBitReversed(IList<T> list)
         {
             if (list.Count == 0)
                 return new ListFragment<T>(list);
@@ -172,14 +154,14 @@ namespace WhiteMath.General
             indicesNew[0] = 0;
             for (int i = 1; i < list.Count; i++)
             {
-                r = nextReversed(r, list.Count);
+                r = GetNextReversed(r, list.Count);
                 indicesNew[i] = r;
             }
 
             return new ListFragment<T>(list, indicesNew);
         }
 
-        private static int nextReversed(int previous, int length)
+		private static int GetNextReversed(int previous, int length)
         {
             do
             {
