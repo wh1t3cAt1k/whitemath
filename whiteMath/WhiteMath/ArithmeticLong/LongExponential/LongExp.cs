@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using WhiteMath.Calculators;
 using WhiteMath.General;
+using WhiteMath.Numeric;
 
 namespace WhiteMath.ArithmeticLong
 {

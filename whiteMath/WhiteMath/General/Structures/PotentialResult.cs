@@ -17,7 +17,7 @@ namespace WhiteMath.General
         /// </summary>
         public bool Success { get; private set; }
 
-        private T ___value;
+		private T _value;
 
         /// <summary>
         /// Gets the value calculated by the function.
@@ -32,8 +32,7 @@ namespace WhiteMath.General
 					.Validate(this.Success)
 					.OrException(new InvalidOperationException("There is no value."));
 
-                return 
-                    ___value;
+                return _value;
             }
         }
 
@@ -47,7 +46,7 @@ namespace WhiteMath.General
         {
             PotentialResult<T> res = new PotentialResult<T>();
 
-            res.___value = value;
+            res._value = value;
             res.Success = true;
 
             return res;

@@ -5,6 +5,7 @@ using System.Drawing;
 
 using WhiteMath;
 using WhiteMath.Calculators;
+using WhiteMath.Numeric;
 
 using WhiteStructs.Conditions;
 using WhiteStructs.Collections;

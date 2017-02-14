@@ -397,6 +397,7 @@
     <Compile Include="WhiteMath\Randoms\Extensibility\RandomBoundedToUpperBoundedWrapper.cs" />
     <Compile Include="WhiteMath\Numeric\SpecialNumberType.cs" />
     <Compile Include="WhiteMath\Numeric\SpecialNumberHelper.cs" />
+    <Compile Include="WhiteMath\Numeric\BoundedIntervalSplitOptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -1,58 +1,48 @@
 ﻿using System;
+using System.Linq;
 
 using WhiteMath.Calculators;
+using WhiteMath.General;
 using WhiteMath.Matrices;
 
 namespace WhiteMath.Vectors
 {
     /// <summary>
-    /// The vector of numeric objects.
-    /// TODO: write the documentation.
+    /// Represents a numeric vector.
     /// </summary>
-    /// <typeparam name="T">The type of numbers stored by the vector.</typeparam>
-    public class Vector<T, C> : ICloneable, IMutableMatrix<T>, IMutableMatrix<Numeric<T, C>> where C : ICalc<T>, new()
+    /// <typeparam name="T">
+	/// The type of numbers stored by the vector.
+	/// </typeparam>
+    public class Vector<T, C> : ICloneable, IMutableMatrix<T>, IMutableMatrix<Numeric<T, C>> 
+		where C : ICalc<T>, new()
     {
-        private static C calc = new C();
-        private T[] array;
+		private static C calculator = new C();
 
-        // --------------------------------
-        // ------ Vector properties--------
-        // --------------------------------
+		private T[] _array;
 
         /// <summary>
         /// Gets the length of the vector.
         /// </summary>
-        public int Length { get { return array.Length; } }
-
-        // ------------------------------
+        public int Length => _array.Length; 
 
         /// <summary>
         /// The indexer of the vector.
         /// </summary>
-        public Numeric<T, C> this[int ind]
+		public Numeric<T, C> this[int elementIndex]
         {
-            get { return array[ind]; }
-            set { array[ind] = value; }
+            get { return _array[elementIndex]; }
+            set { _array[elementIndex] = value; }
         }
 
-
-        // --------------------------------
-        // ------ Constructors ------------
-        // --------------------------------
-
         /// <summary>
-        /// The copy constructor.
-        /// Creates an independent clone of the vector object passed.
+        /// A copy constructor.
+        /// Creates an independent copy of the vector object passed.
         /// </summary>
-        /// <param name="copy"></param>
-        public Vector(Vector<T, C> copy)
+		public Vector(Vector<T, C> source)
         {
-            array = new T[copy.Length];
-
-            for (int i = 0; i < copy.Length; i++)
-                this[i] = calc.GetCopy(copy[i]);
-
-            return;
+			_array = source._array
+				.Select(element => calculator.GetCopy(element))
+				.ToArray();
         }
 
         /// <summary>
@@ -60,41 +50,34 @@ namespace WhiteMath.Vectors
         /// </summary>
         /// <param name="dimension"></param>
         public Vector(int dimension)
-            : this(dimension, calc.Zero)
+            : this(dimension, calculator.Zero)
         { }
 
         /// <summary>
         /// Creates a new vector with elements all initialized equal to the value passed.
         /// </summary>
-        /// <param name="dimension"></param>
-        /// <param name="value"></param>
         public Vector(int dimension, T value)
         {
-            this.array = new T[dimension];
-
-            for (int i = 0; i < dimension; i++)
-                array[i] = calc.GetCopy(value);
+            _array = new T[dimension];
+			_array.FillByAssign(_ => calculator.GetCopy(value));
         }
 
         /// <summary>
         /// Private constructor used by helper methods.
         /// </summary>
-        /// <param name="array"></param>
         private Vector(T[] array)
         {
-            this.array = array;
+            this._array = array;
             return;
         }
 
-        // -------------------------------- Depending on the logic!
-
         /// <summary>
         /// Creates the vector as a wrapper for the array passed.
-        /// (!) All changes to the vector will be reflected on the array, and vice versa.
         /// </summary>
-        /// <param name="array"></param>
-        /// <returns></returns>
-        public static Vector<T, C> CreateWrapper(T[] array)
+		/// <remarks>
+		/// (!) All changes to the vector will be reflected on the array, and vice versa.
+		/// </remarks>
+		public static Vector<T, C> Wrap(T[] array)
         {
             return new Vector<T, C>(array);
         }
@@ -104,26 +87,19 @@ namespace WhiteMath.Vectors
         /// If the shallow array copy is logically deep, no changes to the vector
         /// will be reflected on the array, and vice versa.
         /// </summary>
-        /// <param name="array"></param>
-        /// <returns></returns>
         public static Vector<T, C> CreateIndependent(T[] array)
         {
-            return new Vector<T, C>(CreateWrapper(array));
+            return new Vector<T, C>(Wrap(array));
         }
-
-        // -------------------------------
-        // --------- PROPERTIES ----------
-        // -------------------------------
 
         /// <summary>
         /// Unwraps the current vector to present it as a simple T array.
         /// All changes to the array object returned will be reflected on the vector,
         /// and vice versa.
         /// </summary>
-        /// <returns></returns>
-        public T[] UnwrappedToSimpleArray
+		public T[] Unwrap
         {
-            get { return this.array; }
+            get { return this._array; }
         }
 
         /// <summary>
@@ -131,26 +107,18 @@ namespace WhiteMath.Vectors
         /// </summary>
         public Numeric<T, C>[] AsNumericArray()
         {
-            return this.array.ConvertToNumericArray<T, C>();
+            return this._array.ConvertToNumericArray<T, C>();
         }
-
-        // --------------------------------
-        // ------ Conversion methods ------
-        // --------------------------------
 
         public static implicit operator Vector<T, C>(T[] array)
         {
-            return Vector<T, C>.CreateWrapper(array);
+            return Vector<T, C>.Wrap(array);
         }
 
         public static implicit operator T[](Vector<T, C> vector)
         {
-            return vector.UnwrappedToSimpleArray;
+            return vector.Unwrap;
         }
-
-        // --------------------------------
-        // ------ ToString methods --------
-        // --------------------------------
 
         /// <summary>
         /// Returns the string representation of the current vector using 
@@ -163,7 +131,7 @@ namespace WhiteMath.Vectors
         {
             string res = "(";
 
-            foreach (T obj in array)
+            foreach (T obj in _array)
                 res += String.Format(vectorElementsFormatter, obj) + elementSeparator;
 
             res = res.Remove(res.Length - 2) + ")";
@@ -181,61 +149,55 @@ namespace WhiteMath.Vectors
             return ToString("{0}", "; ");
         }
 
-        // --------------------------------
-        // ------ Cloneable realization----
-        // --------------------------------
-
         public object Clone()
         {
             return new Vector<T, C>(this);
         }
 
-        // --------------------------------
-        // ------ IMatrix realization------
-        // --------------------------------
+		int IMatrix.ColumnCount => 1;
+        int IMatrix.RowCount => Length;
 
-        int IMatrix.ColumnCount { get { return 1; } }
-        int IMatrix.RowCount { get { return Length; } }
-
-        void ___checkMatrixRange(int row, int column)
+		private void CheckMatrixRange(int row, int column)
         {
-            if (column > 0 || row >= Length)
-                throw new ArgumentOutOfRangeException("At least one of the indexes was out of range.");
+			if (column > 0 || row >= Length)
+			{
+				throw new ArgumentOutOfRangeException("At least one of the indexes was out of range.");
+			}
         }
 
         object IMatrix.GetElementAt(int row, int column)
         {
-            ___checkMatrixRange(row, column);
+            CheckMatrixRange(row, column);
             return this[row];
         }
 
         T IMatrix<T>.GetElementAt(int row, int column)
         {
-            ___checkMatrixRange(row, column);
+            CheckMatrixRange(row, column);
             return this[row];
         }
 
         Numeric<T, C> IMatrix<Numeric<T, C>>.GetElementAt(int row, int column)
         {
-            ___checkMatrixRange(row, column);
+            CheckMatrixRange(row, column);
             return this[row];
         }
 
         void IMutableMatrix.SetElementAt(int row, int column, object value)
         {
-            ___checkMatrixRange(row, column);
+            CheckMatrixRange(row, column);
             this[row] = (T)value;
         }
 
         void IMutableMatrix<T>.SetElementAt(int row, int column, T value)
         {
-            ___checkMatrixRange(row, column);
+            CheckMatrixRange(row, column);
             this[row] = value;
         }
 
         void IMutableMatrix<Numeric<T, C>>.SetElementAt(int row, int column, Numeric<T, C> value)
         {
-            ___checkMatrixRange(row, column);
+            CheckMatrixRange(row, column);
             this[row] = value;
         }
     }

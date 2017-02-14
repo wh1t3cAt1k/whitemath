@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using WhiteMath.Calculators;
+using WhiteMath.Numeric;
 
 using WhiteStructs.Conditions;
 

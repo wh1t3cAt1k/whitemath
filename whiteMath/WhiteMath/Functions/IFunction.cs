@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using WhiteMath.Numeric;
 using WhiteMath.Mathematics;
 using WhiteMath.Calculators;
 using WhiteMath.General;
@@ -475,7 +476,7 @@ namespace WhiteMath.Functions
         {
             ICalc<T> calc = Numeric<T, C>.Calculator;
 
-			if (interval.HasZeroLength)
+			if (interval.IsZeroLength)
 			{
 				return calc.Zero;
 			}
@@ -515,7 +516,7 @@ namespace WhiteMath.Functions
 
             // Если интервал нулевой длины, то ваще забей.
 
-            if (interval.HasZeroLength)
+            if (interval.IsZeroLength)
                 return new BoundedInterval<T, C>(calc.Zero, calc.Zero, true, true);
 
             // Если нет, то ваще не забей.

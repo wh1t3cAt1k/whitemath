@@ -14,31 +14,30 @@ namespace WhiteMath.General
     public class ForceNaNEqualityComparer<T>: IEqualityComparer<T>
     {
         /// <summary>
-        /// Gets the parent equality comparer associated with
-        /// the current object.
+        /// Gets the souce equality comparer associated with the current object.
         /// </summary>
-        public IEqualityComparer<T> ParentEqualityComparer { get; private set; }
+        public IEqualityComparer<T> SourceEqualityComparer { get; private set; }
 
         /// <summary>
         /// Constructs a <see cref="ForceNaNEqualityComparer&lt;T&gt;"/> using
         /// an <see cref="IEqualityComparer&lt;T&gt;"/> comparer object.
         /// </summary>
-        /// <param name="parent">
+        /// <param name="sourceEqualityComparer">
         /// An <see cref="IEqualityComparer&lt;T&gt;"/> comparer object
         /// which will be used for equality comparison in every case except
         /// when both compared values are <c>NaN</c>'s (not equal to themselves - in
         /// terms of the parent comparer).
         /// In that case, the constructed comparer will return <c>true</c>.
         /// </param>
-        public ForceNaNEqualityComparer(IEqualityComparer<T> parent)
+		public ForceNaNEqualityComparer(IEqualityComparer<T> sourceEqualityComparer)
         {
-            this.ParentEqualityComparer = parent;
+            SourceEqualityComparer = sourceEqualityComparer;
         }
 
         /// <summary>
         /// Compares two <typeparamref name="T"/> objects and returns whatever 
-        /// the <see cref="ParentEqualityComparer"/> returns, except for the case when
-        /// <see cref="ParentEqualityComparer"/> returns <c>false</c> for 
+        /// the <see cref="SourceEqualityComparer"/> returns, except for the case when
+        /// <see cref="SourceEqualityComparer"/> returns <c>false</c> for 
         /// self-comparison of both <paramref name="first"/> and <paramref name="second"/>.
         /// Since that means that both values are <c>NaN</c> (by definition), the 
         /// comparer will intentionally return <c>true</c> (because that's what it does by design).
@@ -46,32 +45,24 @@ namespace WhiteMath.General
         /// <param name="first">The first object to be compared for equality.</param>
         /// <param name="second">The second object to be compared for equality.</param>
         /// <returns>
-        /// The result of comparison by <see cref="ParentEqualityComparer"/> if at least one of the 
+        /// The result of comparison by <see cref="SourceEqualityComparer"/> if at least one of the 
         /// objects is not <c>NaN</c>, or <c>true</c> otherwise.
         /// </returns>
-        public bool Equals(T first, T second)
-        {
-            if (!this.ParentEqualityComparer.Equals(first, first) &&
-                !this.ParentEqualityComparer.Equals(second, second))
-            {
-                return true;
-            }
-
-            return this.ParentEqualityComparer.Equals(first, second);
-        }
+		public bool Equals(T first, T second)
+			=> SourceEqualityComparer.Equals(first, second)
+				|| (
+					!SourceEqualityComparer.Equals(first, first)
+					&& !SourceEqualityComparer.Equals(second, second));
 
         /// <summary>
-        /// Returns whatever <see cref="ParentEqualityComparer"/>
+        /// Returns whatever <see cref="SourceEqualityComparer"/>
         /// returns in the <see cref="GetHashCode"/> for this value.
         /// </summary>
         /// <param name="value">The value whose hash code is to be calculated.</param>
         /// <returns>
-        /// Whatever <see cref="ParentEqualityComparer"/> returns in the <see cref="GetHashCode"/> 
+        /// Whatever <see cref="SourceEqualityComparer"/> returns in the <see cref="GetHashCode"/> 
         /// for this value.
         /// </returns>
-        public int GetHashCode(T value)
-        {
-            return this.ParentEqualityComparer.GetHashCode(value);
-        }
+        public int GetHashCode(T value) => SourceEqualityComparer.GetHashCode(value);
     }
 }

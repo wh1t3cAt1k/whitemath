@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
+using WhiteMath.Numeric;
 using WhiteMath.Mathematics;
 using WhiteMath.Calculators;
 using WhiteMath.General;

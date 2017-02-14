@@ -2,6 +2,7 @@
 using System.Linq;
 
 using WhiteMath.Calculators;
+using WhiteMath.Numeric;
 
 using WhiteStructs.Conditions;
 

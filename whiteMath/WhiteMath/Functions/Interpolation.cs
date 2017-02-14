@@ -2,15 +2,16 @@
 
 using WhiteMath.Calculators;
 using WhiteMath.General;
+using WhiteMath.Numeric;
 
 namespace WhiteMath.Functions
 {
     /// <summary>
     /// This class provides static methods to create continuous or piecewise functions
     /// interpolating the points arrays.
-    /// <typeparam name="T">The type of numeric arguments of the function.</typeparam>
-    /// <typeparam name="C">The calculator for the numeric type T.</typeparam>
     /// </summary>
+	/// <typeparam name="T">The type of numeric arguments of the function.</typeparam>
+    /// <typeparam name="C">The calculator for the numeric type T.</typeparam>
     public static class Interpolation<T, C> where C: ICalc<T>, new()
     {
 		private static readonly ICalc<T> Calculator = Numeric<T, C>.Calculator;
@@ -31,10 +32,9 @@ namespace WhiteMath.Functions
                 functions[i] = new LinearFunction<T, C>(points[i], points[i + 1]);
             }
 
-            PieceFunction<T, C> fun = new PieceFunction<T, C>(intervals, functions, defaultValue);
-            fun.Type = PieceFunctionType.PieceLinearFunction;
+			PieceFunction<T, C> result = new PieceFunction<T, C>(intervals, functions, defaultValue);
 
-            return fun;
+            return result;
         }
 
         /// <summary>
@@ -115,7 +115,6 @@ namespace WhiteMath.Functions
             }
 
             PieceFunction<T, C> function = new PieceFunction<T, C>(defaultValue, pieces);
-            function.Type = PieceFunctionType.NaturalCubicSpline;
 
             return new PieceFunction<T, C>(defaultValue, pieces);
         }

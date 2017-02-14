@@ -7,33 +7,8 @@ using WhiteMath.General;
 
 using WhiteStructs.Conditions;
 
-namespace WhiteMath
+namespace WhiteMath.Numeric
 {
-    /// <summary>
-    /// This enum contains options to specify when splitting the interval into a sequence of non-intersecting intervals
-    /// and the source interval does not contain a whole number of intervals of the desired length. 
-    /// </summary>
-    public enum BoundedIntervalSplitOptions
-    {
-        /// <summary>
-        /// When using this option, in case of presence of the 'tail' length,
-        /// the last interval will have length bigger than the desired.
-        /// The overall number of intervals produced will be floor(currentInterval.length / desiredLength).
-        /// </summary>
-        BiggerLastInterval,
-
-        /// <summary>
-        /// When using this option, in case of presence of the 'tail' length,
-        /// the last interval will have length smaller than the desired.
-        /// The overall number of intervals produced will be ceil(currentInterval.length / desiredLength).
-        /// </summary>
-        SmallerLastInterval
-    }
-
-    // ------------------------------------------
-    // ------------------------------------------
-    // ------------------------------------------
-
     /// <summary>
     /// This struct represents a numeric interval with either inclusive or exclusive bounds.
     /// Is supposed to be bounded.
@@ -67,12 +42,12 @@ namespace WhiteMath
         /// <summary>
         /// Tests whether the interval has zero length.
         /// </summary>
-        public bool HasZeroLength { get { return Calculator.Equal(this.Length, Calculator.Zero); } }
+		public bool IsZeroLength => Calculator.Equal(this.Length, Calculator.Zero);
 
         /// <summary>
         /// Tests whether the interval contains exactly 0 real-value points.
         /// </summary>
-		public bool HasNoRealPoints { get { return HasZeroLength && !IsLeftInclusive && !IsRightInclusive; } }
+		public bool HasNoRealPoints => IsZeroLength && !IsLeftInclusive && !IsRightInclusive;
 
         /// <summary>
         /// Tests whether the interval contains exactly 0 integer points.
@@ -90,7 +65,7 @@ namespace WhiteMath
         /// <summary>
         /// Returns the arithmetic middle of the interval.
         /// </summary>
-        public Numeric<T, C> Middle { get { return (RightBound + LeftBound) / Calculator.FromInteger(2); } }
+        public Numeric<T, C> Middle => (RightBound + LeftBound) / Calculator.FromInteger(2);
 
         /// <summary>
         /// Returns the number of points in the interval.
@@ -118,10 +93,6 @@ namespace WhiteMath
             }
         }
 
-        // -----------------------------------
-        // ----- constructors ----------------
-        // -----------------------------------
-
         /// <summary>
         /// Creates a new instance of an interval.
         /// </summary>
@@ -143,10 +114,6 @@ namespace WhiteMath
             RightBound = right;
             IsRightInclusive = rightInclusive;
         }
-
-        // -----------------------------------
-        // ----- instance methods ------------
-        // -----------------------------------
 
         /// <summary>
         /// Tests whether the point is located inside the interval bounds.
@@ -483,10 +450,6 @@ namespace WhiteMath
         }
     }
 
-    // ---------------------------------------------------------------
-    // ----------------------- EXTENSION METHODS ---------------------
-    // ---------------------------------------------------------------
-
     /// <summary>
     /// This class provides different extensions (such as hit tests)
     /// for <c>BoundedInterval&lt;T, C&gt;</c> sequences.
@@ -528,13 +491,13 @@ namespace WhiteMath
 				.OrArgumentException("The interval should contain at least one integer point.");
 			Condition.ValidateNotNull(predicate, nameof(predicate));
 
-            BoundedInterval<T, C> inclusive = interval.ToInclusiveIntegerInterval();
+			BoundedInterval<T, C> inclusiveInterval = interval.ToInclusiveIntegerInterval();
 
             bool found = false;
 
             Numeric<T, C> max = Numeric<T, C>.Zero;
 
-            for (Numeric<T, C> current = inclusive.LeftBound; current <= inclusive.RightBound; ++current)
+            for (Numeric<T, C> current = inclusiveInterval.LeftBound; current <= inclusiveInterval.RightBound; ++current)
             {
                 if (predicate(current))
                 {
@@ -543,10 +506,14 @@ namespace WhiteMath
                 }
             }
 
-            if (!found)
-                return PotentialResult<Numeric<T, C>>.CreateFailure();
-            else
-                return PotentialResult<Numeric<T, C>>.CreateSuccess(max);
+			if (!found)
+			{
+				return PotentialResult<Numeric<T, C>>.CreateFailure();
+			}
+			else
+			{
+				return PotentialResult<Numeric<T, C>>.CreateSuccess(max);
+			}
         }
 
         /// <summary>
@@ -607,8 +574,8 @@ namespace WhiteMath
         }
 
         /// <summary>
-        /// Searches a special-way sorted list of non-intersecting <c>BoundedInterval&lt;<typeparamref name="T"/>, <typeparamref name="C"/>&gt;</c> 
-        /// elements and returns the index of interval which contains the specified point.
+		/// Searches a special-way sorted list of non-intersecting <see cref="BoundedInterval{T, C}"/> 
+        /// intervals and returns the index of interval which contains the specified point.
         /// </summary>
         /// <typeparam name="T">A type of numbers contained inside the interval.</typeparam>
         /// <typeparam name="C">A calculator for the <typeparamref name="T"/> type.</typeparam>
@@ -619,10 +586,6 @@ namespace WhiteMath
         public static int HitTest<T, C>(this IList<BoundedInterval<T, C>> list, T point) where C : ICalc<T>, new()
         {
 			Condition.ValidateNotNull(list, nameof(list));
-
-			/*
-			Contract.Ensures(Contract.Result<int>() < list.Count);
-			*/
 			
 			int index = list.WhiteBinarySearch<T, BoundedInterval<T, C>>(
 				(x => x.LeftBound), 
@@ -645,8 +608,10 @@ namespace WhiteMath
             }
             else if (index - 1 >= 0 && index - 1 < list.Count)
             {
-                if (list[index - 1].Contains(point))
-                    return index - 1;
+				if (list[index - 1].Contains(point))
+				{
+					return index - 1;
+				}
             }
 
             return -1;
