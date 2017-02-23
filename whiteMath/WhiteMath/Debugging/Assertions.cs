@@ -21,18 +21,5 @@ namespace WhiteMath
             if (!value)
                 throw ex;
         }
-
-        /// <summary>
-        /// Performs an assertion that the value passed
-        /// is not null. If it is, throws an ArgumentNullException 
-        /// with the message passed.
-        /// </summary>
-        /// <param name="obj">The object to be tested for null.</param>
-        /// <param name="exceptionMessage">The message for the ArgumentNullException.</param>
-        public static void Assert_NotNull(this object obj, string exceptionMessage)
-        {
-            if (obj == null)
-                throw new ArgumentNullException(exceptionMessage);
-        }
     }
 }

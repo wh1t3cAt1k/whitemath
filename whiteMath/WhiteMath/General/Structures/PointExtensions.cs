@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using WhiteMath.Calculators;
 using WhiteMath.Matrices;
 
+using WhiteStructs.Conditions;
+
 namespace WhiteMath.General
 {
     public static class PointExtensions
@@ -16,7 +18,7 @@ namespace WhiteMath.General
         /// <returns>The point object whose X coordinate is a list of X's and Y coordinate is a list of Y's.</returns>
 		public static Point<T[]> ConvertToPairOfLists<T>(this IList<Point<T>> list)
         {
-            list.Assert_NotNull("The list of points should not be null.");
+			Condition.ValidateNotNull(list, "The list of points should not be null.");
 
             T[] arrX = new T[list.Count];
             T[] arrY = new T[list.Count];
@@ -38,10 +40,11 @@ namespace WhiteMath.General
         /// <returns>An array of points with X coordinate storing the respective value of <paramref name="xValues"/> and Y coordinate storing the respective value of <paramref name="yValues"/>.</returns>
         public static Point<T>[] ConvertToListOfPairs<T>(IList<T> xValues, IList<T> yValues)
         {
-            xValues.Assert_NotNull("The X coordinates array should not be null.");
-            yValues.Assert_NotNull("The Y coordinates array should not be null.");
-
-            (xValues.Count == yValues.Count).Assert(new ArgumentException("The lengths of coordinates' lists should be equal to each other."));
+			Condition.ValidateNotNull(xValues, "The X coordinates array should not be null.");
+			Condition.ValidateNotNull(yValues, "The Y coordinates array should not be null.");
+			Condition
+				.Validate(xValues.Count == yValues.Count)
+				.OrArgumentException("The lengths of coordinates' lists should be equal to each other.");
 
             Point<T>[] pointsArray = new Point<T>[xValues.Count];
 
@@ -60,7 +63,7 @@ namespace WhiteMath.General
         /// <returns>The matrix of size (Nx2) which rows are exactly the point coordinates.</returns>
         public static Matrix<T, C> ConvertToMatrixRows<T, C>(this IList<Point<T>> list) where C : ICalc<T>, new()
         {
-            list.Assert_NotNull("The list of points should not be null.");
+			Condition.ValidateNotNull(list, "The list of points should not be null.");
 
             MatrixSDA<T, C> matrix = new MatrixSDA<T, C>(list.Count, 2);
 

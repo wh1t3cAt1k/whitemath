@@ -8,6 +8,8 @@ using WhiteMath.Calculators;
 using WhiteMath.General;
 using WhiteMath.Randoms;
 
+using WhiteStructs.Conditions;
+
 namespace WhiteMath.Functions
 {
     /// <summary>
@@ -51,7 +53,7 @@ namespace WhiteMath.Functions
 
             public DelegateFunction(Func<TArg, TVal> function)
             {
-                function.Assert_NotNull("The function delegate should not be null.");
+				Condition.ValidateNotNull(function, "The function delegate should not be null.");
 
                 this.function = function;
             }
