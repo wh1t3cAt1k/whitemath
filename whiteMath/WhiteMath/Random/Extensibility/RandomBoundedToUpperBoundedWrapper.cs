@@ -2,7 +2,7 @@
 
 using WhiteStructs.Conditions;
 
-namespace WhiteMath.Randoms.Extensibility
+namespace WhiteMath.Random.Extensibility
 {
 	/// <summary>
 	/// This class wraps around an <see cref="IRandomBounded{T}"/>

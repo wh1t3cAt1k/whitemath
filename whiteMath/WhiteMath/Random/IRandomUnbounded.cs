@@ -1,4 +1,4 @@
-﻿namespace WhiteMath.Randoms
+﻿namespace WhiteMath.Random
 {
 	/// <summary>
 	/// Represents an object that is capable of generating random numbers

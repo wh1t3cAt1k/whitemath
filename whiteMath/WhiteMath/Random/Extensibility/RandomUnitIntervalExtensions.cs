@@ -1,6 +1,6 @@
 ﻿using WhiteMath.Calculators;
 
-namespace WhiteMath.Randoms.Extensibility
+namespace WhiteMath.Random.Extensibility
 {
 	public static class RandomUnitIntervalExtensions
 	{

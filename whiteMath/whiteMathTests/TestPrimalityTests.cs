@@ -7,7 +7,7 @@ using System.Linq;
 using WhiteMath.ArithmeticLong;
 using WhiteMath.ArithmeticLong.Bases;
 using WhiteMath.Cryptography;
-using WhiteMath.Randoms;
+using WhiteMath.Random;
 
 using NUnit.Framework;
 

@@ -5,7 +5,7 @@ using WhiteMath.Mathematics;
 using WhiteMath.ArithmeticLong.Infrastructure;
 using WhiteMath.Calculators;
 using WhiteMath.General;
-using WhiteMath.Randoms;
+using WhiteMath.Random;
 
 using WhiteStructs.Conditions;
 using WhiteStructs.Collections;

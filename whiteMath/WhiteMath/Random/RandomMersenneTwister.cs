@@ -2,7 +2,7 @@
 
 using WhiteStructs.Conditions;
 
-namespace WhiteMath.Randoms
+namespace WhiteMath.Random
 {
 	/// <remarks>
 	/// This generator is not thread-safe.

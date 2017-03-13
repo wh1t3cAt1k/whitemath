@@ -11,7 +11,7 @@ namespace WhiteMath
     {
         private class RandomMetricProvider : IMetricProvider<int>
         {
-            Random gen = new Random();
+            System.Random gen = new System.Random();
 
             public int GetMetric(int obj)
             {

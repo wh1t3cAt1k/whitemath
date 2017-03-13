@@ -5,7 +5,7 @@ using WhiteMath.Calculators;
 
 using WhiteStructs.Conditions;
 
-namespace WhiteMath.Randoms.Extensibility
+namespace WhiteMath.Random.Extensibility
 {
 	/// <summary>
 	/// This class contains various extension methods for <see cref="IRandomBounded{T}"/>.

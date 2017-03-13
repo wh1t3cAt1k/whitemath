@@ -4,7 +4,7 @@ using WhiteMath.ArithmeticLong;
 
 using WhiteStructs.Conditions;
 
-namespace WhiteMath.Randoms
+namespace WhiteMath.Random
 {
     /// <summary>
     /// This class provides high-quality uniform random <c>LongInt&lt;<typeparamref name="B"/>&gt;</c>

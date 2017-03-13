@@ -51,7 +51,7 @@ namespace WhiteMath.ArithmeticLong
         /// <param name="powerInterval">An interval in which the exponent of the number can be presented.</param>
         /// <param name="generator">A random generator for the digits.</param>
         /// <param name="digitCount">The digit length of the number. Cannot be more than specified by IPrecision precision class.</param>
-        public LongExp(int digitCount, BoundedInterval<int, CalcInt> powerInterval, Random generator)
+        public LongExp(int digitCount, BoundedInterval<int, CalcInt> powerInterval, System.Random generator)
         {
             this.IsNegative = (generator.Next(0, 2) == 0 ? false : true);
 

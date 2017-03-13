@@ -2,7 +2,7 @@
 
 using WhiteStructs.Conditions;
 
-namespace WhiteMath.Randoms
+namespace WhiteMath.Random
 {
     /// <summary>
     /// Represents a wrapper for a standard <c>Random</c> class from the C# library
@@ -17,7 +17,7 @@ namespace WhiteMath.Randoms
         IRandomUnitInterval<double>,
         IRandomBytes
     {
-		private Random _libraryGenerator;
+		private System.Random _libraryGenerator;
 
         /// <summary>
         /// Creates a new instance of RandomStandard class 
@@ -25,9 +25,9 @@ namespace WhiteMath.Randoms
         /// </summary>
         public RandomStandard(int? seed = null)
         {
-			_libraryGenerator = seed == null
-				? new Random()
-				: new Random(seed.Value);
+            _libraryGenerator = seed == null
+				? new System.Random()
+				: new System.Random(seed.Value);
 			
             InitializeGeneratorDelegates();
         }

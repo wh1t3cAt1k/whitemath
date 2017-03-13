@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using WhiteMath.Randoms;
+using WhiteMath.Random;
 
 namespace WhiteMath.General
 {

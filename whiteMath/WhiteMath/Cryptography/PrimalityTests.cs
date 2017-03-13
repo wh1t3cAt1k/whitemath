@@ -2,7 +2,7 @@
 
 using WhiteMath.Mathematics;
 using WhiteMath.Calculators;
-using WhiteMath.Randoms;
+using WhiteMath.Random;
 using WhiteMath.ArithmeticLong;
 
 using WhiteStructs.Conditions;

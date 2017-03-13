@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 using WhiteStructs.Conditions;
 
-namespace WhiteMath.Randoms
+namespace WhiteMath.Random
 {
     /// <summary>
     /// Represents a random number generator wrapper built

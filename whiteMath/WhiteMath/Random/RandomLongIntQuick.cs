@@ -1,60 +1,32 @@
 ﻿using System;
 
-using WhiteStructs.Conditions;
-
 using WhiteMath.ArithmeticLong;
 
-namespace WhiteMath.Randoms
+using WhiteStructs.Conditions; 
+
+namespace WhiteMath.Random
 {
     /// <summary>
-    /// <para>
-    /// This class provides high-quality uniform random <c>LongInt&lt;<typeparamref name="B"/>&gt;</c>
-    /// number generation, but is incredibly slow.
-    /// </para>
-    /// <para>
-    /// In practice, always use <c>RandomLongIntModular&lt;<typeparamref name="B"/>&gt;</c>
-    /// to achieve the same distribution quality with lower performance overhead.
-    /// </para>
+    /// This class provides quick pseudo-random number generation
+    /// for <c>LongInt&lt;B&gt;</c> type, but sometimes seriously violates
+    /// uniformity. 
     /// </summary>
-    /// <remarks>
-    /// The speed of number generation is usually very slow, because the class uses rejection sampling
-    /// even without modular reduction. Please use <c>RandomLongIntModular&lt;<typeparamref name="B"/>&gt;</c>
-    /// instead.
-    /// </remarks>
-    /// <see cref="RandomLongIntModularUnoptimized&lt;B&gt;"/>
     /// <typeparam name="B">The type specifying the digit base for the <c>LongInt&lt;B&gt;</c> type.</typeparam>
-    [Obsolete("This class is for illustrative purposes only. Please use RandomLongIntModular<B> instead.")]
-    public class RandomLongIntRejection<B> : IRandomBounded<LongInt<B>> where B : IBase, new()
+    public class RandomLongIntQuick<B>: IRandomBounded<LongInt<B>> where B: IBase, new()
     {
-        private IRandomBounded<int> intGenerator;           // integer generator
+        private IRandomBounded<int> intGenerator;
 
         /// <summary>
-        /// Gets the total amount of generated numbers that 
-        /// were discarded during rejection sampling.
-        /// </summary>
-        public int TotalRejected { get; private set; }
-
-        /// <summary>
-        /// Resets the <c>TotalRejected</c>
-        /// counter, setting its value to zero.
-        /// </summary>
-        /// <see cref="TotalRejected"/>
-        public void ResetRejectionCounter()
-        {
-            this.TotalRejected = 0;
-        }
-
-        /// <summary>
-        /// Initializes the <c>RandomLongIntRejection&lt;<typeparamref name="B"/>&gt;</c> instance
-        /// with an integer digit generator.
+        /// Initializes the <c>RandomLongIntQuick&lt;<typeparamref name="B"/>&gt;</c> instance
+        /// with a bounded <c>int</c> random number generator.
         /// </summary>
         /// <param name="intGenerator">
-        /// A uniform distribution integer generator which will be used 
-        /// to produce <c>LongInt&lt;<typeparamref name="B"/>&gt;</c> digits.
-        /// If <c>null</c>, a new <c>RandomStandard</c> instance will be used.
+        /// A uniform integer generator which will be used to produce 
+        /// <c>LongInt&lt;<typeparamref name="B"/>&gt;</c> digits. 
+        /// If <c>null</c>, a new instance of <c>RandomStandard</c> will be used.
         /// </param>
         /// <see cref="RandomStandard"/>
-        public RandomLongIntRejection(IRandomBounded<int> intGenerator = null)
+        public RandomLongIntQuick(IRandomBounded<int> intGenerator = null)
         {
             if (intGenerator == null)
                 intGenerator = new RandomStandard();
@@ -76,37 +48,33 @@ namespace WhiteMath.Randoms
 			Condition.ValidateNotNull(maxInclusive, nameof(maxInclusive));
 			Condition
 				.Validate(!maxInclusive.IsNegative)
-				.OrArgumentOutOfRangeException("The maximum inclusive number should not be negative.");
-
-            // Будем генерировать числа длины такой же, как maxInclusive.
-            // Все цифры - от 0 до BASE - 1
+				.OrArgumentOutOfRangeException("The maximum inclusive bound should not be negative.");
 
             LongInt<B> result = new LongInt<B>();
 
             result.Digits.Clear();
             result.Digits.AddRange(new int[maxInclusive.Length]);
 
-            bool flag = true;  // есть ли ограничение по цифрам
+            // Флаг, сигнализирующий о том, что мы пока генерируем
+            // только цифры нашей верхней границы.
+            // Как только сгенерировали что-то меньшее, все остальное
+            // можно генерировать в пределах от 0 до BASE-1.
 
-            REPEAT:
+            bool flag = true;
 
-            for (int i = maxInclusive.Length - 1; i >= 0; i--)
+            for (int i = result.Length - 1; i >= 0; i--)
             {
-                result.Digits[i] = intGenerator.Next(0, LongInt<B>.BASE);
-
                 if (flag)
                 {
-                    if (result[i] > maxInclusive[i])
-                    {
-                        ++TotalRejected;
-                        goto REPEAT;
-                    }
+                    result[i] = intGenerator.Next(0, maxInclusive[i] + 1);
 
-                    else if (result[i] < maxInclusive[i])
+                    if (result[i] < maxInclusive[i])
                         flag = false;
                 }
+                else
+                    result[i] = intGenerator.Next(0, LongInt<B>.BASE);
             }
-            
+
             result.DealWithZeroes();
 
             return result;
@@ -126,7 +94,7 @@ namespace WhiteMath.Randoms
 			Condition.ValidateNotNull(maxExclusive, nameof(maxExclusive));
 			Condition
 				.Validate(maxExclusive > 0)
-				.OrArgumentOutOfRangeException("The maximum exclusive bound should be a positive number.");
+				.OrArgumentOutOfRangeException("The upper exclusive bound should be strictly positive.");
 
             return NextInclusive(maxExclusive - 1);
         }
@@ -146,10 +114,10 @@ namespace WhiteMath.Randoms
 			Condition.ValidateNotNull(minInclusive, nameof(minInclusive));
 			Condition.ValidateNotNull(maxExclusive, nameof(maxExclusive));
 			Condition
-				.Validate(minInclusive < maxExclusive)
-				.OrArgumentException("The minimum inclusive bound should be less than the maximum exclusive.");
+				.Validate(minInclusive < maxExclusive) 
+				.OrArgumentException("The minimum inclusive bound should be less than the upper exclusive one.");
 
-            return minInclusive + this.NextInclusive(maxExclusive - minInclusive - 1);
+            return minInclusive + NextInclusive(maxExclusive - minInclusive - 1);
         }
     }
 }

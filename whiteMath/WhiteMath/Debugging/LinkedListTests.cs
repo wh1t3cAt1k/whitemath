@@ -70,7 +70,7 @@ namespace WhiteMath
         /// </summary>
         public static void _DBM_LinkedList_ReorderNodeArrayTest(int tests, int n)
         {
-            Random gen = new Random();
+            System.Random gen = new System.Random();
             LinkedList<int> list = new LinkedList<int>();
 
             for (int i = 0; i < tests; i++)

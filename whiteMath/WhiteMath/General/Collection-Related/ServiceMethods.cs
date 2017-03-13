@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using WhiteMath.Calculators;
-using WhiteMath.Randoms;
+using WhiteMath.Random;
 
 using WhiteStructs.Conditions;
 using WhiteStructs.Collections;
@@ -13,7 +13,7 @@ namespace WhiteMath.General
     {
         /// <summary>
         /// Performs a quick, linear-complexity random shuffling of the list.
-		/// The quality of shuffling is medium. Uses the standard <see cref="Random"/> 
+		/// The quality of shuffling is medium. Uses the standard <see cref="System.Random"/> 
 		/// number generator.
         /// </summary>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
@@ -429,7 +429,7 @@ namespace WhiteMath.General
         // ------------- ARRAY EXTENSIONS -----------
         // ------------------------------------------
 
-        private static Random gen = new Random();
+        private static System.Random gen = new System.Random();
 
         /// <summary>
         /// Randomizes the long integer digits array.

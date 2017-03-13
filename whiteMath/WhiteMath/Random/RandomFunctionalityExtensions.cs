@@ -2,7 +2,7 @@
 
 using WhiteStructs.Conditions;
 
-namespace WhiteMath.Randoms
+namespace WhiteMath.Random
 {
     /// <summary>
     /// Represents a method which is able to generate

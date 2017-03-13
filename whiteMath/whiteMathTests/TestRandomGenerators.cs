@@ -5,7 +5,7 @@ using System.Linq;
 using WhiteMath;
 using WhiteMath.Calculators;
 using WhiteMath.Statistics;
-using WhiteMath.Randoms;
+using WhiteMath.Random;
 
 using NUnit.Framework;
 

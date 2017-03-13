@@ -6,7 +6,7 @@ using WhiteMath.Numeric;
 using WhiteMath.Mathematics;
 using WhiteMath.Calculators;
 using WhiteMath.General;
-using WhiteMath.Randoms;
+using WhiteMath.Random;
 
 using WhiteStructs.Conditions;
 

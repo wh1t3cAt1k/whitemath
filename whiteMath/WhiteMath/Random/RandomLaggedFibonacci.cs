@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WhiteMath.Randoms
+namespace WhiteMath.Random
 {
     /// <summary>
     /// This class represents a pseudo-random lagged Fibonacci generator for <c>double</c> values.

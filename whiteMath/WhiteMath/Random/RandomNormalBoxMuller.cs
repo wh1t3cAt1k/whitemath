@@ -2,7 +2,7 @@
 
 using WhiteMath.Calculators;
 
-namespace WhiteMath.Randoms
+namespace WhiteMath.Random
 {
     /// <summary>
     /// This class is a wrapper around a uniformly distributed

@@ -1,4 +1,4 @@
-﻿namespace WhiteMath.Randoms
+﻿namespace WhiteMath.Random
 {
 	/// <summary>
 	/// A generic interface providing means for generating random 

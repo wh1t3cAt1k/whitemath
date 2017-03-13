@@ -5,7 +5,7 @@ using System.Linq;
 using WhiteMath.Mathematics;
 using WhiteMath.Calculators;
 using WhiteMath.Statistics;
-using WhiteMath.Randoms;
+using WhiteMath.Random;
 
 namespace WhiteMath.Statistics
 {

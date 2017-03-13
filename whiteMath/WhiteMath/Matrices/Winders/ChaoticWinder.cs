@@ -15,7 +15,7 @@ namespace WhiteMath.Matrices.Winders
         internal ChaoticWinder(IMatrix matrix) 
             : base(matrix.RowCount, matrix.ColumnCount) { }
 
-		Random _generator = new Random();
+        System.Random _generator = new System.Random();
         
         /// <summary>
         /// Обеспечивает двусторонний проход по массиву стандартной построчной развертки
